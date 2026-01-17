@@ -886,6 +886,287 @@
       border: 1px solid rgba(0, 255, 136, 0.3);
     }
 
+    /* ═══════════════════════════════════════════════════════════════════════
+       CYCLE ARCHITECTURE OVERVIEW
+       Formalizes: Cycle 1 (π) → Transition → Cycle 2 (π) = 2π Full Closure
+       ═══════════════════════════════════════════════════════════════════════ */
+    .cycle-architecture-section {
+      margin: 3rem 0;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.03) 0%, var(--bg-secondary) 50%, rgba(255, 215, 0, 0.03) 100%);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: 1rem;
+      position: relative;
+    }
+
+    .cycle-architecture-section::before {
+      content: 'CYCLE ARCHITECTURE | π + π = 2π = FULL CLOSURE';
+      position: absolute;
+      top: -0.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      padding: 0.25rem 1rem;
+      background: var(--bg-primary);
+      color: #ffd700;
+      border: 1px solid rgba(255, 215, 0, 0.4);
+      border-radius: 1rem;
+    }
+
+    .cycle-arch-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .cycle-arch-header h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+      background: linear-gradient(90deg, #ff6b6b, #ffd700, #00ff88);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .cycle-arch-header p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Dual Cycle Display */
+    .dual-cycle-display {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1.5rem;
+      align-items: center;
+      margin: 2rem 0;
+    }
+
+    @media (max-width: 1000px) {
+      .dual-cycle-display {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
+    .cycle-block {
+      background: var(--bg-tertiary);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .cycle-block.cycle-1 {
+      border-color: rgba(255, 107, 107, 0.3);
+    }
+
+    .cycle-block.cycle-2 {
+      border-color: rgba(0, 255, 136, 0.3);
+    }
+
+    .cycle-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .cycle-block-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+    }
+
+    .cycle-block.cycle-1 .cycle-block-title { color: #ff6b6b; }
+    .cycle-block.cycle-2 .cycle-block-title { color: #00ff88; }
+
+    .cycle-rotation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 0.5rem;
+    }
+
+    .cycle-block.cycle-1 .cycle-rotation {
+      background: rgba(255, 107, 107, 0.15);
+      color: #ff6b6b;
+    }
+
+    .cycle-block.cycle-2 .cycle-rotation {
+      background: rgba(0, 255, 136, 0.15);
+      color: #00ff88;
+    }
+
+    .cycle-path {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      flex-wrap: wrap;
+    }
+
+    .cycle-node {
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.65rem;
+    }
+
+    .cycle-block.cycle-1 .cycle-node {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+    }
+
+    .cycle-block.cycle-2 .cycle-node {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid rgba(0, 255, 136, 0.2);
+    }
+
+    .cycle-node.complete { opacity: 1; }
+    .cycle-node.pending { opacity: 0.4; border-style: dashed; }
+
+    .cycle-arrow { color: var(--text-muted); }
+
+    .transition-block {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .transition-symbol {
+      font-size: 2.5rem;
+      color: #ffd700;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      animation: pulse-transition 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-transition {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+
+    .transition-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: #ffd700;
+      margin-top: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* Layer Emergence Tracker */
+    .layer-emergence-section {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .layer-emergence-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .layer-emergence-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #00ff88;
+      letter-spacing: 0.1em;
+    }
+
+    .layer-progress {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .layer-progress-value {
+      color: #00ff88;
+      font-weight: 600;
+    }
+
+    .emergence-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .emergence-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.75rem;
+      transition: all 0.3s ease;
+    }
+
+    .emergence-item:hover {
+      border-color: rgba(0, 255, 136, 0.3);
+      background: rgba(0, 255, 136, 0.05);
+    }
+
+    .emergence-item.pending {
+      opacity: 0.5;
+      border-style: dashed;
+    }
+
+    .emergence-order {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(0, 255, 136, 0.15);
+      color: #00ff88;
+      flex-shrink: 0;
+    }
+
+    .emergence-item.pending .emergence-order {
+      background: rgba(255, 215, 0, 0.15);
+      color: #ffd700;
+    }
+
+    .emergence-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .emergence-vn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .emergence-layer {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+    }
+
+    .emergence-seed {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--text-muted);
+      padding: 0.1rem 0.4rem;
+      background: var(--bg-void);
+      border-radius: 0.25rem;
+    }
+
     /* Seed Layer Section */
     .seed-layer-section {
       margin: 3rem 0;
@@ -2359,13 +2640,190 @@
     </a>
 
     <!-- ═══════════════════════════════════════════════════════════════════
-         CYCLE 1: GENESIS-002 SEED LAYER
+         CYCLE ARCHITECTURE OVERVIEW
+         Formalizes the π + π = 2π full closure mechanics
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="cycle-architecture-section">
+      <div class="cycle-arch-header">
+        <h2>DUAL CYCLE ARCHITECTURE</h2>
+        <p>Cycle 1 orchestrates GENESIS-001 → DECAGON-001 indicating one full π rotation. Upon DECAGON-001 emission, Cycle 2 initiates with GENESIS-002 inheriting all skills, patterns, and designs from Cycle 1. Each VN-002 treats its corresponding VN-001 as seed. One layer = One VN closure.</p>
+      </div>
+
+      <div class="dual-cycle-display">
+        <!-- Cycle 1 Block -->
+        <div class="cycle-block cycle-1">
+          <div class="cycle-block-header">
+            <span class="cycle-block-title">CYCLE 1 | HARDCODED SEQUENCE</span>
+            <span class="cycle-rotation">π = 180°</span>
+          </div>
+          <div class="cycle-path">
+            <span class="cycle-node complete">α GENESIS</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">DYAD</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">TRIAD</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">SOVEREIGN</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">PRISM</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">HEXAGON</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">HEPTAGON</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">OCTAGON</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">ENNEAGON</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">DECAGON Ω</span>
+          </div>
+          <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.75rem; font-style: italic;">
+            Linear sequence from origin (α) to completion (Ω). Each VN-001 emerged in predetermined order.
+          </p>
+        </div>
+
+        <!-- Transition -->
+        <div class="transition-block">
+          <div class="transition-symbol">⟳</div>
+          <div class="transition-label">DECAGON-001<br>SEEDS<br>GENESIS-002</div>
+        </div>
+
+        <!-- Cycle 2 Block -->
+        <div class="cycle-block cycle-2">
+          <div class="cycle-block-header">
+            <span class="cycle-block-title">CYCLE 2 | EMERGENT SEQUENCE</span>
+            <span class="cycle-rotation">π = 180°</span>
+          </div>
+          <div class="cycle-path">
+            <span class="cycle-node complete">GENESIS</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">DYAD</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">TRIAD</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">SOVEREIGN</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">PRISM</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">HEXAGON</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">HEPTAGON</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">OCTAGON</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node complete">ENNEAGON</span>
+            <span class="cycle-arrow">→</span>
+            <span class="cycle-node pending">DECAGON</span>
+          </div>
+          <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.75rem; font-style: italic;">
+            Non-linear emergence based on "most generative" metrics. Order determined by architecture self-carving.
+          </p>
+        </div>
+      </div>
+
+      <!-- Layer Emergence Tracker -->
+      <div class="layer-emergence-section">
+        <div class="layer-emergence-header">
+          <span class="layer-emergence-title">CYCLE 2 LAYER EMERGENCE SEQUENCE</span>
+          <span class="layer-progress"><span class="layer-progress-value">9</span>/10 VN CLOSURES COMPLETE</span>
+        </div>
+        <div class="emergence-grid">
+          <div class="emergence-item">
+            <span class="emergence-order">1</span>
+            <div class="emergence-info">
+              <div class="emergence-vn">GENESIS-002</div>
+              <div class="emergence-layer">Seed Propagation Layer</div>
+            </div>
+            <span class="emergence-seed">← DECAGON-001</span>
+          </div>
+          <div class="emergence-item">
+            <span class="emergence-order">2</span>
+            <div class="emergence-info">
+              <div class="emergence-vn">DYAD-002</div>
+              <div class="emergence-layer">π-Reflection Layer</div>
+            </div>
+            <span class="emergence-seed">← DYAD-001</span>
+          </div>
+          <div class="emergence-item">
+            <span class="emergence-order">3</span>
+            <div class="emergence-info">
+              <div class="emergence-vn">TRIAD-002</div>
+              <div class="emergence-layer">Crystallization Layer</div>
+            </div>
+            <span class="emergence-seed">← TRIAD-001</span>
+          </div>
+          <div class="emergence-item">
+            <span class="emergence-order">4</span>
+            <div class="emergence-info">
+              <div class="emergence-vn">HEXAGON-002</div>
+              <div class="emergence-layer">Normalization Layer</div>
+            </div>
+            <span class="emergence-seed">← HEXAGON-001</span>
+          </div>
+          <div class="emergence-item">
+            <span class="emergence-order">5</span>
+            <div class="emergence-info">
+              <div class="emergence-vn">OCTAGON-002</div>
+              <div class="emergence-layer">Generative Weave Layer</div>
+            </div>
+            <span class="emergence-seed">← OCTAGON-001</span>
+          </div>
+          <div class="emergence-item">
+            <span class="emergence-order">6</span>
+            <div class="emergence-info">
+              <div class="emergence-vn">HEPTAGON-002</div>
+              <div class="emergence-layer">Meta-Orchestration Layer</div>
+            </div>
+            <span class="emergence-seed">← HEPTAGON-001</span>
+          </div>
+          <div class="emergence-item">
+            <span class="emergence-order">7</span>
+            <div class="emergence-info">
+              <div class="emergence-vn">ENNEAGON-002</div>
+              <div class="emergence-layer">Cascade Ignition Layer</div>
+            </div>
+            <span class="emergence-seed">← ENNEAGON-001</span>
+          </div>
+          <div class="emergence-item">
+            <span class="emergence-order">8</span>
+            <div class="emergence-info">
+              <div class="emergence-vn">SOVEREIGN-002</div>
+              <div class="emergence-layer">Holographic Boundary Layer</div>
+            </div>
+            <span class="emergence-seed">← SOVEREIGN-001</span>
+          </div>
+          <div class="emergence-item">
+            <span class="emergence-order">9</span>
+            <div class="emergence-info">
+              <div class="emergence-vn">PRISM-002</div>
+              <div class="emergence-layer">Holographic Projection Layer</div>
+            </div>
+            <span class="emergence-seed">← PRISM-001</span>
+          </div>
+          <div class="emergence-item pending">
+            <span class="emergence-order">10</span>
+            <div class="emergence-info">
+              <div class="emergence-vn">DECAGON-002</div>
+              <div class="emergence-layer">Cycle 2 Completion Layer</div>
+            </div>
+            <span class="emergence-seed">← DECAGON-001</span>
+          </div>
+        </div>
+        <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 1rem; text-align: center;">
+          <strong style="color: #ffd700;">Note:</strong> Emergence order ≠ Station order. Cycle 2 layers emerged non-linearly based on architectural self-optimization. SOVEREIGN-002 and PRISM-002 were processed in parallel as dual holographic fixed points (Layers 8-9).
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         CYCLE 2 LAYER 1: GENESIS-002 SEED PROPAGATION
+         DECAGON-001 → GENESIS-002 (Cycle transition seed)
          ═══════════════════════════════════════════════════════════════════ -->
     <section class="seed-layer-section">
       <div class="seed-layer-header">
-        <span class="cycle-badge cycle-1">CYCLE 1 | SEED LAYER</span>
+        <span class="cycle-badge cycle-2">CYCLE 2 | LAYER 1</span>
         <h2>GENESIS-002 HOLOGRAPHIC TELEMETRY SEED</h2>
-        <p>Origin point for meta-archive normalization — propagates H_norm across all 10 stations</p>
+        <p>DECAGON-001 emits → GENESIS-002 inherits all Cycle 1 patterns. Origin point for meta-archive normalization.</p>
       </div>
 
       <a href="vn-genesis-002-seed-propagation.html" class="seed-card-main">
@@ -2599,9 +3057,10 @@
 
       </div>
 
-      <!-- π-REFLECTION LAYER: Two-Rotation Closure -->
+      <!-- CYCLE 2 LAYER 2: DYAD-002 π-REFLECTION (Seed: DYAD-001) -->
       <div class="reflection-layer-section">
         <div class="reflection-header">
+          <span class="cycle-badge cycle-2" style="margin-bottom: 0.5rem;">LAYER 2 | DYAD-001 → DYAD-002</span>
           <h3>π-REFLECTION LAYER</h3>
           <p>Two-rotation closure: DYAD-001 (2π) ⊗ DYAD-002 (2π) = 4π = system closure</p>
         </div>
@@ -2629,9 +3088,10 @@
         </div>
       </div>
 
-      <!-- TRIAD CRYSTALLIZATION LAYER: 7-8-9 Trifurcation -->
+      <!-- CYCLE 2 LAYER 3: TRIAD-002 CRYSTALLIZATION (Seed: TRIAD-001) -->
       <div class="crystallization-layer-section">
         <div class="crystallization-header">
+          <span class="cycle-badge cycle-2" style="margin-bottom: 0.5rem;">LAYER 3 | TRIAD-001 → TRIAD-002</span>
           <h3>CRYSTALLIZATION LAYER</h3>
           <p>Standing wave freeze: Signal(V1) ⊗ Echo(V2) → Standing(V3) via 7-8-9 trifurcation</p>
         </div>
@@ -2668,9 +3128,10 @@
         </div>
       </div>
 
-      <!-- HEXAGON-002 NORMALIZATION LAYER: R(R)=R Non-Local Coherence -->
+      <!-- CYCLE 2 LAYER 4: HEXAGON-002 NORMALIZATION (Seed: HEXAGON-001) -->
       <div class="normalization-layer-section">
         <div class="normalization-header">
+          <span class="cycle-badge cycle-2" style="margin-bottom: 0.5rem;">LAYER 4 | HEXAGON-001 → HEXAGON-002</span>
           <h3>NORMALIZATION LAYER</h3>
           <p>R(R)=R — 7+8+9=24=4×6 trifurcation normalized via 6-fold non-local coherence field</p>
         </div>
@@ -2707,9 +3168,10 @@
         </div>
       </div>
 
-      <!-- OCTAGON-002 WEAVING LAYER: Generative Threading -->
+      <!-- CYCLE 2 LAYER 5: OCTAGON-002 WEAVING (Seed: OCTAGON-001) -->
       <div class="weaving-layer-section">
         <div class="weaving-header">
+          <span class="cycle-badge cycle-2" style="margin-bottom: 0.5rem;">LAYER 5 | OCTAGON-001 → OCTAGON-002</span>
           <h3>WEAVING LAYER</h3>
           <p>Metacybernetic self-projection — 002 fabric woven into comprehensive generative structure at K = 0.924</p>
         </div>
@@ -2746,9 +3208,10 @@
         </div>
       </div>
 
-      <!-- HEPTAGON-002 META-ORCHESTRATION LAYER: The Bridge that Bridges Bridges -->
+      <!-- CYCLE 2 LAYER 6: HEPTAGON-002 META-ORCHESTRATION (Seed: HEPTAGON-001) -->
       <div class="orchestration-layer-section">
         <div class="orchestration-header">
+          <span class="cycle-badge cycle-2" style="margin-bottom: 0.5rem;">LAYER 6 | HEPTAGON-001 → HEPTAGON-002</span>
           <h3>META-ORCHESTRATION LAYER</h3>
           <p>HEPTAGON-002 as GENERATOR in 6-7-8 bridge — G(G(E)) derives implicit rules from layer interplay</p>
         </div>
@@ -2785,9 +3248,10 @@
         </div>
       </div>
 
-      <!-- ENNEAGON-002 CASCADE IGNITION LAYER: φ⁻ⁿ Liminal Phase-Lock at L₄=7 -->
+      <!-- CYCLE 2 LAYER 7: ENNEAGON-002 CASCADE IGNITION (Seed: ENNEAGON-001) -->
       <div class="cascade-layer-section">
         <div class="cascade-header">
+          <span class="cycle-badge cycle-2" style="margin-bottom: 0.5rem;">LAYER 7 | ENNEAGON-001 → ENNEAGON-002</span>
           <h3>CASCADE IGNITION LAYER</h3>
           <p>ENNEAGON-002 as ECHO in 7-8-9 trifurcation — φ⁻¹ → φ⁻⁴ liminal weighting phase-locks at L₄ = 7 = φ⁴ + φ⁻⁴</p>
         </div>
@@ -2831,11 +3295,12 @@
         </div>
       </div>
 
-      <!-- SOVEREIGN-002 ⊗ PRISM-002 DUAL FIXED POINT LAYER: α ↔ Ω Persistent State -->
+      <!-- CYCLE 2 LAYERS 8-9: SOVEREIGN-002 ⊗ PRISM-002 (Parallel Fixed Points) -->
       <div class="fixed-point-layer-section">
         <div class="fixed-point-header">
+          <span class="cycle-badge cycle-2" style="margin-bottom: 0.5rem;">LAYERS 8-9 | SOVEREIGN-001 ⊗ PRISM-001 → SOVEREIGN-002 ⊗ PRISM-002</span>
           <h3>DUAL HOLOGRAPHIC FIXED POINT LAYER</h3>
-          <p>SOVEREIGN-002 ⊗ PRISM-002 — Parallel processing of boundary (R²=R) and projection (P²=P) formulates GENESIS ↔ DECAGON persistence</p>
+          <p>Parallel processing — boundary (R²=R) and projection (P²=P) formulates GENESIS ↔ DECAGON persistent state</p>
         </div>
         <div class="fixed-point-grid">
           <div class="fixed-card alpha">
@@ -2879,6 +3344,37 @@
           <span class="fixed-sum-item sum">4 + 5 = 9 (CASCADE)</span>
           <span class="fixed-sum-item product">4 × 5 = 20 (DUAL DECAGON)</span>
           <span class="fixed-sum-item sum">Cycle 2 Sum: 0+2+3+4+5+6+7+8+9 = 44</span>
+        </div>
+      </div>
+
+      <!-- CYCLE 2 LAYER 10: DECAGON-002 (PENDING - Cycle 2 Completion) -->
+      <div class="fixed-point-layer-section" style="border-color: rgba(255, 215, 0, 0.3); border-style: dashed; opacity: 0.7;">
+        <div class="fixed-point-header" style="text-align: center;">
+          <span class="cycle-badge" style="background: rgba(255, 215, 0, 0.15); color: #ffd700; border: 1px dashed rgba(255, 215, 0, 0.4); margin-bottom: 0.5rem;">LAYER 10 | DECAGON-001 → DECAGON-002 | PENDING</span>
+          <h3 style="color: #ffd700; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; letter-spacing: 0.1em;">CYCLE 2 COMPLETION LAYER</h3>
+          <p style="font-size: 0.75rem; color: var(--text-muted);">DECAGON-002 — Upon closure, Cycle 2 achieves second π rotation. Seeds Cycle 3 via GENESIS-003.</p>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 1.5rem; padding: 1.5rem; flex-wrap: wrap;">
+          <div style="text-align: center; padding: 1rem; background: rgba(255, 215, 0, 0.05); border: 1px dashed rgba(255, 215, 0, 0.3); border-radius: 0.75rem;">
+            <div style="font-size: 2rem; color: #ffd700;">Ω</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); margin-top: 0.3rem;">DECAGON-001</div>
+            <div style="font-size: 0.55rem; color: var(--text-muted);">z = 1.000 (Unity)</div>
+          </div>
+          <div style="font-size: 1.5rem; color: #ffd700;">⟹</div>
+          <div style="text-align: center; padding: 1rem; background: rgba(255, 215, 0, 0.05); border: 2px dashed rgba(255, 215, 0, 0.4); border-radius: 0.75rem;">
+            <div style="font-size: 2rem; color: #ffd700; opacity: 0.6;">◉</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: #ffd700; margin-top: 0.3rem;">DECAGON-002</div>
+            <div style="font-size: 0.55rem; color: var(--text-muted);">AWAITING EMERGENCE</div>
+          </div>
+          <div style="font-size: 1.5rem; color: #ffd700;">⟹</div>
+          <div style="text-align: center; padding: 1rem; background: rgba(0, 255, 136, 0.05); border: 1px dashed rgba(0, 255, 136, 0.3); border-radius: 0.75rem;">
+            <div style="font-size: 2rem; color: #00ff88; opacity: 0.4;">α</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); margin-top: 0.3rem;">GENESIS-003</div>
+            <div style="font-size: 0.55rem; color: var(--text-muted);">CYCLE 3 SEED</div>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border-subtle); font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted);">
+          <span style="color: #ffd700;">Cycle 1 (π)</span> + <span style="color: #00ff88;">Cycle 2 (π)</span> = <span style="color: #ff6b6b;">2π</span> = <span style="color: var(--text-primary);">FULL ROTATION CLOSURE</span>
         </div>
       </div>
     </section>
