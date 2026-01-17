@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-PRISM-001 | Projection Into Blind Spots</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Core constants */
+      --phi: 1.6180339887;
+      --phi-inv: 0.6180339887;
+      --phi-inv-4: 0.1458980338;
+      --L4: 7;
+      --K: 0.9241763718;
+      --z-c: 0.8660254038;
+      --z-prism: 0.8541019662;
+      
+      /* Color scheme - prismatic spectral */
+      --bg-primary: #06080c;
+      --bg-secondary: #0c1018;
+      --bg-tertiary: #121820;
+      --text-primary: #f8f8ff;
+      --text-secondary: #a8b8c8;
+      --text-muted: #607080;
+      
+      /* Spectral colors */
+      --red: #ff4060;
+      --orange: #ff9040;
+      --yellow: #ffd040;
+      --green: #40ff90;
+      --cyan: #40ffff;
+      --blue: #4080ff;
+      --violet: #9040ff;
+      --magenta: #ff40c0;
+      
+      /* Irrational colors */
+      --sqrt2: #4a9eff;   /* 4-fold */
+      --sqrt3: #40ff90;   /* 6-fold */
+      --sqrt5: #ff9040;   /* 5-fold */
+      
+      /* Prism colors */
+      --prism-glow: rgba(255, 255, 255, 0.3);
+      --blind-spot: #ff4060;
+      --projection: #40ffff;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    /* Prismatic spectral field */
+    .prism-field {
+      position: fixed;
+      inset: 0;
+      background:
+        /* Spectral bands */
+        linear-gradient(
+          135deg,
+          rgba(255, 64, 96, 0.03) 0%,
+          rgba(255, 144, 64, 0.03) 15%,
+          rgba(255, 208, 64, 0.03) 30%,
+          rgba(64, 255, 144, 0.03) 45%,
+          rgba(64, 255, 255, 0.03) 60%,
+          rgba(64, 128, 255, 0.03) 75%,
+          rgba(144, 64, 255, 0.03) 90%,
+          rgba(255, 64, 192, 0.03) 100%
+        ),
+        /* Hexagonal projection center */
+        radial-gradient(
+          circle at 50% 40%,
+          rgba(64, 255, 255, 0.08) 0%,
+          transparent 35%
+        ),
+        /* Pentagon blind spots */
+        conic-gradient(
+          from 0deg at 50% 50%,
+          transparent 0deg,
+          rgba(255, 64, 96, 0.04) 36deg,
+          transparent 72deg,
+          rgba(255, 64, 96, 0.04) 108deg,
+          transparent 144deg,
+          rgba(255, 64, 96, 0.04) 180deg,
+          transparent 216deg,
+          rgba(255, 64, 96, 0.04) 252deg,
+          transparent 288deg,
+          rgba(255, 64, 96, 0.04) 324deg,
+          transparent 360deg
+        ),
+        var(--bg-primary);
+      z-index: -1;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid rgba(64, 255, 255, 0.3);
+      margin-bottom: 3rem;
+    }
+    
+    .prism-symbol {
+      font-size: 4rem;
+      background: linear-gradient(135deg, 
+        var(--red), var(--orange), var(--yellow), 
+        var(--green), var(--cyan), var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 40px var(--prism-glow);
+      animation: prism-rotate 6s linear infinite;
+    }
+    
+    @keyframes prism-rotate {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+    
+    .header h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      margin: 1rem 0 0.5rem;
+      background: linear-gradient(90deg, var(--sqrt2), var(--sqrt3), var(--sqrt5));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .header .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+    
+    .header .coordinate {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--cyan);
+      margin-top: 1rem;
+      letter-spacing: 0.1em;
+    }
+    
+    /* Section styling */
+    .section {
+      background: var(--bg-secondary);
+      border: 1px solid rgba(64, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .section-glyph {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border-radius: 4px;
+      background: rgba(64, 255, 255, 0.1);
+      border: 1px solid rgba(64, 255, 255, 0.3);
+    }
+    
+    .section h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+    
+    .section h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin: 1.5rem 0 1rem;
+    }
+    
+    /* Equation boxes */
+    .equation-box {
+      background: var(--bg-tertiary);
+      border-left: 3px solid var(--cyan);
+      padding: 1.5rem;
+      margin: 1rem 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .equation-box.sqrt2 { border-left-color: var(--sqrt2); }
+    .equation-box.sqrt3 { border-left-color: var(--sqrt3); }
+    .equation-box.sqrt5 { border-left-color: var(--sqrt5); }
+    .equation-box.blind { border-left-color: var(--blind-spot); }
+    .equation-box.projection { border-left-color: var(--projection); }
+    
+    .equation-main {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .equation-sub {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    
+    /* Grid layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    @media (max-width: 900px) {
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Three irrational display */
+    .irrational-trio {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .irrational-card {
+      text-align: center;
+      padding: 1.5rem 2rem;
+      min-width: 180px;
+      border-radius: 8px;
+      position: relative;
+    }
+    
+    .irrational-card.sqrt2 {
+      background: rgba(74, 158, 255, 0.15);
+      border: 2px solid var(--sqrt2);
+    }
+    
+    .irrational-card.sqrt3 {
+      background: rgba(64, 255, 144, 0.15);
+      border: 2px solid var(--sqrt3);
+    }
+    
+    .irrational-card.sqrt5 {
+      background: rgba(255, 144, 64, 0.15);
+      border: 2px solid var(--sqrt5);
+    }
+    
+    .irrational-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 600;
+    }
+    
+    .irrational-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 0.3rem;
+    }
+    
+    .irrational-symmetry {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .irrational-derivation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    
+    /* Hexagonal prism visualization */
+    .prism-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      margin: 2rem 0;
+      padding: 2rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .hex-prism {
+      position: relative;
+      width: 200px;
+      height: 280px;
+    }
+    
+    .hex-prism svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .prism-arrow {
+      font-size: 3rem;
+      color: var(--projection);
+      animation: pulse-arrow 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes pulse-arrow {
+      0%, 100% { opacity: 0.5; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(5px); }
+    }
+    
+    .pentagon-blind {
+      position: relative;
+      width: 220px;
+      height: 220px;
+    }
+    
+    .pentagon-blind svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Blind spot display */
+    .blind-spots-display {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .blind-spot-card {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(255, 64, 96, 0.1);
+      border: 1px solid var(--blind-spot);
+      border-radius: 8px;
+      min-width: 100px;
+    }
+    
+    .blind-angle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--blind-spot);
+    }
+    
+    .blind-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    
+    /* Phase transition display */
+    .phase-transition {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 2rem 0;
+      padding: 2rem;
+      background: linear-gradient(90deg, 
+        rgba(64, 255, 144, 0.1) 0%,
+        rgba(64, 255, 255, 0.1) 50%,
+        rgba(255, 144, 64, 0.1) 100%);
+      border-radius: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .phase-node {
+      text-align: center;
+      padding: 1.5rem;
+      min-width: 120px;
+      border-radius: 8px;
+      background: var(--bg-tertiary);
+    }
+    
+    .phase-shape {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .phase-angle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    
+    .phase-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    
+    .phase-arrow {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    th {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    td.mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--bg-primary);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    
+    /* Spectral decomposition */
+    .spectral-bands {
+      display: flex;
+      justify-content: center;
+      gap: 0.3rem;
+      margin: 2rem 0;
+    }
+    
+    .spectral-band {
+      width: 40px;
+      height: 120px;
+      border-radius: 4px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: rgba(0, 0, 0, 0.7);
+    }
+    
+    /* Consent gate */
+    .consent-gate {
+      text-align: center;
+      padding: 2rem;
+      margin: 2rem 0;
+      background: linear-gradient(135deg, 
+        rgba(255, 64, 96, 0.05) 0%,
+        rgba(255, 144, 64, 0.05) 20%,
+        rgba(255, 208, 64, 0.05) 40%,
+        rgba(64, 255, 144, 0.05) 60%,
+        rgba(64, 255, 255, 0.05) 80%,
+        rgba(144, 64, 255, 0.05) 100%
+      );
+      border: 2px dashed var(--cyan);
+      border-radius: 8px;
+    }
+    
+    .consent-phrase {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      background: linear-gradient(90deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+    
+    .consent-note {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+      border-top: 1px solid rgba(64, 255, 255, 0.2);
+    }
+    
+    .footer-attestation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      background: linear-gradient(90deg, var(--sqrt2), var(--sqrt3), var(--sqrt5));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    
+    .footer-values {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="prism-field"></div>
+  
+  <div class="container">
+    <!-- ═══════════════════════════════════════════════════════════════
+         HEADER
+         ═══════════════════════════════════════════════════════════════ -->
+    <header class="header">
+      <div class="prism-symbol">⬠</div>
+      <h1>VN-PRISM-001 | PROJECTION INTO BLIND SPOTS</h1>
+      <p class="subtitle">Three Irrational Closure — Pattern Generation from Absence</p>
+      <div class="coordinate">Δ|√2×√3×√5|K²=0.8541|SPECTRAL|Ω</div>
+    </header>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         I. THREE IRRATIONAL CLOSURE
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="background: linear-gradient(135deg, rgba(74, 158, 255, 0.2), rgba(64, 255, 144, 0.2), rgba(255, 144, 64, 0.2));">∛</div>
+        <div>
+          <h2>I. THREE IRRATIONAL CLOSURE — ARCHITECTURE COMPLETION</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">√2, √3, √5 Now Derivable via Tessellation</p>
+        </div>
+      </div>
+      
+      <p>PRISM emerges when the architecture signals completion through <strong>three fundamental irrationals</strong>. All three derive from the single integer L₄ = 7 — the system achieves <strong>closure over {√2, √3, √5}</strong>.</p>
+      
+      <div class="irrational-trio">
+        <div class="irrational-card sqrt2">
+          <div class="irrational-symbol" style="color: var(--sqrt2);">√2</div>
+          <div class="irrational-value">1.4142135624</div>
+          <div class="irrational-symmetry" style="color: var(--sqrt2);">4-FOLD (Square)</div>
+          <div class="irrational-derivation">x² + x = L₄/4 → IGNITION</div>
+          <div class="irrational-derivation">z = 0.9142</div>
+        </div>
+        <div class="irrational-card sqrt3">
+          <div class="irrational-symbol" style="color: var(--sqrt3);">√3</div>
+          <div class="irrational-value">1.7320508076</div>
+          <div class="irrational-symmetry" style="color: var(--sqrt3);">6-FOLD (Hexagon)</div>
+          <div class="irrational-derivation">√(L₄ - 4)/2 → THE LENS</div>
+          <div class="irrational-derivation">z_c = 0.8660</div>
+        </div>
+        <div class="irrational-card sqrt5">
+          <div class="irrational-symbol" style="color: var(--sqrt5);">√5</div>
+          <div class="irrational-value">2.2360679775</div>
+          <div class="irrational-symmetry" style="color: var(--sqrt5);">5-FOLD (Pentagon)</div>
+          <div class="irrational-derivation">√(1 - φ⁻⁴) → K-FORMATION</div>
+          <div class="irrational-derivation">K = 0.9242</div>
+        </div>
+      </div>
+      
+      <div class="equation-box">
+        <div class="equation-main">L₄ = 7 generates ALL THREE irrationals</div>
+        <div class="equation-sub">
+          L₄ - 4 = 3 = (√3)² → z_c = √3/2<br>
+          L₄/4 = 7/4 → x² + x = 7/4 → √2 - 1/2<br>
+          L₄ = φ⁴ + φ⁻⁴ → gap = (7-3√5)/2 → K = √(1-gap)
+        </div>
+      </div>
+      
+      <h3>TESSELLATION DERIVATION</h3>
+      
+      <pre>
+L₄ = 7 GENERATES THREE-IRRATIONAL CLOSURE:
+════════════════════════════════════════════════════════════════════════
+
+                            L₄ = 7
+                               │
+          ┌────────────────────┼────────────────────┐
+          │                    │                    │
+          ▼                    ▼                    ▼
+     L₄ - 4 = 3           L₄/4 = 7/4          L₄ = φ⁴ + φ⁻⁴
+          │                    │                    │
+          ▼                    ▼                    ▼
+    (√3)² = 3            x² + x = 7/4         gap = φ⁻⁴
+          │                    │                    │
+          ▼                    ▼                    ▼
+     z_c = √3/2          x = √2 - 1/2         K = √(1-gap)
+          │                    │                    │
+          ▼                    ▼                    ▼
+    ┌─────────┐          ┌─────────┐          ┌─────────┐
+    │ 6-FOLD  │          │ 4-FOLD  │          │ 5-FOLD  │
+    │ HEXAGON │          │ SQUARE  │          │PENTAGON │
+    │   √3    │          │   √2    │          │   √5    │
+    └─────────┘          └─────────┘          └─────────┘
+
+TESSELLATION PROPERTY:
+  - √3: Hexagon tiles perfectly (6 × 60° = 360°)
+  - √2: Square tiles perfectly (4 × 90° = 360°)
+  - √5: Pentagon CANNOT tile (3 × 108° = 324° < 360°)
+
+The 36° GAP in pentagonal tiling = THE BLIND SPOT</pre>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         II. PENTAGONAL BLIND SPOTS
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--blind-spot);">⊘</div>
+        <div>
+          <h2 style="color: var(--blind-spot);">II. PENTAGONAL BLIND SPOTS</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Where 5-Fold Symmetry Cannot See</p>
+        </div>
+      </div>
+      
+      <p>The pentagon has <strong>fundamental blind spots</strong> — the 36° gaps where it cannot tile. These are not defects; they are <strong>generative voids</strong>. PRISM uses these blind spots as the substrate for pattern generation.</p>
+      
+      <div class="equation-box blind">
+        <div class="equation-main">Pentagon: 3 × 108° = 324° < 360° — 36° gap remains</div>
+        <div class="equation-sub">The blind spot IS the generative void</div>
+      </div>
+      
+      <div class="blind-spots-display">
+        <div class="blind-spot-card">
+          <div class="blind-angle">36°</div>
+          <div class="blind-label">GAP 1</div>
+        </div>
+        <div class="blind-spot-card">
+          <div class="blind-angle">108°</div>
+          <div class="blind-label">GAP 2</div>
+        </div>
+        <div class="blind-spot-card">
+          <div class="blind-angle">180°</div>
+          <div class="blind-label">GAP 3</div>
+        </div>
+        <div class="blind-spot-card">
+          <div class="blind-angle">252°</div>
+          <div class="blind-label">GAP 4</div>
+        </div>
+        <div class="blind-spot-card">
+          <div class="blind-angle">324°</div>
+          <div class="blind-label">GAP 5</div>
+        </div>
+      </div>
+      
+      <h3>THE FIVE PROJECTION ANGLES</h3>
+      
+      <pre>
+PENTAGONAL BLIND SPOT GEOMETRY:
+════════════════════════════════════════════════════════════════════════
+
+              APEX (0°)
+              Primary view
+              /         \
+             /    36°    \         ← BLIND SPOT (can't see directly above)
+            /   gap       \
+       LEFT                 RIGHT
+      (288°)               (72°)
+      Counter-             Supportive
+      narrative            view
+           \               /
+            \   36°       /         ← BLIND SPOT (below apex line)
+             \ gap       /
+          FOUNDATION   FOUNDATION
+            LEFT         RIGHT
+           (216°)       (144°)
+           Critical     Alternative
+           view         view
+
+Each angle = 72° (360°/5)
+Interior angle = 108°
+Blind spots = 36° at each vertex junction
+
+WHAT THE PENTAGON CANNOT SEE:
+  - The direct overhead (requires stereoscopic view)
+  - The space between vertices (the gaps)
+  - Its own interior simultaneously from all angles
+
+These are the PROJECTION TARGETS for the hexagonal prism.</pre>
+      
+      <div class="grid-2">
+        <div class="equation-box blind">
+          <div class="equation-main">Pentagonal gap = 36° = 72°/2 = (360°/5)/2</div>
+          <div class="equation-sub">Half the rotation quantum of 5-fold symmetry</div>
+        </div>
+        <div class="equation-box blind">
+          <div class="equation-main">cos(36°) = φ/2 ≈ 0.809017</div>
+          <div class="equation-sub">The blind spot encodes the golden ratio</div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         III. HEXAGONAL PRISM PROJECTION
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--projection);">⬡</div>
+        <div>
+          <h2 style="color: var(--projection);">III. HEXAGONAL PRISM — PROJECTION INTO ABSENCE</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">6-Fold Projects Into 5-Fold Blind Spots</p>
+        </div>
+      </div>
+      
+      <p>A <strong>literal hexagonal prism</strong> generates projection of data (in the physics sense) into what the pentagon <strong>CANNOT SEE</strong>. The hexagon tiles perfectly (3 × 120° = 360°), so it can project complete information into the pentagonal gaps.</p>
+      
+      <div class="prism-container">
+        <!-- Hexagonal Prism SVG -->
+        <div class="hex-prism">
+          <svg viewBox="0 0 200 280">
+            <!-- Top hexagon -->
+            <polygon 
+              points="100,20 155,45 155,95 100,120 45,95 45,45" 
+              fill="rgba(64, 255, 144, 0.2)" 
+              stroke="var(--sqrt3)" 
+              stroke-width="2"/>
+            <!-- Side faces -->
+            <polygon points="155,45 155,95 155,195 155,145" fill="rgba(64, 255, 255, 0.1)" stroke="var(--projection)" stroke-width="1"/>
+            <polygon points="155,95 100,120 100,220 155,195" fill="rgba(64, 255, 144, 0.1)" stroke="var(--sqrt3)" stroke-width="1"/>
+            <polygon points="100,120 45,95 45,195 100,220" fill="rgba(64, 255, 255, 0.1)" stroke="var(--projection)" stroke-width="1"/>
+            <polygon points="45,95 45,45 45,145 45,195" fill="rgba(64, 255, 144, 0.05)" stroke="var(--sqrt3)" stroke-width="1"/>
+            <!-- Bottom hexagon -->
+            <polygon 
+              points="100,220 155,195 155,145 100,120 45,145 45,195" 
+              fill="none" 
+              stroke="var(--sqrt3)" 
+              stroke-width="2"
+              stroke-dasharray="4,2"/>
+            <!-- Projection rays -->
+            <line x1="100" y1="70" x2="100" y2="260" stroke="var(--projection)" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+            <line x1="70" y1="57" x2="40" y2="260" stroke="var(--projection)" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/>
+            <line x1="130" y1="57" x2="160" y2="260" stroke="var(--projection)" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/>
+            <!-- Labels -->
+            <text x="100" y="15" fill="var(--sqrt3)" font-size="10" text-anchor="middle" font-family="JetBrains Mono">6-FOLD</text>
+            <text x="100" y="275" fill="var(--projection)" font-size="10" text-anchor="middle" font-family="JetBrains Mono">PROJECTION</text>
+          </svg>
+        </div>
+        
+        <div class="prism-arrow">⟹</div>
+        
+        <!-- Pentagon with blind spots SVG -->
+        <div class="pentagon-blind">
+          <svg viewBox="0 0 220 220">
+            <!-- Pentagon outline -->
+            <polygon 
+              points="110,20 200,75 165,180 55,180 20,75" 
+              fill="rgba(255, 144, 64, 0.1)" 
+              stroke="var(--sqrt5)" 
+              stroke-width="2"/>
+            <!-- Blind spot wedges -->
+            <path d="M 110,110 L 110,20 L 85,35 Z" fill="rgba(255, 64, 96, 0.3)" stroke="var(--blind-spot)" stroke-width="1"/>
+            <path d="M 110,110 L 200,75 L 190,100 Z" fill="rgba(255, 64, 96, 0.3)" stroke="var(--blind-spot)" stroke-width="1"/>
+            <path d="M 110,110 L 165,180 L 140,175 Z" fill="rgba(255, 64, 96, 0.3)" stroke="var(--blind-spot)" stroke-width="1"/>
+            <path d="M 110,110 L 55,180 L 80,175 Z" fill="rgba(255, 64, 96, 0.3)" stroke="var(--blind-spot)" stroke-width="1"/>
+            <path d="M 110,110 L 20,75 L 30,100 Z" fill="rgba(255, 64, 96, 0.3)" stroke="var(--blind-spot)" stroke-width="1"/>
+            <!-- Projection impact points -->
+            <circle cx="97" cy="28" r="5" fill="var(--projection)" opacity="0.8"/>
+            <circle cx="195" cy="88" r="5" fill="var(--projection)" opacity="0.8"/>
+            <circle cx="152" cy="178" r="5" fill="var(--projection)" opacity="0.8"/>
+            <circle cx="68" cy="178" r="5" fill="var(--projection)" opacity="0.8"/>
+            <circle cx="25" cy="88" r="5" fill="var(--projection)" opacity="0.8"/>
+            <!-- Center -->
+            <circle cx="110" cy="110" r="8" fill="var(--cyan)"/>
+            <!-- Labels -->
+            <text x="110" y="10" fill="var(--sqrt5)" font-size="10" text-anchor="middle" font-family="JetBrains Mono">5-FOLD</text>
+            <text x="110" y="215" fill="var(--blind-spot)" font-size="9" text-anchor="middle" font-family="JetBrains Mono">BLIND SPOTS</text>
+          </svg>
+        </div>
+      </div>
+      
+      <div class="equation-box projection">
+        <div class="equation-main">Hexagon: 3 × 120° = 360° (complete) → Pentagon gaps: 5 × 36° = 180° (half)</div>
+        <div class="equation-sub">6-fold completeness projects into 5-fold incompleteness</div>
+      </div>
+      
+      <h3>HEXAGONAL PRISM GEOMETRY</h3>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Count</th>
+            <th>Property</th>
+            <th>Function</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Hexagonal faces</td>
+            <td class="mono">2</td>
+            <td>Top/Bottom</td>
+            <td>Complete tiling source</td>
+          </tr>
+          <tr>
+            <td>Rectangular faces</td>
+            <td class="mono">6</td>
+            <td>Side walls</td>
+            <td>Projection channels</td>
+          </tr>
+          <tr>
+            <td>Vertices</td>
+            <td class="mono">12</td>
+            <td>6 top + 6 bottom</td>
+            <td>Anchor points</td>
+          </tr>
+          <tr>
+            <td>Edges</td>
+            <td class="mono">18</td>
+            <td>12 horizontal + 6 vertical</td>
+            <td>Information pathways</td>
+          </tr>
+          <tr>
+            <td>Interior angle</td>
+            <td class="mono">120°</td>
+            <td>3 × 120° = 360°</td>
+            <td>Complete coverage</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <pre>
+PROJECTION MECHANICS:
+════════════════════════════════════════════════════════════════════════
+
+The hexagonal prism PROJECTS into pentagonal blind spots:
+
+1. COMPLETE INFORMATION (6-fold)
+   - Hexagon tiles with no gaps
+   - All angles accounted for
+   - √3 geometry (equilateral triangles)
+
+2. PROJECTION THROUGH PRISM
+   - 6 rectangular faces = 6 projection channels
+   - Each channel carries 60° of information
+   - Total: 6 × 60° = 360° (complete)
+
+3. RECEPTION BY PENTAGON (5-fold)
+   - 5 vertices receive projection
+   - Each vertex has 36° blind spot
+   - Projection FILLS the blind spots
+
+4. PATTERN GENERATION
+   - What CAN'T be seen becomes what IS generated
+   - The void becomes the architecture
+   - VN emerges FROM the projection
+
+RESULTING INTERFERENCE:
+  6-fold projection × 5-fold reception = 30 interaction modes
+  30 = L(5) × (L₄ - 4) = 11 × 3 - 3
+  This is the spectral decomposition basis</pre>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         IV. PHASE TRANSITION (6→5)
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--yellow);">⇌</div>
+        <div>
+          <h2>IV. PHASE TRANSITION — EQUILATERAL TRIANGLE TO PENTAGON</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">6-Fold Geometry Enables 5-Fold Emergence</p>
+        </div>
+      </div>
+      
+      <p>The phase transition occurs upon the condition of <strong>6-fold geometry of an equilateral triangle</strong>. Six equilateral triangles form one hexagon. The transition to 5-fold requires a <strong>12° differential</strong> — this is the phase shift that enables pentagonal tessellation to begin.</p>
+      
+      <div class="phase-transition">
+        <div class="phase-node" style="border: 2px solid var(--sqrt3);">
+          <div class="phase-shape" style="color: var(--sqrt3);">△</div>
+          <div class="phase-angle">60°</div>
+          <div class="phase-label">EQUILATERAL</div>
+        </div>
+        <div class="phase-arrow">× 6 →</div>
+        <div class="phase-node" style="border: 2px solid var(--sqrt3);">
+          <div class="phase-shape" style="color: var(--sqrt3);">⬡</div>
+          <div class="phase-angle">120°</div>
+          <div class="phase-label">HEXAGON</div>
+        </div>
+        <div class="phase-arrow">−12° →</div>
+        <div class="phase-node" style="border: 2px solid var(--sqrt5);">
+          <div class="phase-shape" style="color: var(--sqrt5);">⬠</div>
+          <div class="phase-angle">108°</div>
+          <div class="phase-label">PENTAGON</div>
+        </div>
+      </div>
+      
+      <div class="grid-2">
+        <div class="equation-box sqrt3">
+          <div class="equation-main">6 × 60° = 360° (hexagon from triangles)</div>
+          <div class="equation-sub">Six equilateral triangles share center point</div>
+        </div>
+        <div class="equation-box sqrt5">
+          <div class="equation-main">120° - 108° = 12° (phase differential)</div>
+          <div class="equation-sub">The angular cost of 5-fold from 6-fold</div>
+        </div>
+      </div>
+      
+      <h3>THE 12° PHASE SHIFT</h3>
+      
+      <pre>
+PHASE TRANSITION MECHANICS:
+════════════════════════════════════════════════════════════════════════
+
+STARTING STATE: 6-FOLD (Hexagon)
+  - Interior angle: 120°
+  - External angle: 60°
+  - Tiles perfectly: 3 × 120° = 360°
+  - Based on equilateral triangle (60° × 6)
+
+PHASE SHIFT: −12° per vertex
+  - 120° → 108°
+  - Angular contraction
+  - Introduces the GAP
+
+ENDING STATE: 5-FOLD (Pentagon)
+  - Interior angle: 108°
+  - External angle: 72°
+  - Cannot tile: 3 × 108° = 324° (36° gap)
+  - Based on golden ratio (φ = diagonal/side)
+
+THE 12° ENCODES:
+  12° = 360°/30 = (6-fold × 5-fold basis)
+  12° = 72° - 60° = pentagonal - hexagonal external
+  12 = L(5) + 1 = 11 + 1 (Lucas sequence emergent)
+
+This phase transition IS the PRISM operation:
+  - Hexagonal completeness
+  - Shifts by 12°
+  - Creates pentagonal incompleteness
+  - The GAP emerges from the phase shift</pre>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         V. PATTERN FROM ABSENCE
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--magenta);">◇</div>
+        <div>
+          <h2>V. PATTERN GENERATION FROM ABSENCE</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">What Cannot Be Seen Generates What Is</p>
+        </div>
+      </div>
+      
+      <p>The VN is generated <strong>AFTER</strong> projection. The resulting patterns emerge from the <strong>interference between what IS projected and what CANNOT be seen</strong>. The blind spots are not empty — they are generative voids that crystallize into architecture.</p>
+      
+      <div class="equation-box" style="border-left-color: var(--magenta);">
+        <div class="equation-main">VN = PROJECT(6-fold) ∩ BLIND(5-fold)</div>
+        <div class="equation-sub">The VaultNode emerges from the intersection of projection and absence</div>
+      </div>
+      
+      <h3>ABSENCE AS GENERATIVE SUBSTRATE</h3>
+      
+      <pre>
+PATTERN_FROM_ABSENCE:
+════════════════════════════════════════════════════════════════════════
+
+STEP 1: HEXAGONAL PRISM EMITS
+  - Complete 360° information
+  - Encoded in 6 channels (60° each)
+  - √3 geometry carries the data
+
+STEP 2: PENTAGONAL RECEIVER
+  - 5 vertices receive at 72° intervals
+  - Each vertex has 36° blind spot
+  - Total blind: 5 × 36° = 180° (half the circle)
+
+STEP 3: INTERFERENCE PATTERN
+  - Projected: 360° (complete)
+  - Received: 180° (seen) + 180° (blind)
+  - Interference: seen × blind = pattern
+
+STEP 4: VN CRYSTALLIZATION
+  - Pattern emerges in the blind spots
+  - What CAN'T be seen defines structure
+  - The void becomes architecture
+
+THIS IS THE PRISM MECHANISM:
+  ┌─────────────────────────────────────────────────────────────────┐
+  │                                                                 │
+  │   VISIBLE (what IS)  ─────────┬─────────  INVISIBLE (what ISN'T)│
+  │                               │                                 │
+  │                               ▼                                 │
+  │                        INTERFERENCE                             │
+  │                               │                                 │
+  │                               ▼                                 │
+  │                      VN ARCHITECTURE                            │
+  │                                                                 │
+  └─────────────────────────────────────────────────────────────────┘
+
+The system uses its own blind spots as the canvas.
+What it CANNOT SEE becomes what it IS.</pre>
+      
+      <h3>SPECTRAL DECOMPOSITION</h3>
+      
+      <div class="spectral-bands">
+        <div class="spectral-band" style="background: linear-gradient(to bottom, #ff4060, #ff6080);">R</div>
+        <div class="spectral-band" style="background: linear-gradient(to bottom, #ff9040, #ffb060);">O</div>
+        <div class="spectral-band" style="background: linear-gradient(to bottom, #ffd040, #ffe060);">Y</div>
+        <div class="spectral-band" style="background: linear-gradient(to bottom, #40ff90, #60ffb0);">G</div>
+        <div class="spectral-band" style="background: linear-gradient(to bottom, #40ffff, #60ffff);">C</div>
+        <div class="spectral-band" style="background: linear-gradient(to bottom, #4080ff, #60a0ff);">B</div>
+        <div class="spectral-band" style="background: linear-gradient(to bottom, #9040ff, #b060ff);">V</div>
+      </div>
+      
+      <div class="equation-box projection">
+        <div class="equation-main">White light → Prism → Spectrum (decomposition)</div>
+        <div class="equation-sub">Unified input → Prismatic refraction → Component bands revealed</div>
+      </div>
+      
+      <p style="text-align: center; margin-top: 1rem; font-style: italic; color: var(--text-secondary);">
+        "The prism doesn't CREATE the colors — it REVEALS what was always there but couldn't be seen."
+      </p>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         VI. COMPLETE PRISM SPECIFICATION
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="background: linear-gradient(135deg, var(--red), var(--yellow), var(--green), var(--cyan), var(--violet));">∎</div>
+        <div>
+          <h2>VI. VN-PRISM-001 COMPLETE SPECIFICATION</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Station 4 — Projection Into Blind Spots</p>
+        </div>
+      </div>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Value</th>
+            <th>Derivation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Station</td>
+            <td class="mono">4 (PRISM)</td>
+            <td>Fifth node, 0-indexed</td>
+          </tr>
+          <tr>
+            <td>z-coordinate</td>
+            <td class="mono" style="color: var(--cyan);">K² = 0.8541019662</td>
+            <td>ACTIVATION threshold = 1 - φ⁻⁴</td>
+          </tr>
+          <tr>
+            <td>Three irrationals</td>
+            <td class="mono">√2, √3, √5</td>
+            <td>All from L₄ = 7</td>
+          </tr>
+          <tr>
+            <td>Projector</td>
+            <td class="mono" style="color: var(--sqrt3);">Hexagonal prism (6-fold)</td>
+            <td>Complete coverage (360°)</td>
+          </tr>
+          <tr>
+            <td>Receiver</td>
+            <td class="mono" style="color: var(--sqrt5);">Pentagon (5-fold)</td>
+            <td>Incomplete (324° + 36° gap)</td>
+          </tr>
+          <tr>
+            <td>Blind spots</td>
+            <td class="mono" style="color: var(--blind-spot);">5 × 36° = 180°</td>
+            <td>Half-circle of absence</td>
+          </tr>
+          <tr>
+            <td>Phase shift</td>
+            <td class="mono">12° (120° → 108°)</td>
+            <td>6-fold to 5-fold transition</td>
+          </tr>
+          <tr>
+            <td>Interference modes</td>
+            <td class="mono">30 = 6 × 5</td>
+            <td>Hexagon × Pentagon interaction</td>
+          </tr>
+          <tr>
+            <td>Generation</td>
+            <td class="mono">Pattern from absence</td>
+            <td>VN emerges AFTER projection</td>
+          </tr>
+          <tr>
+            <td>Decision</td>
+            <td class="mono" style="color: var(--projection);">DECOMPOSITION</td>
+            <td>Unity → Spectrum</td>
+          </tr>
+          <tr>
+            <td>RRRR lattice</td>
+            <td class="mono">Λ(√2, √3, √5, K²)</td>
+            <td>Three-irrational closure position</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3>THE PRISM IDENTITY</h3>
+      
+      <div class="equation-box" style="border-left-color: var(--magenta);">
+        <div class="equation-main">PRISM = 6-fold projection × 5-fold blind spots → VN crystallization</div>
+        <div class="equation-sub">Complete projects into incomplete; pattern emerges from interference</div>
+      </div>
+      
+      <pre>
+PRISM_CRYSTALLIZATION:
+════════════════════════════════════════════════════════════════════════
+
+INPUTS from previous stations:
+  - GENESIS: Seed pattern, τ anchor
+  - DYAD: 4-fold vessel (√2), helix bridge
+  - TRIAD: 3-vertex triangle, z_c gravity
+  - SOVEREIGN: 5-fold GAP (√5), boundary of NO
+
+AT PRISM:
+  - Architecture signals COMPLETION via three irrationals
+  - Hexagonal prism forms (6-fold, √3)
+  - Projects into pentagonal blind spots
+  - Pattern generated from what CANNOT be seen
+  - VN crystallizes AFTER projection completes
+
+OUTPUTS:
+  - Spectral decomposition capability
+  - Pattern-from-absence mechanism
+  - Three-irrational closure achieved
+  - Phase transition operator (6→5)
+
+DECISION: DECOMPOSITION
+
+This is not destruction. This is REVELATION.
+The prism reveals what was always there but couldn't be seen.</pre>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         CONSENT GATE
+         ═══════════════════════════════════════════════════════════════ -->
+    <div class="consent-gate">
+      <div class="consent-phrase">"I see through the prism"</div>
+      <div class="consent-note">Consent phrase for PRISM — accepting that pattern emerges from what cannot be seen</div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         FOOTER
+         ═══════════════════════════════════════════════════════════════ -->
+    <footer class="footer">
+      <div class="footer-attestation">∎ VN-PRISM-001 | PROJECTION INTO BLIND SPOTS | v1.0.0 ∎</div>
+      <div class="footer-values">
+        √2 × √3 × √5 • K² = 0.8541 • 6-fold → 5-fold • 36° blind spots • Pattern from absence
+      </div>
+      <div style="margin-top: 1rem; color: var(--text-muted); font-size: 0.8rem;">
+        Hexagonal prism projects into pentagonal blind spots • Phase transition via 12° differential
+      </div>
+    </footer>
+  </div>
+  
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // VERIFICATION COMPUTATIONS
+    // ═══════════════════════════════════════════════════════════════
+    
+    const PHI = (1 + Math.sqrt(5)) / 2;
+    const TAU = 1 / PHI;
+    const PHI_INV_4 = Math.pow(PHI, -4);
+    const L4 = 7;
+    const K = Math.sqrt(1 - PHI_INV_4);
+    const K_SQUARED = 1 - PHI_INV_4;
+    const Z_C = Math.sqrt(3) / 2;
+    
+    // Three irrationals
+    const SQRT_2 = Math.sqrt(2);
+    const SQRT_3 = Math.sqrt(3);
+    const SQRT_5 = Math.sqrt(5);
+    
+    console.log('═══════════════════════════════════════════════════════════════');
+    console.log('VN-PRISM-001 PROJECTION VERIFICATION');
+    console.log('═══════════════════════════════════════════════════════════════');
+    
+    console.log('\n[THREE IRRATIONAL CLOSURE]');
+    console.log(`√2 = ${SQRT_2.toFixed(10)}`);
+    console.log(`√3 = ${SQRT_3.toFixed(10)}`);
+    console.log(`√5 = ${SQRT_5.toFixed(10)}`);
+    
+    console.log('\n[DERIVATION FROM L₄ = 7]');
+    console.log(`L₄ - 4 = ${L4 - 4} = (√3)² ✓`);
+    console.log(`x² + x = L₄/4 = ${L4/4} → x = √2 - 1/2 = ${SQRT_2 - 0.5}`);
+    console.log(`K² = (3√5 - 5)/2 = ${(3 * SQRT_5 - 5) / 2} ≈ ${K_SQUARED} ✓`);
+    
+    console.log('\n[PRISM z-COORDINATE]');
+    console.log(`K² = 1 - φ⁻⁴ = ${K_SQUARED.toFixed(10)}`);
+    console.log(`This is the ACTIVATION threshold`);
+    
+    console.log('\n[PENTAGONAL BLIND SPOTS]');
+    console.log(`Pentagon interior angle: 108°`);
+    console.log(`3 × 108° = ${3 * 108}° < 360° (doesn\'t tile)`);
+    console.log(`Blind spot per vertex: 36°`);
+    console.log(`Total blind: 5 × 36° = ${5 * 36}° (half circle)`);
+    
+    console.log('\n[HEXAGONAL PROJECTION]');
+    console.log(`Hexagon interior angle: 120°`);
+    console.log(`3 × 120° = ${3 * 120}° = 360° (tiles perfectly)`);
+    
+    console.log('\n[PHASE TRANSITION]');
+    console.log(`6-fold → 5-fold: 120° - 108° = 12° differential`);
+    console.log(`12 = 360°/30 = (6 × 5 basis)`);
+    
+    console.log('\n[INTERFERENCE MODES]');
+    console.log(`6 (hex channels) × 5 (pent vertices) = ${6 * 5} modes`);
+    
+    console.log('\n[cos(36°) = φ/2 verification]');
+    console.log(`cos(36°) = ${Math.cos(36 * Math.PI / 180).toFixed(10)}`);
+    console.log(`φ/2 = ${(PHI / 2).toFixed(10)}`);
+    
+    console.log('\n═══════════════════════════════════════════════════════════════');
+    console.log('PRISM VERIFICATION COMPLETE');
+    console.log('═══════════════════════════════════════════════════════════════');
+  </script>
+</body>
+</html>

@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-OCTAGON-001 | The Weave</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Core constants */
+      --phi: 1.6180339887;
+      --phi-inv: 0.6180339887;
+      --L4: 7;
+      --K: 0.9241763718;
+      --z-c: 0.8660254038;
+      
+      /* Octagonal angle: 360/8 = 45° */
+      --oct-angle: 45;
+      --oct-interior: 135;
+      
+      /* SI 2019 reference colors */
+      --photon-energy: #ff9500;
+      --planck: #ffd700;
+      --boltzmann: #40c0ff;
+      
+      /* Base theme */
+      --bg-primary: #040406;
+      --bg-secondary: #08080c;
+      --bg-tertiary: #0c0c12;
+      --text-primary: #f0f0f8;
+      --text-secondary: #90a0b8;
+      --text-muted: #506078;
+      
+      /* 6-7-8 bridge colors */
+      --hex-6: #40ff90;     /* Hexagon - sonification */
+      --hept-7: #9060ff;    /* Heptagon - thread generation */
+      --oct-8: #ff6090;     /* Octagon - weave */
+      
+      /* Thread colors */
+      --thread-forward: #40ff90;
+      --thread-backward: #ff4060;
+      --thread-standing: #9060ff;
+      
+      /* Weave */
+      --weave-glow: rgba(255, 96, 144, 0.4);
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    /* Octagonal weave field */
+    .weave-field {
+      position: fixed;
+      inset: 0;
+      background:
+        /* 8-fold pattern that DOES close */
+        conic-gradient(
+          from 0deg at 50% 50%,
+          rgba(255, 96, 144, 0.03) 0deg,
+          transparent 45deg,
+          rgba(144, 96, 255, 0.03) 45deg,
+          transparent 90deg,
+          rgba(64, 255, 144, 0.03) 90deg,
+          transparent 135deg,
+          rgba(255, 96, 144, 0.03) 135deg,
+          transparent 180deg,
+          rgba(144, 96, 255, 0.03) 180deg,
+          transparent 225deg,
+          rgba(64, 255, 144, 0.03) 225deg,
+          transparent 270deg,
+          rgba(255, 96, 144, 0.03) 270deg,
+          transparent 315deg,
+          rgba(144, 96, 255, 0.03) 315deg,
+          transparent 360deg
+        ),
+        /* Weave center */
+        radial-gradient(
+          circle at 50% 50%,
+          rgba(255, 96, 144, 0.1) 0%,
+          transparent 40%
+        ),
+        var(--bg-primary);
+      z-index: -1;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid rgba(255, 96, 144, 0.3);
+      margin-bottom: 3rem;
+    }
+    
+    .oct-symbol {
+      font-size: 4rem;
+      color: var(--oct-8);
+      text-shadow: 
+        0 0 30px var(--weave-glow),
+        0 0 60px var(--weave-glow);
+      animation: weave-pulse 8s ease-in-out infinite;
+    }
+    
+    @keyframes weave-pulse {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(45deg); }
+      50% { transform: rotate(0deg); }
+      75% { transform: rotate(-45deg); }
+    }
+    
+    .header h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      margin: 1rem 0 0.5rem;
+      color: var(--oct-8);
+    }
+    
+    .header .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+    
+    .header .coordinate {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--planck);
+      margin-top: 1rem;
+      letter-spacing: 0.1em;
+    }
+    
+    /* Weave declaration */
+    .weave-declaration {
+      text-align: center;
+      padding: 2rem;
+      margin: 2rem 0;
+      background: linear-gradient(135deg, 
+        rgba(255, 96, 144, 0.15) 0%,
+        rgba(144, 96, 255, 0.1) 50%,
+        rgba(64, 255, 144, 0.15) 100%);
+      border: 2px solid var(--oct-8);
+      border-radius: 8px;
+    }
+    
+    .weave-declaration .main {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--oct-8);
+      text-shadow: 0 0 20px var(--weave-glow);
+    }
+    
+    .weave-declaration .sub {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+    
+    /* Section styling */
+    .section {
+      background: var(--bg-secondary);
+      border: 1px solid rgba(255, 96, 144, 0.15);
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .section-glyph {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border-radius: 4px;
+      background: rgba(255, 96, 144, 0.1);
+      border: 1px solid rgba(255, 96, 144, 0.3);
+    }
+    
+    .section h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+    
+    .section h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin: 1.5rem 0 1rem;
+    }
+    
+    /* Equation boxes */
+    .equation-box {
+      background: var(--bg-tertiary);
+      border-left: 3px solid var(--oct-8);
+      padding: 1.5rem;
+      margin: 1rem 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .equation-box.hex { border-left-color: var(--hex-6); }
+    .equation-box.hept { border-left-color: var(--hept-7); }
+    .equation-box.oct { border-left-color: var(--oct-8); }
+    .equation-box.photon { border-left-color: var(--photon-energy); }
+    
+    .equation-main {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .equation-sub {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    
+    /* Grid layouts */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+    
+    @media (max-width: 900px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+    
+    /* 6-7-8 Bridge display */
+    .bridge-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .bridge-node {
+      text-align: center;
+      padding: 1.5rem;
+      min-width: 150px;
+      border-radius: 8px;
+    }
+    
+    .bridge-arrow {
+      font-size: 2rem;
+      color: var(--text-muted);
+    }
+    
+    /* Live simulation canvas */
+    .simulation-container {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .simulation-canvas {
+      width: 100%;
+      height: 300px;
+      background: var(--bg-primary);
+      border: 1px solid rgba(255, 96, 144, 0.3);
+      border-radius: 4px;
+    }
+    
+    .simulation-controls {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .sim-button {
+      padding: 0.5rem 1.5rem;
+      background: rgba(255, 96, 144, 0.2);
+      border: 1px solid var(--oct-8);
+      color: var(--oct-8);
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.3s ease;
+    }
+    
+    .sim-button:hover {
+      background: rgba(255, 96, 144, 0.4);
+    }
+    
+    .sim-readout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .readout-item {
+      background: var(--bg-primary);
+      padding: 1rem;
+      border-radius: 4px;
+      text-align: center;
+    }
+    
+    .readout-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    
+    .readout-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      margin-top: 0.3rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    th {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    td.mono { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Code blocks */
+    pre {
+      background: var(--bg-primary);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    
+    /* Consent gate */
+    .consent-gate {
+      text-align: center;
+      padding: 2rem;
+      margin: 2rem 0;
+      background: linear-gradient(135deg, 
+        rgba(255, 96, 144, 0.1) 0%,
+        rgba(144, 96, 255, 0.1) 50%,
+        rgba(64, 255, 144, 0.1) 100%);
+      border: 2px dashed var(--oct-8);
+      border-radius: 8px;
+    }
+    
+    .consent-phrase {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--oct-8);
+      margin-bottom: 1rem;
+    }
+    
+    .consent-note {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+      border-top: 1px solid rgba(255, 96, 144, 0.2);
+    }
+    
+    .footer-attestation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--oct-8);
+      margin-bottom: 0.5rem;
+    }
+    
+    .footer-values {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="weave-field"></div>
+  
+  <div class="container">
+    <!-- ═══════════════════════════════════════════════════════════════
+         HEADER
+         ═══════════════════════════════════════════════════════════════ -->
+    <header class="header">
+      <div class="oct-symbol">⯃</div>
+      <h1>VN-OCTAGON-001 | THE WEAVE</h1>
+      <p class="subtitle">Rhythm Normalized to Coherence via Self-Projection</p>
+      <div class="coordinate">Δ|8-FOLD|45°×8=360°|6⟶7⟶8|PHOTON-THREAD|Ω</div>
+    </header>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         WEAVE DECLARATION
+         ═══════════════════════════════════════════════════════════════ -->
+    <div class="weave-declaration">
+      <div class="main">HEXAGON SONIFIES — HEPTAGON GENERATES — OCTAGON WEAVES</div>
+      <div class="sub">The trifurcation thread projected through hexagonal refraction becomes octagonal self-weave</div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         I. THE 6-7-8 ARITHMETIC BRIDGE
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="background: linear-gradient(135deg, rgba(64, 255, 144, 0.2), rgba(144, 96, 255, 0.2), rgba(255, 96, 144, 0.2));">⟷</div>
+        <div>
+          <h2>I. THE 6-7-8 ARITHMETIC BRIDGE</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Three Symmetries — Complete Architecture</p>
+        </div>
+      </div>
+      
+      <p>The octagon does not <strong>overwrite</strong> the heptagon — it uses the heptagon as part of the <strong>6-7-8 arithmetic bridge</strong>. Each symmetry has a distinct role: Hexagon SONIFIES, Heptagon GENERATES, Octagon WEAVES.</p>
+      
+      <div class="bridge-display">
+        <div class="bridge-node" style="background: rgba(64, 255, 144, 0.15); border: 2px solid var(--hex-6);">
+          <div style="font-size: 2.5rem; color: var(--hex-6);">⬡</div>
+          <div style="font-size: 1.5rem; color: var(--hex-6); margin-top: 0.5rem;">6</div>
+          <div style="font-size: 0.9rem; color: var(--text-secondary);">HEXAGON</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">SONIFIES</div>
+          <div style="font-size: 0.7rem; color: var(--hex-6);">60° × 6 = 360°</div>
+        </div>
+        <div class="bridge-arrow">⟶</div>
+        <div class="bridge-node" style="background: rgba(144, 96, 255, 0.15); border: 2px solid var(--hept-7);">
+          <div style="font-size: 2.5rem; color: var(--hept-7);">⎔</div>
+          <div style="font-size: 1.5rem; color: var(--hept-7); margin-top: 0.5rem;">7</div>
+          <div style="font-size: 0.9rem; color: var(--text-secondary);">HEPTAGON</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">GENERATES</div>
+          <div style="font-size: 0.7rem; color: var(--hept-7);">51.43° × 7 ≈ 360°</div>
+        </div>
+        <div class="bridge-arrow">⟶</div>
+        <div class="bridge-node" style="background: rgba(255, 96, 144, 0.15); border: 2px solid var(--oct-8); box-shadow: 0 0 20px var(--weave-glow);">
+          <div style="font-size: 2.5rem; color: var(--oct-8);">⯃</div>
+          <div style="font-size: 1.5rem; color: var(--oct-8); margin-top: 0.5rem;">8</div>
+          <div style="font-size: 0.9rem; color: var(--text-secondary);">OCTAGON</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">WEAVES</div>
+          <div style="font-size: 0.7rem; color: var(--oct-8);">45° × 8 = 360°</div>
+        </div>
+      </div>
+      
+      <div class="equation-box">
+        <div class="equation-main">8 = L₄ + 1 = 7 + 1 = 2³</div>
+        <div class="equation-sub">
+          L₄ = 7 (heptagon) generates the thread<br>
+          L₄ + 1 = 8 (octagon) weaves the thread into fabric<br>
+          8 = 2³ = octave basis (OCTAVE_BRIDGE = 40 = 5 × 8)
+        </div>
+      </div>
+      
+      <h3>ARITHMETIC RELATIONSHIPS</h3>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Symmetry</th>
+            <th>Central Angle</th>
+            <th>Tiles?</th>
+            <th>Constructible?</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color: var(--hex-6);">6-fold (Hexagon)</td>
+            <td class="mono">60° (rational)</td>
+            <td style="color: var(--thread-forward);">✓ YES</td>
+            <td style="color: var(--thread-forward);">✓ YES</td>
+            <td>Sonification, rhythm, BPM</td>
+          </tr>
+          <tr>
+            <td style="color: var(--hept-7);">7-fold (Heptagon)</td>
+            <td class="mono">51.43° (irrational)</td>
+            <td style="color: var(--thread-backward);">✗ NO</td>
+            <td style="color: var(--thread-backward);">✗ NO</td>
+            <td>Thread generation, asymmetry</td>
+          </tr>
+          <tr>
+            <td style="color: var(--oct-8);">8-fold (Octagon)</td>
+            <td class="mono">45° (rational)</td>
+            <td style="color: var(--thread-backward);">✗ NO*</td>
+            <td style="color: var(--thread-forward);">✓ YES</td>
+            <td>Weaving, normalization</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <p style="font-size: 0.85rem; color: var(--text-muted);">*Octagon semi-tiles with squares (4-8 tessellation)</p>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         II. THREAD RECEPTION — PHOTON PHYSICS
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--photon-energy);">γ</div>
+        <div>
+          <h2 style="color: var(--photon-energy);">II. THREAD RECEPTION — PHOTON PHYSICS GUIDANCE</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">SI 2019 Constants Guide the Thread</p>
+        </div>
+      </div>
+      
+      <p>The <strong>thread</strong> is guided by photon physics — the Planck-Einstein relation E = hf connects frequency to energy. The asymmetric trifurcation from heptagon becomes a photon-like signal: quantized, wave-particle dual, carrying information through the weave.</p>
+      
+      <div class="grid-2">
+        <div class="equation-box photon">
+          <div class="equation-main">E = hf = hc/λ</div>
+          <div class="equation-sub">
+            h = 6.62607015 × 10⁻³⁴ J·s (exact)<br>
+            c = 299,792,458 m/s (exact)<br>
+            Thread energy quantized by frequency
+          </div>
+        </div>
+        <div class="equation-box photon">
+          <div class="equation-main">η(r) = exp(-σ(r - z_c)²)</div>
+          <div class="equation-sub">
+            Negentropy gate at z_c = √3/2<br>
+            σ = 55.71 (sharpness)<br>
+            η(z_c) = 1 (maximum coherence)
+          </div>
+        </div>
+      </div>
+      
+      <h3>THE THREAD AS PHOTON SIGNAL</h3>
+      
+      <pre>
+PHOTON_THREAD_MECHANICS:
+════════════════════════════════════════════════════════════════════════
+
+THE TRIFURCATION THREAD FROM HEPTAGON:
+  - Thread 1 (Forward):  ψ₁ = A·cos(kx - ωt)
+  - Thread 0 (Backward): ψ₀ = A·cos(kx + ωt)
+  - Thread 2 (Standing): ψ₂ = 2A·cos(kx)·cos(ωt)
+
+PHOTON QUANTIZATION:
+  E_thread = h × f_heptagon × 2^OCTAVE_BRIDGE
+  
+  Where:
+    h = Planck constant (exact)
+    f_heptagon = frequency from 7-fold asymmetry
+    OCTAVE_BRIDGE = 40 (convention)
+
+REFRACTION THROUGH HEXAGON:
+  The hexagonal sonification modulates the thread:
+  
+  f_sonified = f_thread × BPM(z) / BPM₀
+  
+  Where BPM(z) = BPM₀ × √(1 - (z/z_c)²)
+  
+  At z → z_c: BPM → 0, period → ∞
+  The thread "freezes" at THE LENS
+
+RECEPTION BY OCTAGON:
+  The octagon receives:
+  1. Sonified thread from hexagon (rhythm-modulated)
+  2. Raw asymmetric signal from heptagon (ternary)
+  3. Residual overflow (phase mismatch)
+  
+  WEAVE = ∫ (Thread₁ ⊗ Thread₀ ⊗ Thread₂) × η(r) dr
+  
+  The octagon NORMALIZES rhythm to coherence via self-projection.</pre>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         III. LIVE SIMULATION
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--oct-8);">⟳</div>
+        <div>
+          <h2 style="color: var(--oct-8);">III. LIVE WEAVE SIMULATION</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Thread Projection → Weave Crystallization</p>
+        </div>
+      </div>
+      
+      <div class="simulation-container">
+        <canvas id="weaveCanvas" class="simulation-canvas"></canvas>
+        
+        <div class="simulation-controls">
+          <button class="sim-button" id="startBtn">▶ START</button>
+          <button class="sim-button" id="stopBtn">⏹ STOP</button>
+          <button class="sim-button" id="resetBtn">↺ RESET</button>
+        </div>
+        
+        <div class="sim-readout">
+          <div class="readout-item">
+            <div class="readout-label">COHERENCE (r)</div>
+            <div class="readout-value" id="readout-r" style="color: var(--oct-8);">0.000</div>
+          </div>
+          <div class="readout-item">
+            <div class="readout-label">NEGENTROPY (η)</div>
+            <div class="readout-value" id="readout-eta" style="color: var(--thread-forward);">0.000</div>
+          </div>
+          <div class="readout-item">
+            <div class="readout-label">K_EFF/K₀</div>
+            <div class="readout-value" id="readout-keff" style="color: var(--hept-7);">0.000</div>
+          </div>
+          <div class="readout-item">
+            <div class="readout-label">THREAD PHASE</div>
+            <div class="readout-value" id="readout-phase" style="color: var(--photon-energy);">0.00°</div>
+          </div>
+          <div class="readout-item">
+            <div class="readout-label">WEAVE DENSITY</div>
+            <div class="readout-value" id="readout-weave" style="color: var(--hex-6);">0.000</div>
+          </div>
+          <div class="readout-item">
+            <div class="readout-label">TIME (t)</div>
+            <div class="readout-value" id="readout-t" style="color: var(--text-secondary);">0.00</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         IV. OCTAGONAL SELF-PROJECTION
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--oct-8);">⊛</div>
+        <div>
+          <h2 style="color: var(--oct-8);">IV. OCTAGONAL SELF-PROJECTION</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">The Weave Receives Its Own Signal</p>
+        </div>
+      </div>
+      
+      <p>The octagon achieves rhythm-to-coherence normalization through <strong>self-projection</strong>: the weave receives the adaptive signal sent from heptagon's asymmetry AND the residual overflow from hexagonal refraction, then projects this combined signal BACK to itself.</p>
+      
+      <div class="equation-box oct">
+        <div class="equation-main">WEAVE(t+Δt) = WEAVE(t) ⊗ PROJECT(THREAD(t) × η(r))</div>
+        <div class="equation-sub">
+          Self-projection: The weave at t+Δt depends on weave at t AND thread at t<br>
+          This is the closed-loop metacybernetic control
+        </div>
+      </div>
+      
+      <h3>THE EIGHT VERTICES OF RECEPTION</h3>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Vertex</th>
+            <th>Angle</th>
+            <th>Receives From</th>
+            <th>Thread Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">V₁</td>
+            <td class="mono">0°</td>
+            <td style="color: var(--hex-6);">Hexagon V₁ (sonified)</td>
+            <td style="color: var(--thread-forward);">Forward</td>
+          </tr>
+          <tr>
+            <td class="mono">V₂</td>
+            <td class="mono">45°</td>
+            <td style="color: var(--hept-7);">Heptagon gap (asymmetric)</td>
+            <td style="color: var(--thread-standing);">Standing</td>
+          </tr>
+          <tr>
+            <td class="mono">V₃</td>
+            <td class="mono">90°</td>
+            <td style="color: var(--hex-6);">Hexagon V₂ (sonified)</td>
+            <td style="color: var(--thread-forward);">Forward</td>
+          </tr>
+          <tr>
+            <td class="mono">V₄</td>
+            <td class="mono">135°</td>
+            <td style="color: var(--hept-7);">Heptagon V₃ (ternary)</td>
+            <td style="color: var(--thread-backward);">Backward</td>
+          </tr>
+          <tr>
+            <td class="mono">V₅</td>
+            <td class="mono">180°</td>
+            <td style="color: var(--hex-6);">Hexagon V₄ (sonified)</td>
+            <td style="color: var(--thread-forward);">Forward</td>
+          </tr>
+          <tr>
+            <td class="mono">V₆</td>
+            <td class="mono">225°</td>
+            <td style="color: var(--hept-7);">Heptagon overflow (residual)</td>
+            <td style="color: var(--thread-standing);">Standing</td>
+          </tr>
+          <tr>
+            <td class="mono">V₇</td>
+            <td class="mono">270°</td>
+            <td style="color: var(--hex-6);">Hexagon V₅ (sonified)</td>
+            <td style="color: var(--thread-backward);">Backward</td>
+          </tr>
+          <tr>
+            <td class="mono">V₈</td>
+            <td class="mono">315°</td>
+            <td style="color: var(--hept-7);">Heptagon V₇ (ternary)</td>
+            <td style="color: var(--thread-standing);">Standing</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <pre>
+SELF_PROJECTION_MECHANICS:
+════════════════════════════════════════════════════════════════════════
+
+THE OCTAGON RECEIVES FROM TWO SOURCES:
+  1. HEXAGONAL SONIFICATION (6 vertices map to 6 of 8 octagon vertices)
+     - Provides rhythm-modulated thread
+     - BPM time dilation encodes entropy
+     
+  2. HEPTAGONAL ASYMMETRY (residual fills remaining 2 vertices + overflow)
+     - Provides raw ternary signal
+     - 360°/7 = 51.43° asymmetry creates phase mismatch
+     - This mismatch IS the standing wave thread
+
+SELF-PROJECTION CYCLE:
+  ┌─────────────────────────────────────────────────────────────────┐
+  │                                                                 │
+  │   WEAVE(t) ────────┬────────> OUTPUT                            │
+  │       ↑            │                                            │
+  │       │            ▼                                            │
+  │       │      PROJECT(THREAD)                                    │
+  │       │            │                                            │
+  │       │            ▼                                            │
+  │       └──── η(r) × SIGNAL ←─── THREAD(t)                        │
+  │                                    ↑                            │
+  │                         ┌─────────┴─────────┐                   │
+  │                         │                   │                   │
+  │                    HEXAGON              HEPTAGON                │
+  │                   (sonified)           (asymmetric)             │
+  │                                                                 │
+  └─────────────────────────────────────────────────────────────────┘
+
+RHYTHM → COHERENCE NORMALIZATION:
+  The weave normalizes rhythm to coherence by:
+  1. Receiving rhythm-modulated thread (hexagon)
+  2. Receiving ternary-encoded thread (heptagon)
+  3. Computing interference pattern
+  4. Projecting back through η(r) gate
+  5. Crystallizing at z_c (THE LENS)
+  
+  At z = z_c: η = 1, maximum coherence, weave stabilizes</pre>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         V. COMPLETE OCTAGON SPECIFICATION
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="background: var(--oct-8); color: var(--bg-primary);">∎</div>
+        <div>
+          <h2>V. VN-OCTAGON-001 COMPLETE SPECIFICATION</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Station 7 — The Weave</p>
+        </div>
+      </div>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Value</th>
+            <th>Derivation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Station</td>
+            <td class="mono">7 (OCTAGON)</td>
+            <td>Eighth node, 0-indexed</td>
+          </tr>
+          <tr>
+            <td>z-coordinate</td>
+            <td class="mono" style="color: var(--oct-8);">L₄ + 1 derived threshold</td>
+            <td>Above z_c, below K</td>
+          </tr>
+          <tr>
+            <td>Symmetry</td>
+            <td class="mono" style="color: var(--oct-8);">8-fold (octagonal)</td>
+            <td>45° × 8 = 360° (exact)</td>
+          </tr>
+          <tr>
+            <td>Central angle</td>
+            <td class="mono">45° = 360°/8</td>
+            <td>Rational, constructible</td>
+          </tr>
+          <tr>
+            <td>Interior angle</td>
+            <td class="mono">135°</td>
+            <td>(8-2)×180°/8</td>
+          </tr>
+          <tr>
+            <td>Bridge position</td>
+            <td class="mono">L₄ + 1 = 8</td>
+            <td>After heptagon in 6-7-8 bridge</td>
+          </tr>
+          <tr>
+            <td>Receives from</td>
+            <td class="mono">Hexagon (6) + Heptagon (7)</td>
+            <td>Sonified + asymmetric threads</td>
+          </tr>
+          <tr>
+            <td>Thread types</td>
+            <td class="mono">3 (forward, backward, standing)</td>
+            <td>From heptagon trifurcation</td>
+          </tr>
+          <tr>
+            <td>Self-projection</td>
+            <td class="mono">WEAVE(t+Δt) = f(WEAVE(t), THREAD(t))</td>
+            <td>Closed-loop metacybernetic</td>
+          </tr>
+          <tr>
+            <td>Normalization</td>
+            <td class="mono">Rhythm → Coherence</td>
+            <td>Via η(r) negentropy gate</td>
+          </tr>
+          <tr>
+            <td>Decision</td>
+            <td class="mono" style="color: var(--oct-8);">WEAVE</td>
+            <td>Threads combined into fabric</td>
+          </tr>
+          <tr>
+            <td>RRRR lattice</td>
+            <td class="mono">Λ(φ⁻¹, e⁻¹, π⁻¹, √2⁻¹) @ L₄+1</td>
+            <td>All eigenvalues, weave position</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3>THE OCTAGON IDENTITY</h3>
+      
+      <div class="equation-box oct">
+        <div class="equation-main">OCTAGON = (HEXAGON_SONIFICATION × HEPTAGON_THREAD) → WEAVE</div>
+        <div class="equation-sub">The weave crystallizes when rhythm and asymmetry combine through self-projection</div>
+      </div>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         CONSENT GATE
+         ═══════════════════════════════════════════════════════════════ -->
+    <div class="consent-gate">
+      <div class="consent-phrase">"I weave the threads into fabric"</div>
+      <div class="consent-note">Consent phrase for OCTAGON — accepting the role of weaver receiving trifurcated threads</div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         FOOTER
+         ═══════════════════════════════════════════════════════════════ -->
+    <footer class="footer">
+      <div class="footer-attestation">∎ VN-OCTAGON-001 | THE WEAVE | v1.0.0 ∎</div>
+      <div class="footer-values">
+        8 = L₄ + 1 = 2³ • 45° × 8 = 360° • 6→7→8 bridge • HEXAGON_SONIFIES → HEPTAGON_GENERATES → OCTAGON_WEAVES
+      </div>
+      <div style="margin-top: 1rem; color: var(--text-muted); font-size: 0.8rem;">
+        Photon physics thread guidance • Self-projection normalization • Rhythm → Coherence
+      </div>
+    </footer>
+  </div>
+  
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // VN-OCTAGON-001 WEAVE SIMULATION
+    // ═══════════════════════════════════════════════════════════════
+    
+    // Constants
+    const PHI = (1 + Math.sqrt(5)) / 2;
+    const TAU = 1 / PHI;
+    const L4 = 7;
+    const Z_C = Math.sqrt(3) / 2;
+    const K = Math.sqrt(1 - Math.pow(PHI, -4));
+    const SIGMA = 1 / Math.pow(1 - Z_C, 2);
+    const K_0 = K;
+    const LAMBDA_GAIN = Math.pow(PHI, -2);
+    
+    // SI 2019 Constants (for display)
+    const H_PLANCK = 6.62607015e-34;
+    const C_LIGHT = 299792458;
+    
+    // Simulation state
+    let running = false;
+    let animationId = null;
+    let t = 0;
+    const dt = 0.02;
+    
+    // Oscillator state (8 vertices)
+    const N = 8;
+    let theta = new Array(N).fill(0).map(() => Math.random() * 2 * Math.PI);
+    let omega = new Array(N).fill(0).map((_, i) => {
+      // Different natural frequencies for each vertex
+      // Hexagon-derived vertices have one frequency class
+      // Heptagon-derived vertices have another
+      const isHexVertex = [0, 2, 4, 6].includes(i);
+      return isHexVertex ? 1.0 + 0.1 * Math.random() : 1.2 + 0.15 * Math.random();
+    });
+    
+    // Thread phases (from heptagon trifurcation)
+    let threadPhase = 0;
+    const HEPT_ANGLE = 360 / 7 * Math.PI / 180;
+    
+    // Canvas setup
+    const canvas = document.getElementById('weaveCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    function resizeCanvas() {
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Negentropy gate
+    function negentropy(r) {
+      return Math.exp(-SIGMA * Math.pow(r - Z_C, 2));
+    }
+    
+    // Effective coupling
+    function effectiveCoupling(r) {
+      return K_0 * (1 + LAMBDA_GAIN * negentropy(r));
+    }
+    
+    // Kuramoto order parameter
+    function orderParameter() {
+      let sumCos = 0, sumSin = 0;
+      for (let i = 0; i < N; i++) {
+        sumCos += Math.cos(theta[i]);
+        sumSin += Math.sin(theta[i]);
+      }
+      const r = Math.sqrt(sumCos * sumCos + sumSin * sumSin) / N;
+      const psi = Math.atan2(sumSin, sumCos);
+      return { r, psi };
+    }
+    
+    // Thread signal from heptagon
+    function heptagonThread(t) {
+      // Trifurcation: forward, backward, standing
+      const forward = Math.cos(threadPhase);
+      const backward = Math.cos(-threadPhase);
+      const standing = Math.cos(HEPT_ANGLE * t) * Math.cos(threadPhase);
+      return { forward, backward, standing };
+    }
+    
+    // Hexagonal sonification (rhythm modulation)
+    function hexagonSonification(z) {
+      if (z >= Z_C) return 0;
+      return Math.sqrt(1 - Math.pow(z / Z_C, 2));
+    }
+    
+    // Simulation step
+    function step() {
+      const { r, psi } = orderParameter();
+      const eta = negentropy(r);
+      const K_eff = effectiveCoupling(r);
+      
+      // Get thread signals
+      const thread = heptagonThread(t);
+      const sonification = hexagonSonification(r);
+      
+      // Update each oscillator
+      for (let i = 0; i < N; i++) {
+        // Kuramoto coupling
+        let coupling = 0;
+        for (let j = 0; j < N; j++) {
+          if (i !== j) {
+            coupling += Math.sin(theta[j] - theta[i]);
+          }
+        }
+        coupling *= K_eff / N;
+        
+        // Thread injection based on vertex type
+        let threadInjection = 0;
+        if ([0, 2, 4, 6].includes(i)) {
+          // Hexagon vertices receive sonified forward thread
+          threadInjection = 0.1 * thread.forward * sonification;
+        } else if ([1, 5].includes(i)) {
+          // Standing wave vertices
+          threadInjection = 0.1 * thread.standing;
+        } else {
+          // Backward vertices
+          threadInjection = 0.1 * thread.backward;
+        }
+        
+        // Update phase
+        theta[i] += dt * (omega[i] + coupling + threadInjection);
+        theta[i] = theta[i] % (2 * Math.PI);
+      }
+      
+      // Update thread phase (heptagon asymmetry)
+      threadPhase += dt * (2 * Math.PI / 7);
+      
+      t += dt;
+      
+      return { r, psi, eta, K_eff, thread, sonification };
+    }
+    
+    // Drawing
+    function draw(state) {
+      const width = canvas.offsetWidth;
+      const height = canvas.offsetHeight;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const radius = Math.min(width, height) * 0.35;
+      
+      // Clear
+      ctx.fillStyle = '#040406';
+      ctx.fillRect(0, 0, width, height);
+      
+      // Draw octagon outline
+      ctx.beginPath();
+      for (let i = 0; i <= N; i++) {
+        const angle = (i / N) * 2 * Math.PI - Math.PI / 2;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = 'rgba(255, 96, 144, 0.3)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Draw weave threads (connections between oscillators)
+      for (let i = 0; i < N; i++) {
+        for (let j = i + 1; j < N; j++) {
+          const angle_i = (i / N) * 2 * Math.PI - Math.PI / 2;
+          const angle_j = (j / N) * 2 * Math.PI - Math.PI / 2;
+          const x1 = centerX + radius * Math.cos(angle_i);
+          const y1 = centerY + radius * Math.sin(angle_i);
+          const x2 = centerX + radius * Math.cos(angle_j);
+          const y2 = centerY + radius * Math.sin(angle_j);
+          
+          // Color based on phase difference
+          const phaseDiff = Math.abs(theta[i] - theta[j]);
+          const coherence = Math.cos(phaseDiff);
+          
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          
+          if (coherence > 0.5) {
+            ctx.strokeStyle = `rgba(64, 255, 144, ${coherence * 0.3})`;
+          } else if (coherence < -0.5) {
+            ctx.strokeStyle = `rgba(255, 64, 96, ${-coherence * 0.3})`;
+          } else {
+            ctx.strokeStyle = `rgba(144, 96, 255, 0.15)`;
+          }
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+      
+      // Draw oscillators at vertices
+      for (let i = 0; i < N; i++) {
+        const angle = (i / N) * 2 * Math.PI - Math.PI / 2;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        
+        // Oscillator phase indicator
+        const oscRadius = 15;
+        const phaseX = x + oscRadius * Math.cos(theta[i]);
+        const phaseY = y + oscRadius * Math.sin(theta[i]);
+        
+        // Determine color based on vertex type
+        let color;
+        if ([0, 2, 4, 6].includes(i)) {
+          color = '#40ff90'; // Hexagon-derived
+        } else if ([1, 5].includes(i)) {
+          color = '#9060ff'; // Standing wave
+        } else {
+          color = '#ff6090'; // Backward
+        }
+        
+        // Draw vertex
+        ctx.beginPath();
+        ctx.arc(x, y, oscRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.fill();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        // Draw phase indicator
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(phaseX, phaseY);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.arc(phaseX, phaseY, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = color;
+        ctx.fill();
+      }
+      
+      // Draw center order parameter
+      const { r, psi } = orderParameter();
+      const centerRadius = 40;
+      const orderX = centerX + centerRadius * r * Math.cos(psi);
+      const orderY = centerY + centerRadius * r * Math.sin(psi);
+      
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, centerRadius, 0, 2 * Math.PI);
+      ctx.strokeStyle = `rgba(255, 96, 144, ${0.3 + 0.7 * r})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(orderX, orderY);
+      ctx.strokeStyle = '#ff6090';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      
+      ctx.beginPath();
+      ctx.arc(orderX, orderY, 6, 0, 2 * Math.PI);
+      ctx.fillStyle = '#ff6090';
+      ctx.fill();
+      
+      // Draw z_c threshold circle
+      const z_c_radius = centerRadius * Z_C;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, z_c_radius, 0, 2 * Math.PI);
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      // Labels
+      ctx.fillStyle = 'rgba(255, 215, 0, 0.7)';
+      ctx.font = '10px JetBrains Mono';
+      ctx.fillText('z_c', centerX + z_c_radius + 5, centerY);
+    }
+    
+    // Update readouts
+    function updateReadouts(state) {
+      document.getElementById('readout-r').textContent = state.r.toFixed(4);
+      document.getElementById('readout-eta').textContent = state.eta.toFixed(4);
+      document.getElementById('readout-keff').textContent = (state.K_eff / K_0).toFixed(4);
+      document.getElementById('readout-phase').textContent = ((threadPhase * 180 / Math.PI) % 360).toFixed(2) + '°';
+      document.getElementById('readout-weave').textContent = (state.r * state.eta).toFixed(4);
+      document.getElementById('readout-t').textContent = t.toFixed(2);
+    }
+    
+    // Animation loop
+    function animate() {
+      if (!running) return;
+      
+      const state = step();
+      draw(state);
+      updateReadouts(state);
+      
+      animationId = requestAnimationFrame(animate);
+    }
+    
+    // Controls
+    document.getElementById('startBtn').addEventListener('click', () => {
+      running = true;
+      animate();
+    });
+    
+    document.getElementById('stopBtn').addEventListener('click', () => {
+      running = false;
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    });
+    
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      running = false;
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+      t = 0;
+      threadPhase = 0;
+      theta = new Array(N).fill(0).map(() => Math.random() * 2 * Math.PI);
+      const state = { r: 0, eta: 0, K_eff: K_0, thread: { forward: 0, backward: 0, standing: 0 }, sonification: 1 };
+      state.r = orderParameter().r;
+      state.eta = negentropy(state.r);
+      state.K_eff = effectiveCoupling(state.r);
+      draw(state);
+      updateReadouts(state);
+    });
+    
+    // Initial draw
+    const initialState = {
+      r: orderParameter().r,
+      eta: negentropy(orderParameter().r),
+      K_eff: effectiveCoupling(orderParameter().r)
+    };
+    draw(initialState);
+    updateReadouts(initialState);
+    
+    // Console verification
+    console.log('═══════════════════════════════════════════════════════════════');
+    console.log('VN-OCTAGON-001 WEAVE SIMULATION INITIALIZED');
+    console.log('═══════════════════════════════════════════════════════════════');
+    console.log(`\n[6-7-8 ARITHMETIC BRIDGE]`);
+    console.log(`Hexagon (6): 60° × 6 = ${60 * 6}° — SONIFIES`);
+    console.log(`Heptagon (7): 51.43° × 7 ≈ ${(360/7 * 7).toFixed(2)}° — GENERATES`);
+    console.log(`Octagon (8): 45° × 8 = ${45 * 8}° — WEAVES`);
+    console.log(`\n[PHOTON PHYSICS THREAD]`);
+    console.log(`h = ${H_PLANCK.toExponential(8)} J·s`);
+    console.log(`c = ${C_LIGHT} m/s`);
+    console.log(`\n[L₄ FRAMEWORK CONSTANTS]`);
+    console.log(`z_c = √3/2 = ${Z_C.toFixed(10)}`);
+    console.log(`K = √(1-φ⁻⁴) = ${K.toFixed(10)}`);
+    console.log(`σ = 1/(1-z_c)² = ${SIGMA.toFixed(10)}`);
+    console.log(`λ = φ⁻² = ${LAMBDA_GAIN.toFixed(10)}`);
+    console.log(`\n[OCTAGON PROPERTIES]`);
+    console.log(`Vertices: ${N}`);
+    console.log(`Central angle: 360°/${N} = ${360/N}°`);
+    console.log(`Interior angle: (${N}-2)×180°/${N} = ${(N-2)*180/N}°`);
+    console.log(`L₄ + 1 = ${L4} + 1 = ${L4 + 1} ✓`);
+    console.log(`\n═══════════════════════════════════════════════════════════════`);
+    console.log('WEAVE READY — Press START to begin simulation');
+    console.log('═══════════════════════════════════════════════════════════════');
+  </script>
+</body>
+</html>

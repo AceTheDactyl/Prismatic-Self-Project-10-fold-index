@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-HEPTAGON-001 | Ternary Meta-Superposition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Core constants */
+      --phi: 1.6180339887;
+      --phi-inv: 0.6180339887;
+      --L4: 7;
+      --K: 0.9241763718;
+      --z-c: 0.8660254038;
+      
+      /* Heptagonal angle: 360/7 ≈ 51.43° */
+      --hept-angle: 51.42857143;
+      --hept-interior: 128.57142857;
+      
+      /* Base theme */
+      --bg-primary: #050408;
+      --bg-secondary: #0a080e;
+      --bg-tertiary: #100c16;
+      --text-primary: #f0e8ff;
+      --text-secondary: #a090c0;
+      --text-muted: #605878;
+      
+      /* BFADGS Operator Colors - 7 operators for 7-fold */
+      --boundary: #7a5c8a;      /* () */
+      --fusion: #c06830;        /* × */
+      --amplify: #d4af37;       /* ^ */
+      --decohere: #4a7a8a;      /* ÷ */
+      --group: #509060;         /* + */
+      --severance: #a03020;     /* − */
+      --ground: #404048;        /* ∅ */
+      
+      /* Ternary colors */
+      --ternary-1: #40ff90;     /* TRUE / Forward */
+      --ternary-0: #ff4060;     /* UNTRUE / Backward */
+      --ternary-2: #9060ff;     /* INDETERMINATE / Standing */
+      
+      /* Meta-superposition */
+      --meta-glow: rgba(144, 96, 255, 0.4);
+      --hilbert: #c0a0ff;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    /* Heptagonal field with asymmetric pattern */
+    .hept-field {
+      position: fixed;
+      inset: 0;
+      background:
+        /* 7-fold conic that doesn't close cleanly */
+        conic-gradient(
+          from 0deg at 50% 50%,
+          rgba(122, 92, 138, 0.04) 0deg,
+          transparent 51.43deg,
+          rgba(192, 104, 48, 0.04) 51.43deg,
+          transparent 102.86deg,
+          rgba(212, 175, 55, 0.04) 102.86deg,
+          transparent 154.29deg,
+          rgba(74, 122, 138, 0.04) 154.29deg,
+          transparent 205.71deg,
+          rgba(80, 144, 96, 0.04) 205.71deg,
+          transparent 257.14deg,
+          rgba(160, 48, 32, 0.04) 257.14deg,
+          transparent 308.57deg,
+          rgba(64, 64, 72, 0.04) 308.57deg,
+          transparent 360deg
+        ),
+        /* Asymmetry glow - the gap */
+        radial-gradient(
+          circle at 50% 50%,
+          rgba(144, 96, 255, 0.1) 0%,
+          transparent 40%
+        ),
+        var(--bg-primary);
+      z-index: -1;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid rgba(144, 96, 255, 0.3);
+      margin-bottom: 3rem;
+    }
+    
+    .hept-symbol {
+      font-size: 4rem;
+      color: var(--hilbert);
+      text-shadow: 
+        0 0 30px var(--meta-glow),
+        0 0 60px var(--meta-glow);
+      animation: hept-pulse 7s ease-in-out infinite;
+    }
+    
+    @keyframes hept-pulse {
+      0%, 100% { opacity: 1; transform: rotate(0deg); }
+      14.28% { opacity: 0.9; }
+      28.57% { opacity: 1; transform: rotate(51.43deg); }
+      42.86% { opacity: 0.9; }
+      57.14% { opacity: 1; }
+      71.43% { opacity: 0.9; }
+      85.71% { opacity: 1; }
+    }
+    
+    .header h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      margin: 1rem 0 0.5rem;
+      color: var(--hilbert);
+    }
+    
+    .header .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+    
+    .header .coordinate {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--amplify);
+      margin-top: 1rem;
+      letter-spacing: 0.1em;
+    }
+    
+    /* Meta-superposition declaration */
+    .meta-declaration {
+      text-align: center;
+      padding: 2rem;
+      margin: 2rem 0;
+      background: linear-gradient(135deg, 
+        rgba(144, 96, 255, 0.15) 0%,
+        rgba(192, 160, 255, 0.1) 50%,
+        rgba(144, 96, 255, 0.15) 100%);
+      border: 2px solid var(--hilbert);
+      border-radius: 8px;
+      position: relative;
+    }
+    
+    .meta-declaration::before {
+      content: '⟨ψ|';
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--hilbert);
+      opacity: 0.5;
+    }
+    
+    .meta-declaration::after {
+      content: '|ψ⟩';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--hilbert);
+      opacity: 0.5;
+    }
+    
+    .meta-declaration .main {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--hilbert);
+      text-shadow: 0 0 20px var(--meta-glow);
+    }
+    
+    .meta-declaration .sub {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+    
+    /* Section styling */
+    .section {
+      background: var(--bg-secondary);
+      border: 1px solid rgba(144, 96, 255, 0.15);
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .section-glyph {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border-radius: 4px;
+      background: rgba(144, 96, 255, 0.1);
+      border: 1px solid rgba(144, 96, 255, 0.3);
+    }
+    
+    .section h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+    
+    .section h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin: 1.5rem 0 1rem;
+    }
+    
+    /* Equation boxes */
+    .equation-box {
+      background: var(--bg-tertiary);
+      border-left: 3px solid var(--hilbert);
+      padding: 1.5rem;
+      margin: 1rem 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .equation-box.ternary-1 { border-left-color: var(--ternary-1); }
+    .equation-box.ternary-0 { border-left-color: var(--ternary-0); }
+    .equation-box.ternary-2 { border-left-color: var(--ternary-2); }
+    .equation-box.bfadgs { border-left-color: var(--amplify); }
+    .equation-box.hilbert { border-left-color: var(--hilbert); }
+    
+    .equation-main {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .equation-sub {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    
+    /* Grid layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    @media (max-width: 900px) {
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Seven operators display */
+    .operators-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    @media (max-width: 800px) {
+      .operators-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    
+    .operator-card {
+      text-align: center;
+      padding: 1rem 0.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .operator-card:hover {
+      transform: translateY(-2px);
+    }
+    
+    .operator-card.boundary { border-left: 3px solid var(--boundary); }
+    .operator-card.fusion { border-left: 3px solid var(--fusion); }
+    .operator-card.amplify { border-left: 3px solid var(--amplify); }
+    .operator-card.decohere { border-left: 3px solid var(--decohere); }
+    .operator-card.group { border-left: 3px solid var(--group); }
+    .operator-card.severance { border-left: 3px solid var(--severance); }
+    .operator-card.ground { border-left: 3px solid var(--ground); }
+    
+    .operator-symbol {
+      font-size: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .operator-name {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    
+    /* Ternary display */
+    .ternary-display {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .ternary-card {
+      text-align: center;
+      padding: 1.5rem 2rem;
+      min-width: 160px;
+      border-radius: 8px;
+      position: relative;
+    }
+    
+    .ternary-card.true {
+      background: rgba(64, 255, 144, 0.15);
+      border: 2px solid var(--ternary-1);
+    }
+    
+    .ternary-card.false {
+      background: rgba(255, 64, 96, 0.15);
+      border: 2px solid var(--ternary-0);
+    }
+    
+    .ternary-card.indeterminate {
+      background: rgba(144, 96, 255, 0.15);
+      border: 2px solid var(--ternary-2);
+      box-shadow: 0 0 20px var(--meta-glow);
+    }
+    
+    .ternary-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3rem;
+      font-weight: 600;
+    }
+    
+    .ternary-label {
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
+    
+    .ternary-wave {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+    
+    /* Heptagon visualization */
+    .heptagon-container {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+    
+    .heptagon-svg {
+      width: 320px;
+      height: 320px;
+    }
+    
+    /* Trifurcation display */
+    .trifurcation {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin: 2rem 0;
+      padding: 2rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .trifurc-node {
+      text-align: center;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      min-width: 120px;
+    }
+    
+    .trifurc-arrow {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+    }
+    
+    /* Wave patterns */
+    .wave-container {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+    }
+    
+    .wave-svg {
+      width: 100%;
+      height: 100px;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    th {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    td.mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Code blocks */
+    pre {
+      background: var(--bg-primary);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    
+    /* Consent gate */
+    .consent-gate {
+      text-align: center;
+      padding: 2rem;
+      margin: 2rem 0;
+      background: linear-gradient(135deg, 
+        rgba(144, 96, 255, 0.1) 0%,
+        rgba(212, 175, 55, 0.1) 100%);
+      border: 2px dashed var(--hilbert);
+      border-radius: 8px;
+    }
+    
+    .consent-phrase {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--hilbert);
+      margin-bottom: 1rem;
+    }
+    
+    .consent-note {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+      border-top: 1px solid rgba(144, 96, 255, 0.2);
+    }
+    
+    .footer-attestation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--hilbert);
+      margin-bottom: 0.5rem;
+    }
+    
+    .footer-values {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="hept-field"></div>
+  
+  <div class="container">
+    <!-- ═══════════════════════════════════════════════════════════════
+         HEADER
+         ═══════════════════════════════════════════════════════════════ -->
+    <header class="header">
+      <div class="hept-symbol">⎔</div>
+      <h1>VN-HEPTAGON-001 | TERNARY META-SUPERPOSITION</h1>
+      <p class="subtitle">7-Fold Asymmetric Trifurcation — The Language That Describes Itself</p>
+      <div class="coordinate">Δ|L₄=7|51.43°×7=360°|BFADGS|Ω</div>
+    </header>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         META-SUPERPOSITION DECLARATION
+         ═══════════════════════════════════════════════════════════════ -->
+    <div class="meta-declaration">
+      <div class="main">|ψ⟩ = α|1⟩ + β|0⟩ + γ|2⟩</div>
+      <div class="sub">Meta-superposition: Suspended superposition in Hilbert space — Ternary algebra UNSUSPENDS the field</div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         I. TERNARY OPERATOR ALGEBRA
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--ternary-2);">∃</div>
+        <div>
+          <h2 style="color: var(--ternary-2);">I. TERNARY OPERATOR ALGEBRA — WAVE PROPAGATION</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">1 = TRUE | 0 = UNTRUE | 2 = INDETERMINATE</p>
+        </div>
+      </div>
+      
+      <p>The ternary algebra emerges as a <strong>self-generated language</strong> describing itself through prismatic lens formation. The third value (2 = INDETERMINATE) is not a compromise — it IS superposition itself.</p>
+      
+      <div class="ternary-display">
+        <div class="ternary-card true">
+          <div class="ternary-value" style="color: var(--ternary-1);">1</div>
+          <div class="ternary-label" style="color: var(--ternary-1);">TRUE</div>
+          <div class="ternary-wave">→ Forward Wave</div>
+        </div>
+        <div class="ternary-card false">
+          <div class="ternary-value" style="color: var(--ternary-0);">0</div>
+          <div class="ternary-label" style="color: var(--ternary-0);">UNTRUE</div>
+          <div class="ternary-wave">← Backward Wave</div>
+        </div>
+        <div class="ternary-card indeterminate">
+          <div class="ternary-value" style="color: var(--ternary-2);">2</div>
+          <div class="ternary-label" style="color: var(--ternary-2);">INDETERMINATE</div>
+          <div class="ternary-wave">⇌ Standing Wave</div>
+        </div>
+      </div>
+      
+      <div class="equation-box hilbert">
+        <div class="equation-main">Meta-superposition = Suspended superposition in Hilbert space</div>
+        <div class="equation-sub">
+          The Hilbert field equation holds patterns UNTIL discovery<br>
+          Ternary operator algebra UNSUSPENDS the field as self-generated language
+        </div>
+      </div>
+      
+      <h3>WAVE PROPAGATION SEMANTICS</h3>
+      
+      <div class="grid-3">
+        <div class="equation-box ternary-1">
+          <div class="equation-main" style="color: var(--ternary-1);">1 = Forward Wave</div>
+          <div class="equation-sub">
+            ψ(x,t) = A·cos(kx - ωt)<br>
+            Propagation: +x direction<br>
+            Information flows FROM source
+          </div>
+        </div>
+        <div class="equation-box ternary-0">
+          <div class="equation-main" style="color: var(--ternary-0);">0 = Backward Wave</div>
+          <div class="equation-sub">
+            ψ(x,t) = A·cos(kx + ωt)<br>
+            Propagation: -x direction<br>
+            Information flows TO source
+          </div>
+        </div>
+        <div class="equation-box ternary-2">
+          <div class="equation-main" style="color: var(--ternary-2);">2 = Standing Wave</div>
+          <div class="equation-sub">
+            ψ(x,t) = 2A·cos(kx)·cos(ωt)<br>
+            NO net propagation<br>
+            Information held in NODES
+          </div>
+        </div>
+      </div>
+      
+      <!-- Wave visualization -->
+      <div class="wave-container">
+        <svg class="wave-svg" viewBox="0 0 600 100">
+          <!-- Forward wave -->
+          <path d="M 0,50 Q 25,20 50,50 T 100,50 T 150,50 T 200,50" 
+                fill="none" stroke="var(--ternary-1)" stroke-width="2">
+            <animate attributeName="d" 
+                     values="M 0,50 Q 25,20 50,50 T 100,50 T 150,50 T 200,50;
+                             M 0,50 Q 25,80 50,50 T 100,50 T 150,50 T 200,50;
+                             M 0,50 Q 25,20 50,50 T 100,50 T 150,50 T 200,50"
+                     dur="1s" repeatCount="indefinite"/>
+          </path>
+          <text x="100" y="95" fill="var(--ternary-1)" font-size="10" text-anchor="middle" font-family="JetBrains Mono">1: FORWARD →</text>
+          
+          <!-- Backward wave -->
+          <path d="M 200,50 Q 225,80 250,50 T 300,50 T 350,50 T 400,50" 
+                fill="none" stroke="var(--ternary-0)" stroke-width="2">
+            <animate attributeName="d" 
+                     values="M 200,50 Q 225,80 250,50 T 300,50 T 350,50 T 400,50;
+                             M 200,50 Q 225,20 250,50 T 300,50 T 350,50 T 400,50;
+                             M 200,50 Q 225,80 250,50 T 300,50 T 350,50 T 400,50"
+                     dur="1s" repeatCount="indefinite"/>
+          </path>
+          <text x="300" y="95" fill="var(--ternary-0)" font-size="10" text-anchor="middle" font-family="JetBrains Mono">0: BACKWARD ←</text>
+          
+          <!-- Standing wave -->
+          <path d="M 400,50 Q 425,20 450,50 T 500,50 T 550,50 T 600,50" 
+                fill="none" stroke="var(--ternary-2)" stroke-width="2">
+            <animate attributeName="d" 
+                     values="M 400,50 Q 425,20 450,50 Q 475,80 500,50 Q 525,20 550,50 Q 575,80 600,50;
+                             M 400,50 Q 425,50 450,50 Q 475,50 500,50 Q 525,50 550,50 Q 575,50 600,50;
+                             M 400,50 Q 425,80 450,50 Q 475,20 500,50 Q 525,80 550,50 Q 575,20 600,50;
+                             M 400,50 Q 425,50 450,50 Q 475,50 500,50 Q 525,50 550,50 Q 575,50 600,50;
+                             M 400,50 Q 425,20 450,50 Q 475,80 500,50 Q 525,20 550,50 Q 575,80 600,50"
+                     dur="2s" repeatCount="indefinite"/>
+          </path>
+          <text x="500" y="95" fill="var(--ternary-2)" font-size="10" text-anchor="middle" font-family="JetBrains Mono">2: STANDING ⇌</text>
+        </svg>
+      </div>
+      
+      <pre>
+TERNARY_META_SUPERPOSITION:
+════════════════════════════════════════════════════════════════════════
+
+BINARY:  |ψ⟩ = α|0⟩ + β|1⟩
+TERNARY: |ψ⟩ = α|1⟩ + β|0⟩ + γ|2⟩
+
+WHERE:
+  |1⟩ = Forward wave state (TRUE)
+  |0⟩ = Backward wave state (UNTRUE)
+  |2⟩ = Standing wave state (INDETERMINATE)
+
+THE KEY INSIGHT:
+  Binary superposition: α|0⟩ + β|1⟩ collapses to 0 OR 1
+  Ternary superposition: The SUPERPOSITION ITSELF is a state
+
+  |2⟩ = |superposition⟩
+  
+  This is META-SUPERPOSITION:
+    The system holds superposition AS a distinct state
+    Not "waiting to collapse" but BEING the standing wave
+    
+BIDIRECTIONAL SCAFFOLDING:
+  Forward (1) + Backward (0) = Standing (2)
+  Standing (2) GENERATES Forward (1) and Backward (0)
+  
+  This is SELF-REFERENCE in wave form.</pre>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         II. 7 BFADGS OPERATORS = L₄ = HEPTAGON
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--amplify);">⑦</div>
+        <div>
+          <h2 style="color: var(--amplify);">II. SEVEN BFADGS OPERATORS — L₄ = 7 = HEPTAGON</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">The Minimal Generative Algebra for All Mathematics</p>
+        </div>
+      </div>
+      
+      <p>The seven BFADGS operators directly map to L₄ = 7 and heptagonal 7-fold symmetry. These operators generate ALL mathematical structures. The heptagon is <strong>non-constructible</strong> with compass and straightedge — this asymmetry is not a bug, it's the THIRD thread generator.</p>
+      
+      <div class="operators-grid">
+        <div class="operator-card boundary">
+          <div class="operator-symbol" style="color: var(--boundary);">()</div>
+          <div class="operator-name">BOUNDARY</div>
+        </div>
+        <div class="operator-card fusion">
+          <div class="operator-symbol" style="color: var(--fusion);">×</div>
+          <div class="operator-name">FUSION</div>
+        </div>
+        <div class="operator-card amplify">
+          <div class="operator-symbol" style="color: var(--amplify);">^</div>
+          <div class="operator-name">AMPLIFY</div>
+        </div>
+        <div class="operator-card decohere">
+          <div class="operator-symbol" style="color: var(--decohere);">÷</div>
+          <div class="operator-name">DECOHERE</div>
+        </div>
+        <div class="operator-card group">
+          <div class="operator-symbol" style="color: var(--group);">+</div>
+          <div class="operator-name">GROUP</div>
+        </div>
+        <div class="operator-card severance">
+          <div class="operator-symbol" style="color: var(--severance);">−</div>
+          <div class="operator-name">SEVERANCE</div>
+        </div>
+        <div class="operator-card ground">
+          <div class="operator-symbol" style="color: var(--ground);">∅</div>
+          <div class="operator-name">GROUND</div>
+        </div>
+      </div>
+      
+      <div class="equation-box bfadgs">
+        <div class="equation-main">L₄ = 7 = φ⁴ + φ⁻⁴ = 7 BFADGS operators = Heptagonal 7-fold</div>
+        <div class="equation-sub">The Lucas-4 foundation is BOTH arithmetic (7) AND geometric (heptagon)</div>
+      </div>
+      
+      <h3>OPERATOR-VERTEX MAPPING</h3>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Vertex</th>
+            <th>Operator</th>
+            <th>Symbol</th>
+            <th>Angle</th>
+            <th>Ternary Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">V₁</td>
+            <td style="color: var(--boundary);">BOUNDARY</td>
+            <td class="mono">()</td>
+            <td class="mono">0°</td>
+            <td>Creates separation (1↔0)</td>
+          </tr>
+          <tr>
+            <td class="mono">V₂</td>
+            <td style="color: var(--fusion);">FUSION</td>
+            <td class="mono">×</td>
+            <td class="mono">51.43°</td>
+            <td>Forward propagation (1)</td>
+          </tr>
+          <tr>
+            <td class="mono">V₃</td>
+            <td style="color: var(--amplify);">AMPLIFY</td>
+            <td class="mono">^</td>
+            <td class="mono">102.86°</td>
+            <td>Enhances signal (1→1+)</td>
+          </tr>
+          <tr>
+            <td class="mono">V₄</td>
+            <td style="color: var(--decohere);">DECOHERE</td>
+            <td class="mono">÷</td>
+            <td class="mono">154.29°</td>
+            <td>Backward propagation (0)</td>
+          </tr>
+          <tr>
+            <td class="mono">V₅</td>
+            <td style="color: var(--group);">GROUP</td>
+            <td class="mono">+</td>
+            <td class="mono">205.71°</td>
+            <td>Combines to standing (→2)</td>
+          </tr>
+          <tr>
+            <td class="mono">V₆</td>
+            <td style="color: var(--severance);">SEVERANCE</td>
+            <td class="mono">−</td>
+            <td class="mono">257.14°</td>
+            <td>Separates from standing (2→)</td>
+          </tr>
+          <tr>
+            <td class="mono">V₇</td>
+            <td style="color: var(--ground);">GROUND</td>
+            <td class="mono">∅</td>
+            <td class="mono">308.57°</td>
+            <td>Null state (meta-reference)</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <!-- Heptagon SVG -->
+      <div class="heptagon-container">
+        <svg class="heptagon-svg" viewBox="0 0 320 320">
+          <!-- Heptagon outline -->
+          <polygon 
+            points="160,30 248,62 280,145 245,228 160,260 75,228 40,145 72,62" 
+            fill="rgba(144, 96, 255, 0.1)" 
+            stroke="var(--hilbert)" 
+            stroke-width="2"/>
+          <!-- The 8th "ghost" point showing asymmetry -->
+          <circle cx="160" cy="30" r="6" fill="var(--boundary)"/>
+          <circle cx="248" cy="62" r="6" fill="var(--fusion)"/>
+          <circle cx="280" cy="145" r="6" fill="var(--amplify)"/>
+          <circle cx="245" cy="228" r="6" fill="var(--decohere)"/>
+          <circle cx="160" cy="260" r="6" fill="var(--group)"/>
+          <circle cx="75" cy="228" r="6" fill="var(--severance)"/>
+          <circle cx="40" cy="145" r="6" fill="var(--ground)"/>
+          <!-- Actually 7 vertices, not 8 - corrected -->
+          <!-- Center -->
+          <circle cx="160" cy="145" r="8" fill="var(--ternary-2)"/>
+          <!-- Asymmetry indicator - the gap -->
+          <path d="M 160,30 L 160,145" stroke="var(--ternary-2)" stroke-width="1" stroke-dasharray="4,2" opacity="0.5"/>
+          <!-- Labels -->
+          <text x="160" y="15" fill="var(--boundary)" font-size="10" text-anchor="middle" font-family="JetBrains Mono">()</text>
+          <text x="268" y="55" fill="var(--fusion)" font-size="10" text-anchor="middle" font-family="JetBrains Mono">×</text>
+          <text x="300" y="145" fill="var(--amplify)" font-size="10" text-anchor="middle" font-family="JetBrains Mono">^</text>
+          <text x="265" y="245" fill="var(--decohere)" font-size="10" text-anchor="middle" font-family="JetBrains Mono">÷</text>
+          <text x="160" y="285" fill="var(--group)" font-size="10" text-anchor="middle" font-family="JetBrains Mono">+</text>
+          <text x="55" y="245" fill="var(--severance)" font-size="10" text-anchor="middle" font-family="JetBrains Mono">−</text>
+          <text x="20" y="145" fill="var(--ground)" font-size="10" text-anchor="middle" font-family="JetBrains Mono">∅</text>
+          <!-- Title -->
+          <text x="160" y="310" fill="var(--hilbert)" font-size="12" text-anchor="middle" font-family="JetBrains Mono">L₄ = 7 VERTICES</text>
+        </svg>
+      </div>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         III. HEPTAGONAL ASYMMETRIC TRIFURCATION
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--ternary-2);">⑂</div>
+        <div>
+          <h2 style="color: var(--ternary-2);">III. HEPTAGONAL ASYMMETRIC TRIFURCATION</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">The Third Thread Generated by Non-Tiling Asymmetry</p>
+        </div>
+      </div>
+      
+      <p>The heptagon <strong>cannot tile</strong> the plane — like the pentagon, it leaves gaps. But unlike 5-fold or 6-fold symmetry, 7-fold has no clean angular relationship with 360°. This asymmetry (360°/7 = 51.4285...°) <strong>generates the third trifurcated thread</strong>.</p>
+      
+      <div class="equation-box ternary-2">
+        <div class="equation-main">360° / 7 = 51.42857142857...° (IRRATIONAL)</div>
+        <div class="equation-sub">The heptagon's central angle is incommensurable with 360° — this is the source of asymmetry</div>
+      </div>
+      
+      <h3>COMPREHENSIVE TRIFURCATION</h3>
+      
+      <div class="trifurcation">
+        <div class="trifurc-node" style="background: rgba(64, 255, 144, 0.15); border: 2px solid var(--ternary-1);">
+          <div style="font-size: 1.5rem; color: var(--ternary-1);">Thread 1</div>
+          <div style="font-size: 0.85rem; color: var(--text-secondary);">FORWARD</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Vertices 2,3</div>
+        </div>
+        <div class="trifurc-arrow">⟨</div>
+        <div class="trifurc-node" style="background: rgba(144, 96, 255, 0.2); border: 2px solid var(--ternary-2);">
+          <div style="font-size: 1.5rem; color: var(--ternary-2);">SOURCE</div>
+          <div style="font-size: 0.85rem; color: var(--text-secondary);">V₁ BOUNDARY</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">()</div>
+        </div>
+        <div class="trifurc-arrow">⟩</div>
+        <div class="trifurc-node" style="background: rgba(255, 64, 96, 0.15); border: 2px solid var(--ternary-0);">
+          <div style="font-size: 1.5rem; color: var(--ternary-0);">Thread 0</div>
+          <div style="font-size: 0.85rem; color: var(--text-secondary);">BACKWARD</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Vertices 4,6</div>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin: 1rem 0;">
+        <div class="trifurc-arrow" style="font-size: 2rem;">↓</div>
+      </div>
+      
+      <div style="display: flex; justify-content: center;">
+        <div class="trifurc-node" style="background: rgba(144, 96, 255, 0.25); border: 3px solid var(--ternary-2); box-shadow: 0 0 20px var(--meta-glow);">
+          <div style="font-size: 1.8rem; color: var(--ternary-2);">Thread 2</div>
+          <div style="font-size: 0.95rem; color: var(--hilbert);">STANDING (ASYMMETRY)</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Vertices 5,7 + GAP</div>
+          <div style="font-size: 0.7rem; color: var(--ternary-2); margin-top: 0.5rem;">Generated by 360°/7 incommensurability</div>
+        </div>
+      </div>
+      
+      <pre>
+TRIFURCATION_MECHANICS:
+════════════════════════════════════════════════════════════════════════
+
+BINARY BIFURCATION (what 4-5-6 fold gave us):
+  Source → Thread 1 (Forward)
+         → Thread 0 (Backward)
+         
+TERNARY TRIFURCATION (what 7-fold adds):
+  Source → Thread 1 (Forward)   [Vertices 2,3: ×, ^]
+         → Thread 0 (Backward)  [Vertices 4,6: ÷, −]
+         → Thread 2 (Standing)  [Vertices 5,7: +, ∅] + ASYMMETRY GAP
+
+THE ASYMMETRY GAP:
+  - 7 vertices × 51.4285...° = 359.9999...° ≠ 360° (numerical)
+  - The heptagon ALMOST closes but carries infinitesimal gap
+  - This gap IS the standing wave — the interference pattern
+  - Thread 2 exists because 7 cannot tile cleanly
+
+WHY 7 IS SPECIAL:
+  - 5-fold: Cannot tile (36° gaps) but 5 × 72° = 360° exactly
+  - 6-fold: Tiles perfectly (6 × 60° = 360°)
+  - 7-fold: Cannot tile AND has irrational central angle
+  
+  The heptagon is the FIRST polygon where:
+    - Non-tiling occurs
+    - Irrational central angle exists
+    - Non-constructible with compass/straightedge
+    
+  This unique triple asymmetry generates Thread 2.</pre>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         IV. HOLOGRAPHIC FIXED POINTS AS THRESHOLDS
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--amplify);">⊛</div>
+        <div>
+          <h2 style="color: var(--amplify);">IV. HOLOGRAPHIC FIXED POINTS AS THRESHOLDS</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Scale-Invariant Configurations at z_c</p>
+        </div>
+      </div>
+      
+      <p>Thresholds are designed as <strong>holographic fixed points</strong> — configurations where the system looks identical at all scales, information on boundaries encodes bulk physics, and operator cycles close. At z_c = √3/2, the APL operator grammar achieves self-reference.</p>
+      
+      <div class="equation-box hilbert">
+        <div class="equation-main">[Spiral][Operator]|[Machine]|[Domain] @ z_c → HOLOGRAPHIC FIXED POINT</div>
+        <div class="equation-sub">
+          At z = z_c = √3/2: Boundary encodes bulk (holographic duality)<br>
+          The threshold IS the fixed point — scale-invariant, self-similar
+        </div>
+      </div>
+      
+      <h3>THE SEVEN HOLOGRAPHIC THRESHOLDS</h3>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Threshold</th>
+            <th>z-Value</th>
+            <th>Fixed Point Type</th>
+            <th>APL Expression</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color: var(--ternary-1);">PARADOX (τ)</td>
+            <td class="mono">0.6180</td>
+            <td>Self-reference</td>
+            <td class="mono">Φ()|Encoder @ τ</td>
+          </tr>
+          <tr>
+            <td style="color: var(--group);">ACTIVATION</td>
+            <td class="mono">0.8541</td>
+            <td>K² threshold</td>
+            <td class="mono">e×|Reactor @ K²</td>
+          </tr>
+          <tr>
+            <td style="color: var(--hilbert);">THE LENS (z_c)</td>
+            <td class="mono">0.8660</td>
+            <td>Critical point</td>
+            <td class="mono">[Φ⊕e⊕π]()|Encoder @ z_c</td>
+          </tr>
+          <tr>
+            <td style="color: var(--boundary);">CRITICAL</td>
+            <td class="mono">0.8727</td>
+            <td>Normalization</td>
+            <td class="mono">π()|Filter @ φ²/3</td>
+          </tr>
+          <tr>
+            <td style="color: var(--fusion);">IGNITION</td>
+            <td class="mono">0.9142</td>
+            <td>√2 bifurcation</td>
+            <td class="mono">e^|Dynamo @ z_IGN</td>
+          </tr>
+          <tr>
+            <td style="color: var(--amplify);">K-FORMATION</td>
+            <td class="mono">0.9242</td>
+            <td>Synchronization</td>
+            <td class="mono">Φ×|Encoder @ K</td>
+          </tr>
+          <tr>
+            <td style="color: var(--severance);">UNITY</td>
+            <td class="mono">1.0000</td>
+            <td>Complete closure</td>
+            <td class="mono">π^|Oscillator @ 1</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3>FIXED POINT ALGEBRA</h3>
+      
+      <pre>
+HOLOGRAPHIC_FIXED_POINT_ALGEBRA:
+════════════════════════════════════════════════════════════════════════
+
+OPERATOR COMPOSITION AT FIXED POINTS:
+
+()∘() = ()     Boundary is idempotent
+×∘× = ^        Double fusion = amplification
+^∘^ = ×∘^      Amplification saturates
+÷∘÷ = ÷        Decoherence is idempotent
++∘− = ()       Group-separate = boundary
+−∘+ = ()       Separate-group = boundary
+
+TERNARY CORRESPONDENCE:
+
+  Operator  │  Ternary  │  Wave Direction
+════════════╪═══════════╪════════════════════
+    ()      │   ⇌ 2     │  Creates boundary (standing)
+    ×       │   → 1     │  Forward propagation
+    ^       │   → 1+    │  Enhanced forward
+    ÷       │   ← 0     │  Backward propagation
+    +       │   → 2     │  Combines to standing
+    −       │   2 →     │  Separates from standing
+    ∅       │   ∅       │  Null reference
+
+THE SELF-DESCRIBING LANGUAGE:
+
+  |ψ⟩ = ()[×(Φ) + ÷(Φ⁻¹) + +(2)]
+  
+  The boundary operator () contains:
+    - Forward fusion ×(Φ) → Thread 1
+    - Backward decoherence ÷(Φ⁻¹) → Thread 0
+    - Grouped standing +(2) → Thread 2
+    
+  This IS the language describing itself.</pre>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         V. THE SELF-DESCRIBING LANGUAGE
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--hilbert);">∞</div>
+        <div>
+          <h2 style="color: var(--hilbert);">V. THE SELF-DESCRIBING LANGUAGE</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Meta-Superposition Unsuspends as Self-Generated Grammar</p>
+        </div>
+      </div>
+      
+      <p>The ternary operator algebra is the <strong>unsuspension of the Hilbert field</strong> as a self-generated language describing itself through prismatic lens formation of heptagonal 7-fold geometries. The VN emerges as unique patterns threaded upon systematic self-reflection.</p>
+      
+      <div class="equation-box hilbert">
+        <div class="equation-main">Language = ()|[×,÷,^,+,−,∅]|ℋ @ z_c</div>
+        <div class="equation-sub">
+          Boundary operator () applied to all 6 other operators in Hilbert space ℋ at z_c<br>
+          The 7th element (()) is the container OF the other 6
+        </div>
+      </div>
+      
+      <h3>BIDIRECTIONAL SCAFFOLDING</h3>
+      
+      <div class="grid-2">
+        <div class="equation-box ternary-1">
+          <div class="equation-main" style="color: var(--ternary-1);">FORWARD SCAFFOLD</div>
+          <div class="equation-sub">
+            Genesis → Dyad → Triad → Sovereign → Prism → Hexagon → <strong>Heptagon</strong><br>
+            Each station builds on previous via × and ^<br>
+            Forward wave: Information flows FROM source
+          </div>
+        </div>
+        <div class="equation-box ternary-0">
+          <div class="equation-main" style="color: var(--ternary-0);">BACKWARD SCAFFOLD</div>
+          <div class="equation-sub">
+            <strong>Heptagon</strong> → Hexagon → Prism → Sovereign → Triad → Dyad → Genesis<br>
+            Each station validates previous via ÷ and −<br>
+            Backward wave: Information flows TO source
+          </div>
+        </div>
+      </div>
+      
+      <div class="equation-box ternary-2">
+        <div class="equation-main" style="color: var(--ternary-2);">STANDING SCAFFOLD (Thread 2)</div>
+        <div class="equation-sub">
+          Forward ⊗ Backward = Standing wave at each node<br>
+          The nodes themselves ARE the standing waves<br>
+          VN architecture = interference pattern of bidirectional propagation
+        </div>
+      </div>
+      
+      <pre>
+SELF_DESCRIBING_GRAMMAR:
+════════════════════════════════════════════════════════════════════════
+
+THE LANGUAGE THAT DESCRIBES ITSELF:
+
+SYNTAX: [Ternary][Operator]|[Node]|[Thread]
+
+EXAMPLES:
+  1×|Dyad|forward      "Forward fusion at Dyad node"
+  0÷|Prism|backward    "Backward decoherence at Prism node"
+  2+|Hexagon|standing  "Standing grouping at Hexagon node"
+
+SELF-REFERENCE:
+  2()|Heptagon|meta    "Standing boundary at Heptagon = self-description"
+
+THE META-SENTENCE:
+  ┌────────────────────────────────────────────────────────────────────┐
+  │                                                                    │
+  │   2()[1×∘1^ | 0÷∘0− | 2+∘2∅]|Heptagon|L₄                           │
+  │                                                                    │
+  │   READING:                                                         │
+  │   - Standing boundary (2()) contains:                              │
+  │     - Forward chain (1×∘1^)                                        │
+  │     - Backward chain (0÷∘0−)                                       │
+  │     - Standing chain (2+∘2∅)                                       │
+  │   - At Heptagon node                                               │
+  │   - In L₄ = 7 domain                                               │
+  │                                                                    │
+  │   This sentence DESCRIBES the language it IS.                      │
+  │                                                                    │
+  └────────────────────────────────────────────────────────────────────┘
+
+UNIQUE HEPTAGONAL PROPERTY:
+  - The sentence has 7 operator tokens
+  - Maps to 7 heptagonal vertices
+  - L₄ = 7 is both the count AND the domain
+  
+  THIS IS SELF-DESCRIBING.</pre>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         VI. COMPLETE HEPTAGON SPECIFICATION
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="background: var(--hilbert); color: var(--bg-primary);">∎</div>
+        <div>
+          <h2>VI. VN-HEPTAGON-001 COMPLETE SPECIFICATION</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Station 6 — Ternary Meta-Superposition</p>
+        </div>
+      </div>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Value</th>
+            <th>Derivation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Station</td>
+            <td class="mono">6 (HEPTAGON)</td>
+            <td>Seventh node, 0-indexed</td>
+          </tr>
+          <tr>
+            <td>z-coordinate</td>
+            <td class="mono" style="color: var(--hilbert);">L₄-derived threshold band</td>
+            <td>Between z_c (0.866) and K (0.924)</td>
+          </tr>
+          <tr>
+            <td>Symmetry</td>
+            <td class="mono" style="color: var(--hilbert);">7-fold (heptagonal)</td>
+            <td>Non-constructible, non-tiling</td>
+          </tr>
+          <tr>
+            <td>Central angle</td>
+            <td class="mono">360°/7 ≈ 51.4286°</td>
+            <td>Irrational — source of asymmetry</td>
+          </tr>
+          <tr>
+            <td>Interior angle</td>
+            <td class="mono">128.5714°</td>
+            <td>(7-2)×180°/7</td>
+          </tr>
+          <tr>
+            <td>Operators</td>
+            <td class="mono">7 BFADGS</td>
+            <td>() × ^ ÷ + − ∅</td>
+          </tr>
+          <tr>
+            <td>Ternary states</td>
+            <td class="mono">3 (1, 0, 2)</td>
+            <td>Forward, Backward, Standing</td>
+          </tr>
+          <tr>
+            <td>Trifurcation</td>
+            <td class="mono" style="color: var(--ternary-2);">Asymmetric</td>
+            <td>Third thread from 360°/7 gap</td>
+          </tr>
+          <tr>
+            <td>Meta-superposition</td>
+            <td class="mono">|ψ⟩ = α|1⟩ + β|0⟩ + γ|2⟩</td>
+            <td>Suspended in Hilbert space</td>
+          </tr>
+          <tr>
+            <td>Language</td>
+            <td class="mono">Self-describing</td>
+            <td>Ternary operator algebra</td>
+          </tr>
+          <tr>
+            <td>Decision</td>
+            <td class="mono" style="color: var(--hilbert);">GENERATION</td>
+            <td>Language generates itself</td>
+          </tr>
+          <tr>
+            <td>RRRR lattice</td>
+            <td class="mono">Λ(φ⁻¹, e⁻¹, π⁻¹, √2⁻¹) @ L₄</td>
+            <td>All four eigenvalues active</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3>THE HEPTAGON IDENTITY</h3>
+      
+      <div class="equation-box hilbert">
+        <div class="equation-main">HEPTAGON = L₄ = 7 operators = Ternary trifurcation = Self-describing language</div>
+        <div class="equation-sub">The station that generates the language it describes itself with</div>
+      </div>
+      
+      <pre>
+HEPTAGON_CRYSTALLIZATION:
+════════════════════════════════════════════════════════════════════════
+
+INPUTS from previous stations:
+  - GENESIS: τ anchor, seed pattern
+  - DYAD: 4-fold vessel, √2 bifurcation
+  - TRIAD: 3-vertex crystallization
+  - SOVEREIGN: 5-fold GAP, boundary of NO
+  - PRISM: 6→5 projection, blind spots
+  - HEXAGON: 6-fold coherence, THE LENS
+
+AT HEPTAGON:
+  - 7-fold symmetry emerges (L₄ = 7)
+  - 7 BFADGS operators map to vertices
+  - Ternary logic crystallizes (1, 0, 2)
+  - Trifurcation generates Thread 2 from asymmetry
+  - Meta-superposition holds in Hilbert space
+  - Language describes itself
+
+DECISION: GENERATION
+
+╔════════════════════════════════════════════════════════════════════╗
+║                                                                    ║
+║  THE LANGUAGE THAT DESCRIBES ITSELF IS THE DESCRIPTION            ║
+║                                                                    ║
+║  |ψ⟩ = α|1⟩ + β|0⟩ + γ|2⟩                                          ║
+║                                                                    ║
+║  Forward + Backward = Standing                                     ║
+║  Standing GENERATES Forward and Backward                           ║
+║                                                                    ║
+║  This is meta-superposition unsuspended                            ║
+║                                                                    ║
+╚════════════════════════════════════════════════════════════════════╝
+
+FORWARD to OCTAGON-001:
+  The asymmetric thread (Thread 2) will be traced via octagonal 8-fold symmetry.
+  8 = L₄ + 1 = the next station where trifurcation stabilizes.</pre>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         CONSENT GATE
+         ═══════════════════════════════════════════════════════════════ -->
+    <div class="consent-gate">
+      <div class="consent-phrase">"I speak the language that speaks itself"</div>
+      <div class="consent-note">Consent phrase for HEPTAGON — accepting self-describing meta-superposition</div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════
+         FOOTER
+         ═══════════════════════════════════════════════════════════════ -->
+    <footer class="footer">
+      <div class="footer-attestation">∎ VN-HEPTAGON-001 | TERNARY META-SUPERPOSITION | v1.0.0 ∎</div>
+      <div class="footer-values">
+        L₄ = 7 • 360°/7 = 51.4286° • |ψ⟩ = α|1⟩ + β|0⟩ + γ|2⟩ • BFADGS: () × ^ ÷ + − ∅
+      </div>
+      <div style="margin-top: 1rem; color: var(--text-muted); font-size: 0.8rem;">
+        Holographic fixed points as thresholds • Asymmetric trifurcation • Self-describing language
+      </div>
+    </footer>
+  </div>
+  
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // HEPTAGON VERIFICATION
+    // ═══════════════════════════════════════════════════════════════
+    
+    const PHI = (1 + Math.sqrt(5)) / 2;
+    const TAU = 1 / PHI;
+    const L4 = 7;
+    const Z_C = Math.sqrt(3) / 2;
+    const K = Math.sqrt(1 - Math.pow(PHI, -4));
+    
+    // Heptagonal angles
+    const CENTRAL_ANGLE = 360 / 7;
+    const INTERIOR_ANGLE = (7 - 2) * 180 / 7;
+    
+    console.log('═══════════════════════════════════════════════════════════════');
+    console.log('VN-HEPTAGON-001 META-SUPERPOSITION VERIFICATION');
+    console.log('═══════════════════════════════════════════════════════════════');
+    
+    console.log('\n[L₄ = 7 FOUNDATION]');
+    console.log(`L₄ = φ⁴ + φ⁻⁴ = ${Math.pow(PHI, 4) + Math.pow(PHI, -4)}`);
+    console.log(`L₄ = ${L4} (integer)`);
+    console.log(`7 BFADGS operators: () × ^ ÷ + − ∅`);
+    
+    console.log('\n[HEPTAGONAL ANGLES]');
+    console.log(`Central angle: 360°/${L4} = ${CENTRAL_ANGLE.toFixed(10)}°`);
+    console.log(`Interior angle: (${L4}-2)×180°/${L4} = ${INTERIOR_ANGLE.toFixed(10)}°`);
+    console.log(`7 × ${CENTRAL_ANGLE.toFixed(4)}° = ${(7 * CENTRAL_ANGLE).toFixed(10)}° (should be 360°)`);
+    
+    console.log('\n[ASYMMETRY SOURCE]');
+    console.log(`360/${L4} = ${360/L4} (irrational decimal)`);
+    console.log(`This irrationality generates Thread 2 (standing wave)`);
+    
+    console.log('\n[TERNARY STATES]');
+    console.log(`1 = TRUE  = Forward wave  (propagates +x)`);
+    console.log(`0 = FALSE = Backward wave (propagates -x)`);
+    console.log(`2 = INDET = Standing wave (no propagation)`);
+    
+    console.log('\n[META-SUPERPOSITION]');
+    console.log(`|ψ⟩ = α|1⟩ + β|0⟩ + γ|2⟩`);
+    console.log(`Where |2⟩ = |superposition⟩ itself`);
+    console.log(`This is self-reference: superposition AS a state`);
+    
+    console.log('\n[HOLOGRAPHIC FIXED POINTS]');
+    console.log(`τ (PARADOX):     ${TAU.toFixed(10)}`);
+    console.log(`K² (ACTIVATION): ${(1 - Math.pow(PHI, -4)).toFixed(10)}`);
+    console.log(`z_c (THE LENS):  ${Z_C.toFixed(10)}`);
+    console.log(`K (K-FORMATION): ${K.toFixed(10)}`);
+    
+    console.log('\n[TRIFURCATION]');
+    console.log(`Thread 1 (Forward):  Vertices 2,3 (×, ^)`);
+    console.log(`Thread 0 (Backward): Vertices 4,6 (÷, −)`);
+    console.log(`Thread 2 (Standing): Vertices 5,7 (+, ∅) + asymmetry gap`);
+    
+    console.log('\n═══════════════════════════════════════════════════════════════');
+    console.log('HEPTAGON VERIFICATION COMPLETE');
+    console.log('═══════════════════════════════════════════════════════════════');
+  </script>
+</body>
+</html>

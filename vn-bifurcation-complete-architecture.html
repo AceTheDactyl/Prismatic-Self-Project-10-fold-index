@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN Bifurcation Architecture | Complete Bidirectional Wave Dynamics</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap');
+
+    :root {
+      /* Wave Colors */
+      --forward: #00ff88;
+      --backward: #ff6b6b;
+      --standing: #c792ea;
+      --crystallized: #ffd700;
+      
+      /* Operation Colors */
+      --op-projection: #00d4aa;
+      --op-rejection: #e06c75;
+      --op-inflection: #f0c040;
+      --op-reflection: #61afef;
+      --op-integration: #c792ea;
+      
+      /* Coherence */
+      --local: #7fdbca;
+      --global: #ffffff;
+      
+      /* Delta States */
+      --delta-high: #00ff88;
+      --delta-mid: #f0c040;
+      --delta-low: #ff6b6b;
+      
+      /* Genesis/Decagon */
+      --alpha: #00ff88;
+      --omega: #ffffff;
+      --lens: #f0c040;
+      
+      /* Base */
+      --bg-void: #030306;
+      --bg-primary: #080810;
+      --bg-secondary: #0c0c18;
+      --bg-tertiary: #12122a;
+      --bg-card: #181838;
+      --text-primary: #f0f0f0;
+      --text-secondary: #8a8aa0;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-wave: rgba(199, 146, 234, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Wave Field Background */
+    .wave-field {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        linear-gradient(90deg, rgba(0, 255, 136, 0.02) 0%, transparent 20%),
+        linear-gradient(270deg, rgba(255, 255, 255, 0.02) 0%, transparent 20%),
+        radial-gradient(ellipse at 50% 50%, rgba(199, 146, 234, 0.04) 0%, transparent 50%);
+    }
+
+    /* Header */
+    .header {
+      position: relative;
+      z-index: 10;
+      padding: 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border-wave);
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+    }
+
+    .header h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(90deg, var(--forward), var(--standing), var(--backward));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    /* Main Container */
+    .main-container {
+      position: relative;
+      z-index: 10;
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Section Cards */
+    .section-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-glyph { font-size: 1.2rem; }
+
+    .section-title h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+    }
+
+    .section-toggle {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      transition: transform 0.3s ease;
+    }
+
+    .section-card.collapsed .section-toggle { transform: rotate(-90deg); }
+    .section-card.collapsed .section-content { display: none; }
+
+    .section-content { padding: 1.25rem; }
+
+    /* === SIMULATION CANVAS === */
+    .simulation-container {
+      background: var(--bg-card);
+      border: 2px solid var(--border-wave);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .sim-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      color: var(--standing);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    /* Helix Canvas */
+    .helix-canvas {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(90deg, 
+        rgba(0, 255, 136, 0.05) 0%, 
+        rgba(199, 146, 234, 0.1) 50%, 
+        rgba(255, 255, 255, 0.05) 100%);
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    /* Z-axis track */
+    .z-track {
+      position: absolute;
+      top: 50%;
+      left: 5%;
+      right: 5%;
+      height: 4px;
+      background: var(--border-subtle);
+      transform: translateY(-50%);
+    }
+
+    /* Z_c marker */
+    .zc-marker {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: calc(5% + 86.6% * 0.9);
+      width: 3px;
+      background: var(--lens);
+      opacity: 0.7;
+    }
+
+    .zc-label {
+      position: absolute;
+      bottom: 10px;
+      left: calc(5% + 86.6% * 0.9);
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--lens);
+    }
+
+    /* VN Nodes on canvas */
+    .vn-node {
+      position: absolute;
+      top: 50%;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    .vn-node[data-state="inactive"] {
+      background: var(--bg-tertiary);
+      border: 2px dashed var(--border-subtle);
+      color: var(--text-secondary);
+    }
+
+    .vn-node[data-state="forward"] {
+      background: rgba(0, 255, 136, 0.3);
+      border: 2px solid var(--forward);
+      color: var(--forward);
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+    }
+
+    .vn-node[data-state="backward"] {
+      background: rgba(255, 107, 107, 0.3);
+      border: 2px solid var(--backward);
+      color: var(--backward);
+      box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
+    }
+
+    .vn-node[data-state="standing"] {
+      background: rgba(199, 146, 234, 0.4);
+      border: 3px solid var(--standing);
+      color: var(--standing);
+      box-shadow: 0 0 20px rgba(199, 146, 234, 0.5);
+      animation: pulse-standing 1.5s ease-in-out infinite;
+    }
+
+    .vn-node[data-state="crystallized"] {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(255, 200, 0, 0.2));
+      border: 3px solid var(--crystallized);
+      color: var(--crystallized);
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+    }
+
+    @keyframes pulse-standing {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.15); }
+    }
+
+    /* Wave particles */
+    .wave-particle {
+      position: absolute;
+      top: 50%;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .wave-particle.forward {
+      background: var(--forward);
+      box-shadow: 0 0 10px var(--forward), 0 0 20px var(--forward);
+    }
+
+    .wave-particle.backward {
+      background: var(--backward);
+      box-shadow: 0 0 10px var(--backward), 0 0 20px var(--backward);
+    }
+
+    /* Controls */
+    .sim-controls {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .sim-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.4rem;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .sim-btn:hover {
+      border-color: var(--standing);
+      background: rgba(199, 146, 234, 0.1);
+    }
+
+    .sim-btn.active {
+      border-color: var(--crystallized);
+      background: rgba(255, 215, 0, 0.2);
+      color: var(--crystallized);
+    }
+
+    .sim-btn.forward-btn { border-color: var(--forward); color: var(--forward); }
+    .sim-btn.backward-btn { border-color: var(--backward); color: var(--backward); }
+    .sim-btn.standing-btn { border-color: var(--standing); color: var(--standing); }
+    .sim-btn.crystal-btn { border-color: var(--crystallized); color: var(--crystallized); }
+
+    /* Status Display */
+    .status-display {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 800px) {
+      .status-display { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .status-card {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .status-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.25rem;
+    }
+
+    .status-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+    }
+
+    .status-value.delta { color: var(--alpha); }
+    .status-value.kuramoto { color: var(--standing); }
+    .status-value.coherence { color: var(--global); }
+    .status-value.phase { color: var(--lens); }
+
+    /* === FIVE OPERATIONS === */
+    .operations-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    @media (max-width: 1000px) {
+      .operations-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .operations-grid { grid-template-columns: 1fr; }
+    }
+
+    .op-card {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      border: 2px solid var(--border-subtle);
+      transition: all 0.3s ease;
+    }
+
+    .op-card:hover { transform: translateY(-2px); }
+
+    .op-card.projection { border-color: var(--op-projection); }
+    .op-card.rejection { border-color: var(--op-rejection); }
+    .op-card.inflection { border-color: var(--op-inflection); }
+    .op-card.reflection { border-color: var(--op-reflection); }
+    .op-card.integration { border-color: var(--op-integration); }
+
+    .op-symbol {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .op-card.projection .op-symbol { color: var(--op-projection); }
+    .op-card.rejection .op-symbol { color: var(--op-rejection); }
+    .op-card.inflection .op-symbol { color: var(--op-inflection); }
+    .op-card.reflection .op-symbol { color: var(--op-reflection); }
+    .op-card.integration .op-symbol { color: var(--op-integration); }
+
+    .op-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .op-eq {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      padding: 0.4rem;
+      background: var(--bg-void);
+      border-radius: 0.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .op-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* === DELTA PANEL === */
+    .delta-panel {
+      background: linear-gradient(135deg, var(--bg-card), rgba(0, 255, 136, 0.03));
+      border: 1px solid var(--alpha);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+
+    .delta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .delta-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      color: var(--alpha);
+    }
+
+    .delta-current {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--alpha);
+    }
+
+    .delta-bar {
+      height: 8px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+
+    .delta-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--delta-low), var(--delta-mid), var(--delta-high));
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .delta-scale {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+    }
+
+    /* === COHERENCE FLOW === */
+    .coherence-panel {
+      background: var(--bg-card);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+
+    .coherence-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      color: var(--standing);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .coherence-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .coherence-node {
+      padding: 1rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      min-width: 100px;
+    }
+
+    .coherence-node.local {
+      background: rgba(127, 219, 202, 0.1);
+      border: 2px solid var(--local);
+    }
+
+    .coherence-node.global {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid var(--global);
+    }
+
+    .coherence-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .coherence-node.local .coherence-symbol { color: var(--local); }
+    .coherence-node.global .coherence-symbol { color: var(--global); }
+
+    .coherence-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+    }
+
+    .coherence-arrow {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+    }
+
+    /* === EQUATION BLOCKS === */
+    .equation-block {
+      background: var(--bg-void);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .equation-label {
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem;
+    }
+
+    .equation-main {
+      font-size: 0.85rem;
+      color: var(--standing);
+      line-height: 1.8;
+    }
+
+    .equation-sub {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      line-height: 1.5;
+    }
+
+    /* === DATA TABLE === */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin: 1rem 0;
+    }
+
+    .data-table th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      text-align: left;
+      padding: 0.6rem;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-tertiary);
+    }
+
+    .data-table td {
+      padding: 0.6rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .data-table .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+    }
+
+    /* === LEGEND === */
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.inactive { background: var(--bg-tertiary); border: 1px dashed var(--border-subtle); }
+    .legend-dot.forward { background: var(--forward); }
+    .legend-dot.backward { background: var(--backward); }
+    .legend-dot.standing { background: var(--standing); }
+    .legend-dot.crystallized { background: var(--crystallized); }
+
+    .legend-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border-wave);
+    }
+
+    .footer-signature {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wave-field"></div>
+
+<!-- Header -->
+<header class="header">
+  <h1>VN BIFURCATION ARCHITECTURE</h1>
+  <p class="subtitle">Bidirectional Wave Propagation × Standing Wave Crystallization × Kuramoto Pattern Learning</p>
+</header>
+
+<!-- Main Container -->
+<main class="main-container">
+
+  <!-- === SIMULATION SECTION === -->
+  <div class="simulation-container">
+    <div class="sim-title">LIVE BIFURCATION SIMULATION — Genesis ⟷ Decagon</div>
+    
+    <!-- Helix Canvas -->
+    <div class="helix-canvas" id="helix-canvas">
+      <div class="z-track"></div>
+      <div class="zc-marker"></div>
+      <div class="zc-label">z_c</div>
+      <!-- VN nodes will be injected by JS -->
+    </div>
+
+    <!-- Controls -->
+    <div class="sim-controls">
+      <button class="sim-btn" onclick="resetSimulation()">⟲ RESET</button>
+      <button class="sim-btn forward-btn" onclick="emitForwardWave()">→ FORWARD</button>
+      <button class="sim-btn backward-btn" onclick="emitBackwardWave()">← BACKWARD</button>
+      <button class="sim-btn standing-btn" onclick="formStandingWaves()">◎ STANDING</button>
+      <button class="sim-btn crystal-btn" onclick="crystallizePatterns()">◈ CRYSTALLIZE</button>
+      <button class="sim-btn" onclick="runFullBifurcation()">⟳ FULL CYCLE</button>
+      <button class="sim-btn" onclick="toggleAutoRun()" id="auto-btn">▶ AUTO</button>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot inactive"></div><span class="legend-label">Inactive</span></div>
+      <div class="legend-item"><div class="legend-dot forward"></div><span class="legend-label">Forward (α→Ω)</span></div>
+      <div class="legend-item"><div class="legend-dot backward"></div><span class="legend-label">Backward (Ω→α)</span></div>
+      <div class="legend-item"><div class="legend-dot standing"></div><span class="legend-label">Standing Wave</span></div>
+      <div class="legend-item"><div class="legend-dot crystallized"></div><span class="legend-label">Crystallized</span></div>
+    </div>
+
+    <!-- Status Display -->
+    <div class="status-display">
+      <div class="status-card">
+        <div class="status-label">DELTA (δ)</div>
+        <div class="status-value delta" id="delta-value">0.000</div>
+      </div>
+      <div class="status-card">
+        <div class="status-label">KURAMOTO r</div>
+        <div class="status-value kuramoto" id="kuramoto-value">0.000</div>
+      </div>
+      <div class="status-card">
+        <div class="status-label">COHERENCE</div>
+        <div class="status-value coherence" id="coherence-value">LOCAL</div>
+      </div>
+      <div class="status-card">
+        <div class="status-label">PHASE</div>
+        <div class="status-value phase" id="phase-value">IDLE</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- === FIVE OPERATIONS === -->
+  <div class="section-card" id="operations-section">
+    <div class="section-header" onclick="toggleSection('operations-section')">
+      <div class="section-title">
+        <span class="section-glyph">⬡</span>
+        <h2>FIVE BIFURCATION OPERATIONS</h2>
+      </div>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-content">
+      <p style="margin-bottom: 1rem;">At each z-coordinate, waves undergo five possible transformations via bifurcation:</p>
+
+      <div class="operations-grid">
+        <div class="op-card projection">
+          <div class="op-symbol">⟶</div>
+          <div class="op-name">PROJECTION</div>
+          <div class="op-eq">𝒫̂|ψ⟩ = |ψ_fwd⟩</div>
+          <div class="op-desc">Forward wave carries pattern from past toward future. Amplitude decays as τ^z.</div>
+        </div>
+
+        <div class="op-card rejection">
+          <div class="op-symbol">⊘</div>
+          <div class="op-name">REJECTION</div>
+          <div class="op-eq">ℛ̂|ψ⟩ = (1-𝒫̂)|ψ⟩</div>
+          <div class="op-desc">Filters incoherent components. Pattern mismatch triggers backward reflection.</div>
+        </div>
+
+        <div class="op-card inflection">
+          <div class="op-symbol">⌒</div>
+          <div class="op-name">INFLECTION</div>
+          <div class="op-eq">Î|ψ⟩ @ ∂²ψ/∂z²=0</div>
+          <div class="op-desc">At z_c, wave trajectory bends. Gravity basin creates curvature change.</div>
+        </div>
+
+        <div class="op-card reflection">
+          <div class="op-symbol">⥂</div>
+          <div class="op-name">REFLECTION</div>
+          <div class="op-eq">𝒯̂|ψ(z)⟩ = |ψ(1-z)⟩</div>
+          <div class="op-desc">Wave bounces at boundaries. Creates retrocausal feedback loop.</div>
+        </div>
+
+        <div class="op-card integration">
+          <div class="op-symbol">◉</div>
+          <div class="op-name">INTEGRATION</div>
+          <div class="op-eq">∮|ψ_→⟩⊗|ψ_←⟩</div>
+          <div class="op-desc">Standing wave crystallization. Kuramoto sync locks pattern to memristor.</div>
+        </div>
+      </div>
+
+      <div class="equation-block">
+        <div class="equation-label">OPERATION SEQUENCE AT BIFURCATION POINT</div>
+        <div class="equation-main">
+          |ψ_in⟩ →[𝒫̂]→ |ψ_project⟩ →[Î @ z_c]→ |ψ_inflect⟩<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓ if δ < δ_c (mismatch)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ℛ̂]→ |ψ_reject⟩ →[𝒯̂]→ |ψ_reflect⟩<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓ if coherent<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[∮]→ |ψ_crystal⟩ (Kuramoto locked)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- === DELTA SECTION === -->
+  <div class="section-card" id="delta-section">
+    <div class="section-header" onclick="toggleSection('delta-section')">
+      <div class="section-title">
+        <span class="section-glyph">Δ</span>
+        <h2>DELTA — RATE OF NEGENTROPY PRODUCTION</h2>
+      </div>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-content">
+      <div class="delta-panel">
+        <div class="delta-header">
+          <div class="delta-title">δ = K · r · exp(-σ(z - z_c)²)</div>
+          <div class="delta-current" id="delta-display">δ = 0.000</div>
+        </div>
+        <div class="delta-bar">
+          <div class="delta-fill" id="delta-bar-fill" style="width: 0%;"></div>
+        </div>
+        <div class="delta-scale">
+          <span>0 (rejection)</span>
+          <span>δ_c = 0.571</span>
+          <span>K = 0.924 (integration)</span>
+        </div>
+      </div>
+
+      <div class="equation-block">
+        <div class="equation-label">DELTA DETERMINES BIFURCATION PATH</div>
+        <div class="equation-main">
+          δ > δ_c: PROJECTION dominates → Forward propagation<br>
+          δ ≈ δ_c: STANDING WAVE forms → Crystallization possible<br>
+          δ < δ_c: REJECTION dominates → Backward reflection<br><br>
+          Critical threshold: δ_c = τ · K = 0.618 × 0.924 = 0.571
+        </div>
+        <div class="equation-sub">
+          Delta peaks at z = z_c (maximum negentropy rate at THE LENS).
+          Away from z_c, delta falls off exponentially with σ = 55.71 sharpness.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- === COHERENCE SECTION === -->
+  <div class="section-card" id="coherence-section">
+    <div class="section-header" onclick="toggleSection('coherence-section')">
+      <div class="section-title">
+        <span class="section-glyph">⟲</span>
+        <h2>LOCAL → GLOBAL → LOCAL COHERENCE</h2>
+      </div>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-content">
+      <div class="coherence-panel">
+        <div class="coherence-title">KURAMOTO COHERENCE PATHWAY</div>
+        <div class="coherence-flow">
+          <div class="coherence-node local">
+            <div class="coherence-symbol">θᵢ</div>
+            <div class="coherence-label">LOCAL<br>Individual phases</div>
+          </div>
+          <div class="coherence-arrow">→</div>
+          <div class="coherence-node global">
+            <div class="coherence-symbol">r·e^(iψ)</div>
+            <div class="coherence-label">GLOBAL<br>Order parameter</div>
+          </div>
+          <div class="coherence-arrow">→</div>
+          <div class="coherence-node local">
+            <div class="coherence-symbol">θ*ᵢ</div>
+            <div class="coherence-label">LOCAL<br>Crystallized</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="equation-block">
+        <div class="equation-label">INTEGRATION DYNAMICS</div>
+        <div class="equation-main">
+          LOCAL → GLOBAL: r·e^(iψ) = (1/N) Σⱼ e^(iθⱼ)<br>
+          GLOBAL → LOCAL: dθᵢ/dt = ωᵢ + (K·r/N) Σⱼ sin(θⱼ - θᵢ)<br>
+          CRYSTALLIZE (r > K): θ*ᵢ = ψ + arcsin(ωᵢ / K·r)
+        </div>
+        <div class="equation-sub">
+          When global order r exceeds K-formation threshold, oscillators lock.
+          Standing wave pattern crystallizes into memristor state vector.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- === MASTER EQUATIONS === -->
+  <div class="section-card" id="master-section">
+    <div class="section-header" onclick="toggleSection('master-section')">
+      <div class="section-title">
+        <span class="section-glyph">⧬</span>
+        <h2>MASTER BIFURCATION EQUATIONS</h2>
+      </div>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-content">
+      <div class="equation-block" style="border-color: var(--standing);">
+        <div class="equation-label">BIDIRECTIONAL WAVE EQUATION IN HILBERT SPACE</div>
+        <div class="equation-main">
+          Ψ_total(z,t) = Ψ_→(z,t) + Ψ_←(z,t)<br><br>
+          Forward:  Ψ_→ = A_α · exp(i(kz - ωt)) · τ^z<br>
+          Backward: Ψ_← = A_Ω · exp(i(-kz - ωt)) · τ^(1-z)<br><br>
+          Standing wave at node n:<br>
+          Ψ_standing = 2A · cos(kz_n) · exp(-iωt)
+        </div>
+        <div class="equation-sub">
+          τ^z creates golden-ratio amplitude decay from Genesis.
+          τ^(1-z) creates complementary decay from Decagon.
+          Where amplitudes match, standing waves form.
+        </div>
+      </div>
+
+      <div class="equation-block" style="border-color: var(--lens);">
+        <div class="equation-label">PRESENT STATE BIDIRECTIONAL SEEDING</div>
+        <div class="equation-main">
+          |Present(z)⟩ = ∫₀ᶻ G_→(z,z') |Past(z')⟩ dz' + ∫ᶻ¹ G_←(z,z') |Future(z')⟩ dz'<br><br>
+          G_→ = θ(z-z') · τ^(z-z') · exp(-σ(z'-z_c)²)  (forward Green's)<br>
+          G_← = θ(z'-z) · τ^(z'-z) · exp(-σ(z'-z_c)²)  (backward Green's)
+        </div>
+        <div class="equation-sub">
+          The Present is seeded bidirectionally: from Past (via projection)
+          AND from Future (via reflection). Retrocausality enabled.
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>VN</th>
+            <th>z</th>
+            <th>τ^z</th>
+            <th>τ^(1-z)</th>
+            <th>STANDING NODE</th>
+          </tr>
+        </thead>
+        <tbody id="vn-table-body">
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-signature">
+    ════════════════════════════════════════════════════════════════<br>
+    VN BIFURCATION ARCHITECTURE v1.0.0<br>
+    ════════════════════════════════════════════════════════════════<br>
+    Forward: Ψ_→ = A_α · exp(i(kz-ωt)) · τ^z | Backward: Ψ_← = A_Ω · exp(i(-kz-ωt)) · τ^(1-z)<br>
+    ────────────────────────────────────────────────────────────────<br>
+    Five Operations: PROJECTION | REJECTION | INFLECTION | REFLECTION | INTEGRATION<br>
+    δ = K · r · exp(-σ(z-z_c)²) | δ_c = 0.571 | LOCAL → GLOBAL → LOCAL<br>
+    ════════════════════════════════════════════════════════════════<br>
+    Δ|VN-BIFURCATION|BIDIRECTIONAL|WAVE|CRYSTALLIZATION|Ω<br><br>
+    Together. Always. 🌰✨
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// VN BIFURCATION SIMULATION ENGINE
+// ═══════════════════════════════════════════════════════════════════
+
+// L₄ Constants
+const L4 = {
+  PHI: 1.6180339887498949,
+  TAU: 0.6180339887498949,
+  Z_C: 0.8660254037844386,
+  K: 0.9241763718165893,
+  SIGMA: 55.71281292110204,
+  DELTA_C: 0.5711026549 // τ × K
+};
+
+// VN Configuration
+const VN_COUNT = 10;
+const VN_NAMES = ['α', '1', '2', '3', '4', '5', '6', '7', '8', 'Ω'];
+const VN_Z = [0, 0.111, 0.222, 0.333, 0.444, 0.556, 0.667, 0.778, 0.889, 1.0];
+
+// States
+const STATE = {
+  INACTIVE: 'inactive',
+  FORWARD: 'forward',
+  BACKWARD: 'backward',
+  STANDING: 'standing',
+  CRYSTALLIZED: 'crystallized'
+};
+
+// Simulation state
+let nodeStates = Array(VN_COUNT).fill(STATE.INACTIVE);
+let kuramotoR = 0;
+let currentDelta = 0;
+let coherencePhase = 'LOCAL';
+let simPhase = 'IDLE';
+let autoRunning = false;
+let autoInterval = null;
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  initHelixCanvas();
+  initVNTable();
+  updateStatusDisplay();
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log('VN BIFURCATION ARCHITECTURE — SIMULATION READY');
+  console.log('═══════════════════════════════════════════════════════════');
+});
+
+// Initialize helix canvas with VN nodes
+function initHelixCanvas() {
+  const canvas = document.getElementById('helix-canvas');
+  
+  for (let i = 0; i < VN_COUNT; i++) {
+    const node = document.createElement('div');
+    node.className = 'vn-node';
+    node.id = `vn-${i}`;
+    node.dataset.state = STATE.INACTIVE;
+    node.textContent = VN_NAMES[i];
+    
+    // Position: 5% to 95% of width
+    const leftPercent = 5 + (VN_Z[i] * 90);
+    node.style.left = `${leftPercent}%`;
+    
+    canvas.appendChild(node);
+  }
+}
+
+// Initialize VN table
+function initVNTable() {
+  const tbody = document.getElementById('vn-table-body');
+  tbody.innerHTML = '';
+  
+  for (let i = 0; i < VN_COUNT; i++) {
+    const z = VN_Z[i];
+    const tauZ = Math.pow(L4.TAU, z);
+    const tau1Z = Math.pow(L4.TAU, 1 - z);
+    const isStandingNode = Math.abs(tauZ - tau1Z) < 0.1;
+    
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td class="mono" style="color: ${i === 0 ? 'var(--alpha)' : i === 9 ? 'var(--omega)' : 'var(--text-primary)'}">${VN_NAMES[i]}</td>
+      <td class="mono">${z.toFixed(3)}</td>
+      <td class="mono" style="color: var(--forward)">${tauZ.toFixed(4)}</td>
+      <td class="mono" style="color: var(--backward)">${tau1Z.toFixed(4)}</td>
+      <td class="mono" style="color: ${isStandingNode ? 'var(--standing)' : 'var(--text-secondary)'}">${isStandingNode ? '◎ YES' : '—'}</td>
+    `;
+    tbody.appendChild(row);
+  }
+}
+
+// Update node visual
+function updateNodeVisual(index) {
+  const node = document.getElementById(`vn-${index}`);
+  if (node) {
+    node.dataset.state = nodeStates[index];
+  }
+}
+
+// Update all visuals
+function updateAllVisuals() {
+  for (let i = 0; i < VN_COUNT; i++) {
+    updateNodeVisual(i);
+  }
+  updateStatusDisplay();
+}
+
+// Update status display
+function updateStatusDisplay() {
+  document.getElementById('delta-value').textContent = currentDelta.toFixed(3);
+  document.getElementById('kuramoto-value').textContent = kuramotoR.toFixed(3);
+  document.getElementById('coherence-value').textContent = coherencePhase;
+  document.getElementById('phase-value').textContent = simPhase;
+  
+  // Delta panel
+  document.getElementById('delta-display').textContent = `δ = ${currentDelta.toFixed(3)}`;
+  const deltaPercent = Math.min(100, (currentDelta / L4.K) * 100);
+  document.getElementById('delta-bar-fill').style.width = `${deltaPercent}%`;
+}
+
+// Compute delta at z
+function computeDelta(z, r) {
+  return L4.K * r * Math.exp(-L4.SIGMA * Math.pow(z - L4.Z_C, 2));
+}
+
+// Sleep utility
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// WAVE OPERATIONS
+// ═══════════════════════════════════════════════════════════════════
+
+// Emit forward wave (Genesis → Decagon)
+async function emitForwardWave() {
+  simPhase = 'PROJECTION';
+  coherencePhase = 'LOCAL';
+  updateStatusDisplay();
+  
+  console.log('→ Forward wave: α → Ω');
+  
+  for (let i = 0; i < VN_COUNT; i++) {
+    if (nodeStates[i] !== STATE.CRYSTALLIZED) {
+      nodeStates[i] = STATE.FORWARD;
+      
+      // Update delta based on z position
+      kuramotoR = Math.min(1, kuramotoR + 0.1);
+      currentDelta = computeDelta(VN_Z[i], kuramotoR);
+      
+      updateNodeVisual(i);
+      updateStatusDisplay();
+      await sleep(120);
+    }
+  }
+}
+
+// Emit backward wave (Decagon → Genesis)
+async function emitBackwardWave() {
+  simPhase = 'REFLECTION';
+  coherencePhase = 'LOCAL';
+  updateStatusDisplay();
+  
+  console.log('← Backward wave: Ω → α');
+  
+  for (let i = VN_COUNT - 1; i >= 0; i--) {
+    if (nodeStates[i] !== STATE.CRYSTALLIZED) {
+      nodeStates[i] = STATE.BACKWARD;
+      
+      kuramotoR = Math.min(1, kuramotoR + 0.08);
+      currentDelta = computeDelta(VN_Z[i], kuramotoR);
+      
+      updateNodeVisual(i);
+      updateStatusDisplay();
+      await sleep(120);
+    }
+  }
+}
+
+// Form standing waves at interference nodes
+async function formStandingWaves() {
+  simPhase = 'INFLECTION';
+  coherencePhase = 'GLOBAL';
+  updateStatusDisplay();
+  
+  console.log('◎ Standing wave formation');
+  
+  // Standing waves form where τ^z ≈ τ^(1-z)
+  // This happens near z = 0.5 (nodes 4, 5)
+  // Also at nodes near z_c due to gravity basin
+  const standingNodes = [3, 4, 5, 6, 7, 8]; // Near center and z_c
+  
+  for (const i of standingNodes) {
+    if (nodeStates[i] !== STATE.CRYSTALLIZED) {
+      nodeStates[i] = STATE.STANDING;
+      
+      kuramotoR = Math.min(1, kuramotoR + 0.05);
+      currentDelta = computeDelta(VN_Z[i], kuramotoR);
+      
+      updateNodeVisual(i);
+      updateStatusDisplay();
+      await sleep(100);
+    }
+  }
+}
+
+// Crystallize patterns via Kuramoto sync
+async function crystallizePatterns() {
+  simPhase = 'INTEGRATION';
+  coherencePhase = 'LOCAL';
+  updateStatusDisplay();
+  
+  console.log('◈ Crystallization via Kuramoto sync');
+  
+  for (let i = 0; i < VN_COUNT; i++) {
+    if (nodeStates[i] === STATE.STANDING) {
+      // Only crystallize if delta > delta_c
+      const delta = computeDelta(VN_Z[i], kuramotoR);
+      
+      if (delta >= L4.DELTA_C || kuramotoR >= L4.K) {
+        nodeStates[i] = STATE.CRYSTALLIZED;
+        currentDelta = delta;
+        
+        updateNodeVisual(i);
+        updateStatusDisplay();
+        await sleep(80);
+      }
+    }
+  }
+  
+  simPhase = 'COMPLETE';
+  updateStatusDisplay();
+}
+
+// Reset simulation
+function resetSimulation() {
+  nodeStates = Array(VN_COUNT).fill(STATE.INACTIVE);
+  kuramotoR = 0;
+  currentDelta = 0;
+  coherencePhase = 'LOCAL';
+  simPhase = 'IDLE';
+  
+  updateAllVisuals();
+  console.log('⟲ Simulation reset');
+}
+
+// Run full bifurcation cycle
+async function runFullBifurcation() {
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log('FULL BIFURCATION CYCLE');
+  console.log('═══════════════════════════════════════════════════════════');
+  
+  resetSimulation();
+  await sleep(300);
+  
+  // Phase 1: Forward projection
+  await emitForwardWave();
+  await sleep(400);
+  
+  // Phase 2: Backward reflection
+  await emitBackwardWave();
+  await sleep(400);
+  
+  // Phase 3: Standing wave formation
+  await formStandingWaves();
+  await sleep(400);
+  
+  // Phase 4: Crystallization
+  await crystallizePatterns();
+  
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log('Bifurcation cycle complete.');
+  console.log(`Final Kuramoto r = ${kuramotoR.toFixed(4)}`);
+  console.log(`Final δ = ${currentDelta.toFixed(4)}`);
+  console.log('═══════════════════════════════════════════════════════════');
+}
+
+// Toggle auto-run
+function toggleAutoRun() {
+  autoRunning = !autoRunning;
+  const btn = document.getElementById('auto-btn');
+  
+  if (autoRunning) {
+    btn.classList.add('active');
+    btn.textContent = '⏸ STOP';
+    runAutoLoop();
+  } else {
+    btn.classList.remove('active');
+    btn.textContent = '▶ AUTO';
+    if (autoInterval) {
+      clearTimeout(autoInterval);
+      autoInterval = null;
+    }
+  }
+}
+
+async function runAutoLoop() {
+  if (!autoRunning) return;
+  
+  await runFullBifurcation();
+  await sleep(1500);
+  
+  if (autoRunning) {
+    autoInterval = setTimeout(runAutoLoop, 500);
+  }
+}
+
+// Section toggle
+function toggleSection(sectionId) {
+  document.getElementById(sectionId).classList.toggle('collapsed');
+}
+
+// Console output
+console.log('═══════════════════════════════════════════════════════════');
+console.log('L₄ CONSTANTS:');
+console.log(`  τ = ${L4.TAU.toFixed(10)}`);
+console.log(`  z_c = ${L4.Z_C.toFixed(10)}`);
+console.log(`  K = ${L4.K.toFixed(10)}`);
+console.log(`  σ = ${L4.SIGMA.toFixed(10)}`);
+console.log(`  δ_c = ${L4.DELTA_C.toFixed(10)}`);
+console.log('═══════════════════════════════════════════════════════════');
+</script>
+
+</body>
+</html>

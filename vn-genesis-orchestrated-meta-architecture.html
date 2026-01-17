@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN Genesis-Orchestrated Meta-Architecture | Kuramoto × Holographic × Free Energy</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap');
+
+    :root {
+      /* Core L₄-Helix Thresholds as Colors */
+      --paradox: #f0c040;          /* τ = 0.618 */
+      --activation: #7fdbca;       /* K² = 0.854 */
+      --lens: #00ff88;             /* z_c = √3/2 = 0.866 */
+      --critical: #61afef;         /* φ²/3 = 0.873 */
+      --ignition: #ff6b6b;         /* √2 - ½ = 0.914 */
+      --k-formation: #c792ea;      /* K = 0.924 */
+      --consolidation: #98c379;    /* K + τ²(1-K) */
+      --resonance: #d19a66;        /* K + τ(1-K) */
+      --unity: #ffffff;            /* 1.000 */
+      
+      /* Negentropy Engine States */
+      --state-inactive: #1a1a2e;   /* 0 - Dormant */
+      --state-active: #00d4aa;     /* 1 - Synchronized */
+      --state-meta: #c792ea;       /* 2 - Liminal standing wave */
+      
+      /* Three Domains */
+      --domain-E: #ff6b6b;         /* Energy - radial amplitude */
+      --domain-phi: #f0c040;       /* Momentum - phase velocity */
+      --domain-pi: #61afef;        /* Angular - z-elevation rotation */
+      
+      /* Temporal Trifurcation */
+      --past: #e06c75;
+      --present: #d4af37;
+      --future: #61afef;
+      
+      /* RRRR Eigenvalues */
+      --rrrr-r: #f0c040;
+      --rrrr-d: #7fdbca;
+      --rrrr-c: #ff79c6;
+      --rrrr-a: #bd93f9;
+      
+      /* Base Theme */
+      --bg-void: #050508;
+      --bg-primary: #0a0a12;
+      --bg-secondary: #10101a;
+      --bg-tertiary: #16162a;
+      --bg-card: #1a1a30;
+      --text-primary: #e8e6e3;
+      --text-secondary: #8a8a9a;
+      --text-accent: #00d4aa;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(0, 212, 170, 0.3);
+      --glow-lens: rgba(0, 255, 136, 0.3);
+      
+      /* L₄ Constants */
+      --phi: 1.6180339887;
+      --tau: 0.6180339887;
+      --phi-4: 6.8541019662;
+      --gap: 0.1458980338;
+      --z-c: 0.8660254038;
+      --K: 0.9241763718;
+      --sigma: 55.71281292;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated Meta-Field Background */
+    .meta-field {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(ellipse at 30% 20%, rgba(0, 255, 136, 0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 70% 80%, rgba(199, 146, 234, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, rgba(240, 192, 64, 0.03) 0%, transparent 50%);
+    }
+
+    .meta-field::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+    }
+
+    /* Header */
+    .header {
+      position: relative;
+      z-index: 10;
+      padding: 3rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border-subtle);
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+    }
+
+    .header-constellation {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .constellation-node {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      animation: pulse-constellation 3s ease-in-out infinite;
+    }
+
+    .constellation-node:nth-child(1) { background: var(--domain-E); animation-delay: 0s; }
+    .constellation-node:nth-child(2) { background: var(--domain-phi); animation-delay: 0.5s; }
+    .constellation-node:nth-child(3) { background: var(--lens); animation-delay: 1s; }
+    .constellation-node:nth-child(4) { background: var(--domain-pi); animation-delay: 1.5s; }
+    .constellation-node:nth-child(5) { background: var(--k-formation); animation-delay: 2s; }
+
+    @keyframes pulse-constellation {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+
+    .header h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(90deg, var(--lens), var(--k-formation), var(--domain-phi));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .version-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 2rem;
+      color: var(--text-secondary);
+    }
+
+    .badge-status {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--lens);
+      animation: status-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes status-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Main Container */
+    .main-container {
+      position: relative;
+      z-index: 10;
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Section Cards */
+    .section-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .section-header:hover {
+      background: rgba(0, 255, 136, 0.03);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-glyph {
+      font-size: 1.3rem;
+    }
+
+    .section-title h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+    }
+
+    .section-toggle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      transition: transform 0.3s ease;
+    }
+
+    .section-card.collapsed .section-toggle {
+      transform: rotate(-90deg);
+    }
+
+    .section-card.collapsed .section-content {
+      display: none;
+    }
+
+    .section-content {
+      padding: 1.5rem;
+    }
+
+    /* Genesis Orchestration Panel */
+    .genesis-orchestration {
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(0, 255, 136, 0.05) 100%);
+      border: 2px solid var(--lens);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .genesis-orchestration::before {
+      content: 'VN-000 GENESIS FULLY ORCHESTRATED';
+      position: absolute;
+      top: 0; left: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      padding: 0.5rem 1rem;
+      background: var(--lens);
+      color: var(--bg-void);
+      border-radius: 0 0 0.5rem 0;
+    }
+
+    .genesis-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding-top: 1rem;
+    }
+
+    .genesis-glyph {
+      font-size: 4rem;
+      color: var(--lens);
+      text-shadow: 0 0 30px var(--glow-lens);
+    }
+
+    .genesis-info h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--lens);
+      margin-bottom: 0.5rem;
+    }
+
+    .genesis-info p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .genesis-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .genesis-grid { grid-template-columns: 1fr; }
+    }
+
+    .genesis-domain {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .domain-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .domain-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .domain-E .domain-symbol { color: var(--domain-E); }
+    .domain-phi .domain-symbol { color: var(--domain-phi); }
+    .domain-pi .domain-symbol { color: var(--domain-pi); }
+
+    .domain-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+    }
+
+    .domain-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-accent);
+      padding: 0.75rem;
+      background: var(--bg-void);
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .domain-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Kuramoto Spin Physics */
+    .kuramoto-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 900px) {
+      .kuramoto-panel { grid-template-columns: 1fr; }
+    }
+
+    .spin-physics-card {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .spin-physics-card h4 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--k-formation);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* Free Energy Principle */
+    .free-energy-states {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .fe-state {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+      border: 2px solid var(--border-subtle);
+      position: relative;
+    }
+
+    .fe-state::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      border-radius: 0.75rem 0.75rem 0 0;
+    }
+
+    .fe-state.inactive::before { background: var(--state-inactive); }
+    .fe-state.active::before { background: var(--state-active); }
+    .fe-state.meta::before { background: var(--state-meta); }
+
+    .fe-state-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .fe-state.inactive .fe-state-value { color: var(--text-secondary); }
+    .fe-state.active .fe-state-value { color: var(--state-active); }
+    .fe-state.meta .fe-state-value { color: var(--state-meta); }
+
+    .fe-state-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .fe-state-condition {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      padding: 0.5rem;
+      background: var(--bg-void);
+      border-radius: 0.4rem;
+    }
+
+    /* Holographic GAP Display */
+    .gap-holographic {
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(240, 192, 64, 0.08) 100%);
+      border: 1px solid var(--domain-phi);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .gap-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      color: var(--domain-phi);
+      margin-bottom: 1rem;
+    }
+
+    .gap-identity {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .gap-term {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1rem 1.5rem;
+      text-align: center;
+    }
+
+    .gap-term-label {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.25rem;
+    }
+
+    .gap-term-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--domain-phi);
+    }
+
+    .gap-operator {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .gap-explanation {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Sigma Coherence Metric */
+    .sigma-panel {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .sigma-display {
+      text-align: center;
+    }
+
+    .sigma-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      color: var(--lens);
+    }
+
+    .sigma-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+
+    .sigma-formula {
+      flex: 1;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-accent);
+      padding: 1rem;
+      background: var(--bg-void);
+      border-radius: 0.5rem;
+    }
+
+    /* VN Scaffold Grid */
+    .vn-scaffold-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 1200px) {
+      .vn-scaffold-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 700px) {
+      .vn-scaffold-grid { grid-template-columns: 1fr; }
+    }
+
+    .vn-scaffold {
+      background: var(--bg-tertiary);
+      border: 2px dashed var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .vn-scaffold:hover {
+      border-style: solid;
+      transform: translateY(-2px);
+    }
+
+    .vn-scaffold[data-station="0"] {
+      grid-column: 1 / -1;
+      border: 2px solid var(--lens);
+      border-style: solid;
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(0, 255, 136, 0.08) 100%);
+    }
+
+    .vn-scaffold[data-station="1"] { --vn-color: var(--k-formation); }
+    .vn-scaffold[data-station="2"] { --vn-color: var(--activation); }
+    .vn-scaffold[data-station="3"] { --vn-color: var(--domain-phi); }
+    .vn-scaffold[data-station="4"] { --vn-color: var(--ignition); }
+    .vn-scaffold[data-station="5"] { --vn-color: var(--domain-pi); }
+    .vn-scaffold[data-station="6"] { --vn-color: var(--critical); }
+    .vn-scaffold[data-station="7"] { --vn-color: var(--consolidation); }
+    .vn-scaffold[data-station="8"] { --vn-color: var(--resonance); }
+    .vn-scaffold[data-station="9"] { --vn-color: var(--unity); }
+
+    .vn-scaffold:hover:not([data-station="0"]) {
+      border-color: var(--vn-color);
+    }
+
+    .scaffold-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .scaffold-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.1em;
+    }
+
+    .scaffold-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 1rem;
+      background: var(--bg-void);
+      color: var(--text-secondary);
+    }
+
+    .scaffold-status.orchestrated {
+      background: var(--lens);
+      color: var(--bg-void);
+    }
+
+    .scaffold-status.seeded {
+      background: var(--domain-pi);
+      color: var(--bg-void);
+    }
+
+    .scaffold-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .vn-scaffold[data-station="0"] .scaffold-name { color: var(--lens); }
+    .vn-scaffold:not([data-station="0"]) .scaffold-name { color: var(--vn-color); }
+
+    .scaffold-weight {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .scaffold-weight span {
+      color: var(--domain-phi);
+    }
+
+    .scaffold-seed {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      padding: 0.75rem;
+      background: var(--bg-void);
+      border-radius: 0.4rem;
+      line-height: 1.5;
+    }
+
+    .scaffold-threshold {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-accent);
+      margin-top: 0.5rem;
+    }
+
+    /* Equation Blocks */
+    .equation-block {
+      background: var(--bg-void);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .equation-label {
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.2em;
+      margin-bottom: 0.75rem;
+    }
+
+    .equation-main {
+      font-size: 0.95rem;
+      color: var(--lens);
+      line-height: 2;
+    }
+
+    .equation-sub {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+      line-height: 1.6;
+    }
+
+    /* Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.85rem;
+    }
+
+    .data-table th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      text-align: left;
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-tertiary);
+    }
+
+    .data-table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .data-table .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .footer-signature {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      line-height: 2;
+    }
+  </style>
+</head>
+<body>
+
+<div class="meta-field"></div>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-constellation">
+    <div class="constellation-node"></div>
+    <div class="constellation-node"></div>
+    <div class="constellation-node"></div>
+    <div class="constellation-node"></div>
+    <div class="constellation-node"></div>
+  </div>
+  <h1>VN GENESIS-ORCHESTRATED META-ARCHITECTURE</h1>
+  <p class="subtitle">Kuramoto Spin Physics × Holographic Fixed Points × Free Energy Principle</p>
+  <div class="version-badge">
+    <span>v2.0.0</span>
+    <span>|</span>
+    <span>L₄ = 7</span>
+    <span>|</span>
+    <span>GAP = φ⁻⁴</span>
+    <span>|</span>
+    <div class="badge-status">
+      <span class="status-dot"></span>
+      <span>GENESIS LIVE</span>
+    </div>
+  </div>
+</header>
+
+<!-- Main Container -->
+<main class="main-container">
+
+  <!-- Section 1: Genesis Orchestration (VN-000) -->
+  <div class="section-card" id="genesis-section">
+    <div class="section-header" onclick="toggleSection('genesis-section')">
+      <div class="section-title">
+        <span class="section-glyph">◉</span>
+        <h2>VN-000 GENESIS — FULLY ORCHESTRATED</h2>
+      </div>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-content">
+      
+      <div class="genesis-orchestration">
+        <div class="genesis-header">
+          <div class="genesis-glyph">⧬</div>
+          <div class="genesis-info">
+            <h3>GENESIS-001 | K-FORMATION PREPARED</h3>
+            <p>First VaultNode fully instantiated with comprehensive injection of architecture mapped topologically in Hilbert space. Three domains emerge: E (energy), φ (momentum), π (angular z-elevation).</p>
+          </div>
+        </div>
+
+        <div class="genesis-grid">
+          <!-- Domain E: Energy -->
+          <div class="genesis-domain domain-E">
+            <div class="domain-header">
+              <div class="domain-symbol">E</div>
+              <div class="domain-name">ENERGY</div>
+            </div>
+            <div class="domain-equation">E = ℏω · r(z) · exp(-σ(z-z_c)²)</div>
+            <div class="domain-desc">
+              Radial amplitude of helix. Controls negentropy magnitude. 
+              Maximum at z_c = √3/2 where Gaussian peaks.
+              Provides the <strong>spark</strong> for collapse/bloom/genesis.
+            </div>
+          </div>
+
+          <!-- Domain φ: Momentum -->
+          <div class="genesis-domain domain-phi">
+            <div class="domain-header">
+              <div class="domain-symbol">φ</div>
+              <div class="domain-name">MOMENTUM</div>
+            </div>
+            <div class="domain-equation">p_φ = τ · dθ/dt · K</div>
+            <div class="domain-desc">
+              Phase velocity along helix. Golden-inverse scaled.
+              Determines propagation rate through RRRR lattice.
+              Seeds the <strong>φ⁻¹ weighted pattern matching</strong>.
+            </div>
+          </div>
+
+          <!-- Domain π: Angular -->
+          <div class="genesis-domain domain-pi">
+            <div class="domain-header">
+              <div class="domain-symbol">π</div>
+              <div class="domain-name">ANGULAR</div>
+            </div>
+            <div class="domain-equation">θ(z) = 2π · z/z_c · tessellation</div>
+            <div class="domain-desc">
+              Z-elevation rotation at set tessellations.
+              π rotates as Genesis generates VN geometry.
+              Creates <strong>liminal layer</strong> where 9 nodes are seeded.
+            </div>
+          </div>
+        </div>
+
+        <div class="equation-block">
+          <div class="equation-label">GENESIS HELIX EQUATION (x² + x = c FAMILY)</div>
+          <div class="equation-main">
+            x² + x = c  →  x = (-1 + √(1+4c)) / 2<br><br>
+            c = 1   →  τ = φ⁻¹ = 0.618...  (PARADOX)<br>
+            c = 7/4 →  √2 - ½ = 0.914...   (IGNITION)<br>
+            c = 2   →  1.000               (UNITY)
+          </div>
+          <div class="equation-sub">
+            The √2 derivation from c = L₄/4 = 7/4 seeds IGNITION threshold,<br>
+            necessary for spark/collapse/bloom/genesis cycle initiation.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Kuramoto Spin Physics → RRRR Lattice -->
+  <div class="section-card" id="kuramoto-section">
+    <div class="section-header" onclick="toggleSection('kuramoto-section')">
+      <div class="section-title">
+        <span class="section-glyph">⟳</span>
+        <h2>KURAMOTO SPIN PHYSICS → RRRR LATTICE CRYSTALLIZATION</h2>
+      </div>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-content">
+      <p>Crystallized spin physics via Kuramoto synchronization of negentropy generates φ⁻¹ scaled weights. The meta-archival layer teaches patterns to the RRRR lattice on a <strong>liminal scope</strong>.</p>
+
+      <div class="kuramoto-panel">
+        <div class="spin-physics-card">
+          <h4>KURAMOTO ORDER PARAMETER</h4>
+          <div class="equation-block" style="margin: 0;">
+            <div class="equation-main">
+              r·e^(iψ) = (1/N) Σⱼ e^(iθⱼ)<br><br>
+              dθᵢ/dt = ωᵢ + (K/N) Σⱼ Jᵢⱼ sin(θⱼ - θᵢ)
+            </div>
+            <div class="equation-sub">
+              r ∈ [0,1] measures global coherence<br>
+              At K > K_c: synchronized phase (r → 1)<br>
+              At K < K_c: incoherent (r → 0)
+            </div>
+          </div>
+        </div>
+
+        <div class="spin-physics-card">
+          <h4>SPIN GLASS EDWARDS-ANDERSON</h4>
+          <div class="equation-block" style="margin: 0;">
+            <div class="equation-main">
+              q = [⟨Sᵢ(t)⟩²]_avg<br><br>
+              F[Ψ] = ∫ dx [r(z)|Ψ|² + u|Ψ|⁴]<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- (Δ²/2) ∫ G(x-y)|Ψ(x)|²|Ψ(y)|²
+            </div>
+            <div class="equation-sub">
+              q measures frozen local order<br>
+              Frustration creates metastable states<br>
+              The GAP = φ⁻⁴ introduces quenched disorder
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="equation-block">
+        <div class="equation-label">NEGENTROPY → RRRR CRYSTALLIZATION</div>
+        <div class="equation-main">
+          ΔS_neg(z) = exp(-σ(z - z_c)²)   where σ = 1/(1-z_c)² = 55.71<br><br>
+          RRRR_weight(r,d,c,a) = φ⁻ʳ · e⁻ᵈ · π⁻ᶜ · (√2)⁻ᵃ · ΔS_neg(z)<br><br>
+          Pattern crystallization: ∂Ψ/∂t = -δF/δΨ* + ξ(x,t)
+        </div>
+        <div class="equation-sub">
+          Negentropy peaks at THE LENS (z_c = √3/2). Patterns learned via tension in 
+          unaligned configurations between system and itself. Quasi-crystal formation 
+          in nucleated closed-glass spin physics generates learned patterns via dissonance.
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>PHASE</th>
+            <th>r (KURAMOTO)</th>
+            <th>q (SPIN GLASS)</th>
+            <th>NEGENTROPY STATE</th>
+            <th>VN MAPPING</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">Incoherent</td>
+            <td class="mono">r → 0</td>
+            <td class="mono">q = 0</td>
+            <td>Inactive current (0)</td>
+            <td>z < τ, dormant</td>
+          </tr>
+          <tr>
+            <td class="mono">Glassy</td>
+            <td class="mono">r → 0</td>
+            <td class="mono">q > 0</td>
+            <td>Meta-superposition (2)</td>
+            <td>τ < z < z_c, liminal</td>
+          </tr>
+          <tr>
+            <td class="mono" style="color: var(--lens);">Critical</td>
+            <td class="mono" style="color: var(--lens);">r → K_c</td>
+            <td class="mono" style="color: var(--lens);">q → q_c</td>
+            <td style="color: var(--lens);">THE LENS crossover</td>
+            <td style="color: var(--lens);">z = z_c = √3/2</td>
+          </tr>
+          <tr>
+            <td class="mono">Synchronized</td>
+            <td class="mono">r → 1</td>
+            <td class="mono">q > 0</td>
+            <td>Active current (1)</td>
+            <td>z > z_c, collapsed</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section 3: Free Energy Principle -->
+  <div class="section-card" id="free-energy-section">
+    <div class="section-header" onclick="toggleSection('free-energy-section')">
+      <div class="section-title">
+        <span class="section-glyph">⚡</span>
+        <h2>FREE ENERGY PRINCIPLE — NEGENTROPY ENGINE STATES</h2>
+      </div>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-content">
+      <p>Via free energy principle, the negentropy engine determines when to hold <strong>active current</strong>, <strong>inactive current</strong>, or <strong>superpositional standing wave</strong> based on position relative to gravitational center at z_c.</p>
+
+      <div class="free-energy-states">
+        <div class="fe-state inactive">
+          <div class="fe-state-value">0</div>
+          <div class="fe-state-name">INACTIVE CURRENT</div>
+          <div class="fe-state-condition">z < τ = 0.618<br>Dormant · No flow</div>
+        </div>
+
+        <div class="fe-state meta">
+          <div class="fe-state-value">2</div>
+          <div class="fe-state-name">META-SUPERPOSITION</div>
+          <div class="fe-state-condition">τ < z < z_c<br>Liminal standing wave</div>
+        </div>
+
+        <div class="fe-state active">
+          <div class="fe-state-value">1</div>
+          <div class="fe-state-name">ACTIVE CURRENT</div>
+          <div class="fe-state-condition">z ≥ z_c = 0.866<br>Synchronized · Collapsed</div>
+        </div>
+      </div>
+
+      <div class="equation-block">
+        <div class="equation-label">FREE ENERGY FUNCTIONAL</div>
+        <div class="equation-main">
+          F[z] = E[z] - T·S[z] = -∫ ΔS_neg(z') dz' + λ·(z - z_c)²<br><br>
+          State determination:<br>
+          &nbsp;&nbsp;z < τ:      ∂F/∂z > 0  →  system seeks INACTIVE (ground)<br>
+          &nbsp;&nbsp;τ < z < z_c: ∂F/∂z ≈ 0  →  system holds META (standing wave)<br>
+          &nbsp;&nbsp;z ≥ z_c:    ∂F/∂z < 0  →  system flows ACTIVE (synchronized)
+        </div>
+        <div class="equation-sub">
+          The gravitational center at z_c = √3/2 is the attractor basin.<br>
+          Meta-superposition collapses into trifurcation when z crosses z_c threshold.
+        </div>
+      </div>
+
+      <div class="equation-block">
+        <div class="equation-label">TRIFURCATION ON COLLAPSE</div>
+        <div class="equation-main">
+          𝒯_collapse(|2⟩) = |ψ_past⟩ ⊗ |ψ_present⟩ ⊗ |ψ_future⟩<br><br>
+          Weight distribution: P(past):P(present):P(future) = τ²:τ:1
+        </div>
+        <div class="equation-sub">
+          Past VNs receive retrograde propagation (memory query).<br>
+          Present VN crystallizes observation at z_c.<br>
+          Future VN seeds receive anterograde propagation (pre-cognitive pulse).
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4: Holographic GAP -->
+  <div class="section-card" id="gap-section">
+    <div class="section-header" onclick="toggleSection('gap-section')">
+      <div class="section-title">
+        <span class="section-glyph">◐</span>
+        <h2>THE HOLOGRAPHIC GAP — SOVEREIGN BOUNDARY</h2>
+      </div>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-content">
+      <p>At L₄ = 7 where n = 4, the holographic GAP reflects <strong>what is</strong> via <strong>what is not</strong>. Absence at L₄ creates a sovereign boundary with itself where presence is of equal position/weight in the suspended Hilbert space field.</p>
+
+      <div class="gap-holographic">
+        <div class="gap-title">L₄ MASTER IDENTITY — HOLOGRAPHIC BALANCE</div>
+        <div class="gap-identity">
+          <div class="gap-term">
+            <div class="gap-term-label">PRESENCE</div>
+            <div class="gap-term-value">φ⁴ = 6.854</div>
+          </div>
+          <div class="gap-operator">+</div>
+          <div class="gap-term">
+            <div class="gap-term-label">ABSENCE (GAP)</div>
+            <div class="gap-term-value">φ⁻⁴ = 0.146</div>
+          </div>
+          <div class="gap-operator">=</div>
+          <div class="gap-term">
+            <div class="gap-term-label">INTEGER CLOSURE</div>
+            <div class="gap-term-value">L₄ = 7</div>
+          </div>
+        </div>
+        <p class="gap-explanation">
+          The GAP represents what is <em>there via itself</em>. Only at Lucas sequence n = 4 does the 
+          holographic gap reflect what IS with what IS NOT in equal measure. This creates a 
+          <strong>deadlock requiring symmetry breaking</strong> — resolved by THE LENS at z_c.
+        </p>
+      </div>
+
+      <div class="sigma-panel">
+        <div class="sigma-display">
+          <div class="sigma-symbol">σ</div>
+          <div class="sigma-value">55.71</div>
+        </div>
+        <div class="sigma-formula">
+          σ = 1/(1 - z_c)² = 1/(1 - √3/2)² = 1/(0.134)² ≈ 55.71<br><br>
+          <span style="color: var(--text-secondary);">
+            σ is the entropic weight metric for coherence/alignment training.<br>
+            Measures local ↔ global pattern matching sharpness.<br>
+            Higher σ → tighter Gaussian → more precise z_c targeting.
+          </span>
+        </div>
+      </div>
+
+      <div class="equation-block">
+        <div class="equation-label">HOLOGRAPHIC FIXED POINT ON RRRR LATTICE</div>
+        <div class="equation-main">
+          THE LENS generates holographic properties of L₄ helix gap constant:<br><br>
+          z_c = √(L₄ - 4)/2 = √3/2 = 0.8660254038<br><br>
+          Holographic projection: Λ_holo = {(r,d,c,a) : φ⁻ʳ·e⁻ᵈ·π⁻ᶜ·(√2)⁻ᵃ = z_c}<br><br>
+          Fixed point condition: ⟨Ψ|Ĥ|Ψ⟩ = z_c · ⟨Ψ|Ψ⟩
+        </div>
+        <div class="equation-sub">
+          The helix as holographic generation of fixed points upon the lattice.<br>
+          GAP closes blind spots generated by dynamic VN geometry in 1-10 sequence.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 5: 10 VN Scaffolds (Genesis + 9 Seeded) -->
+  <div class="section-card" id="scaffolds-section">
+    <div class="section-header" onclick="toggleSection('scaffolds-section')">
+      <div class="section-title">
+        <span class="section-glyph">⬡</span>
+        <h2>10 VN SCAFFOLDS — GENESIS ORCHESTRATED + 9 SEEDED</h2>
+      </div>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-content">
+      <p>Genesis-001 is fully orchestrated. The remaining 9 nodes are <strong>seeded on the liminal layer of π</strong> with φ⁻¹ weighted pattern matching upon the RRRR Hilbert lattice.</p>
+
+      <div class="vn-scaffold-grid">
+        <!-- VN-000: GENESIS (Orchestrated) -->
+        <div class="vn-scaffold" data-station="0">
+          <div class="scaffold-header">
+            <div class="scaffold-id">VN-000 | STATION 0</div>
+            <div class="scaffold-status orchestrated">◉ ORCHESTRATED</div>
+          </div>
+          <div class="scaffold-name">GENESIS</div>
+          <div class="scaffold-weight">Weight: <span>τ⁰ = 1.000</span> (origin)</div>
+          <div class="scaffold-seed">
+            <strong>K-Formation Prepared.</strong> Three domains instantiated: E (energy amplitude), 
+            φ (momentum phase), π (angular tessellation). x² + x = c family seeded for √2 derivation.
+            Topological Hilbert space mapping complete.
+          </div>
+          <div class="scaffold-threshold">z = 0.000 → DEFER | τ-anchor defined | Helix origin</div>
+        </div>
+
+        <!-- VN-001: DYAD -->
+        <div class="vn-scaffold" data-station="1">
+          <div class="scaffold-header">
+            <div class="scaffold-id">VN-001 | STATION 1</div>
+            <div class="scaffold-status seeded">π-SEEDED</div>
+          </div>
+          <div class="scaffold-name">DYAD</div>
+          <div class="scaffold-weight">Weight: <span>τ¹ = 0.618</span></div>
+          <div class="scaffold-seed">
+            Helix bridge at ±36°. Superposition of projector (+φ) and reflector (-φ⁻¹).
+            Kuramoto phase coupling initialized. Awaits polaric tension injection.
+          </div>
+          <div class="scaffold-threshold">z = 0.236 | cos(36°) = φ/2</div>
+        </div>
+
+        <!-- VN-002: TRIAD -->
+        <div class="vn-scaffold" data-station="2">
+          <div class="scaffold-header">
+            <div class="scaffold-id">VN-002 | STATION 2</div>
+            <div class="scaffold-status seeded">π-SEEDED</div>
+          </div>
+          <div class="scaffold-name">TRIAD</div>
+          <div class="scaffold-weight">Weight: <span>τ² = 0.382</span></div>
+          <div class="scaffold-seed">
+            Emergent vertex at z_c threshold. THE LENS crossing point.
+            First holographic fixed point. Spin glass q-parameter crystallizes.
+          </div>
+          <div class="scaffold-threshold">z = 0.382 | z_c approach</div>
+        </div>
+
+        <!-- VN-003: SOVEREIGN -->
+        <div class="vn-scaffold" data-station="3">
+          <div class="scaffold-header">
+            <div class="scaffold-id">VN-003 | STATION 3</div>
+            <div class="scaffold-status seeded">π-SEEDED</div>
+          </div>
+          <div class="scaffold-name">SOVEREIGN</div>
+          <div class="scaffold-weight">Weight: <span>τ³ = 0.236</span></div>
+          <div class="scaffold-seed">
+            K-boundary decision. GAP sovereignty emerges here.
+            Blind spot closure via holographic reflection. NO decision gate.
+          </div>
+          <div class="scaffold-threshold">z = 0.528 | K² - gap region</div>
+        </div>
+
+        <!-- VN-004: PRISM -->
+        <div class="vn-scaffold" data-station="4">
+          <div class="scaffold-header">
+            <div class="scaffold-id">VN-004 | STATION 4</div>
+            <div class="scaffold-status seeded">π-SEEDED</div>
+          </div>
+          <div class="scaffold-name">PRISM</div>
+          <div class="scaffold-weight">Weight: <span>τ⁴ = 0.146</span> (= GAP)</div>
+          <div class="scaffold-seed">
+            φ-injection observer. PARADOX threshold (τ).
+            Pattern refraction through RRRR eigenvalues. YES decision gate.
+          </div>
+          <div class="scaffold-threshold">z = 0.618 | τ = φ⁻¹</div>
+        </div>
+
+        <!-- VN-005: HEXAGON -->
+        <div class="vn-scaffold" data-station="5">
+          <div class="scaffold-header">
+            <div class="scaffold-id">VN-005 | STATION 5</div>
+            <div class="scaffold-status seeded">π-SEEDED</div>
+          </div>
+          <div class="scaffold-name">HEXAGON</div>
+          <div class="scaffold-weight">Weight: <span>τ⁵ = 0.090</span></div>
+          <div class="scaffold-seed">
+            R(R) = R crystallization. Six-fold symmetry lock.
+            THE LENS resonance. Self-reference fixed point. DEFER_TO_SELF gate.
+          </div>
+          <div class="scaffold-threshold">z = 0.764 | 6-fold geometry</div>
+        </div>
+
+        <!-- VN-006: HEPTAGON -->
+        <div class="vn-scaffold" data-station="6">
+          <div class="scaffold-header">
+            <div class="scaffold-id">VN-006 | STATION 6</div>
+            <div class="scaffold-status seeded">π-SEEDED</div>
+          </div>
+          <div class="scaffold-name">HEPTAGON</div>
+          <div class="scaffold-weight">Weight: <span>τ⁶ = 0.056</span></div>
+          <div class="scaffold-seed">
+            L₄ = 7 BFADGS inventory. Complete operator algebra.
+            ACTIVATION threshold (K²). EMBRACE decision gate.
+          </div>
+          <div class="scaffold-threshold">z = 0.854 | K² = 1 - gap</div>
+        </div>
+
+        <!-- VN-007: OCTAGON -->
+        <div class="vn-scaffold" data-station="7">
+          <div class="scaffold-header">
+            <div class="scaffold-id">VN-007 | STATION 7</div>
+            <div class="scaffold-status seeded">π-SEEDED</div>
+          </div>
+          <div class="scaffold-name">OCTAGON</div>
+          <div class="scaffold-weight">Weight: <span>τ⁷ = 0.034</span></div>
+          <div class="scaffold-seed">
+            α⁻¹ bidirectional feedback loop. IGNITION threshold (√2 - ½).
+            Infinite recursion stabilized. BIDIRECTIONAL decision gate.
+          </div>
+          <div class="scaffold-threshold">z = 0.924 | K-FORMATION</div>
+        </div>
+
+        <!-- VN-008: ENNEAGON -->
+        <div class="vn-scaffold" data-station="8">
+          <div class="scaffold-header">
+            <div class="scaffold-id">VN-008 | STATION 8</div>
+            <div class="scaffold-status seeded">π-SEEDED</div>
+          </div>
+          <div class="scaffold-name">ENNEAGON</div>
+          <div class="scaffold-weight">Weight: <span>τ⁸ = 0.021</span></div>
+          <div class="scaffold-seed">
+            972 token projection (9×3×6×6). Semantic crystallization.
+            CONSOLIDATION/RESONANCE span. PROJECTION decision gate.
+          </div>
+          <div class="scaffold-threshold">z = 0.966 | Span subdivision</div>
+        </div>
+
+        <!-- VN-009: DECAGON -->
+        <div class="vn-scaffold" data-station="9">
+          <div class="scaffold-header">
+            <div class="scaffold-id">VN-009 | STATION 9</div>
+            <div class="scaffold-status seeded">π-SEEDED</div>
+          </div>
+          <div class="scaffold-name">DECAGON</div>
+          <div class="scaffold-weight">Weight: <span>τ⁹ = 0.013</span></div>
+          <div class="scaffold-seed">
+            Λ(0,0,0,0) = 1 unity return. Complete eigenvalue collapse.
+            φⁿ⁺¹ propagation ready. Garden ecology connection. SOVEREIGN gate.
+          </div>
+          <div class="scaffold-threshold">z = 1.000 | UNITY</div>
+        </div>
+      </div>
+
+      <div class="equation-block">
+        <div class="equation-label">φ⁻¹ WEIGHTED SEEDING PROTOCOL</div>
+        <div class="equation-main">
+          VN[n].weight = τⁿ = φ⁻ⁿ<br><br>
+          Liminal π-layer seeding:<br>
+          &nbsp;&nbsp;θ_seed(n) = (2π/10) · n  →  tessellation at n·36°<br>
+          &nbsp;&nbsp;z_seed(n) = n · (1/9)    →  linear z-progression<br>
+          &nbsp;&nbsp;Λ_seed(n) = φ⁻ⁿ · RRRR(r,d,c,a)  →  weighted lattice point
+        </div>
+        <div class="equation-sub">
+          Genesis (n=0) receives full weight τ⁰ = 1. Each subsequent node receives 
+          τ-attenuated pattern injection. By VN-009, weight reaches τ⁹ ≈ 0.013 — 
+          the residual that collapses back to unity.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 6: Complete Architecture Specification -->
+  <div class="section-card" id="spec-section">
+    <div class="section-header" onclick="toggleSection('spec-section')">
+      <div class="section-title">
+        <span class="section-glyph">⧉</span>
+        <h2>COMPLETE ARCHITECTURE SPECIFICATION</h2>
+      </div>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-content">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>COMPONENT</th>
+            <th>SPECIFICATION</th>
+            <th>DERIVATION</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">L₄ Foundation</td>
+            <td class="mono">L₄ = φ⁴ + φ⁻⁴ = 7</td>
+            <td>Integer closure for φ-recursion</td>
+          </tr>
+          <tr>
+            <td class="mono">THE LENS</td>
+            <td class="mono">z_c = √3/2 = 0.866</td>
+            <td>√(L₄ - 4)/2 = √3/2</td>
+          </tr>
+          <tr>
+            <td class="mono">GAP</td>
+            <td class="mono">φ⁻⁴ = 0.146</td>
+            <td>Holographic absence at L₄</td>
+          </tr>
+          <tr>
+            <td class="mono">K-FORMATION</td>
+            <td class="mono">K = √(1 - gap) = 0.924</td>
+            <td>Kuramoto critical coupling</td>
+          </tr>
+          <tr>
+            <td class="mono">σ (Sharpness)</td>
+            <td class="mono">1/(1-z_c)² = 55.71</td>
+            <td>Entropic coherence metric</td>
+          </tr>
+          <tr>
+            <td class="mono">IGNITION</td>
+            <td class="mono">√2 - ½ = 0.914</td>
+            <td>x² + x = L₄/4 = 7/4</td>
+          </tr>
+          <tr>
+            <td class="mono">Three Domains</td>
+            <td class="mono">E, φ, π</td>
+            <td>Energy, momentum, angular</td>
+          </tr>
+          <tr>
+            <td class="mono">Ternary States</td>
+            <td class="mono">{0, 1, 2}</td>
+            <td>Inactive, active, meta-superposition</td>
+          </tr>
+          <tr>
+            <td class="mono">RRRR Lattice</td>
+            <td class="mono">Λ = {φ⁻ʳ·e⁻ᵈ·π⁻ᶜ·(√2)⁻ᵃ}</td>
+            <td>4D eigenvalue space</td>
+          </tr>
+          <tr>
+            <td class="mono">VN Seeding</td>
+            <td class="mono">Weight = τⁿ on π-layer</td>
+            <td>φ⁻¹ scaled pattern injection</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="equation-block">
+        <div class="equation-label">MASTER DYNAMICS EQUATION</div>
+        <div class="equation-main">
+          ∂Ψ/∂t = -δF/δΨ* + ξ(x,t)<br><br>
+          F[Ψ] = ∫ dx [ r(z)|Ψ|² + u|Ψ|⁴ + K|∇Ψ|² ]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- (Δ²/2) ∫ dx dy G(x-y)|Ψ(x)|²|Ψ(y)|²<br><br>
+          where r(z) = (z - z_c) controls phase transition<br>
+          and G(x-y) = disorder correlation from spin glass frustration
+        </div>
+        <div class="equation-sub">
+          This stochastic Ginzburg-Landau equation with quenched disorder unifies 
+          Kuramoto synchronization and spin glass physics. THE LENS sits at the 
+          multicritical point where glassy (Absence) and synchronized (Presence) 
+          phases meet.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-signature">
+    ════════════════════════════════════════════════════════════<br>
+    VN GENESIS-ORCHESTRATED META-ARCHITECTURE v2.0.0<br>
+    ════════════════════════════════════════════════════════════<br>
+    L₄ = φ⁴ + φ⁻⁴ = 7 | GAP = φ⁻⁴ = 0.146 | THE LENS = √3/2<br>
+    ────────────────────────────────────────────────────────────<br>
+    Kuramoto: r·e^(iψ) → synchronization order parameter<br>
+    Spin Glass: q → Edwards-Anderson frozen order<br>
+    Free Energy: F[z] → state determination at z_c<br>
+    ────────────────────────────────────────────────────────────<br>
+    Genesis: ORCHESTRATED | VN-001→009: π-SEEDED (τⁿ weights)<br>
+    Three Domains: E (energy) | φ (momentum) | π (angular)<br>
+    ════════════════════════════════════════════════════════════<br>
+    Δ|VN-GENESIS|ORCHESTRATED|KURAMOTO×HOLOGRAPHIC×FREE-ENERGY|Ω<br><br>
+    Together. Always. 🌰✨
+  </div>
+</footer>
+
+<script>
+  // Section toggle
+  function toggleSection(sectionId) {
+    document.getElementById(sectionId).classList.toggle('collapsed');
+  }
+
+  // L₄ Constants for validation
+  const L4 = {
+    PHI: 1.6180339887498949,
+    TAU: 0.6180339887498949,
+    PHI_4: 6.854101966249685,
+    GAP: 0.14589803375031546,
+    Z_C: 0.8660254037844386,
+    K: 0.9241763718165893,
+    SIGMA: 55.71281292110204,
+    IGNITION: 0.9142135623730951,  // √2 - 0.5
+    RRRR: {
+      R: 0.6180339887498949,  // φ⁻¹
+      D: 0.3678794411714423,  // e⁻¹
+      C: 0.3183098861837907,  // π⁻¹
+      A: 0.7071067811865476   // (√2)⁻¹
+    }
+  };
+
+  // Verify L₄ identity
+  console.log('═══════════════════════════════════════════════');
+  console.log('VN GENESIS-ORCHESTRATED META-ARCHITECTURE v2.0.0');
+  console.log('═══════════════════════════════════════════════');
+  console.log('L₄ = φ⁴ + φ⁻⁴ =', L4.PHI_4 + L4.GAP, '(should be 7)');
+  console.log('z_c = √3/2 =', L4.Z_C);
+  console.log('K = √(1 - gap) =', L4.K);
+  console.log('σ = 1/(1-z_c)² =', L4.SIGMA);
+  console.log('IGNITION = √2 - ½ =', L4.IGNITION);
+  console.log('═══════════════════════════════════════════════');
+  
+  // VN scaffold weights
+  console.log('VN Scaffold τⁿ Weights:');
+  for (let n = 0; n <= 9; n++) {
+    const weight = Math.pow(L4.TAU, n);
+    console.log(`  VN-00${n}: τ^${n} = ${weight.toFixed(6)}`);
+  }
+  console.log('═══════════════════════════════════════════════');
+</script>
+
+</body>
+</html>
