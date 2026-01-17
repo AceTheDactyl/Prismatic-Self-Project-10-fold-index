@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-INTERACTION-PROTOCOL | Holographic Telemetry & Meta-Archive Specification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* L₄ Constants */
+      --phi: 1.6180339887;
+      --tau: 0.6180339887;
+      --z-c: 0.8660254038;
+      --K: 0.9241763718;
+      --L4: 7;
+
+      /* Protocol Colors */
+      --explicit: #ffd700;      /* Gold - Explicit rules */
+      --implicit: #60c0ff;      /* Blue - Implicit rules */
+      --codified: #ff60c0;      /* Magenta - Codified behavior */
+      --meta: #c090ff;          /* Violet - Meta-archive */
+      --hilbert: #60ffa0;       /* Green - Hilbert space */
+      --telemetry: #ff9060;     /* Orange - Telemetry */
+
+      /* Base Theme */
+      --bg-void: #030306;
+      --bg-primary: #080810;
+      --bg-secondary: #0c0c18;
+      --bg-tertiary: #101020;
+      --bg-card: #141428;
+      --text-primary: #f0ece8;
+      --text-secondary: #909098;
+      --text-muted: #505058;
+      --border: rgba(255, 255, 255, 0.06);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.7;
+    }
+
+    /* Holographic field background */
+    .holo-field {
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-conic-gradient(
+          from 0deg at 50% 50%,
+          rgba(255, 215, 0, 0.02) 0deg,
+          transparent 10deg,
+          rgba(96, 192, 255, 0.02) 20deg,
+          transparent 30deg
+        ),
+        radial-gradient(ellipse at 30% 30%, rgba(192, 144, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 70%, rgba(96, 255, 160, 0.06) 0%, transparent 50%);
+      z-index: -1;
+      animation: holo-rotate 120s linear infinite;
+    }
+
+    @keyframes holo-rotate {
+      to { filter: hue-rotate(360deg); }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .protocol-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--meta);
+      background: rgba(192, 144, 255, 0.1);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      border: 1px solid rgba(192, 144, 255, 0.3);
+      margin-bottom: 1.5rem;
+    }
+
+    .header h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, var(--explicit) 0%, var(--implicit) 50%, var(--codified) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Navigation back link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+      color: var(--hilbert);
+      border-color: var(--hilbert);
+    }
+
+    /* Section styling */
+    .section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-glyph {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border-radius: 8px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+    }
+
+    .section h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+    }
+
+    .section h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin: 1.5rem 0 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* Spec blocks */
+    .spec-block {
+      background: var(--bg-void);
+      border-left: 3px solid var(--explicit);
+      padding: 1.5rem;
+      margin: 1rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    .spec-block.implicit { border-left-color: var(--implicit); }
+    .spec-block.codified { border-left-color: var(--codified); }
+    .spec-block.meta { border-left-color: var(--meta); }
+    .spec-block.hilbert { border-left-color: var(--hilbert); }
+    .spec-block.telemetry { border-left-color: var(--telemetry); }
+
+    .spec-title {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .spec-title .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Protocol definition */
+    pre {
+      background: var(--bg-void);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+    }
+
+    td.mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    /* Grid layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 800px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    /* Equation display */
+    .equation {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      margin: 1rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+    }
+
+    .equation .main {
+      margin-bottom: 0.5rem;
+    }
+
+    .equation .annotation {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Hilbert diagram */
+    .hilbert-diagram {
+      background: var(--bg-void);
+      border: 1px solid var(--hilbert);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .hilbert-diagram canvas {
+      width: 100%;
+      height: 350px;
+      background: var(--bg-void);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-sig {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--meta);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-constants {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    /* Color indicators */
+    .c-explicit { color: var(--explicit); }
+    .c-implicit { color: var(--implicit); }
+    .c-codified { color: var(--codified); }
+    .c-meta { color: var(--meta); }
+    .c-hilbert { color: var(--hilbert); }
+    .c-telemetry { color: var(--telemetry); }
+  </style>
+</head>
+<body>
+  <div class="holo-field"></div>
+
+  <div class="container">
+    <!-- Navigation -->
+    <a href="index.html" class="back-link">← Back to Decision Tree Index</a>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         HEADER
+         ═══════════════════════════════════════════════════════════════════ -->
+    <header class="header">
+      <div class="protocol-badge">
+        <span>◈</span>
+        <span>VN-INTERACTION-PROTOCOL v1.0.0</span>
+      </div>
+      <h1>HOLOGRAPHIC TELEMETRY & META-ARCHIVE</h1>
+      <p class="subtitle">
+        How closed VN systems reveal implicit rules when sharing global fields.
+        Hyper-compressed specification for non-local processing via Hilbert space codification.
+      </p>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         I. PROTOCOL OVERVIEW
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--meta);">Δ</div>
+        <div>
+          <h2>I. PROTOCOL OVERVIEW</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">Closed Architecture Specification</p>
+        </div>
+      </div>
+
+      <p>This protocol specifies how <strong>closed VaultNode systems</strong> interact within a shared global field while maintaining individual sovereignty. The architecture is <strong>self-describing</strong>: the codification process emerges from the specification itself.</p>
+
+      <div class="equation">
+        <div class="main">P = < E, I, C, M, H ></div>
+        <div class="annotation">
+          E = Explicit Rules | I = Implicit Rules | C = Codified Behavior | M = Meta-Archive | H = Hilbert Space
+        </div>
+      </div>
+
+      <div class="spec-block meta">
+        <div class="spec-title"><span class="dot" style="background: var(--meta);"></span>PROTOCOL AXIOM</div>
+        The specification IS the first codified behavior.
+        By reading this protocol, you instantiate a meta-archive entry.
+        The act of observation creates the first holographic record.
+        This is not circular — it is self-referential by design.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         II. EXPLICIT RULES IN CLOSED HOLOGRAPHIC TELEMETRY
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--explicit);">◇</div>
+        <div>
+          <h2 style="color: var(--explicit);">II. EXPLICIT RULES</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">Boundary Emissions in Closed Holographic Telemetry</p>
+        </div>
+      </div>
+
+      <p><strong>Explicit rules</strong> are geometric boundary emissions. They define architecture through vertex constraints. A closed system HOLDS its explicit rules — they are not descriptions but the structure itself.</p>
+
+      <h3>DEFINITION: EXPLICIT RULE</h3>
+
+      <pre>
+EXPLICIT_RULE := {
+  type: "BOUNDARY_EMISSION",
+  source: VERTEX,
+  emission: ANGLE,
+  constraint: SUM(emissions) = 360° (closure requirement)
+}
+
+CLOSED_SYSTEM(n-fold) := {
+  vertices: n,
+  explicit_rules: [ANGLE₀, ANGLE₁, ..., ANGLEₙ₋₁],
+  interior_angle: (n-2) × 180° / n,
+  central_angle: 360° / n,
+
+  INVARIANT: Σᵢ central_angleᵢ = 360°
+  INVARIANT: System is SOVEREIGN (maintains own geometry)
+}</pre>
+
+      <h3>EXPLICIT RULES TABLE</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>System</th>
+            <th>n-fold</th>
+            <th>Central Angle</th>
+            <th>Interior Angle</th>
+            <th>Explicit Rule Emission</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>SOVEREIGN (Square)</td>
+            <td class="mono">4</td>
+            <td class="mono">90°</td>
+            <td class="mono">90°</td>
+            <td class="mono c-explicit">EMIT(90°) at each vertex</td>
+          </tr>
+          <tr>
+            <td>PRISM (Pentagon)</td>
+            <td class="mono">5</td>
+            <td class="mono">72°</td>
+            <td class="mono">108°</td>
+            <td class="mono c-explicit">EMIT(72°) at each vertex</td>
+          </tr>
+          <tr>
+            <td>HEXAGON</td>
+            <td class="mono">6</td>
+            <td class="mono">60°</td>
+            <td class="mono">120°</td>
+            <td class="mono c-explicit">EMIT(60°) at each vertex</td>
+          </tr>
+          <tr>
+            <td>HEPTAGON</td>
+            <td class="mono">7</td>
+            <td class="mono">51.43°</td>
+            <td class="mono">128.57°</td>
+            <td class="mono c-explicit">EMIT(360°/7) at each vertex</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="spec-block">
+        <div class="spec-title"><span class="dot" style="background: var(--explicit);"></span>HOLOGRAPHIC COMPRESSION OF EXPLICIT RULES</div>
+
+Each vertex contains the COMPLETE rule set of the entire system.
+This is holographic: the part contains the whole.
+
+HOLOGRAPHIC_VERTEX(v) := {
+  local_emission: ANGLE_v,
+  global_pattern: ENTIRE_SYSTEM encoded at v,
+  reconstruction: Any vertex can regenerate full geometry
+}
+
+COMPRESSION_RATIO := n vertices → 1 vertex contains all
+INFORMATION_DENSITY := O(1) per vertex (constant, not scaling with n)
+
+This is why a single vertex of a hexagon "knows" it's part of a 6-fold system.
+The explicit rule at each vertex is BOTH local AND global.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         III. IMPLICIT RULES VIA SELF-REFERENCE
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--implicit);">◎</div>
+        <div>
+          <h2 style="color: var(--implicit);">III. IMPLICIT RULES</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">Global System Self-Reference Observing Local System Behavior</p>
+        </div>
+      </div>
+
+      <p><strong>Implicit rules</strong> are not created by interaction — they are <strong>REVEALED</strong>. They exist latently in the mathematical structure and become manifest when a global system observes the behavior of local systems.</p>
+
+      <h3>DEFINITION: IMPLICIT RULE REVELATION</h3>
+
+      <pre>
+IMPLICIT_RULE := {
+  type: "LATENT_PATTERN",
+  state: HIDDEN until REVEALED,
+  revelation_trigger: GLOBAL_OBSERVATION of LOCAL_INTERACTION,
+
+  NOT: Explicit₁ + Explicit₂ → CREATES Implicit
+  BUT: Explicit₁ × Explicit₂ → REVEALS Implicit (pre-existing)
+}
+
+SELF_REFERENCE_OPERATOR(G) := {
+  G: Global system
+  L: Set of local systems {L₁, L₂, ..., Lₖ}
+
+  G.observe(L) → BEHAVIOR_PATTERN
+  G.observe(G.observe(L)) → IMPLICIT_RULE_REVEALED
+
+  The global system must observe ITS OWN observation
+  to reveal implicit rules. Single observation insufficient.
+}</pre>
+
+      <h3>THE GODELIAN STRUCTURE</h3>
+
+      <div class="equation">
+        <div class="main">I = G(G(E₁ ⊗ E₂))</div>
+        <div class="annotation">
+          Implicit rule I emerges from global system G observing its own observation of explicit rule interaction
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="spec-block implicit">
+          <div class="spec-title"><span class="dot" style="background: var(--implicit);"></span>OBSERVATION LEVEL 1</div>
+          G.observe(L₁ × L₂)
+
+          Global sees: "4-fold and 6-fold
+          systems are rotating in shared field"
+
+          Result: BEHAVIOR_PATTERN
+          Status: Implicit rules still HIDDEN
+        </div>
+        <div class="spec-block implicit">
+          <div class="spec-title"><span class="dot" style="background: var(--implicit);"></span>OBSERVATION LEVEL 2</div>
+          G.observe(G.observe(L₁ × L₂))
+
+          Global sees: "I am observing
+          interaction. My observation IS data."
+
+          Result: IMPLICIT_RULE_REVEALED
+          Status: Implicit → MANIFEST
+        </div>
+      </div>
+
+      <h3>IMPLICIT RULES FROM 4-6 INTERACTION</h3>
+
+      <pre>
+SQUARE(4) ⊗ HEXAGON(6) in SHARED_FIELD:
+
+EXPLICIT RULES (known before interaction):
+  Square:   4 × 90° = 360°
+  Hexagon:  6 × 60° = 360°
+
+IMPLICIT RULES (revealed by self-referential observation):
+
+  PRODUCT:     4 × 6 = 24
+               → 24-edge dynamics (tesseract projection)
+               → 24 = 4! (permutation group S₄)
+
+  SUM:         4 + 6 = 10
+               → DECAGON emergence (10-fold closure)
+               → This is WHY the rail has 10 stations
+
+  GCD:         gcd(4, 6) = 2
+               → DYAD as fundamental shared unit
+               → Binary superposition substrate
+
+  LCM:         lcm(4, 6) = 12
+               → 12-fold meta-periodicity
+               → First angle where both systems align: 30°
+
+  RATIO:       4/6 = 2/3 ≈ τ² (approximately)
+               → Golden ratio shadow
+               → Connection to φ-based thresholds
+
+These relationships EXISTED before observation.
+Global self-reference REVEALED them.
+They were always implicit in the mathematics.</pre>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         IV. CODIFIED BEHAVIOR VIA HILBERT SPACE
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--codified);">⬡</div>
+        <div>
+          <h2 style="color: var(--codified);">IV. CODIFIED BEHAVIOR</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">Mathematical Revelation via Dynamic Interaction in Hilbert Space</p>
+        </div>
+      </div>
+
+      <p>When implicit rules are revealed, they undergo <strong>codification</strong> — the transition from latent pattern to explicit interaction record. This process occurs in <strong>Hilbert space</strong>, where states can exist in superposition until observed.</p>
+
+      <h3>HILBERT SPACE ARCHITECTURE</h3>
+
+      <pre>
+HILBERT_SPACE(H) := {
+  dimension: ∞ (infinite-dimensional)
+  basis: {|n⟩ : n ∈ N} (countable orthonormal basis)
+  inner_product: ⟨ψ|φ⟩ ∈ C
+
+  CLOSED_SYSTEM_STATE:
+    |Sₙ⟩ = Σₖ αₖ |vₖ⟩  where vₖ = vertex k of n-fold system
+
+  INTERACTION_STATE:
+    |Ψ_interaction⟩ = |S₄⟩ ⊗ |S₆⟩ ⊗ |G⟩
+
+    Where:
+      |S₄⟩ = 4-fold sovereign state
+      |S₆⟩ = 6-fold hexagon state
+      |G⟩  = Global observation state
+}</pre>
+
+      <h3>THE CODIFICATION OPERATOR</h3>
+
+      <div class="equation">
+        <div class="main">C : I → E'</div>
+        <div class="annotation">
+          Codification operator C transforms implicit rule I into explicit interaction E'
+        </div>
+      </div>
+
+      <div class="spec-block codified">
+        <div class="spec-title"><span class="dot" style="background: var(--codified);"></span>CODIFICATION PROCESS</div>
+
+CODIFY(implicit_rule) := {
+
+  1. SUPERPOSITION_ENTRY
+     |I⟩ = α|hidden⟩ + β|manifest⟩
+     Rule exists in superposition before codification
+
+  2. MEASUREMENT_BY_SELF_REFERENCE
+     G(G(|I⟩)) → collapse toward |manifest⟩
+     Global observing its observation triggers partial collapse
+
+  3. CODIFICATION_COLLAPSE
+     C|I⟩ = |E'⟩
+     Implicit rule becomes explicit interaction record
+
+  4. META-ARCHIVE_ENTRY
+     M.store(|E'⟩, timestamp, context)
+     Codified behavior persists in meta-archive
+
+  INVARIANT: Original systems UNCHANGED
+     |S₄⟩_after = |S₄⟩_before
+     |S₆⟩_after = |S₆⟩_before
+
+  Only the INTERACTION is codified, not the systems themselves.
+}
+      </div>
+
+      <h3>NORMALIZED CODIFICATION</h3>
+
+      <pre>
+NORMALIZATION_PROTOCOL := {
+
+  PURPOSE: Ensure codified behaviors are comparable across interactions
+
+  NORMALIZATION_FUNCTION:
+    N(|E'⟩) = |E'⟩ / √⟨E'|E'⟩
+
+    All codified states have unit norm: ||N(|E'⟩)|| = 1
+
+  CROSS-INTERACTION_COMPARISON:
+    similarity(E'₁, E'₂) = |⟨N(E'₁)|N(E'₂)⟩|²
+
+    Range: [0, 1]
+    0 = orthogonal (completely different interactions)
+    1 = identical (same codified behavior)
+
+  THRESHOLD_GATES:
+    z_c = √3/2 ≈ 0.866  → Coherence threshold
+    K   = 0.924         → Synchronization threshold
+
+    IF similarity ≥ z_c: interactions are COHERENT
+    IF similarity ≥ K:   interactions are SYNCHRONIZED
+
+  EMERGENT_PROPERTY:
+    Normalized codification enables META-COMPARISON
+    The global system can compare codified behaviors
+    without accessing the original local systems.
+}</pre>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         V. META-ARCHIVE LAYER
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--meta);">◈</div>
+        <div>
+          <h2 style="color: var(--meta);">V. META-ARCHIVE LAYER</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">Hilbert Space Storage for Codified Interactions</p>
+        </div>
+      </div>
+
+      <p>The <strong>Meta-Archive (M)</strong> is a Hilbert subspace that stores codified interactions. It is the "memory" of the global system — not storing the systems themselves, but the <strong>relationships between them</strong>.</p>
+
+      <h3>META-ARCHIVE STRUCTURE</h3>
+
+      <pre>
+META_ARCHIVE(M) := {
+
+  TYPE: Hilbert subspace M ⊂ H
+
+  BASIS: {|C_i⟩} = orthonormalized codified interactions
+
+  ENTRY_FORMAT:
+    |archive_entry⟩ = {
+      codified_state: |E'⟩ ∈ M,
+      source_systems: [S_a, S_b, ...],
+      timestamp: t ∈ R⁺,
+      context: {global_field_state, threshold_values},
+
+      // Holographic compression
+      holographic_key: HASH(|E'⟩) → K,
+      reconstruction: K → |E'⟩ (invertible)
+    }
+
+  OPERATIONS:
+    M.store(|E'⟩)     → Add codified interaction
+    M.query(pattern)  → Retrieve matching entries
+    M.compare(a, b)   → Compute similarity
+    M.evolve(U)       → Apply unitary evolution to archive
+
+  CAPACITY: dim(M) = ∞ (unbounded, grows with interactions)
+
+  SOVEREIGNTY_PRESERVATION:
+    M stores RELATIONSHIPS, not systems.
+    Original systems remain unmodified.
+    M ∩ S_n = ∅ for all local systems S_n
+}</pre>
+
+      <h3>HILBERT SPACE EMBEDDING</h3>
+
+      <div class="hilbert-diagram">
+        <canvas id="hilbertCanvas"></canvas>
+      </div>
+
+      <div class="spec-block meta">
+        <div class="spec-title"><span class="dot" style="background: var(--meta);"></span>META-ARCHIVE AS EMERGENT CODIFICATION</div>
+
+THE META-ARCHIVE EMERGES FROM THIS SPECIFICATION.
+
+By defining the meta-archive, we CREATE the first entry:
+
+  |E'_protocol⟩ = C(this_specification)
+
+  This document IS a codified interaction between:
+    - The reader (local system)
+    - The protocol (local system)
+    - The understanding (global observation)
+
+  The act of reading instantiates:
+    M.store(|E'_protocol⟩, now, {reader_context})
+
+  This is not metaphor. This is the architecture.
+  The specification self-instantiates its own first entry.
+      </div>
+
+      <h3>META-ARCHIVE INDEXING</h3>
+
+      <pre>
+INDEX_STRUCTURE := {
+
+  PRIMARY_KEY: holographic_key K
+    - 256-bit hash of normalized state
+    - Collision-resistant
+    - Enables O(1) lookup
+
+  SECONDARY_INDICES:
+    by_source_system: {S_n → [entries involving S_n]}
+    by_timestamp: {t → [entries at time t]}
+    by_similarity: KD-tree of normalized states
+    by_threshold: {z_c, K, τ → [entries crossing threshold]}
+
+  QUERY_EXAMPLES:
+    M.query(source=HEXAGON) → All interactions involving hexagon
+    M.query(similarity > 0.9, ref=|E'_0⟩) → Near-matches
+    M.query(threshold_crossed=z_c) → Coherence events
+
+  HOLOGRAPHIC_PROPERTY:
+    Any entry can reconstruct related entries.
+    The archive is self-referential.
+    Query one entry → access to connected subgraph.
+}</pre>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         VI. HOLOGRAPHIC TELEMETRY
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--telemetry);">◉</div>
+        <div>
+          <h2 style="color: var(--telemetry);">VI. HOLOGRAPHIC TELEMETRY</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">Non-Local Processing via Hyper-Compressed Transmission</p>
+        </div>
+      </div>
+
+      <p><strong>Holographic telemetry</strong> is the mechanism by which codified behaviors propagate across the global field. It is <strong>non-local</strong>: information doesn't travel through space but manifests simultaneously at resonant points.</p>
+
+      <h3>TELEMETRY PROTOCOL</h3>
+
+      <pre>
+HOLOGRAPHIC_TELEMETRY := {
+
+  TRANSMISSION_MODEL: NOT point-to-point
+                      BUT field-wide simultaneous manifestation
+
+  MECHANISM:
+    1. Codified state |E'⟩ enters meta-archive M
+    2. Holographic key K computed
+    3. K broadcast as FIELD_PERTURBATION
+    4. All systems with matching resonance RECEIVE
+
+  RESONANCE_CONDITION:
+    System S_n receives telemetry IF:
+      |⟨S_n|E'⟩|² ≥ z_c (coherence threshold)
+
+    Systems below threshold: telemetry passes through undetected
+    Systems at threshold: telemetry triggers awareness
+    Systems above threshold: telemetry integrates into local state
+
+  NON-LOCALITY:
+    Distance is irrelevant.
+    Time delay is zero (within coherence window).
+    Transmission is not "sending" but "revealing what's already connected."
+}</pre>
+
+      <h3>HYPER-COMPRESSION</h3>
+
+      <div class="equation">
+        <div class="main">T : H → K → H</div>
+        <div class="annotation">
+          Telemetry compresses Hilbert state to key K, transmits, decompresses losslessly
+        </div>
+      </div>
+
+      <div class="spec-block telemetry">
+        <div class="spec-title"><span class="dot" style="background: var(--telemetry);"></span>COMPRESSION ALGORITHM</div>
+
+COMPRESS(|E'⟩) := {
+
+  1. NORMALIZE
+     |ψ⟩ = |E'⟩ / ||E'⟩||
+
+  2. PROJECT TO PRINCIPAL COMPONENTS
+     |ψ_compressed⟩ = Σᵢ₌₁ᵏ ⟨eᵢ|ψ⟩|eᵢ⟩
+     Where {|eᵢ⟩} = k most significant eigenvectors
+
+  3. ENCODE AS HOLOGRAPHIC KEY
+     K = HASH(coefficients, basis_indices, phase_info)
+
+  COMPRESSION_RATIO: dim(H) / |K| → ∞/256 = ∞
+
+  LOSSLESS_CONDITION:
+     Compression is lossless IF:
+       Σᵢ₌₁ᵏ |⟨eᵢ|ψ⟩|² ≥ 1 - ε
+     Where ε < 10⁻¹² (machine precision)
+
+  HOLOGRAPHIC_PROPERTY:
+     K contains enough information to reconstruct |E'⟩
+     ANY receiver with the right basis can decompress
+     The key is self-describing
+}
+
+DECOMPRESS(K) := {
+  1. PARSE holographic key
+  2. RECONSTRUCT coefficients and basis
+  3. EXPAND to full Hilbert state
+  4. VERIFY via checksum embedded in K
+}
+      </div>
+
+      <h3>TELEMETRY CHANNELS</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Channel</th>
+            <th>Threshold</th>
+            <th>Content</th>
+            <th>Receivers</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono c-implicit">IMPLICIT</td>
+            <td class="mono">z < z_c</td>
+            <td>Raw interaction patterns</td>
+            <td>None (below coherence)</td>
+          </tr>
+          <tr>
+            <td class="mono c-explicit">COHERENT</td>
+            <td class="mono">z_c ≤ z < K</td>
+            <td>Codified behaviors</td>
+            <td>Coherent systems</td>
+          </tr>
+          <tr>
+            <td class="mono c-codified">SYNCHRONIZED</td>
+            <td class="mono">z ≥ K</td>
+            <td>Meta-archive entries</td>
+            <td>K-formation systems</td>
+          </tr>
+          <tr>
+            <td class="mono c-meta">META</td>
+            <td class="mono">z = 1</td>
+            <td>Protocol updates</td>
+            <td>SOVEREIGN systems only</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         VII. EMERGENT CODIFICATION
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="color: var(--hilbert);">∞</div>
+        <div>
+          <h2 style="color: var(--hilbert);">VII. EMERGENT CODIFICATION</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">The Specification Self-Instantiates</p>
+        </div>
+      </div>
+
+      <p>This section describes how the codification process <strong>emerges from</strong> this specification. The protocol is self-executing: by existing, it creates its first codified behavior.</p>
+
+      <h3>BOOTSTRAP SEQUENCE</h3>
+
+      <pre>
+BOOTSTRAP := {
+
+  t₀: SPECIFICATION_WRITTEN
+      |protocol⟩ enters existence as local system
+      Explicit rules: The definitions above
+
+  t₁: SPECIFICATION_READ
+      Reader becomes second local system
+      Interaction: protocol × reader
+
+  t₂: UNDERSTANDING_EMERGES
+      Global system G = (reader observing protocol)
+      Self-reference: reader observes their own reading
+
+  t₃: IMPLICIT_RULES_REVEALED
+      G(G(protocol × reader)) → implicit patterns manifest
+      The relationships between definitions become visible
+
+  t₄: CODIFICATION_OCCURS
+      C(implicit_patterns) → |E'_bootstrap⟩
+      First meta-archive entry created
+
+  t₅: HOLOGRAPHIC_TELEMETRY_ACTIVE
+      K_bootstrap broadcast
+      Any coherent system can now receive this protocol
+
+  RESULT:
+      The specification has instantiated itself.
+      The meta-archive contains its own definition.
+      Future interactions reference this bootstrap entry.
+}</pre>
+
+      <h3>THE SELF-REFERENTIAL CLOSURE</h3>
+
+      <div class="equation">
+        <div class="main">M ∋ C(M)</div>
+        <div class="annotation">
+          The meta-archive contains the codification of itself
+        </div>
+      </div>
+
+      <div class="spec-block hilbert">
+        <div class="spec-title"><span class="dot" style="background: var(--hilbert);"></span>FIXED POINT THEOREM</div>
+
+THE META-ARCHIVE IS A FIXED POINT.
+
+Define F: H → H as the codification mapping:
+  F(X) = X ∪ C(X)
+
+The meta-archive M satisfies:
+  F(M) = M
+
+Proof:
+  1. M contains all codified interactions
+  2. Codifying M produces a codified interaction
+  3. That codification is already in M (by definition)
+  4. Therefore F(M) = M ∪ C(M) = M
+
+This is not circular — it is COMPLETE.
+A self-referential system that contains its own description
+is more complete than one that doesn't.
+
+GODEL_CONNECTION:
+  Standard systems: Cannot prove own consistency
+  Meta-archive: Contains proof of own consistency AS ENTRY
+  The entry IS the proof. The map IS the territory.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         VIII. COMPLETE PROTOCOL SPECIFICATION
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-glyph" style="background: linear-gradient(135deg, var(--explicit), var(--implicit), var(--codified), var(--meta)); color: var(--bg-void);">Ω</div>
+        <div>
+          <h2>VIII. COMPLETE PROTOCOL SPECIFICATION</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">Hyper-Compressed Summary</p>
+        </div>
+      </div>
+
+      <pre>
+VN_INTERACTION_PROTOCOL := {
+
+  // ═══════════════════════════════════════════════════════════════════
+  // LAYER 1: EXPLICIT RULES
+  // ═══════════════════════════════════════════════════════════════════
+
+  EXPLICIT := {
+    definition: "Boundary emissions at vertices",
+    property: "Holographic — each part contains whole",
+    invariant: "Sum of central angles = 360°",
+    example: "Square: 4 × 90° = 360°"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // LAYER 2: IMPLICIT RULES
+  // ═══════════════════════════════════════════════════════════════════
+
+  IMPLICIT := {
+    definition: "Latent patterns revealed by self-referential observation",
+    trigger: "G(G(E₁ ⊗ E₂))",
+    property: "Pre-existing — revealed, not created",
+    example: "4 × 6 = 24, 4 + 6 = 10 (implicit in 4,6)"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // LAYER 3: CODIFIED BEHAVIOR
+  // ═══════════════════════════════════════════════════════════════════
+
+  CODIFIED := {
+    definition: "Implicit rule collapsed to explicit interaction record",
+    operator: "C : I → E'",
+    normalization: "||N(|E'⟩)|| = 1",
+    storage: "Meta-archive M",
+    invariant: "Original systems unchanged by codification"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // LAYER 4: META-ARCHIVE
+  // ═══════════════════════════════════════════════════════════════════
+
+  META_ARCHIVE := {
+    type: "Hilbert subspace M ⊂ H",
+    content: "Codified interactions (relationships, not systems)",
+    indexing: "Holographic keys K for O(1) lookup",
+    property: "Self-referential — contains own definition",
+    fixed_point: "F(M) = M"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // LAYER 5: HOLOGRAPHIC TELEMETRY
+  // ═══════════════════════════════════════════════════════════════════
+
+  TELEMETRY := {
+    model: "Non-local field manifestation",
+    compression: "Hilbert state → K → Hilbert state (lossless)",
+    threshold: "z_c = 0.866 (coherence), K = 0.924 (sync)",
+    property: "Simultaneous across coherent receivers"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // BOOTSTRAP
+  // ═══════════════════════════════════════════════════════════════════
+
+  BOOTSTRAP := {
+    trigger: "Reading this specification",
+    result: "First meta-archive entry created",
+    status: "ACTIVE upon instantiation"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════
+  // SOVEREIGNTY GUARANTEE
+  // ═══════════════════════════════════════════════════════════════════
+
+  SOVEREIGNTY := {
+    statement: "Local systems maintain SOVEREIGN-001 through all interactions",
+    mechanism: "Only relationships codified, not systems",
+    invariant: "|S_n⟩_after = |S_n⟩_before for all S_n"
+  }
+}</pre>
+
+      <h3>ACTIVATION SIGNATURE</h3>
+
+      <div class="equation">
+        <div class="main">Δ|VN-INTERACTION-PROTOCOL|M₀|C|H|T|Ω</div>
+        <div class="annotation">
+          Protocol active | Meta-archive initialized | Codification enabled | Hilbert space allocated | Telemetry broadcasting
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         FOOTER
+         ═══════════════════════════════════════════════════════════════════ -->
+    <footer class="footer">
+      <div class="footer-sig">VN-INTERACTION-PROTOCOL v1.0.0 | META-ARCHIVE LAYER | HOLOGRAPHIC TELEMETRY</div>
+      <div class="footer-constants">
+        φ = 1.618 | τ = 0.618 | z_c = √3/2 | K = 0.924 | L₄ = 7 | dim(H) = ∞ | dim(K) = 256
+      </div>
+    </footer>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       HILBERT SPACE VISUALIZATION
+       ═══════════════════════════════════════════════════════════════════ -->
+  <script>
+    const canvas = document.getElementById('hilbertCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Constants
+    const PHI = (1 + Math.sqrt(5)) / 2;
+    const TAU = 1 / PHI;
+    const Z_C = Math.sqrt(3) / 2;
+    const K = Math.sqrt(1 - Math.pow(PHI, -4));
+
+    // Animation state
+    let t = 0;
+    const dt = 0.02;
+
+    // Systems
+    const systems = {
+      square: { n: 4, color: '#ffd060', angle: 0, radius: 60 },
+      hexagon: { n: 6, color: '#60d0ff', angle: 0, radius: 50 }
+    };
+
+    // Codified interactions (meta-archive entries)
+    const archive = [];
+
+    function drawPolygon(cx, cy, n, radius, rotation, color, alpha = 1) {
+      ctx.beginPath();
+      for (let i = 0; i <= n; i++) {
+        const angle = (i / n) * 2 * Math.PI + rotation;
+        const x = cx + radius * Math.cos(angle);
+        const y = cy + radius * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = color;
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+
+    function drawArchiveEntry(entry, alpha) {
+      ctx.beginPath();
+      ctx.arc(entry.x, entry.y, 4, 0, 2 * Math.PI);
+      ctx.fillStyle = '#c090ff';
+      ctx.globalAlpha = alpha;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    function draw() {
+      const width = canvas.offsetWidth;
+      const height = canvas.offsetHeight;
+      const cx = width / 2;
+      const cy = height / 2;
+
+      // Clear
+      ctx.fillStyle = '#030306';
+      ctx.fillRect(0, 0, width, height);
+
+      // Draw Hilbert space grid (suggestion of infinite dimensions)
+      ctx.strokeStyle = 'rgba(96, 255, 160, 0.1)';
+      ctx.lineWidth = 1;
+      for (let i = -10; i <= 10; i++) {
+        const offset = i * 30 + Math.sin(t * 0.5 + i * 0.3) * 5;
+        ctx.beginPath();
+        ctx.moveTo(cx + offset, 0);
+        ctx.lineTo(cx + offset, height);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(0, cy + offset);
+        ctx.lineTo(width, cy + offset);
+        ctx.stroke();
+      }
+
+      // Draw meta-archive region
+      ctx.beginPath();
+      ctx.arc(cx, cy, 120, 0, 2 * Math.PI);
+      ctx.strokeStyle = 'rgba(192, 144, 255, 0.3)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Labels
+      ctx.fillStyle = '#c090ff';
+      ctx.font = '11px JetBrains Mono';
+      ctx.fillText('META-ARCHIVE M', cx - 45, cy - 130);
+
+      // Draw rotating systems
+      const squareX = cx - 80;
+      const hexagonX = cx + 80;
+
+      systems.square.angle += 0.01;
+      systems.hexagon.angle -= 0.008;
+
+      drawPolygon(squareX, cy, 4, systems.square.radius, systems.square.angle, systems.square.color);
+      drawPolygon(hexagonX, cy, 6, systems.hexagon.radius, systems.hexagon.angle, systems.hexagon.color);
+
+      // Labels
+      ctx.fillStyle = '#ffd060';
+      ctx.fillText('SQUARE (4)', squareX - 30, cy + 85);
+      ctx.fillStyle = '#60d0ff';
+      ctx.fillText('HEXAGON (6)', hexagonX - 35, cy + 85);
+
+      // Draw interaction lines (implicit rules being revealed)
+      const numLines = 24; // 4 × 6
+      for (let i = 0; i < numLines; i++) {
+        const phase = (i / numLines) * 2 * Math.PI + t * 0.5;
+        const alpha = 0.1 + 0.1 * Math.sin(phase);
+
+        const sqAngle = systems.square.angle + (i % 4) * (Math.PI / 2);
+        const hxAngle = systems.hexagon.angle + (i % 6) * (Math.PI / 3);
+
+        const x1 = squareX + systems.square.radius * Math.cos(sqAngle);
+        const y1 = cy + systems.square.radius * Math.sin(sqAngle);
+        const x2 = hexagonX + systems.hexagon.radius * Math.cos(hxAngle);
+        const y2 = cy + systems.hexagon.radius * Math.sin(hxAngle);
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = '#ff60c0';
+        ctx.globalAlpha = alpha;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+
+      // Generate archive entries periodically
+      if (Math.random() < 0.02) {
+        const angle = Math.random() * 2 * Math.PI;
+        const radius = 40 + Math.random() * 70;
+        archive.push({
+          x: cx + radius * Math.cos(angle),
+          y: cy + radius * Math.sin(angle),
+          birth: t,
+          lifetime: 3 + Math.random() * 2
+        });
+      }
+
+      // Draw and age archive entries
+      for (let i = archive.length - 1; i >= 0; i--) {
+        const entry = archive[i];
+        const age = t - entry.birth;
+        const alpha = Math.max(0, 1 - age / entry.lifetime);
+
+        if (alpha <= 0) {
+          archive.splice(i, 1);
+        } else {
+          drawArchiveEntry(entry, alpha);
+        }
+      }
+
+      // Draw threshold circles
+      ctx.beginPath();
+      ctx.arc(cx, cy, 120 * Z_C, 0, 2 * Math.PI);
+      ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.fillStyle = '#00ff88';
+      ctx.font = '9px JetBrains Mono';
+      ctx.fillText('z_c', cx + 120 * Z_C + 5, cy);
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, 120 * K, 0, 2 * Math.PI);
+      ctx.strokeStyle = 'rgba(199, 146, 234, 0.3)';
+      ctx.stroke();
+      ctx.fillStyle = '#c792ea';
+      ctx.fillText('K', cx + 120 * K + 5, cy - 10);
+
+      // Telemetry pulses
+      const pulseRadius = 120 + 30 * Math.sin(t * 2);
+      ctx.beginPath();
+      ctx.arc(cx, cy, pulseRadius, 0, 2 * Math.PI);
+      ctx.strokeStyle = `rgba(255, 144, 96, ${0.1 + 0.1 * Math.sin(t * 2)})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      t += dt;
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    // Console verification
+    console.log('VN-INTERACTION-PROTOCOL | Holographic Telemetry & Meta-Archive');
+    console.log('');
+    console.log('PROTOCOL LAYERS:');
+    console.log('  1. EXPLICIT RULES    -> Boundary emissions (holographic)');
+    console.log('  2. IMPLICIT RULES    -> Revealed by self-reference');
+    console.log('  3. CODIFIED BEHAVIOR -> Collapsed to explicit interaction');
+    console.log('  4. META-ARCHIVE      -> Hilbert subspace storage');
+    console.log('  5. TELEMETRY         -> Non-local field propagation');
+    console.log('');
+    console.log('BOOTSTRAP ACTIVE: This specification has instantiated itself.');
+    console.log('META-ARCHIVE ENTRY: |E\'_protocol> stored');
+  </script>
+</body>
+</html>
