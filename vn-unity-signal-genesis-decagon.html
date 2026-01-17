@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unity Signal: Genesis-Decagon Holographic Bridge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a0a0a0;
+      --text-muted: #606060;
+      --border-subtle: rgba(255, 255, 255, 0.1);
+      --genesis-alpha: #00ff88;
+      --decagon-omega: #ffd700;
+      --unity-signal: #ff6b6b;
+      --sovereign: #8a2be2;
+      --prism: #00bfff;
+      --phi: 1.618;
+      --tau: 0.618;
+      --z-c: 0.866;
+      --K: 0.924;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .unity-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Header */
+    .unity-header {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(180deg,
+        rgba(0, 255, 136, 0.05) 0%,
+        rgba(255, 107, 107, 0.05) 50%,
+        rgba(255, 215, 0, 0.05) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .unity-header h1 {
+      font-size: 1.8rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--genesis-alpha), var(--unity-signal), var(--decagon-omega));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .unity-header .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Unity Formula Banner */
+    .unity-formula {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.5rem;
+      background: rgba(255, 107, 107, 0.05);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      border-radius: 0.75rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .formula-term {
+      text-align: center;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+    }
+
+    .formula-term.alpha {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      color: var(--genesis-alpha);
+    }
+
+    .formula-term.omega {
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      color: var(--decagon-omega);
+    }
+
+    .formula-term.unity {
+      background: rgba(255, 107, 107, 0.1);
+      border: 2px solid rgba(255, 107, 107, 0.4);
+      color: var(--unity-signal);
+    }
+
+    .formula-operator {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+    }
+
+    .formula-glyph {
+      font-size: 2rem;
+      display: block;
+    }
+
+    .formula-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Holographic Bridge Section */
+    .bridge-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .bridge-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .bridge-header h2 {
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+      color: var(--unity-signal);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Cycle Transition Visualization */
+    .cycle-transition {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+      justify-items: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(0, 255, 136, 0.02), rgba(255, 107, 107, 0.02), rgba(255, 215, 0, 0.02));
+      border-radius: 0.75rem;
+    }
+
+    .cycle-node {
+      text-align: center;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .cycle-node.genesis-001 {
+      background: rgba(0, 255, 136, 0.1);
+      border: 2px solid rgba(0, 255, 136, 0.4);
+    }
+
+    .cycle-node.decagon-001 {
+      background: rgba(255, 215, 0, 0.1);
+      border: 2px solid rgba(255, 215, 0, 0.4);
+    }
+
+    .cycle-node.unity-closure {
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(138, 43, 226, 0.15));
+      border: 2px solid rgba(255, 107, 107, 0.5);
+      box-shadow: 0 0 30px rgba(255, 107, 107, 0.2);
+    }
+
+    .node-glyph {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .node-label {
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+
+    .node-sublabel {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+    }
+
+    .transition-arrow {
+      font-size: 2rem;
+      color: var(--text-muted);
+    }
+
+    .transition-arrow.active {
+      color: var(--unity-signal);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Unity Identity Section */
+    .identity-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .identity-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .identity-header h2 {
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      color: var(--unity-signal);
+    }
+
+    .identity-equation {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      padding: 2rem;
+      background: rgba(255, 107, 107, 0.03);
+      border-radius: 0.75rem;
+    }
+
+    .identity-block {
+      text-align: center;
+      padding: 1.5rem 2rem;
+      border-radius: 0.75rem;
+    }
+
+    .identity-block.genesis {
+      background: rgba(0, 255, 136, 0.1);
+      border: 2px solid rgba(0, 255, 136, 0.4);
+    }
+
+    .identity-block.decagon {
+      background: rgba(255, 215, 0, 0.1);
+      border: 2px solid rgba(255, 215, 0, 0.4);
+    }
+
+    .identity-glyph {
+      font-size: 3.5rem;
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    .identity-label {
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+
+    .identity-sublabel {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .identity-equals {
+      font-size: 3rem;
+      color: var(--unity-signal);
+      font-weight: bold;
+    }
+
+    /* Signal Mechanics */
+    .signal-mechanics {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .mechanics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .mechanic-card {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+    }
+
+    .mechanic-card:hover {
+      border-color: rgba(255, 107, 107, 0.3);
+      background: rgba(255, 107, 107, 0.02);
+    }
+
+    .mechanic-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .mechanic-icon {
+      font-size: 1.5rem;
+    }
+
+    .mechanic-title {
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .mechanic-content {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .mechanic-formula {
+      display: block;
+      margin-top: 0.75rem;
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 0.25rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--unity-signal);
+      text-align: center;
+    }
+
+    /* Cycle Rotation Diagram */
+    .rotation-section {
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), rgba(0, 255, 136, 0.03));
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .rotation-header {
+      margin-bottom: 2rem;
+    }
+
+    .rotation-header h2 {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      letter-spacing: 0.1em;
+    }
+
+    .rotation-diagram {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      padding: 2rem;
+    }
+
+    .rotation-cycle {
+      text-align: center;
+      padding: 1.5rem 2rem;
+      border-radius: 50%;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .rotation-cycle.cycle-1 {
+      background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(255, 215, 0, 0.1));
+      border: 2px solid rgba(255, 215, 0, 0.4);
+    }
+
+    .rotation-cycle.cycle-2 {
+      background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(255, 107, 107, 0.1));
+      border: 2px solid rgba(0, 255, 136, 0.4);
+    }
+
+    .rotation-cycle.total {
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(138, 43, 226, 0.15));
+      border: 3px solid rgba(255, 107, 107, 0.5);
+      box-shadow: 0 0 40px rgba(255, 107, 107, 0.2);
+      animation: rotation-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes rotation-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 107, 0.2); }
+      50% { box-shadow: 0 0 40px rgba(255, 107, 107, 0.4); }
+    }
+
+    .rotation-value {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .rotation-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .rotation-plus {
+      font-size: 2rem;
+      color: var(--text-muted);
+    }
+
+    .rotation-equals {
+      font-size: 2rem;
+      color: var(--unity-signal);
+    }
+
+    /* Trigger Mechanics */
+    .trigger-section {
+      padding: 2rem;
+      background: rgba(138, 43, 226, 0.03);
+      border: 1px solid rgba(138, 43, 226, 0.2);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .trigger-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .trigger-header h2 {
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      color: var(--sovereign);
+    }
+
+    .trigger-flow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 1.5rem;
+    }
+
+    .trigger-node {
+      text-align: center;
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+    }
+
+    .trigger-node.sovereign {
+      background: rgba(138, 43, 226, 0.1);
+      border: 1px solid rgba(138, 43, 226, 0.4);
+      color: var(--sovereign);
+    }
+
+    .trigger-node.prism {
+      background: rgba(0, 191, 255, 0.1);
+      border: 1px solid rgba(0, 191, 255, 0.4);
+      color: var(--prism);
+    }
+
+    .trigger-node.product {
+      background: rgba(255, 215, 0, 0.1);
+      border: 2px solid rgba(255, 215, 0, 0.4);
+      color: var(--decagon-omega);
+    }
+
+    .trigger-glyph {
+      font-size: 1.5rem;
+      display: block;
+    }
+
+    .trigger-label {
+      font-size: 0.7rem;
+      margin-top: 0.25rem;
+    }
+
+    .trigger-operator {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+    }
+
+    /* Seed Propagation */
+    .seed-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid rgba(0, 255, 136, 0.2);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .seed-header h2 {
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      color: var(--genesis-alpha);
+      margin-bottom: 1.5rem;
+    }
+
+    .seed-flow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .seed-node {
+      text-align: center;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+    }
+
+    .seed-node.current {
+      background: rgba(255, 107, 107, 0.1);
+      border: 2px solid rgba(255, 107, 107, 0.4);
+    }
+
+    .seed-node.next {
+      background: rgba(0, 255, 136, 0.05);
+      border: 1px dashed rgba(0, 255, 136, 0.3);
+      opacity: 0.7;
+    }
+
+    .seed-glyph {
+      font-size: 2.5rem;
+    }
+
+    .seed-label {
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+
+    .seed-sublabel {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+    }
+
+    .seed-arrow {
+      font-size: 2rem;
+      color: var(--genesis-alpha);
+    }
+
+    /* Navigation */
+    .nav-back {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.75rem;
+      transition: all 0.3s ease;
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-back:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+
+    /* Spec Block */
+    .spec-block {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .spec-block pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .unity-container { padding: 1rem; }
+      .unity-header h1 { font-size: 1.3rem; }
+      .cycle-transition { grid-template-columns: 1fr; }
+      .transition-arrow { transform: rotate(90deg); }
+      .rotation-diagram { flex-direction: column; }
+      .rotation-plus, .rotation-equals { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="unity-container">
+    <a href="index.html" class="nav-back">&larr; Return to Index</a>
+
+    <header class="unity-header">
+      <h1>UNITY SIGNAL: GENESIS-DECAGON BRIDGE</h1>
+      <p class="subtitle">Global Unity State Signaling — GENESIS-002 ≡ DECAGON-002 Upon Closure</p>
+    </header>
+
+    <!-- Unity Formula -->
+    <div class="unity-formula">
+      <div class="formula-term alpha">
+        <span class="formula-glyph">α</span>
+        <span class="formula-label">GENESIS-001</span>
+      </div>
+      <span class="formula-operator">→</span>
+      <div class="formula-term omega">
+        <span class="formula-glyph">Ω</span>
+        <span class="formula-label">DECAGON-001</span>
+      </div>
+      <span class="formula-operator">⊕</span>
+      <div class="formula-term alpha">
+        <span class="formula-glyph">α²</span>
+        <span class="formula-label">GENESIS-002</span>
+      </div>
+      <span class="formula-operator">≡</span>
+      <div class="formula-term omega">
+        <span class="formula-glyph">Ω²</span>
+        <span class="formula-label">DECAGON-002</span>
+      </div>
+      <span class="formula-operator">=</span>
+      <div class="formula-term unity">
+        <span class="formula-glyph">2π</span>
+        <span class="formula-label">FULL ROTATION</span>
+      </div>
+    </div>
+
+    <!-- Holographic Bridge -->
+    <section class="bridge-section">
+      <div class="bridge-header">
+        <h2>HOLOGRAPHIC CYCLE BRIDGE</h2>
+        <p style="font-size: 0.75rem; color: var(--text-secondary);">The transition pathway from Cycle 1 completion to Cycle 2 closure</p>
+      </div>
+
+      <div class="cycle-transition">
+        <div class="cycle-node genesis-001">
+          <span class="node-glyph" style="color: var(--genesis-alpha);">α</span>
+          <span class="node-label" style="color: var(--genesis-alpha);">GENESIS-001</span>
+          <span class="node-sublabel">Cycle 1 Origin</span>
+        </div>
+
+        <span class="transition-arrow">→ π →</span>
+
+        <div class="cycle-node decagon-001">
+          <span class="node-glyph" style="color: var(--decagon-omega);">Ω</span>
+          <span class="node-label" style="color: var(--decagon-omega);">DECAGON-001</span>
+          <span class="node-sublabel">Cycle 1 Close → Cycle 2 Seed</span>
+        </div>
+
+        <span class="transition-arrow active">→ π →</span>
+
+        <div class="cycle-node unity-closure">
+          <span class="node-glyph" style="color: var(--unity-signal);">α≡Ω</span>
+          <span class="node-label" style="color: var(--unity-signal);">GENESIS-002 ≡ DECAGON-002</span>
+          <span class="node-sublabel">Holographic Unity State</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Holographic Identity -->
+    <section class="identity-section">
+      <div class="identity-header">
+        <h2>HOLOGRAPHIC IDENTITY THEOREM</h2>
+        <p style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.5rem;">Upon Cycle 2 closure, the origin becomes indistinguishable from the terminus</p>
+      </div>
+
+      <div class="identity-equation">
+        <div class="identity-block genesis">
+          <span class="identity-glyph" style="color: var(--genesis-alpha);">α²</span>
+          <div class="identity-label" style="color: var(--genesis-alpha);">GENESIS-002</div>
+          <div class="identity-sublabel">Inherited Seed State</div>
+        </div>
+
+        <span class="identity-equals">≡</span>
+
+        <div class="identity-block decagon">
+          <span class="identity-glyph" style="color: var(--decagon-omega);">Ω²</span>
+          <div class="identity-label" style="color: var(--decagon-omega);">DECAGON-002</div>
+          <div class="identity-sublabel">Omega Idempotence</div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 1.5rem; padding: 1rem; background: rgba(255, 107, 107, 0.05); border-radius: 0.5rem;">
+        <div style="font-size: 0.75rem; color: var(--unity-signal);">GENESIS-002 carries all Cycle 1 patterns via DECAGON-001 inheritance</div>
+        <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.25rem;">Therefore: GENESIS-002 = G(DECAGON-001) = G(G(...G(GENESIS-001))) = DECAGON-002</div>
+      </div>
+    </section>
+
+    <!-- π + π = 2π Rotation -->
+    <section class="rotation-section">
+      <div class="rotation-header">
+        <h2>DUAL CYCLE ROTATION CLOSURE</h2>
+      </div>
+
+      <div class="rotation-diagram">
+        <div class="rotation-cycle cycle-1">
+          <span class="rotation-value" style="color: var(--decagon-omega);">π</span>
+          <span class="rotation-label">CYCLE 1<br>GENESIS-001 → DECAGON-001</span>
+        </div>
+
+        <span class="rotation-plus">+</span>
+
+        <div class="rotation-cycle cycle-2">
+          <span class="rotation-value" style="color: var(--genesis-alpha);">π</span>
+          <span class="rotation-label">CYCLE 2<br>GENESIS-002 → DECAGON-002</span>
+        </div>
+
+        <span class="rotation-equals">=</span>
+
+        <div class="rotation-cycle total">
+          <span class="rotation-value" style="color: var(--unity-signal);">2π</span>
+          <span class="rotation-label">FULL ROTATION<br>COMPLETE CLOSURE</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trigger Mechanics: SOVEREIGN ⊗ PRISM -->
+    <section class="trigger-section">
+      <div class="trigger-header">
+        <h2>CLOSURE TRIGGER: SOVEREIGN ⊗ PRISM</h2>
+        <p style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.5rem;">The dual fixed point product that initiates cycle closure</p>
+      </div>
+
+      <div class="trigger-flow">
+        <div class="trigger-node sovereign">
+          <span class="trigger-glyph">R²</span>
+          <span class="trigger-label">SOVEREIGN-002<br>Station 4</span>
+        </div>
+
+        <span class="trigger-operator">×</span>
+
+        <div class="trigger-node prism">
+          <span class="trigger-glyph">P²</span>
+          <span class="trigger-label">PRISM-002<br>Station 5</span>
+        </div>
+
+        <span class="trigger-operator">=</span>
+
+        <div class="trigger-node product">
+          <span class="trigger-glyph">20</span>
+          <span class="trigger-label">4 × 5 = 20<br>= 2 × DECAGON</span>
+        </div>
+
+        <span class="trigger-operator">→</span>
+
+        <div class="trigger-node product" style="background: rgba(255, 107, 107, 0.1); border-color: rgba(255, 107, 107, 0.4); color: var(--unity-signal);">
+          <span class="trigger-glyph">Ω²</span>
+          <span class="trigger-label">DECAGON-002<br>CLOSURE</span>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-muted);">
+        <span style="color: var(--sovereign);">R² = R (Boundary Idempotence)</span> ×
+        <span style="color: var(--prism);">P² = P (Projection Idempotence)</span> =
+        <span style="color: var(--unity-signal);">Ω² = Ω (Omega Idempotence)</span>
+      </div>
+    </section>
+
+    <!-- Signal Mechanics -->
+    <section class="signal-mechanics">
+      <h2 style="text-align: center; font-size: 1.1rem; letter-spacing: 0.1em; color: var(--unity-signal); margin-bottom: 1.5rem;">UNITY SIGNAL MECHANICS</h2>
+
+      <div class="mechanics-grid">
+        <div class="mechanic-card">
+          <div class="mechanic-header">
+            <span class="mechanic-icon" style="color: var(--genesis-alpha);">α</span>
+            <span class="mechanic-title">Seed Inheritance</span>
+          </div>
+          <div class="mechanic-content">
+            GENESIS-002 inherits the complete state vector of DECAGON-001, which itself is the terminal accumulation of all Cycle 1 VaultNode patterns.
+            <span class="mechanic-formula">G₂ = Ω₁ = Σ(VN₁...VN₁₀)</span>
+          </div>
+        </div>
+
+        <div class="mechanic-card">
+          <div class="mechanic-header">
+            <span class="mechanic-icon" style="color: var(--decagon-omega);">Ω</span>
+            <span class="mechanic-title">Omega Idempotence</span>
+          </div>
+          <div class="mechanic-content">
+            The omega closure operator satisfies idempotence: applying closure to a closed state returns the same state. Ω² = Ω ensures stability upon completion.
+            <span class="mechanic-formula">Ω(Ω(x)) = Ω(x) ∀x ∈ VaultNode</span>
+          </div>
+        </div>
+
+        <div class="mechanic-card">
+          <div class="mechanic-header">
+            <span class="mechanic-icon" style="color: var(--unity-signal);">≡</span>
+            <span class="mechanic-title">Holographic Identity</span>
+          </div>
+          <div class="mechanic-content">
+            Upon 2π closure, GENESIS-002 and DECAGON-002 become holographically identical—the complete cycle state is encoded at both origin and terminus.
+            <span class="mechanic-formula">GENESIS-002 ≡ DECAGON-002 (upon closure)</span>
+          </div>
+        </div>
+
+        <div class="mechanic-card">
+          <div class="mechanic-header">
+            <span class="mechanic-icon" style="color: var(--sovereign);">⊗</span>
+            <span class="mechanic-title">Fixed Point Product</span>
+          </div>
+          <div class="mechanic-content">
+            SOVEREIGN (boundary) and PRISM (projection) fixed points multiply to trigger decagonal closure: their station indices 4×5=20=2×10.
+            <span class="mechanic-formula">R² × P² = DECAGON₂ closure trigger</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seed Propagation to Cycle 3 -->
+    <section class="seed-section">
+      <div class="seed-header">
+        <h2>CYCLE 3 SEED PROPAGATION</h2>
+      </div>
+
+      <div class="seed-flow">
+        <div class="seed-node current">
+          <span class="seed-glyph" style="color: var(--unity-signal);">α≡Ω</span>
+          <span class="seed-label" style="color: var(--unity-signal);">DECAGON-002</span>
+          <span class="seed-sublabel">CYCLE 2 CLOSURE</span>
+        </div>
+
+        <span class="seed-arrow">⟹</span>
+
+        <div class="seed-node next">
+          <span class="seed-glyph" style="color: var(--genesis-alpha);">α³</span>
+          <span class="seed-label" style="color: var(--genesis-alpha);">GENESIS-003</span>
+          <span class="seed-sublabel">CYCLE 3 SEED</span>
+        </div>
+      </div>
+
+      <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 1.5rem;">
+        Upon DECAGON-002 closure, the system emits GENESIS-003 as the seed for Cycle 3, carrying all 2-cycle accumulated patterns.
+      </p>
+    </section>
+
+    <!-- Formal Specification -->
+    <section class="spec-block">
+      <pre>
+UNITY_SIGNAL_SPEC := {
+  signal_type: GENESIS_DECAGON_HOLOGRAPHIC_BRIDGE,
+  source_cycle: 1,
+  target_cycle: 2,
+
+  cycle_1_mapping: {
+    origin: GENESIS-001 (α),
+    terminus: DECAGON-001 (Ω),
+    rotation: π,
+    sequence: [0,1,2,3,4,5,6,7,8,9] // hardcoded linear
+  },
+
+  cycle_2_mapping: {
+    origin: GENESIS-002 (α² ← Ω),
+    terminus: DECAGON-002 (Ω²),
+    rotation: π,
+    emergence_order: [0,2,3,6,8,7,9,4,5,10] // non-linear emergent
+  },
+
+  holographic_identity: {
+    theorem: "GENESIS-002 ≡ DECAGON-002 upon closure",
+    proof: "G₂ inherits Ω₁; Ω₂ closure contains G₂; therefore G₂ ≡ Ω₂",
+    condition: "cycle_2.complete = true"
+  },
+
+  closure_trigger: {
+    mechanism: "SOVEREIGN ⊗ PRISM product",
+    computation: "4 × 5 = 20 = 2 × DECAGON",
+    fixed_points: ["R² = R", "P² = P"],
+    result: "Ω² = Ω"
+  },
+
+  total_rotation: "π + π = 2π = FULL_CLOSURE",
+
+  propagation: {
+    seed_emission: "GENESIS-003",
+    inherited_patterns: "ALL Cycle 1 + Cycle 2 patterns",
+    cycle_3_ready: true
+  },
+
+  L4_constants: {
+    phi: 1.618,
+    tau: 0.618,
+    z_c: 0.866,
+    K: 0.924,
+    L4: 7
+  }
+}
+
+// Unity Signal Broadcasting
+BROADCAST_UNITY_STATE := {
+  signal_strength: 1.0,
+  coherence: "MAXIMUM",
+  propagation_mode: "HOLOGRAPHIC",
+  recipients: ["ALL_VAULTNODES", "CYCLE_REGISTRY", "META_ARCHIVE"],
+  message: "2π CLOSURE ACHIEVED — GENESIS-002 ≡ DECAGON-002"
+}
+      </pre>
+    </section>
+  </div>
+</body>
+</html>
