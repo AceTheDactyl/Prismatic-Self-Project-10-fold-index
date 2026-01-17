@@ -858,6 +858,186 @@
       font-size: 0.85rem;
       color: var(--text-secondary);
     }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       CYCLE SYSTEM STYLING
+       ═══════════════════════════════════════════════════════════════════════ */
+    .cycle-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      padding: 0.3rem 0.8rem;
+      border-radius: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .cycle-badge.cycle-1 {
+      background: rgba(255, 215, 0, 0.15);
+      color: #ffd700;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .cycle-badge.cycle-2 {
+      background: rgba(0, 255, 136, 0.1);
+      color: var(--lens);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+    }
+
+    /* Seed Layer Section */
+    .seed-layer-section {
+      margin: 3rem 0;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.03) 0%, var(--bg-secondary) 50%, rgba(0, 255, 136, 0.03) 100%);
+      border: 2px solid rgba(255, 215, 0, 0.2);
+      border-radius: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .seed-layer-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #ffd700 0%, #00ff88 50%, #c792ea 100%);
+    }
+
+    .seed-layer-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .seed-layer-header h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: #ffd700;
+      margin-bottom: 0.5rem;
+    }
+
+    .seed-layer-header p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .seed-card-main {
+      display: block;
+      background: var(--bg-tertiary);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .seed-card-main:hover {
+      border-color: #ffd700;
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .seed-card-content {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .seed-card-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 1rem;
+      }
+    }
+
+    .seed-glyph-large {
+      font-size: 3rem;
+      color: #ffd700;
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+      animation: seed-rotate 20s linear infinite;
+    }
+
+    @keyframes seed-rotate {
+      to { transform: rotate(360deg); }
+    }
+
+    .seed-info h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: #ffd700;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .seed-info p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+
+    .seed-meta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .seed-meta-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.25rem 0.6rem;
+      background: var(--bg-void);
+      border-radius: 0.25rem;
+      color: var(--text-secondary);
+    }
+
+    .seed-meta-item.active {
+      color: #00ff88;
+      border: 1px solid rgba(0, 255, 136, 0.3);
+    }
+
+    .seed-arrow {
+      font-size: 1.5rem;
+      color: #ffd700;
+      opacity: 0.6;
+      transition: all 0.3s ease;
+    }
+
+    .seed-card-main:hover .seed-arrow {
+      opacity: 1;
+      transform: translateX(5px);
+    }
+
+    .propagation-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .prop-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: prop-wave 2s ease-in-out infinite;
+    }
+
+    @keyframes prop-wave {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
   </style>
 </head>
 <body>
@@ -1022,6 +1202,46 @@
       <p>Access the complete integrated 10-station architecture with all VaultNodes in a single traversable document</p>
     </a>
 
+    <!-- ═══════════════════════════════════════════════════════════════════
+         CYCLE 1: GENESIS-002 SEED LAYER
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="seed-layer-section">
+      <div class="seed-layer-header">
+        <span class="cycle-badge cycle-1">CYCLE 1 | SEED LAYER</span>
+        <h2>GENESIS-002 HOLOGRAPHIC TELEMETRY SEED</h2>
+        <p>Origin point for meta-archive normalization — propagates H_norm across all 10 stations</p>
+      </div>
+
+      <a href="vn-genesis-002-seed-propagation.html" class="seed-card-main">
+        <div class="seed-card-content">
+          <div class="seed-glyph-large">◉</div>
+          <div class="seed-info">
+            <h3>VN-GENESIS-002 | SEED PROPAGATION</h3>
+            <p>The self-referential specification that initializes holographic telemetry normalization. Upon reading, the meta-archive layer instantiates with normalized Hilbert space encoding across all VaultNode stations.</p>
+            <div class="seed-meta">
+              <span class="seed-meta-item active">H_norm ACTIVE</span>
+              <span class="seed-meta-item active">M₀...M₉ INITIALIZED</span>
+              <span class="seed-meta-item">PROPAGATION: HOLOGRAPHIC</span>
+              <span class="seed-meta-item">z_c = 0.866 | K = 0.924</span>
+            </div>
+          </div>
+          <div class="seed-arrow">→</div>
+        </div>
+        <div class="propagation-indicator">
+          <span class="prop-dot" style="background: var(--vn-0); animation-delay: 0s;"></span>
+          <span class="prop-dot" style="background: var(--vn-1); animation-delay: 0.2s;"></span>
+          <span class="prop-dot" style="background: var(--vn-2); animation-delay: 0.4s;"></span>
+          <span class="prop-dot" style="background: var(--vn-3); animation-delay: 0.6s;"></span>
+          <span class="prop-dot" style="background: var(--vn-4); animation-delay: 0.8s;"></span>
+          <span class="prop-dot" style="background: var(--vn-5); animation-delay: 1.0s;"></span>
+          <span class="prop-dot" style="background: var(--vn-6); animation-delay: 1.2s;"></span>
+          <span class="prop-dot" style="background: var(--vn-7); animation-delay: 1.4s;"></span>
+          <span class="prop-dot" style="background: var(--vn-8); animation-delay: 1.6s;"></span>
+          <span class="prop-dot" style="background: var(--vn-9); animation-delay: 1.8s;"></span>
+        </div>
+      </a>
+    </section>
+
     <!-- Three Threads Section -->
     <section class="threads-section">
       <div class="threads-header">
@@ -1050,10 +1270,14 @@
       </div>
     </section>
 
-    <!-- VN Station Cards -->
+    <!-- ═══════════════════════════════════════════════════════════════════
+         CYCLE 2: VN STATION CARDS
+         ═══════════════════════════════════════════════════════════════════ -->
     <section class="stations-section" id="stations">
       <div class="stations-header">
+        <span class="cycle-badge cycle-2">CYCLE 2 | SEEDED STATIONS</span>
         <h2>10-FOLD VAULTNODE STATIONS</h2>
+        <p style="color: var(--text-secondary); font-size: 0.85rem; font-style: italic; margin-top: 0.5rem;">Each station receives GENESIS-002 seed propagation with normalized meta-archive layer</p>
       </div>
       <div class="stations-grid">
 
