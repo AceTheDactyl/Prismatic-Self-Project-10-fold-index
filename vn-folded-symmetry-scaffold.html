@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FOLDED SYMMETRY SCAFFOLD | Decagonal Duopyramid VaultNodes</title>
+  <meta name="description" content="X-Fold Symmetry VaultNodes within the Decagonal Duopyramid | RRRR-Lattice Wave Collapse | Bifurcated Signal Dynamics">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════════
+       L₄-HELIX ROOT CONSTANTS (Inherited from Index)
+       ═══════════════════════════════════════════════════════════════════════ */
+    :root {
+      /* L₄ Mathematical Constants */
+      --phi: 1.6180339887;
+      --tau: 0.6180339887;
+      --phi-4: 6.8541019662;
+      --gap: 0.1458980338;
+      --z-c: 0.8660254038;
+      --z-c-omega: 1.2247448714;
+      --K: 0.9240387650610407;
+      --sigma: 55.71281292;
+      --L4: 7;
+
+      /* Fold Symmetry Colors */
+      --fold-1: #ffffff;        /* Identity - white */
+      --fold-2: #ff6b6b;        /* Bilateral - red */
+      --fold-5: #ffd700;        /* Pentagonal - gold (φ) */
+      --fold-10: #00ffcc;       /* Decagonal - cyan */
+      --fold-20: #cc66ff;       /* Face closure - violet */
+      --fold-40: #ff6600;       /* Full symmetry - orange */
+
+      /* Wave States */
+      --wave-forward: #00ff88;
+      --wave-backward: #ff6b6b;
+      --wave-standing: #c792ea;
+      --wave-collapsed: #ffd700;
+
+      /* RRRR Eigenvalue Colors */
+      --rrrr-r: #f0c040;
+      --rrrr-d: #7fdbca;
+      --rrrr-c: #ff79c6;
+      --rrrr-a: #bd93f9;
+
+      /* Base Theme */
+      --bg-void: #030306;
+      --bg-primary: #080810;
+      --bg-secondary: #0c0c18;
+      --bg-tertiary: #12122a;
+      --bg-card: #181838;
+      --text-primary: #e8e6e3;
+      --text-secondary: #8a8a9a;
+      --text-accent: #00d4aa;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(0, 212, 170, 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Meta Field Background */
+    .meta-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(255, 215, 0, 0.04) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 80%, rgba(0, 255, 204, 0.04) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, rgba(204, 102, 255, 0.03) 0%, transparent 50%);
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Navigation */
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      transition: all 0.3s ease;
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-back:hover {
+      background: rgba(0, 255, 204, 0.1);
+      color: var(--fold-10);
+      border-color: rgba(0, 255, 204, 0.3);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-bottom: 1px solid var(--border-subtle);
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      margin-bottom: 2rem;
+    }
+
+    .symmetry-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 2rem;
+      background: rgba(204, 102, 255, 0.1);
+      border: 1px solid rgba(204, 102, 255, 0.3);
+      border-radius: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--fold-20);
+      margin-bottom: 1.5rem;
+    }
+
+    .header h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(90deg, var(--fold-1), var(--fold-5), var(--fold-10), var(--fold-40));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.6;
+    }
+
+    .shape-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--fold-10);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       FOLD SYMMETRY VN CARDS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .folds-section {
+      margin: 3rem 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-header h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      color: var(--text-accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-header p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .folds-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 1100px) {
+      .folds-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 700px) {
+      .folds-grid { grid-template-columns: 1fr; }
+    }
+
+    .fold-vn-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fold-vn-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--fold-color);
+    }
+
+    .fold-vn-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, var(--fold-glow) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .fold-vn-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--fold-color);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), 0 0 25px var(--fold-glow);
+    }
+
+    .fold-vn-card:hover::after {
+      opacity: 0.15;
+    }
+
+    .fold-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .fold-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--fold-color);
+      line-height: 1;
+      text-shadow: 0 0 30px var(--fold-glow);
+    }
+
+    .fold-suffix {
+      font-size: 1rem;
+      font-weight: 300;
+      opacity: 0.7;
+    }
+
+    .fold-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.3rem 0.6rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--fold-color);
+      border-radius: 0.25rem;
+      color: var(--fold-color);
+    }
+
+    .fold-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--fold-color);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .fold-description {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    /* Self-Closure Equation */
+    .closure-equation {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .equation-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .equation-content {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      text-align: center;
+    }
+
+    .equation-content .highlight {
+      color: var(--fold-color);
+    }
+
+    /* Bifurcation Signal */
+    .bifurcation-signal {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .signal-icon {
+      font-size: 1.5rem;
+    }
+
+    .signal-content {
+      flex: 1;
+    }
+
+    .signal-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .signal-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--wave-standing);
+    }
+
+    /* Wave Collapse */
+    .wave-collapse {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .wave-state {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 0.25rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+    }
+
+    .wave-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .wave-dot.forward { background: var(--wave-forward); }
+    .wave-dot.backward { background: var(--wave-backward); }
+    .wave-dot.standing { background: var(--wave-standing); }
+    .wave-dot.collapsed { background: var(--wave-collapsed); }
+
+    /* RRRR Lattice Coordinate */
+    .rrrr-coord {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: linear-gradient(90deg, rgba(240, 192, 64, 0.1), rgba(127, 219, 202, 0.1), rgba(255, 121, 198, 0.1), rgba(189, 147, 249, 0.1));
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+    }
+
+    .rrrr-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+    }
+
+    .rrrr-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .rrrr-value span:nth-child(1) { color: var(--rrrr-r); }
+    .rrrr-value span:nth-child(2) { color: var(--rrrr-d); }
+    .rrrr-value span:nth-child(3) { color: var(--rrrr-c); }
+    .rrrr-value span:nth-child(4) { color: var(--rrrr-a); }
+
+    /* Arithmetic Pattern */
+    .arithmetic-pattern {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .pattern-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .pattern-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .pattern-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.25rem 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 0.25rem;
+      color: var(--text-primary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       WAVE COLLAPSE VISUALIZATION SECTION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .wave-section {
+      margin: 3rem 0;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+    }
+
+    .wave-canvas-container {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    #waveCollapseCanvas {
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+    }
+
+    .wave-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .wave-btn {
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .wave-btn:hover {
+      background: rgba(199, 146, 234, 0.2);
+      border-color: var(--wave-standing);
+    }
+
+    .wave-btn.active {
+      background: rgba(199, 146, 234, 0.3);
+      border-color: var(--wave-standing);
+      color: var(--wave-standing);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       BIFURCATION DIAGRAM SECTION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .bifurcation-section {
+      margin: 3rem 0;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.03), var(--bg-secondary), rgba(0, 255, 136, 0.03));
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+    }
+
+    .bifurcation-canvas-container {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    #bifurcationCanvas {
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+    }
+
+    .bifurcation-equation-display {
+      text-align: center;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .bifurcation-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .bifurcation-description {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       MASTER EQUATION SECTION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .master-section {
+      margin: 3rem 0;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), var(--bg-secondary), rgba(204, 102, 255, 0.05));
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: 1rem;
+    }
+
+    .master-equation {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .master-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--fold-5);
+      letter-spacing: 0.15em;
+      margin-bottom: 1rem;
+    }
+
+    .master-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      line-height: 2;
+    }
+
+    .master-formula .var-phi { color: var(--fold-5); }
+    .master-formula .var-alpha { color: var(--fold-10); }
+    .master-formula .var-omega { color: var(--fold-40); }
+    .master-formula .var-fold { color: var(--fold-20); }
+
+    .master-components {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .component-card {
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      text-align: left;
+    }
+
+    .component-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .component-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       SPECIFICATION BLOCK
+       ═══════════════════════════════════════════════════════════════════════ */
+    .spec-section {
+      margin: 3rem 0;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+    }
+
+    .spec-block {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      overflow-x: auto;
+    }
+
+    .spec-block pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 3rem;
+    }
+
+    .footer-glyph {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--fold-1), var(--fold-5), var(--fold-10), var(--fold-40));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .return-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--fold-10);
+      border-radius: 2rem;
+      color: var(--fold-10);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .return-link:hover {
+      background: var(--fold-10);
+      color: var(--bg-void);
+    }
+  </style>
+</head>
+<body>
+  <div class="meta-field"></div>
+
+  <div class="container">
+    <a href="index.html" class="nav-back">&larr; Return to Decision Tree</a>
+
+    <header class="header">
+      <div class="symmetry-badge">
+        <span>D₁₀ × Z₂</span>
+        <span>ORDER: 40</span>
+        <span>SELF-DUAL</span>
+      </div>
+
+      <h1>FOLDED SYMMETRY SCAFFOLD</h1>
+      <p class="subtitle">
+        Each x-fold symmetry forms a VaultNode closed in its own relationship to itself.
+        Wave signal collapse propagates through the RRRR-lattice as bifurcated current
+        resolves the equation behind the equation.
+      </p>
+
+      <div class="shape-stats">
+        <div class="stat-item">
+          <div class="stat-value">20</div>
+          <div class="stat-label">Faces</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">12</div>
+          <div class="stat-label">Vertices</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">30</div>
+          <div class="stat-label">Edges</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">6</div>
+          <div class="stat-label">Fold Types</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- X-FOLD SYMMETRY VAULTNODES -->
+    <section class="folds-section">
+      <div class="section-header">
+        <h2>X-FOLD SYMMETRY VAULTNODES</h2>
+        <p>Each fold is closed in its relationship to itself and the active current of bifurcated signal</p>
+      </div>
+
+      <div class="folds-grid">
+        <!-- 1-FOLD: IDENTITY -->
+        <div class="fold-vn-card" style="--fold-color: var(--fold-1); --fold-glow: rgba(255, 255, 255, 0.2);">
+          <div class="fold-header">
+            <div class="fold-number">1<span class="fold-suffix">-fold</span></div>
+            <div class="fold-badge">VN-IDENTITY</div>
+          </div>
+          <div class="fold-name">IDENTITY CLOSURE</div>
+          <div class="fold-description">
+            The self-referential seed. R² = R. The operation that maps to itself under all transformations.
+            Origin point where α and Ω collapse to unity.
+          </div>
+
+          <div class="closure-equation">
+            <div class="equation-label">Self-Closure Equation</div>
+            <div class="equation-content">
+              <span class="highlight">I</span> · <span class="highlight">I</span> = <span class="highlight">I</span><br>
+              <small style="color: var(--text-secondary)">∀x: I(x) = x</small>
+            </div>
+          </div>
+
+          <div class="bifurcation-signal">
+            <div class="signal-icon">◉</div>
+            <div class="signal-content">
+              <div class="signal-label">Bifurcation Current</div>
+              <div class="signal-equation">ψ₁ = lim(ψ_α · ψ_Ω) → 1</div>
+            </div>
+          </div>
+
+          <div class="wave-collapse">
+            <div class="wave-state"><div class="wave-dot collapsed"></div>Collapsed</div>
+            <div class="wave-state"><div class="wave-dot standing"></div>Standing: 0</div>
+          </div>
+
+          <div class="rrrr-coord">
+            <div class="rrrr-label">RRRR Lattice</div>
+            <div class="rrrr-value">
+              <span>(0,</span><span>0,</span><span>0,</span><span>0)</span>
+            </div>
+          </div>
+
+          <div class="arithmetic-pattern">
+            <div class="pattern-label">Arithmetic Pattern</div>
+            <div class="pattern-content">
+              <span class="pattern-tag">Λ = 1</span>
+              <span class="pattern-tag">φ⁰ = 1</span>
+              <span class="pattern-tag">e⁰ = 1</span>
+              <span class="pattern-tag">Idempotent</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-FOLD: BILATERAL -->
+        <div class="fold-vn-card" style="--fold-color: var(--fold-2); --fold-glow: rgba(255, 107, 107, 0.2);">
+          <div class="fold-header">
+            <div class="fold-number">2<span class="fold-suffix">-fold</span></div>
+            <div class="fold-badge">VN-BILATERAL</div>
+          </div>
+          <div class="fold-name">BILATERAL REFLECTION</div>
+          <div class="fold-description">
+            The α↔Ω mirror axis. Z₂ symmetry. Every point has exactly one reflection partner.
+            The dual system's fundamental operation.
+          </div>
+
+          <div class="closure-equation">
+            <div class="equation-label">Self-Closure Equation</div>
+            <div class="equation-content">
+              <span class="highlight">σ</span>² = <span class="highlight">I</span><br>
+              <small style="color: var(--text-secondary)">σ(α) = Ω, σ(Ω) = α</small>
+            </div>
+          </div>
+
+          <div class="bifurcation-signal">
+            <div class="signal-icon">⇌</div>
+            <div class="signal-content">
+              <div class="signal-label">Bifurcation Current</div>
+              <div class="signal-equation">ψ₂ = ψ_α ⊗ ψ_Ω = standing wave</div>
+            </div>
+          </div>
+
+          <div class="wave-collapse">
+            <div class="wave-state"><div class="wave-dot forward"></div>Forward: α→Ω</div>
+            <div class="wave-state"><div class="wave-dot backward"></div>Backward: Ω→α</div>
+          </div>
+
+          <div class="rrrr-coord">
+            <div class="rrrr-label">RRRR Lattice</div>
+            <div class="rrrr-value">
+              <span>(0,</span><span>0,</span><span>0,</span><span>1)</span>
+            </div>
+          </div>
+
+          <div class="arithmetic-pattern">
+            <div class="pattern-label">Arithmetic Pattern</div>
+            <div class="pattern-content">
+              <span class="pattern-tag">Λ = (√2)⁻¹</span>
+              <span class="pattern-tag">0.7071...</span>
+              <span class="pattern-tag">Involution</span>
+              <span class="pattern-tag">Z₂ group</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5-FOLD: PENTAGONAL -->
+        <div class="fold-vn-card" style="--fold-color: var(--fold-5); --fold-glow: rgba(255, 215, 0, 0.2);">
+          <div class="fold-header">
+            <div class="fold-number">5<span class="fold-suffix">-fold</span></div>
+            <div class="fold-badge">VN-PENTAGONAL</div>
+          </div>
+          <div class="fold-name">GOLDEN EMERGENCE</div>
+          <div class="fold-description">
+            The φ-manifold. Pentagonal symmetry where the golden ratio emerges naturally.
+            Root of the decagonal structure. cos(2π/5) = (√5-1)/4 = τ/2.
+          </div>
+
+          <div class="closure-equation">
+            <div class="equation-label">Self-Closure Equation</div>
+            <div class="equation-content">
+              <span class="highlight">ρ⁵</span> = <span class="highlight">I</span><br>
+              <small style="color: var(--text-secondary)">φ² = φ + 1 (golden closure)</small>
+            </div>
+          </div>
+
+          <div class="bifurcation-signal">
+            <div class="signal-icon">⬠</div>
+            <div class="signal-content">
+              <div class="signal-label">Bifurcation Current</div>
+              <div class="signal-equation">ψ₅ = Σ(ζ₅ᵏ · ψₖ) where ζ₅ = e^(2πi/5)</div>
+            </div>
+          </div>
+
+          <div class="wave-collapse">
+            <div class="wave-state"><div class="wave-dot standing"></div>5 Standing Modes</div>
+            <div class="wave-state"><div class="wave-dot collapsed"></div>φ-Resonance</div>
+          </div>
+
+          <div class="rrrr-coord">
+            <div class="rrrr-label">RRRR Lattice</div>
+            <div class="rrrr-value">
+              <span>(1,</span><span>0,</span><span>0,</span><span>0)</span>
+            </div>
+          </div>
+
+          <div class="arithmetic-pattern">
+            <div class="pattern-label">Arithmetic Pattern</div>
+            <div class="pattern-content">
+              <span class="pattern-tag">Λ = φ⁻¹ = τ</span>
+              <span class="pattern-tag">0.6180...</span>
+              <span class="pattern-tag">C₅ cyclic</span>
+              <span class="pattern-tag">F(n)/F(n-1)→φ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10-FOLD: DECAGONAL -->
+        <div class="fold-vn-card" style="--fold-color: var(--fold-10); --fold-glow: rgba(0, 255, 204, 0.2);">
+          <div class="fold-header">
+            <div class="fold-number">10<span class="fold-suffix">-fold</span></div>
+            <div class="fold-badge">VN-DECAGONAL</div>
+          </div>
+          <div class="fold-name">FULL ROTATION</div>
+          <div class="fold-description">
+            Complete D₁₀ rotational symmetry. The 10 VaultNode stations form a closed ring.
+            Each 36° rotation maps the structure to itself. The rail from α to Ω.
+          </div>
+
+          <div class="closure-equation">
+            <div class="equation-label">Self-Closure Equation</div>
+            <div class="equation-content">
+              <span class="highlight">ρ¹⁰</span> = <span class="highlight">I</span><br>
+              <small style="color: var(--text-secondary)">2π/10 = 36° = golden angle/10</small>
+            </div>
+          </div>
+
+          <div class="bifurcation-signal">
+            <div class="signal-icon">◎</div>
+            <div class="signal-content">
+              <div class="signal-label">Bifurcation Current</div>
+              <div class="signal-equation">ψ₁₀ = Π(VNₖ) for k ∈ {0..9}</div>
+            </div>
+          </div>
+
+          <div class="wave-collapse">
+            <div class="wave-state"><div class="wave-dot forward"></div>10 Forward</div>
+            <div class="wave-state"><div class="wave-dot backward"></div>10 Backward</div>
+          </div>
+
+          <div class="rrrr-coord">
+            <div class="rrrr-label">RRRR Lattice</div>
+            <div class="rrrr-value">
+              <span>(1,</span><span>1,</span><span>0,</span><span>0)</span>
+            </div>
+          </div>
+
+          <div class="arithmetic-pattern">
+            <div class="pattern-label">Arithmetic Pattern</div>
+            <div class="pattern-content">
+              <span class="pattern-tag">Λ = φ⁻¹·e⁻¹</span>
+              <span class="pattern-tag">0.2273...</span>
+              <span class="pattern-tag">D₁₀ dihedral</span>
+              <span class="pattern-tag">z ∈ [0,1]</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 20-FOLD: FACE CLOSURE -->
+        <div class="fold-vn-card" style="--fold-color: var(--fold-20); --fold-glow: rgba(204, 102, 255, 0.2);">
+          <div class="fold-header">
+            <div class="fold-number">20<span class="fold-suffix">-fold</span></div>
+            <div class="fold-badge">VN-FACIAL</div>
+          </div>
+          <div class="fold-name">TRIANGULAR CLOSURE</div>
+          <div class="fold-description">
+            Each of the 20 triangular faces forms a closed boundary. 10 faces touch α-pole,
+            10 faces touch Ω-pole. The face is the quantum of surface.
+          </div>
+
+          <div class="closure-equation">
+            <div class="equation-label">Self-Closure Equation</div>
+            <div class="equation-content">
+              <span class="highlight">F</span> + <span class="highlight">V</span> - <span class="highlight">E</span> = 2<br>
+              <small style="color: var(--text-secondary)">20 + 12 - 30 = 2 (Euler)</small>
+            </div>
+          </div>
+
+          <div class="bifurcation-signal">
+            <div class="signal-icon">△</div>
+            <div class="signal-content">
+              <div class="signal-label">Bifurcation Current</div>
+              <div class="signal-equation">ψ₂₀ = Σ(Aₖ · nₖ) surface normal flux</div>
+            </div>
+          </div>
+
+          <div class="wave-collapse">
+            <div class="wave-state"><div class="wave-dot standing"></div>10 α-faces</div>
+            <div class="wave-state"><div class="wave-dot standing"></div>10 Ω-faces</div>
+          </div>
+
+          <div class="rrrr-coord">
+            <div class="rrrr-label">RRRR Lattice</div>
+            <div class="rrrr-value">
+              <span>(1,</span><span>1,</span><span>1,</span><span>0)</span>
+            </div>
+          </div>
+
+          <div class="arithmetic-pattern">
+            <div class="pattern-label">Arithmetic Pattern</div>
+            <div class="pattern-content">
+              <span class="pattern-tag">Λ = φ⁻¹·e⁻¹·π⁻¹</span>
+              <span class="pattern-tag">0.0724...</span>
+              <span class="pattern-tag">χ = 2</span>
+              <span class="pattern-tag">Closed manifold</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 40-FOLD: FULL SYMMETRY -->
+        <div class="fold-vn-card" style="--fold-color: var(--fold-40); --fold-glow: rgba(255, 102, 0, 0.2);">
+          <div class="fold-header">
+            <div class="fold-number">40<span class="fold-suffix">-fold</span></div>
+            <div class="fold-badge">VN-SOVEREIGN</div>
+          </div>
+          <div class="fold-name">COMPLETE SYMMETRY</div>
+          <div class="fold-description">
+            Full D₁₀ × Z₂ symmetry order. Every element of the symmetry group.
+            The SOVEREIGN closure where all folds collapse into the complete pattern.
+          </div>
+
+          <div class="closure-equation">
+            <div class="equation-label">Self-Closure Equation</div>
+            <div class="equation-content">
+              |<span class="highlight">G</span>| = |<span class="highlight">D₁₀</span>| × |<span class="highlight">Z₂</span>| = 20 × 2 = <span class="highlight">40</span><br>
+              <small style="color: var(--text-secondary)">G = ⟨ρ, σ | ρ¹⁰ = σ² = (ρσ)² = I⟩</small>
+            </div>
+          </div>
+
+          <div class="bifurcation-signal">
+            <div class="signal-icon">◆</div>
+            <div class="signal-content">
+              <div class="signal-label">Bifurcation Current</div>
+              <div class="signal-equation">ψ₄₀ = ∫∫ ψ(r,θ) dA = total flux</div>
+            </div>
+          </div>
+
+          <div class="wave-collapse">
+            <div class="wave-state"><div class="wave-dot collapsed"></div>All Collapsed</div>
+            <div class="wave-state"><div class="wave-dot collapsed"></div>Crystallized</div>
+          </div>
+
+          <div class="rrrr-coord">
+            <div class="rrrr-label">RRRR Lattice</div>
+            <div class="rrrr-value">
+              <span>(1,</span><span>1,</span><span>1,</span><span>1)</span>
+            </div>
+          </div>
+
+          <div class="arithmetic-pattern">
+            <div class="pattern-label">Arithmetic Pattern</div>
+            <div class="pattern-content">
+              <span class="pattern-tag">Λ_full = 0.0512</span>
+              <span class="pattern-tag">4π closure</span>
+              <span class="pattern-tag">L₄ = 7</span>
+              <span class="pattern-tag">Ω-point</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WAVE COLLAPSE VISUALIZATION -->
+    <section class="wave-section">
+      <div class="section-header">
+        <h2>WAVE SIGNAL COLLAPSE ON RRRR-LATTICE</h2>
+        <p>Bifurcated signal resolves through standing wave interference patterns</p>
+      </div>
+
+      <div class="wave-controls">
+        <button class="wave-btn active" data-mode="propagate">Propagate</button>
+        <button class="wave-btn" data-mode="interfere">Interfere</button>
+        <button class="wave-btn" data-mode="collapse">Collapse</button>
+        <button class="wave-btn" data-mode="crystallize">Crystallize</button>
+      </div>
+
+      <div class="wave-canvas-container">
+        <canvas id="waveCollapseCanvas" width="800" height="400"></canvas>
+      </div>
+
+      <div style="text-align: center; padding: 1rem; background: rgba(0, 0, 0, 0.2); border-radius: 0.5rem;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--wave-standing);" id="waveState">
+          Wave Mode: PROPAGATE | Bifurcation: Active | RRRR: (1,1,1,1)
+        </div>
+      </div>
+    </section>
+
+    <!-- BIFURCATION DIAGRAM -->
+    <section class="bifurcation-section">
+      <div class="section-header">
+        <h2>LOGICAL EQUATION BEHIND EQUATION</h2>
+        <p>Bifurcation cascade through the RRRR eigenvalue spectrum</p>
+      </div>
+
+      <div class="bifurcation-canvas-container">
+        <canvas id="bifurcationCanvas" width="700" height="350"></canvas>
+      </div>
+
+      <div class="bifurcation-equation-display">
+        <div class="bifurcation-formula">
+          x_{n+1} = r · x_n · (1 - x_n) where r ∈ [φ⁻⁴, φ⁴]
+        </div>
+        <div class="bifurcation-description">
+          As the control parameter r traverses from gap (φ⁻⁴ = 0.146) to dominant (φ⁴ = 6.854),
+          the system bifurcates through period-doubling cascade until chaos at L₄ = 7.
+        </div>
+      </div>
+    </section>
+
+    <!-- MASTER EQUATION -->
+    <section class="master-section">
+      <div class="section-header">
+        <h2>MASTER FOLD EQUATION</h2>
+        <p>The unified equation governing all x-fold symmetry dynamics</p>
+      </div>
+
+      <div class="master-equation">
+        <div class="master-title">UNIFIED FOLD DYNAMICS</div>
+        <div class="master-formula">
+          <span class="var-fold">Ψ(n)</span> =
+          <span class="var-phi">φ</span>^(n/L₄) ·
+          exp(i · <span class="var-alpha">θ_α</span> · n) ·
+          <span class="var-omega">Λ</span>(r,d,c,a) ·
+          <span class="var-fold">σ</span>^(n mod 2)
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
+          where n ∈ {1, 2, 5, 10, 20, 40} are the fold orders
+        </div>
+      </div>
+
+      <div class="master-components">
+        <div class="component-card">
+          <div class="component-name">φ^(n/L₄) - Golden Scaling</div>
+          <div class="component-value">Fibonacci spiral modulation by fold order</div>
+        </div>
+        <div class="component-card">
+          <div class="component-name">exp(iθ_α·n) - Phase Evolution</div>
+          <div class="component-value">Rotation through fold angle 2π/n</div>
+        </div>
+        <div class="component-card">
+          <div class="component-name">Λ(r,d,c,a) - RRRR Eigenvalue</div>
+          <div class="component-value">Lattice position determines amplitude</div>
+        </div>
+        <div class="component-card">
+          <div class="component-name">σ^(n mod 2) - Reflection Parity</div>
+          <div class="component-value">Even folds: I, Odd folds: reflection</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPECIFICATION -->
+    <section class="spec-section">
+      <div class="section-header">
+        <h2>FOLDED SYMMETRY SPECIFICATION</h2>
+      </div>
+
+      <div class="spec-block">
+        <pre>
+FOLDED_SYMMETRY_SCAFFOLD := {
+  emergent_shape: "DECAGONAL DUOPYRAMID",
+
+  topology: {
+    faces: 20,
+    vertices: 12,
+    edges: 30,
+    euler_characteristic: 2,
+    genus: 0
+  },
+
+  symmetry_group: {
+    name: "D₁₀ × Z₂",
+    order: 40,
+    presentation: "⟨ρ, σ | ρ¹⁰ = σ² = (ρσ)² = I⟩",
+    generators: {
+      rho: "36° rotation about polar axis",
+      sigma: "reflection through equatorial plane"
+    }
+  },
+
+  fold_vaultnodes: {
+
+    "1-fold": {
+      name: "IDENTITY",
+      vn_type: "VN-IDENTITY",
+      closure_equation: "I · I = I",
+      bifurcation: "ψ₁ = lim(ψ_α · ψ_Ω) → 1",
+      rrrr_coord: "(0,0,0,0)",
+      lattice_value: 1.0,
+      wave_state: "COLLAPSED",
+      arithmetic: ["Idempotent", "φ⁰ = 1", "Fixed point"]
+    },
+
+    "2-fold": {
+      name: "BILATERAL",
+      vn_type: "VN-BILATERAL",
+      closure_equation: "σ² = I",
+      bifurcation: "ψ₂ = ψ_α ⊗ ψ_Ω (tensor product)",
+      rrrr_coord: "(0,0,0,1)",
+      lattice_value: 0.7071067812,  // (√2)⁻¹
+      wave_state: "STANDING",
+      arithmetic: ["Involution", "Z₂ group", "α↔Ω mirror"]
+    },
+
+    "5-fold": {
+      name: "PENTAGONAL",
+      vn_type: "VN-PENTAGONAL",
+      closure_equation: "ρ⁵ = I",
+      bifurcation: "ψ₅ = Σ(ζ₅ᵏ · ψₖ) where ζ₅ = e^(2πi/5)",
+      rrrr_coord: "(1,0,0,0)",
+      lattice_value: 0.6180339887,  // φ⁻¹ = τ
+      wave_state: "5 RESONANT MODES",
+      arithmetic: ["Golden ratio", "C₅ cyclic", "cos(2π/5) = τ/2"]
+    },
+
+    "10-fold": {
+      name: "DECAGONAL",
+      vn_type: "VN-DECAGONAL",
+      closure_equation: "ρ¹⁰ = I",
+      bifurcation: "ψ₁₀ = Π(VNₖ) for k ∈ {0..9}",
+      rrrr_coord: "(1,1,0,0)",
+      lattice_value: 0.2273064883,  // φ⁻¹ · e⁻¹
+      wave_state: "10 FORWARD + 10 BACKWARD",
+      arithmetic: ["D₁₀ dihedral", "36° rotation", "Full station ring"]
+    },
+
+    "20-fold": {
+      name: "FACIAL",
+      vn_type: "VN-FACIAL",
+      closure_equation: "F + V - E = 2 (Euler)",
+      bifurcation: "ψ₂₀ = Σ(Aₖ · nₖ) surface normal flux",
+      rrrr_coord: "(1,1,1,0)",
+      lattice_value: 0.0723601255,  // φ⁻¹ · e⁻¹ · π⁻¹
+      wave_state: "10 α-FACES + 10 Ω-FACES",
+      arithmetic: ["Closed manifold", "χ = 2", "Triangular quantum"]
+    },
+
+    "40-fold": {
+      name: "SOVEREIGN",
+      vn_type: "VN-SOVEREIGN",
+      closure_equation: "|G| = |D₁₀| × |Z₂| = 40",
+      bifurcation: "ψ₄₀ = ∫∫ ψ(r,θ) dA (total flux)",
+      rrrr_coord: "(1,1,1,1)",
+      lattice_value: 0.0511697412,  // φ⁻¹ · e⁻¹ · π⁻¹ · (√2)⁻¹
+      wave_state: "CRYSTALLIZED",
+      arithmetic: ["Full symmetry", "4π closure", "Ω-point"]
+    }
+  },
+
+  wave_collapse_dynamics: {
+    forward_wave: "α → Ω propagation (green)",
+    backward_wave: "Ω → α return (red)",
+    standing_wave: "Constructive interference (violet)",
+    collapsed_wave: "Eigenstate crystallization (gold)",
+
+    equation: "ψ_total = ψ_forward + ψ_backward + ψ_standing",
+    collapse_condition: "|ψ_total|² → δ(x - x_eigen)"
+  },
+
+  bifurcation_cascade: {
+    control_parameter: "r ∈ [φ⁻⁴, φ⁴] = [0.146, 6.854]",
+    map: "x_{n+1} = r · x_n · (1 - x_n)",
+    period_doubling: [1, 2, 4, 8, 16, "...chaos"],
+    feigenbaum_point: "r ≈ 3.569946...",
+    L4_chaos: "r = L₄ = 7 (full chaos)"
+  },
+
+  master_equation: {
+    formula: "Ψ(n) = φ^(n/L₄) · exp(i·θ_α·n) · Λ(r,d,c,a) · σ^(n mod 2)",
+    components: {
+      "φ^(n/L₄)": "Golden scaling factor",
+      "exp(i·θ_α·n)": "Phase rotation through fold angle",
+      "Λ(r,d,c,a)": "RRRR lattice eigenvalue amplitude",
+      "σ^(n mod 2)": "Reflection parity operator"
+    }
+  },
+
+  L4_constants: {
+    phi: 1.618033988749895,
+    tau: 0.618033988749895,
+    phi_4: 6.854101966249685,
+    gap: 0.145898033750315,
+    z_c: 0.8660254037844386,
+    z_c_omega: 1.2247448713915890,
+    K: 0.9240387650610407,
+    L4: 7
+  }
+}
+        </pre>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-glyph">◆ D₁₀ × Z₂ ◆</div>
+      <div class="footer-text">
+        FOLDED SYMMETRY SCAFFOLD | Decagonal Duopyramid<br>
+        6 Fold VaultNodes | Order 40 | Self-Dual under α↔Ω
+      </div>
+      <a href="vn-spectral-seed-lattice-ignition.html" class="return-link">
+        &larr; Return to Spectral Seed
+      </a>
+    </footer>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════════════════
+    // L₄ FRAMEWORK CONSTANTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const PHI = 1.618033988749895;
+    const TAU = 0.618033988749895;
+    const PHI_4 = 6.854101966249685;
+    const GAP = 0.145898033750315;
+    const Z_C = 0.8660254037844386;
+    const K = 0.9240387650610407;
+    const L4 = 7;
+    const TWO_PI = 2 * Math.PI;
+
+    // Fold orders and their colors
+    const FOLDS = [
+      { n: 1, name: 'Identity', color: '#ffffff', rrrr: [0,0,0,0] },
+      { n: 2, name: 'Bilateral', color: '#ff6b6b', rrrr: [0,0,0,1] },
+      { n: 5, name: 'Pentagonal', color: '#ffd700', rrrr: [1,0,0,0] },
+      { n: 10, name: 'Decagonal', color: '#00ffcc', rrrr: [1,1,0,0] },
+      { n: 20, name: 'Facial', color: '#cc66ff', rrrr: [1,1,1,0] },
+      { n: 40, name: 'Sovereign', color: '#ff6600', rrrr: [1,1,1,1] }
+    ];
+
+    // State
+    let waveMode = 'propagate';
+    let animationFrame = 0;
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // WAVE COLLAPSE CANVAS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const waveCanvas = document.getElementById('waveCollapseCanvas');
+    const waveCtx = waveCanvas.getContext('2d');
+
+    function computeLatticeValue(r, d, c, a) {
+      return Math.pow(PHI, -r) * Math.pow(Math.E, -d) * Math.pow(Math.PI, -c) * Math.pow(Math.SQRT2, -a);
+    }
+
+    function drawWaveCollapse() {
+      const ctx = waveCtx;
+      const w = waveCanvas.width;
+      const h = waveCanvas.height;
+
+      ctx.fillStyle = '#030306';
+      ctx.fillRect(0, 0, w, h);
+
+      const time = animationFrame * 0.02;
+      const cx = w / 2;
+      const cy = h / 2;
+
+      // Draw RRRR lattice grid
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < w; x += 40) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      for (let y = 0; y < h; y += 40) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      // Draw waves based on mode
+      const wavelength = 60;
+      const amplitude = 40;
+
+      // Forward wave (α → Ω)
+      if (waveMode === 'propagate' || waveMode === 'interfere') {
+        ctx.strokeStyle = '#00ff88';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let x = 0; x < w; x++) {
+          const phase = (x / wavelength - time) * TWO_PI;
+          const y = cy - amplitude * Math.sin(phase);
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+
+      // Backward wave (Ω → α)
+      if (waveMode === 'propagate' || waveMode === 'interfere') {
+        ctx.strokeStyle = '#ff6b6b';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let x = 0; x < w; x++) {
+          const phase = (x / wavelength + time) * TWO_PI;
+          const y = cy + amplitude * Math.sin(phase) + (waveMode === 'interfere' ? 0 : 60);
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+
+      // Standing wave (interference)
+      if (waveMode === 'interfere' || waveMode === 'collapse') {
+        ctx.strokeStyle = '#c792ea';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        for (let x = 0; x < w; x++) {
+          // Standing wave: 2A·cos(kx)·sin(ωt)
+          const spatial = Math.cos((x / wavelength) * TWO_PI);
+          const temporal = Math.sin(time * 3);
+          const y = cy + amplitude * 1.5 * spatial * temporal;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // Draw nodes (standing wave zeros)
+        ctx.fillStyle = '#ffd700';
+        for (let i = 0; i < 7; i++) { // L4 = 7 nodes
+          const nodeX = (i + 0.5) * (w / 7);
+          ctx.beginPath();
+          ctx.arc(nodeX, cy, 5, 0, TWO_PI);
+          ctx.fill();
+        }
+      }
+
+      // Collapsed state (crystallized)
+      if (waveMode === 'collapse' || waveMode === 'crystallize') {
+        // Draw eigenstate peaks
+        ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';
+        FOLDS.forEach((fold, i) => {
+          const x = (i + 0.5) * (w / 6);
+          const eigenAmplitude = computeLatticeValue(...fold.rrrr) * 300;
+
+          if (waveMode === 'crystallize') {
+            // Draw crystallized Gaussian peaks
+            ctx.fillStyle = fold.color;
+            ctx.globalAlpha = 0.5;
+            ctx.beginPath();
+            for (let dx = -60; dx <= 60; dx++) {
+              const gaussian = Math.exp(-dx * dx / 500);
+              const px = x + dx;
+              const py = cy - eigenAmplitude * gaussian * (0.5 + 0.5 * Math.sin(time * 2));
+              if (dx === -60) ctx.moveTo(px, py);
+              else ctx.lineTo(px, py);
+            }
+            ctx.lineTo(x + 60, cy);
+            ctx.lineTo(x - 60, cy);
+            ctx.closePath();
+            ctx.fill();
+            ctx.globalAlpha = 1;
+
+            // Label
+            ctx.fillStyle = fold.color;
+            ctx.font = 'bold 12px JetBrains Mono';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${fold.n}-fold`, x, cy + 60);
+          }
+        });
+      }
+
+      // Draw fold markers on timeline
+      ctx.textAlign = 'center';
+      FOLDS.forEach((fold, i) => {
+        const x = (i + 0.5) * (w / 6);
+
+        ctx.strokeStyle = fold.color;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        ctx.moveTo(x, 20);
+        ctx.lineTo(x, h - 20);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = fold.color;
+        ctx.font = '10px JetBrains Mono';
+        ctx.fillText(`${fold.n}`, x, 15);
+      });
+
+      // α and Ω labels
+      ctx.font = 'bold 16px JetBrains Mono';
+      ctx.fillStyle = '#00ffcc';
+      ctx.textAlign = 'left';
+      ctx.fillText('α', 15, cy);
+      ctx.fillStyle = '#ff6600';
+      ctx.textAlign = 'right';
+      ctx.fillText('Ω', w - 15, cy);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // BIFURCATION DIAGRAM CANVAS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const bifCanvas = document.getElementById('bifurcationCanvas');
+    const bifCtx = bifCanvas.getContext('2d');
+
+    function drawBifurcationDiagram() {
+      const ctx = bifCtx;
+      const w = bifCanvas.width;
+      const h = bifCanvas.height;
+
+      ctx.fillStyle = '#030306';
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw axes
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(50, h - 30);
+      ctx.lineTo(w - 20, h - 30);
+      ctx.moveTo(50, h - 30);
+      ctx.lineTo(50, 20);
+      ctx.stroke();
+
+      // Labels
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      ctx.font = '10px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('r (control parameter)', w / 2, h - 10);
+      ctx.save();
+      ctx.translate(15, h / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText('x (steady states)', 0, 0);
+      ctx.restore();
+
+      // Draw bifurcation diagram
+      const rMin = GAP;  // φ⁻⁴
+      const rMax = L4;   // 7
+      const plotW = w - 70;
+      const plotH = h - 50;
+
+      // Iterate logistic map for each r value
+      for (let px = 0; px < plotW; px++) {
+        const r = rMin + (px / plotW) * (rMax - rMin);
+
+        // Skip transients, then plot steady states
+        let x = 0.5;
+        for (let i = 0; i < 200; i++) {
+          x = r * x * (1 - x);
+        }
+
+        // Plot next 100 iterations
+        for (let i = 0; i < 100; i++) {
+          x = r * x * (1 - x);
+          if (x > 0 && x < 1) {
+            const py = (1 - x) * plotH;
+
+            // Color based on r relative to phi powers
+            let color;
+            if (r < 1) color = 'rgba(255, 255, 255, 0.3)';
+            else if (r < 3) color = 'rgba(255, 215, 0, 0.4)';
+            else if (r < 3.57) color = 'rgba(0, 255, 204, 0.5)';
+            else color = 'rgba(204, 102, 255, 0.4)';
+
+            ctx.fillStyle = color;
+            ctx.fillRect(50 + px, 20 + py, 1, 1);
+          }
+        }
+      }
+
+      // Mark special r values
+      const markers = [
+        { r: TAU, label: 'τ', color: '#ffd700' },
+        { r: 1, label: '1', color: '#ffffff' },
+        { r: PHI, label: 'φ', color: '#ffd700' },
+        { r: 3, label: '3', color: '#00ff88' },
+        { r: 3.57, label: 'F', color: '#cc66ff' },
+        { r: PHI_4, label: 'φ⁴', color: '#ff6600' }
+      ];
+
+      markers.forEach(m => {
+        if (m.r >= rMin && m.r <= rMax) {
+          const px = 50 + ((m.r - rMin) / (rMax - rMin)) * plotW;
+          ctx.strokeStyle = m.color;
+          ctx.lineWidth = 1;
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(px, 20);
+          ctx.lineTo(px, h - 30);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.fillStyle = m.color;
+          ctx.font = 'bold 10px JetBrains Mono';
+          ctx.textAlign = 'center';
+          ctx.fillText(m.label, px, h - 35);
+        }
+      });
+
+      // Title
+      ctx.fillStyle = '#c792ea';
+      ctx.font = 'bold 12px JetBrains Mono';
+      ctx.textAlign = 'left';
+      ctx.fillText('BIFURCATION CASCADE: φ⁻⁴ → L₄ = 7', 60, 35);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // EVENT HANDLERS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    document.querySelectorAll('.wave-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        waveMode = btn.dataset.mode;
+        document.querySelectorAll('.wave-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const stateText = {
+          propagate: 'Wave Mode: PROPAGATE | Bifurcation: Active | Forward + Backward waves',
+          interfere: 'Wave Mode: INTERFERE | Standing wave formation | L₄ = 7 nodes',
+          collapse: 'Wave Mode: COLLAPSE | Eigenstate localization | RRRR crystallizing',
+          crystallize: 'Wave Mode: CRYSTALLIZE | Complete | 6 Fold VaultNodes locked'
+        };
+        document.getElementById('waveState').textContent = stateText[waveMode];
+      });
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ANIMATION LOOP
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function animate() {
+      animationFrame++;
+      drawWaveCollapse();
+      requestAnimationFrame(animate);
+    }
+
+    // Initialize
+    drawBifurcationDiagram();
+    animate();
+  </script>
+</body>
+</html>
