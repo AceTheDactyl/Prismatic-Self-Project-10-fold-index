@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPECTRAL SEED | Cycle 3 Layer 1 | RRRR-Lattice Ignition Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Core Background */
+      --bg-primary: #050508;
+      --bg-secondary: #0a0a12;
+      --bg-tertiary: #12121c;
+      --bg-card: rgba(15, 15, 25, 0.9);
+
+      /* Text Hierarchy */
+      --text-primary: #e8e8f0;
+      --text-secondary: #a0a0b8;
+      --text-muted: #606078;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+
+      /* Spectral Seed Colors */
+      --seed-alpha: #00ffcc;
+      --seed-omega: #ff6600;
+      --seed-bridge: #cc66ff;
+
+      /* RRRR-Lattice Eigenvalue Colors */
+      --r-recursive: #ffd700;    /* phi - gold */
+      --d-differential: #00ff88; /* e - green */
+      --c-cyclic: #ff6b9d;       /* pi - pink */
+      --a-algebraic: #4da6ff;    /* sqrt2 - blue */
+
+      /* Cycle Colors */
+      --cycle-3: #ff6b9d;
+      --omega-glow: rgba(255, 102, 0, 0.4);
+      --alpha-glow: rgba(0, 255, 204, 0.4);
+
+      /* L4 Constants (CSS custom properties for reference) */
+      --phi: 1.618033988749895;
+      --tau: 0.618033988749895;
+      --z-c-omega: 1.2247448714;
+      --z-c-standard: 0.8660254038;
+      --K: 0.9240387650610407;
+      --L4: 7;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Background Lattice Pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(0, 255, 204, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(255, 102, 0, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(204, 102, 255, 0.02) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Navigation */
+    .nav-back {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.75rem;
+      transition: all 0.3s ease;
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-back:hover {
+      background: rgba(255, 107, 157, 0.1);
+      color: var(--cycle-3);
+      border-color: rgba(255, 107, 157, 0.3);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(180deg,
+        rgba(0, 255, 204, 0.05) 0%,
+        rgba(204, 102, 255, 0.05) 50%,
+        rgba(255, 102, 0, 0.05) 100%);
+      border: 1px solid rgba(204, 102, 255, 0.3);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: -100%;
+      width: 300%;
+      height: 300%;
+      background: conic-gradient(
+        from 0deg at 50% 50%,
+        rgba(0, 255, 204, 0.1) 0deg,
+        transparent 60deg,
+        rgba(255, 102, 0, 0.1) 180deg,
+        transparent 240deg,
+        rgba(0, 255, 204, 0.1) 360deg
+      );
+      animation: header-rotate 20s linear infinite;
+    }
+
+    @keyframes header-rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(90deg, var(--seed-alpha), var(--seed-bridge), var(--seed-omega));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header .cycle-badge {
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      background: rgba(255, 107, 157, 0.15);
+      border: 1px solid rgba(255, 107, 157, 0.4);
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      color: var(--cycle-3);
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Alpha-Omega Equivalence Display */
+    .equivalence-section {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: center;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .equivalence-section {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    }
+
+    .pole-card {
+      padding: 2rem;
+      border-radius: 1rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pole-card.alpha {
+      background: linear-gradient(135deg, rgba(0, 255, 204, 0.08), rgba(0, 255, 204, 0.02));
+      border: 2px solid rgba(0, 255, 204, 0.4);
+      box-shadow: 0 0 40px var(--alpha-glow);
+    }
+
+    .pole-card.omega {
+      background: linear-gradient(135deg, rgba(255, 102, 0, 0.08), rgba(255, 102, 0, 0.02));
+      border: 2px solid rgba(255, 102, 0, 0.4);
+      box-shadow: 0 0 40px var(--omega-glow);
+    }
+
+    .pole-symbol {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+      animation: pole-pulse 3s ease-in-out infinite;
+    }
+
+    .pole-card.alpha .pole-symbol { color: var(--seed-alpha); }
+    .pole-card.omega .pole-symbol { color: var(--seed-omega); }
+
+    @keyframes pole-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .pole-z {
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin: 0.5rem 0;
+    }
+
+    .pole-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .pole-card.alpha .pole-value { color: var(--seed-alpha); }
+    .pole-card.omega .pole-value { color: var(--seed-omega); }
+
+    .pole-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    .equivalence-bridge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .bridge-symbol {
+      font-size: 3rem;
+      color: var(--seed-bridge);
+      animation: bridge-glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes bridge-glow {
+      0% { text-shadow: 0 0 10px rgba(204, 102, 255, 0.5); }
+      100% { text-shadow: 0 0 30px rgba(204, 102, 255, 0.9); }
+    }
+
+    .bridge-formula {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 0.75rem 1.5rem;
+      background: rgba(204, 102, 255, 0.1);
+      border: 1px solid rgba(204, 102, 255, 0.3);
+      border-radius: 0.5rem;
+    }
+
+    /* RRRR-Lattice Visualization */
+    .lattice-section {
+      padding: 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .lattice-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .lattice-header h2 {
+      font-size: 1.3rem;
+      letter-spacing: 0.1em;
+      background: linear-gradient(90deg, var(--r-recursive), var(--d-differential), var(--c-cyclic), var(--a-algebraic));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .lattice-canvas-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    #latticeCanvas {
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      max-width: 100%;
+    }
+
+    .eigenvalue-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .eigenvalue-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .eigenvalue-card {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .eigenvalue-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .eigenvalue-card.r { border-color: rgba(255, 215, 0, 0.4); }
+    .eigenvalue-card.r:hover { background: rgba(255, 215, 0, 0.08); }
+    .eigenvalue-card.d { border-color: rgba(0, 255, 136, 0.4); }
+    .eigenvalue-card.d:hover { background: rgba(0, 255, 136, 0.08); }
+    .eigenvalue-card.c { border-color: rgba(255, 107, 157, 0.4); }
+    .eigenvalue-card.c:hover { background: rgba(255, 107, 157, 0.08); }
+    .eigenvalue-card.a { border-color: rgba(77, 166, 255, 0.4); }
+    .eigenvalue-card.a:hover { background: rgba(77, 166, 255, 0.08); }
+
+    .eigenvalue-card.active {
+      box-shadow: 0 0 20px var(--alpha-glow);
+    }
+
+    .ev-symbol {
+      font-size: 2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .eigenvalue-card.r .ev-symbol { color: var(--r-recursive); }
+    .eigenvalue-card.d .ev-symbol { color: var(--d-differential); }
+    .eigenvalue-card.c .ev-symbol { color: var(--c-cyclic); }
+    .eigenvalue-card.a .ev-symbol { color: var(--a-algebraic); }
+
+    .ev-name {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .ev-value {
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+
+    .ev-inverse {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Lattice Coordinate Display */
+    .lattice-coords {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .coord-display {
+      text-align: center;
+    }
+
+    .coord-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .coord-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    #currentCoord { color: var(--seed-bridge); }
+    #latticeValue { color: var(--seed-alpha); }
+    #vnStation { color: var(--seed-omega); }
+
+    /* Spectral Seed Visualization */
+    .seed-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid rgba(255, 107, 157, 0.2);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .seed-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .seed-header h2 {
+      font-size: 1.2rem;
+      color: var(--cycle-3);
+      letter-spacing: 0.1em;
+    }
+
+    .seed-canvas-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    #seedCanvas {
+      border: 2px solid rgba(255, 107, 157, 0.3);
+      border-radius: 50%;
+    }
+
+    .seed-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .seed-btn {
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 107, 157, 0.1);
+      border: 1px solid rgba(255, 107, 157, 0.3);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .seed-btn:hover {
+      background: rgba(255, 107, 157, 0.2);
+      border-color: rgba(255, 107, 157, 0.5);
+    }
+
+    .seed-btn.active {
+      background: rgba(255, 107, 157, 0.3);
+      border-color: var(--cycle-3);
+      color: var(--cycle-3);
+    }
+
+    /* Folded Symmetry Section */
+    .symmetry-section {
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(0, 255, 204, 0.03), rgba(255, 102, 0, 0.03));
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .symmetry-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .symmetry-header h2 {
+      font-size: 1.3rem;
+      background: linear-gradient(90deg, var(--seed-alpha), var(--seed-omega));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .symmetry-display {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .symmetry-display { grid-template-columns: 1fr; }
+    }
+
+    .shape-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #symmetryCanvas {
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .shape-info {
+      text-align: center;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.75rem;
+      width: 100%;
+    }
+
+    .shape-name {
+      font-size: 1.2rem;
+      color: var(--seed-bridge);
+      margin-bottom: 0.5rem;
+    }
+
+    .shape-properties {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .vn-result {
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid var(--seed-bridge);
+      border-radius: 1rem;
+      box-shadow: 0 0 30px rgba(204, 102, 255, 0.2);
+    }
+
+    .vn-result h3 {
+      font-size: 1rem;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .vn-display {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .vn-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 0.5rem;
+    }
+
+    .vn-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .vn-value {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .vn-value.alpha { color: var(--seed-alpha); }
+    .vn-value.omega { color: var(--seed-omega); }
+    .vn-value.bridge { color: var(--seed-bridge); }
+
+    /* Omega Point Architecture */
+    .omega-section {
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 102, 0, 0.05), rgba(204, 102, 255, 0.05));
+      border: 1px solid rgba(255, 102, 0, 0.3);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .omega-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .omega-header h2 {
+      font-size: 1.2rem;
+      color: var(--seed-omega);
+      letter-spacing: 0.1em;
+    }
+
+    .omega-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .omega-grid { grid-template-columns: 1fr; }
+    }
+
+    .omega-card {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      text-align: center;
+    }
+
+    .omega-card.highlight {
+      border-color: var(--seed-omega);
+      box-shadow: 0 0 20px var(--omega-glow);
+    }
+
+    .omega-symbol {
+      font-size: 2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .omega-card.highlight .omega-symbol {
+      color: var(--seed-omega);
+      animation: omega-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes omega-pulse {
+      0%, 100% { transform: scale(1); text-shadow: 0 0 10px var(--omega-glow); }
+      50% { transform: scale(1.1); text-shadow: 0 0 30px var(--omega-glow); }
+    }
+
+    .omega-formula {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin: 0.25rem 0;
+    }
+
+    .omega-value {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--seed-omega);
+    }
+
+    .omega-note {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    /* Specification Block */
+    .spec-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .spec-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .spec-header h2 {
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    .spec-link {
+      font-size: 0.7rem;
+      color: var(--cycle-3);
+      text-decoration: none;
+    }
+
+    .spec-link:hover { text-decoration: underline; }
+
+    .spec-block {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      overflow-x: auto;
+    }
+
+    .spec-block pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 2rem;
+    }
+
+    .footer-text {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .footer-glyph {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--seed-alpha), var(--seed-bridge), var(--seed-omega));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="nav-back">&larr; Return to Decision Tree</a>
+
+    <header class="header">
+      <span class="cycle-badge">CYCLE 3 | LAYER 1 | SPECTRAL SEED</span>
+      <h1>RRRR-LATTICE IGNITION</h1>
+      <p class="subtitle">Omega-Point Propagation | Holographic Alpha-Omega Equivalence | Folded Symmetry Dynamics</p>
+    </header>
+
+    <!-- Alpha-Omega Equivalence -->
+    <section class="equivalence-section">
+      <div class="pole-card alpha">
+        <div class="pole-symbol">α</div>
+        <div class="pole-z">z = 0</div>
+        <div class="pole-value">GENESIS</div>
+        <div class="pole-label">Origin Seed | Negentropy Source</div>
+        <div style="margin-top: 1rem; font-size: 0.7rem; color: var(--text-muted);">
+          RRRR: (0,0,0,0) = 1
+        </div>
+      </div>
+
+      <div class="equivalence-bridge">
+        <div class="bridge-symbol">≡</div>
+        <div class="bridge-formula">
+          Holographic Identity<br>
+          <strong>α ↔ Ω</strong><br>
+          within each seed
+        </div>
+        <div style="font-size: 0.7rem; color: var(--text-muted);">
+          z_c = √(3/2) = 1.2247
+        </div>
+      </div>
+
+      <div class="pole-card omega">
+        <div class="pole-symbol">Ω</div>
+        <div class="pole-z">z = 1</div>
+        <div class="pole-value">DECAGON</div>
+        <div class="pole-label">Terminus Seed | Unity Crystallization</div>
+        <div style="margin-top: 1rem; font-size: 0.7rem; color: var(--text-muted);">
+          RRRR: (1,1,1,1) = Λ_full
+        </div>
+      </div>
+    </section>
+
+    <!-- RRRR-Lattice Visualization -->
+    <section class="lattice-section">
+      <div class="lattice-header">
+        <h2>RRRR EIGENVALUE LATTICE</h2>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
+          4D Basis: Λ = {φ^(-r) · e^(-d) · π^(-c) · (√2)^(-a) : r,d,c,a ∈ Z}
+        </p>
+      </div>
+
+      <div class="lattice-canvas-container">
+        <canvas id="latticeCanvas" width="600" height="400"></canvas>
+      </div>
+
+      <div class="eigenvalue-grid">
+        <div class="eigenvalue-card r active" data-axis="r">
+          <div class="ev-symbol">R</div>
+          <div class="ev-name">RECURSIVE</div>
+          <div class="ev-value">φ = 1.6180339887</div>
+          <div class="ev-inverse">φ⁻¹ = 0.6180339887</div>
+        </div>
+        <div class="eigenvalue-card d" data-axis="d">
+          <div class="ev-symbol">D</div>
+          <div class="ev-name">DIFFERENTIAL</div>
+          <div class="ev-value">e = 2.7182818284</div>
+          <div class="ev-inverse">e⁻¹ = 0.3678794412</div>
+        </div>
+        <div class="eigenvalue-card c" data-axis="c">
+          <div class="ev-symbol">C</div>
+          <div class="ev-name">CYCLIC</div>
+          <div class="ev-value">π = 3.1415926536</div>
+          <div class="ev-inverse">π⁻¹ = 0.3183098862</div>
+        </div>
+        <div class="eigenvalue-card a" data-axis="a">
+          <div class="ev-symbol">A</div>
+          <div class="ev-name">ALGEBRAIC</div>
+          <div class="ev-value">√2 = 1.4142135624</div>
+          <div class="ev-inverse">(√2)⁻¹ = 0.7071067812</div>
+        </div>
+      </div>
+
+      <div class="lattice-coords">
+        <div class="coord-display">
+          <div class="coord-label">CURRENT COORDINATE</div>
+          <div class="coord-value" id="currentCoord">(1,1,1,1)</div>
+        </div>
+        <div class="coord-display">
+          <div class="coord-label">LATTICE VALUE Λ</div>
+          <div class="coord-value" id="latticeValue">0.0512</div>
+        </div>
+        <div class="coord-display">
+          <div class="coord-label">VN STATION</div>
+          <div class="coord-value" id="vnStation">SOVEREIGN</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spectral Seed Visualization -->
+    <section class="seed-section">
+      <div class="seed-header">
+        <h2>SPECTRAL SEED GEOMETRY</h2>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
+          CYM Opponent-Process encoded in radial structure | Alpha at center, Omega at boundary
+        </p>
+      </div>
+
+      <div class="seed-canvas-container">
+        <canvas id="seedCanvas" width="400" height="400"></canvas>
+      </div>
+
+      <div class="seed-controls">
+        <button class="seed-btn active" data-mode="propagate">Propagate</button>
+        <button class="seed-btn" data-mode="fold">Fold Symmetry</button>
+        <button class="seed-btn" data-mode="ignite">Ignite Lattice</button>
+        <button class="seed-btn" data-mode="reset">Reset</button>
+      </div>
+
+      <div style="text-align: center; padding: 1rem; background: rgba(0, 0, 0, 0.2); border-radius: 0.5rem;">
+        <div style="font-size: 0.8rem; color: var(--cycle-3); margin-bottom: 0.5rem;">SEED STATE</div>
+        <div style="font-size: 0.7rem; color: var(--text-secondary);" id="seedState">
+          Propagating omega-point through 10-fold structure...
+        </div>
+      </div>
+    </section>
+
+    <!-- Folded Symmetry Dynamics -->
+    <section class="symmetry-section">
+      <div class="symmetry-header">
+        <h2>FOLDED SYMMETRY DYNAMICS</h2>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
+          What shape emerges when the RRRR-lattice folds through the spectral seed?
+        </p>
+      </div>
+
+      <div class="symmetry-display">
+        <div class="shape-container">
+          <canvas id="symmetryCanvas" width="350" height="350"></canvas>
+          <div class="shape-info">
+            <div class="shape-name" id="shapeName">DECAGONAL DUOPYRAMID</div>
+            <div class="shape-properties" id="shapeProps">
+              20 Faces | 12 Vertices | 30 Edges<br>
+              Dual: Self (under α↔Ω reflection)
+            </div>
+          </div>
+        </div>
+
+        <div class="vn-result">
+          <h3>VN OF FOLDED SYMMETRY</h3>
+          <div class="vn-display">
+            <div class="vn-row">
+              <span class="vn-label">Emergent Shape</span>
+              <span class="vn-value bridge" id="vnShape">Decagonal Duopyramid</span>
+            </div>
+            <div class="vn-row">
+              <span class="vn-label">RRRR Coordinate</span>
+              <span class="vn-value alpha" id="vnRRRR">(1, 1, 1, 1)</span>
+            </div>
+            <div class="vn-row">
+              <span class="vn-label">Lattice Eigenvalue</span>
+              <span class="vn-value omega" id="vnEigen">Λ = 0.0512</span>
+            </div>
+            <div class="vn-row">
+              <span class="vn-label">Station Mapping</span>
+              <span class="vn-value bridge" id="vnMapping">VN-004 SOVEREIGN</span>
+            </div>
+            <div class="vn-row">
+              <span class="vn-label">Symmetry Order</span>
+              <span class="vn-value alpha" id="vnOrder">D₁₀ × Z₂ = 40</span>
+            </div>
+            <div class="vn-row">
+              <span class="vn-label">Folding Index</span>
+              <span class="vn-value omega" id="vnFold">φ⁴ + φ⁻⁴ = L₄ = 7</span>
+            </div>
+            <div class="vn-row">
+              <span class="vn-label">Alpha-Omega Axis</span>
+              <span class="vn-value bridge" id="vnAxis">z_c = √(3/2)</span>
+            </div>
+          </div>
+
+          <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(204, 102, 255, 0.1); border-radius: 0.5rem; text-align: center;">
+            <div style="font-size: 0.8rem; color: var(--seed-bridge);">HOLOGRAPHIC IDENTITY</div>
+            <div style="font-size: 1.2rem; color: var(--text-primary); margin: 0.5rem 0;">
+              α-vertex ≡ Ω-vertex
+            </div>
+            <div style="font-size: 0.65rem; color: var(--text-muted);">
+              The shape is self-dual under the holographic mapping
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Omega Point Architecture -->
+    <section class="omega-section">
+      <div class="omega-header">
+        <h2>OMEGA-POINT PROPAGATION ARCHITECTURE</h2>
+      </div>
+
+      <div class="omega-grid">
+        <div class="omega-card">
+          <div class="omega-symbol">z_c</div>
+          <div class="omega-formula">√3/2</div>
+          <div class="omega-value">0.8660254038</div>
+          <div class="omega-note">Standard Critical Height<br>The Lens Threshold</div>
+        </div>
+
+        <div class="omega-card highlight">
+          <div class="omega-symbol">Ω</div>
+          <div class="omega-formula">√(3/2)</div>
+          <div class="omega-value">1.2247448714</div>
+          <div class="omega-note">Omega-Point Elevation<br>Spectral Seed Target</div>
+        </div>
+
+        <div class="omega-card">
+          <div class="omega-symbol">×√2</div>
+          <div class="omega-formula">ratio</div>
+          <div class="omega-value">1.4142135624</div>
+          <div class="omega-note">Elevation Factor<br>z_c(Ω) / z_c(std)</div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: rgba(0, 0, 0, 0.3); border-radius: 0.75rem;">
+        <div style="font-size: 0.9rem; color: var(--text-primary); margin-bottom: 1rem;">
+          OMEGA-POINT INJECTION INTO SEED ARCHITECTURE
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace;">
+          ω(seed) = exp(i · z_c(Ω) · 2π) × Λ(r,d,c,a)<br><br>
+          where Λ(1,1,1,1) = φ⁻¹ · e⁻¹ · π⁻¹ · (√2)⁻¹ ≈ 0.0512
+        </div>
+      </div>
+    </section>
+
+    <!-- Specification -->
+    <section class="spec-section">
+      <div class="spec-header">
+        <h2>SPECTRAL SEED LATTICE SPECIFICATION</h2>
+        <a href="fibonacci-helix-holographic.py" class="spec-link">View α-Truth Module →</a>
+      </div>
+
+      <div class="spec-block">
+        <pre>
+SPECTRAL_SEED_LATTICE_SPEC := {
+  cycle: 3,
+  layer: 1,
+  architecture: "RRRR-Lattice Ignition",
+
+  alpha_omega_equivalence: {
+    principle: "α ≡ Ω within each seed",
+    alpha: { z: 0, station: "GENESIS", rrrr: "(0,0,0,0) = 1" },
+    omega: { z: 1, station: "DECAGON", rrrr: "(1,1,1,1) = Λ_full" },
+    bridge: { z_c: "√(3/2) = 1.2247448714" }
+  },
+
+  rrrr_lattice: {
+    basis: "Λ = {φ^(-r) · e^(-d) · π^(-c) · (√2)^(-a)}",
+    eigenvalues: {
+      R: { name: "Recursive", value: "φ = 1.618033988749895", inverse: "φ⁻¹ = 0.6180339887" },
+      D: { name: "Differential", value: "e = 2.718281828459045", inverse: "e⁻¹ = 0.3678794412" },
+      C: { name: "Cyclic", value: "π = 3.141592653589793", inverse: "π⁻¹ = 0.3183098862" },
+      A: { name: "Algebraic", value: "√2 = 1.4142135623730951", inverse: "(√2)⁻¹ = 0.7071067812" }
+    },
+    sovereign_coord: "(1,1,1,1)",
+    sovereign_value: "Λ = 0.0512093..."
+  },
+
+  folded_symmetry: {
+    emergent_shape: "DECAGONAL DUOPYRAMID",
+    faces: 20,
+    vertices: 12,
+    edges: 30,
+    symmetry_group: "D₁₀ × Z₂",
+    symmetry_order: 40,
+    self_dual: true,
+
+    vn_mapping: {
+      station: "VN-004 SOVEREIGN",
+      condition: "R² = R (idempotent)",
+      folding_index: "L₄ = φ⁴ + φ⁻⁴ = 7"
+    }
+  },
+
+  omega_point: {
+    standard: { formula: "√3/2", value: 0.8660254037844386 },
+    elevated: { formula: "√(3/2)", value: 1.2247448713915890 },
+    ratio: { formula: "√2", value: 1.4142135623730951 },
+    injection: "ω(seed) = exp(i · z_c(Ω) · 2π) × Λ(r,d,c,a)"
+  },
+
+  spectral_encoding: {
+    opponent_channels: ["CY (Cyan-Red)", "RG (Magenta-Green)", "BY (Yellow-Blue)"],
+    cym_weights: { cyan: "τ-scaled", magenta: "unity", yellow: "φ-scaled" },
+    radial_mapping: "α at center → Ω at boundary"
+  },
+
+  propagation: {
+    mode: "omega-point propagation through 10-fold structure",
+    cycles_required: "4π (full dual closure)",
+    current_phase: "3π (Cycle 3 active)"
+  },
+
+  L4_constants: {
+    phi: 1.618033988749895,
+    tau: 0.618033988749895,
+    z_c: 0.8660254037844386,
+    z_c_omega: 1.2247448713915890,
+    K: 0.9240387650610407,
+    L4: 7
+  }
+}
+        </pre>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-glyph">◇ α ≡ Ω ◇</div>
+      <p class="footer-text">SPECTRAL SEED | Cycle 3 Layer 1 | RRRR-Lattice Ignition</p>
+      <p class="footer-text" style="margin-top: 0.5rem;">
+        Folded Symmetry: DECAGONAL DUOPYRAMID | VN: (1,1,1,1) → SOVEREIGN
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════════════════
+    // L₄ FRAMEWORK CONSTANTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const PHI = 1.618033988749895;
+    const TAU = 0.618033988749895;
+    const E = 2.718281828459045;
+    const PI = 3.141592653589793;
+    const SQRT2 = 1.4142135623730951;
+    const Z_C = 0.8660254037844386;
+    const Z_C_OMEGA = 1.2247448713915890;
+    const K = 0.9240387650610407;
+    const L4 = 7;
+    const TWO_PI = 2 * Math.PI;
+
+    // RRRR eigenvalues
+    const RRRR = {
+      R: { value: PHI, inverse: 1/PHI, name: 'Recursive', color: '#ffd700' },
+      D: { value: E, inverse: 1/E, name: 'Differential', color: '#00ff88' },
+      C: { value: PI, inverse: 1/PI, name: 'Cyclic', color: '#ff6b9d' },
+      A: { value: SQRT2, inverse: 1/SQRT2, name: 'Algebraic', color: '#4da6ff' }
+    };
+
+    // VN Station mappings
+    const VN_STATIONS = [
+      'GENESIS', 'DYAD', 'TRIAD', 'SOVEREIGN', 'PRISM',
+      'HEXAGON', 'HEPTAGON', 'OCTAGON', 'ENNEAGON', 'DECAGON'
+    ];
+
+    // State
+    let latticeCoord = [1, 1, 1, 1];
+    let seedMode = 'propagate';
+    let animationFrame = 0;
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // LATTICE CANVAS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const latticeCanvas = document.getElementById('latticeCanvas');
+    const latticeCtx = latticeCanvas.getContext('2d');
+
+    function computeLatticeValue(r, d, c, a) {
+      return Math.pow(PHI, -r) * Math.pow(E, -d) * Math.pow(PI, -c) * Math.pow(SQRT2, -a);
+    }
+
+    function coordToStation(coord) {
+      const sum = coord.reduce((a, b) => a + b, 0);
+      return VN_STATIONS[Math.min(sum, 9)];
+    }
+
+    function drawLattice() {
+      const ctx = latticeCtx;
+      const w = latticeCanvas.width;
+      const h = latticeCanvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+
+      ctx.fillStyle = '#050508';
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw 4D lattice projection (2D view of 4D hypercube)
+      const scale = 80;
+      const time = animationFrame * 0.02;
+
+      // Draw connections
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.lineWidth = 1;
+
+      for (let r = 0; r <= 2; r++) {
+        for (let d = 0; d <= 2; d++) {
+          for (let c = 0; c <= 2; c++) {
+            for (let a = 0; a <= 2; a++) {
+              // 4D to 2D projection with rotation
+              const x4 = (r - 1) * scale;
+              const y4 = (d - 1) * scale;
+              const z4 = (c - 1) * scale * 0.6;
+              const w4 = (a - 1) * scale * 0.4;
+
+              const rotX = x4 * Math.cos(time) - z4 * Math.sin(time);
+              const rotZ = x4 * Math.sin(time) + z4 * Math.cos(time);
+              const rotY = y4 * Math.cos(time * 0.7) - w4 * Math.sin(time * 0.7);
+
+              const px = cx + rotX + rotZ * 0.3;
+              const py = cy + rotY + w4 * 0.3;
+
+              // Draw point
+              const value = computeLatticeValue(r, d, c, a);
+              const alpha = Math.min(1, value * 5);
+
+              // Highlight current coordinate
+              const isCurrent = r === latticeCoord[0] && d === latticeCoord[1] &&
+                               c === latticeCoord[2] && a === latticeCoord[3];
+
+              if (isCurrent) {
+                ctx.fillStyle = '#cc66ff';
+                ctx.shadowColor = '#cc66ff';
+                ctx.shadowBlur = 20;
+                ctx.beginPath();
+                ctx.arc(px, py, 12, 0, TWO_PI);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+              } else {
+                const hue = (r * 90 + d * 60 + c * 45 + a * 30) % 360;
+                ctx.fillStyle = `hsla(${hue}, 70%, 60%, ${alpha})`;
+                ctx.beginPath();
+                ctx.arc(px, py, 4 + value * 3, 0, TWO_PI);
+                ctx.fill();
+              }
+            }
+          }
+        }
+      }
+
+      // Draw axis labels
+      ctx.font = '12px JetBrains Mono';
+      ctx.textAlign = 'center';
+
+      const labels = [
+        { text: 'R (φ)', color: RRRR.R.color, x: cx - 120, y: cy - 150 },
+        { text: 'D (e)', color: RRRR.D.color, x: cx + 120, y: cy - 150 },
+        { text: 'C (π)', color: RRRR.C.color, x: cx - 120, y: cy + 170 },
+        { text: 'A (√2)', color: RRRR.A.color, x: cx + 120, y: cy + 170 }
+      ];
+
+      labels.forEach(l => {
+        ctx.fillStyle = l.color;
+        ctx.fillText(l.text, l.x, l.y);
+      });
+
+      // Draw alpha-omega axis
+      ctx.strokeStyle = 'rgba(204, 102, 255, 0.5)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(cx - 150, cy);
+      ctx.lineTo(cx + 150, cy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#00ffcc';
+      ctx.fillText('α', cx - 160, cy + 4);
+      ctx.fillStyle = '#ff6600';
+      ctx.fillText('Ω', cx + 160, cy + 4);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // SPECTRAL SEED CANVAS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const seedCanvas = document.getElementById('seedCanvas');
+    const seedCtx = seedCanvas.getContext('2d');
+
+    function drawSpectralSeed() {
+      const ctx = seedCtx;
+      const w = seedCanvas.width;
+      const h = seedCanvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const maxR = Math.min(w, h) / 2 - 20;
+
+      ctx.fillStyle = '#050508';
+      ctx.fillRect(0, 0, w, h);
+
+      const time = animationFrame * 0.03;
+
+      // Draw 10-fold structure (decagonal)
+      for (let layer = 10; layer >= 1; layer--) {
+        const r = (layer / 10) * maxR;
+        const z = layer / 10;
+
+        // Compute omega-point injection
+        const omegaPhase = Math.exp(Z_C_OMEGA * z * time);
+        const alphaPhase = Math.exp(-Z_C_OMEGA * (1 - z) * time);
+
+        // Draw layer ring with spectral color
+        const hue = 300 - (layer * 25); // Spectral gradient
+        const sat = 60 + (seedMode === 'ignite' ? Math.sin(time * 3) * 20 : 0);
+        const lightness = 40 + z * 30;
+
+        ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${lightness}%, 0.8)`;
+        ctx.lineWidth = 2 + (seedMode === 'propagate' ? Math.sin(time + layer) * 1 : 0);
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, TWO_PI);
+        ctx.stroke();
+
+        // Draw 10 radial nodes on each ring
+        for (let i = 0; i < 10; i++) {
+          const angle = (i / 10) * TWO_PI + (seedMode === 'fold' ? time * 0.5 : 0);
+          const nx = cx + Math.cos(angle) * r;
+          const ny = cy + Math.sin(angle) * r;
+
+          // Node color based on alpha-omega interpolation
+          const alphaWeight = 1 - z;
+          const omegaWeight = z;
+
+          const nodeR = Math.floor(255 * omegaWeight * 0.8);
+          const nodeG = Math.floor(255 * alphaWeight * 0.8);
+          const nodeB = Math.floor(200 * (1 - Math.abs(omegaWeight - alphaWeight)));
+
+          ctx.fillStyle = `rgb(${nodeR}, ${nodeG}, ${nodeB})`;
+
+          const nodeSize = 3 + (seedMode === 'ignite' && layer === Math.floor((time * 2) % 10) + 1 ? 4 : 0);
+          ctx.beginPath();
+          ctx.arc(nx, ny, nodeSize, 0, TWO_PI);
+          ctx.fill();
+        }
+      }
+
+      // Draw alpha center
+      const alphaGlow = 20 + Math.sin(time * 2) * 10;
+      ctx.shadowColor = '#00ffcc';
+      ctx.shadowBlur = alphaGlow;
+      ctx.fillStyle = '#00ffcc';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 8, 0, TWO_PI);
+      ctx.fill();
+      ctx.font = 'bold 14px JetBrains Mono';
+      ctx.fillStyle = '#00ffcc';
+      ctx.textAlign = 'center';
+      ctx.fillText('α', cx, cy + 25);
+      ctx.shadowBlur = 0;
+
+      // Draw omega boundary
+      ctx.shadowColor = '#ff6600';
+      ctx.shadowBlur = 15;
+      ctx.strokeStyle = '#ff6600';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(cx, cy, maxR, 0, TWO_PI);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Omega label
+      ctx.fillStyle = '#ff6600';
+      ctx.fillText('Ω', cx, cy - maxR - 15);
+
+      // Draw z_c threshold ring
+      const zcR = Z_C * maxR;
+      ctx.strokeStyle = 'rgba(204, 102, 255, 0.6)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 4]);
+      ctx.beginPath();
+      ctx.arc(cx, cy, zcR, 0, TWO_PI);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#cc66ff';
+      ctx.font = '10px JetBrains Mono';
+      ctx.fillText('z_c', cx + zcR + 15, cy);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // FOLDED SYMMETRY CANVAS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const symmetryCanvas = document.getElementById('symmetryCanvas');
+    const symmetryCtx = symmetryCanvas.getContext('2d');
+
+    function drawFoldedSymmetry() {
+      const ctx = symmetryCtx;
+      const w = symmetryCanvas.width;
+      const h = symmetryCanvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+
+      ctx.fillStyle = '#050508';
+      ctx.fillRect(0, 0, w, h);
+
+      const time = animationFrame * 0.015;
+      const scale = 100;
+
+      // Draw Decagonal Duopyramid (20 faces, 12 vertices, 30 edges)
+      // Vertices: 10 on equator + 2 poles (alpha/omega)
+
+      const vertices = [];
+
+      // Alpha pole (top)
+      vertices.push({ x: 0, y: 0, z: 1.5, type: 'alpha' });
+
+      // Omega pole (bottom)
+      vertices.push({ x: 0, y: 0, z: -1.5, type: 'omega' });
+
+      // 10 equatorial vertices
+      for (let i = 0; i < 10; i++) {
+        const angle = (i / 10) * TWO_PI;
+        vertices.push({
+          x: Math.cos(angle),
+          y: Math.sin(angle),
+          z: 0,
+          type: 'equator'
+        });
+      }
+
+      // Rotate vertices
+      const rotatedVertices = vertices.map(v => {
+        // Rotate around Y axis
+        const x1 = v.x * Math.cos(time) - v.z * Math.sin(time);
+        const z1 = v.x * Math.sin(time) + v.z * Math.cos(time);
+
+        // Rotate around X axis
+        const y2 = v.y * Math.cos(time * 0.7) - z1 * Math.sin(time * 0.7);
+        const z2 = v.y * Math.sin(time * 0.7) + z1 * Math.cos(time * 0.7);
+
+        return {
+          x: x1 * scale,
+          y: y2 * scale,
+          z: z2,
+          type: v.type
+        };
+      });
+
+      // Draw edges
+      ctx.strokeStyle = 'rgba(204, 102, 255, 0.4)';
+      ctx.lineWidth = 1;
+
+      // Connect poles to all equatorial vertices
+      for (let i = 2; i < 12; i++) {
+        // Alpha to equator
+        ctx.beginPath();
+        ctx.moveTo(cx + rotatedVertices[0].x, cy + rotatedVertices[0].y);
+        ctx.lineTo(cx + rotatedVertices[i].x, cy + rotatedVertices[i].y);
+        ctx.stroke();
+
+        // Omega to equator
+        ctx.beginPath();
+        ctx.moveTo(cx + rotatedVertices[1].x, cy + rotatedVertices[1].y);
+        ctx.lineTo(cx + rotatedVertices[i].x, cy + rotatedVertices[i].y);
+        ctx.stroke();
+
+        // Connect equatorial vertices
+        const next = i < 11 ? i + 1 : 2;
+        ctx.beginPath();
+        ctx.moveTo(cx + rotatedVertices[i].x, cy + rotatedVertices[i].y);
+        ctx.lineTo(cx + rotatedVertices[next].x, cy + rotatedVertices[next].y);
+        ctx.stroke();
+      }
+
+      // Draw faces (triangular, semi-transparent)
+      for (let i = 2; i < 12; i++) {
+        const next = i < 11 ? i + 1 : 2;
+
+        // Upper face (alpha pole)
+        const avgZ1 = (rotatedVertices[0].z + rotatedVertices[i].z + rotatedVertices[next].z) / 3;
+        ctx.fillStyle = `rgba(0, 255, 204, ${0.1 + avgZ1 * 0.1})`;
+        ctx.beginPath();
+        ctx.moveTo(cx + rotatedVertices[0].x, cy + rotatedVertices[0].y);
+        ctx.lineTo(cx + rotatedVertices[i].x, cy + rotatedVertices[i].y);
+        ctx.lineTo(cx + rotatedVertices[next].x, cy + rotatedVertices[next].y);
+        ctx.closePath();
+        ctx.fill();
+
+        // Lower face (omega pole)
+        const avgZ2 = (rotatedVertices[1].z + rotatedVertices[i].z + rotatedVertices[next].z) / 3;
+        ctx.fillStyle = `rgba(255, 102, 0, ${0.1 - avgZ2 * 0.1})`;
+        ctx.beginPath();
+        ctx.moveTo(cx + rotatedVertices[1].x, cy + rotatedVertices[1].y);
+        ctx.lineTo(cx + rotatedVertices[i].x, cy + rotatedVertices[i].y);
+        ctx.lineTo(cx + rotatedVertices[next].x, cy + rotatedVertices[next].y);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Draw vertices
+      rotatedVertices.forEach((v, idx) => {
+        const size = v.type === 'equator' ? 5 : 10;
+
+        if (v.type === 'alpha') {
+          ctx.shadowColor = '#00ffcc';
+          ctx.shadowBlur = 15;
+          ctx.fillStyle = '#00ffcc';
+        } else if (v.type === 'omega') {
+          ctx.shadowColor = '#ff6600';
+          ctx.shadowBlur = 15;
+          ctx.fillStyle = '#ff6600';
+        } else {
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = '#cc66ff';
+        }
+
+        ctx.beginPath();
+        ctx.arc(cx + v.x, cy + v.y, size, 0, TWO_PI);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      // Labels
+      ctx.font = 'bold 14px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#00ffcc';
+      ctx.fillText('α', cx + rotatedVertices[0].x + 15, cy + rotatedVertices[0].y);
+      ctx.fillStyle = '#ff6600';
+      ctx.fillText('Ω', cx + rotatedVertices[1].x + 15, cy + rotatedVertices[1].y);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // UPDATE FUNCTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function updateCoordDisplay() {
+      const coordStr = `(${latticeCoord.join(',')})`;
+      const value = computeLatticeValue(...latticeCoord);
+      const station = coordToStation(latticeCoord);
+
+      document.getElementById('currentCoord').textContent = coordStr;
+      document.getElementById('latticeValue').textContent = value.toFixed(6);
+      document.getElementById('vnStation').textContent = station;
+
+      // Update VN result display
+      document.getElementById('vnRRRR').textContent = coordStr;
+      document.getElementById('vnEigen').textContent = `Λ = ${value.toFixed(6)}`;
+      document.getElementById('vnMapping').textContent = `VN-00${Math.min(latticeCoord.reduce((a,b)=>a+b,0), 9)} ${station}`;
+    }
+
+    function updateSeedState() {
+      const states = {
+        'propagate': 'Propagating omega-point through 10-fold structure...',
+        'fold': 'Folding symmetry through RRRR-lattice projection...',
+        'ignite': 'Igniting lattice coordinates for VN placement...',
+        'reset': 'Resetting to initial spectral seed state...'
+      };
+      document.getElementById('seedState').textContent = states[seedMode] || states.propagate;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // EVENT HANDLERS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Eigenvalue card clicks
+    document.querySelectorAll('.eigenvalue-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const axis = card.dataset.axis;
+        const axisMap = { r: 0, d: 1, c: 2, a: 3 };
+        const idx = axisMap[axis];
+
+        // Toggle coordinate
+        latticeCoord[idx] = (latticeCoord[idx] + 1) % 3;
+
+        // Update active state
+        document.querySelectorAll('.eigenvalue-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+
+        updateCoordDisplay();
+      });
+    });
+
+    // Seed control buttons
+    document.querySelectorAll('.seed-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        seedMode = btn.dataset.mode;
+        document.querySelectorAll('.seed-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        updateSeedState();
+
+        if (seedMode === 'reset') {
+          latticeCoord = [1, 1, 1, 1];
+          updateCoordDisplay();
+        }
+      });
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ANIMATION LOOP
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function animate() {
+      animationFrame++;
+      drawLattice();
+      drawSpectralSeed();
+      drawFoldedSymmetry();
+      requestAnimationFrame(animate);
+    }
+
+    // Initialize
+    updateCoordDisplay();
+    updateSeedState();
+    animate();
+  </script>
+</body>
+</html>
