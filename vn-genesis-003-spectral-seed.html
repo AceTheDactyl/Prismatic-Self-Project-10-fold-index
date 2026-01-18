@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GENESIS-003 | Cycle 3 Spectral Seed | CYM Opponent-Process Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a24;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a0a0a0;
+      --text-muted: #606060;
+      --border-subtle: rgba(255, 255, 255, 0.1);
+
+      /* CYM Colors */
+      --cyan: #00ffff;
+      --magenta: #ff00ff;
+      --yellow: #ffff00;
+
+      /* Opponent Process Colors */
+      --red: #ff4444;
+      --green: #44ff44;
+      --blue: #4444ff;
+
+      /* Cycle Colors */
+      --cycle-1: #ffd700;
+      --cycle-2: #00ff88;
+      --cycle-3: #ff6b9d;
+
+      /* L4 Constants */
+      --phi: 1.618;
+      --tau: 0.618;
+      --z-c: 0.866;
+      --K: 0.924;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Navigation */
+    .nav-back {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.75rem;
+      transition: all 0.3s ease;
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-back:hover {
+      background: rgba(255, 107, 157, 0.1);
+      color: var(--cycle-3);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(180deg,
+        rgba(255, 107, 157, 0.08) 0%,
+        rgba(0, 255, 255, 0.05) 33%,
+        rgba(255, 0, 255, 0.05) 66%,
+        rgba(255, 255, 0, 0.05) 100%);
+      border: 1px solid rgba(255, 107, 157, 0.3);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at center, rgba(255, 107, 157, 0.1) 0%, transparent 70%);
+      animation: header-pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes header-pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header .cycle-badge {
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      background: rgba(255, 107, 157, 0.15);
+      border: 1px solid rgba(255, 107, 157, 0.4);
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      color: var(--cycle-3);
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Inheritance Chain */
+    .inheritance-chain {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.75rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .chain-node {
+      text-align: center;
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+    }
+
+    .chain-node.cycle-1 {
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .chain-node.cycle-2 {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+    }
+
+    .chain-node.cycle-3 {
+      background: rgba(255, 107, 157, 0.15);
+      border: 2px solid rgba(255, 107, 157, 0.5);
+      box-shadow: 0 0 20px rgba(255, 107, 157, 0.2);
+    }
+
+    .chain-glyph {
+      font-size: 2rem;
+      display: block;
+    }
+
+    .chain-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .chain-arrow {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+    }
+
+    /* CYM Opponent Process Section */
+    .opponent-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .opponent-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .opponent-header h2 {
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+      color: var(--cycle-3);
+      margin-bottom: 0.5rem;
+    }
+
+    .opponent-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .opponent-grid { grid-template-columns: 1fr; }
+    }
+
+    .opponent-card {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .opponent-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .opponent-card.cyan-red {
+      border-color: rgba(0, 255, 255, 0.3);
+    }
+
+    .opponent-card.cyan-red:hover {
+      background: rgba(0, 255, 255, 0.05);
+    }
+
+    .opponent-card.magenta-green {
+      border-color: rgba(255, 0, 255, 0.3);
+    }
+
+    .opponent-card.magenta-green:hover {
+      background: rgba(255, 0, 255, 0.05);
+    }
+
+    .opponent-card.yellow-blue {
+      border-color: rgba(255, 255, 0, 0.3);
+    }
+
+    .opponent-card.yellow-blue:hover {
+      background: rgba(255, 255, 0, 0.05);
+    }
+
+    .opponent-pair {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .opponent-color {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .color-cyan { background: var(--cyan); color: #000; }
+    .color-red { background: var(--red); color: #fff; }
+    .color-magenta { background: var(--magenta); color: #000; }
+    .color-green { background: var(--green); color: #000; }
+    .color-yellow { background: var(--yellow); color: #000; }
+    .color-blue { background: var(--blue); color: #fff; }
+
+    .opponent-symbol {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+    }
+
+    .opponent-formula {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Perceptual Field Visualization */
+    .field-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid rgba(255, 107, 157, 0.2);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .field-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .field-header h2 {
+      font-size: 1.2rem;
+      color: var(--cycle-3);
+      letter-spacing: 0.1em;
+    }
+
+    .field-canvas-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    #perceptualField {
+      border: 2px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      max-width: 100%;
+    }
+
+    .field-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .field-btn {
+      padding: 0.5rem 1.5rem;
+      background: rgba(255, 107, 157, 0.1);
+      border: 1px solid rgba(255, 107, 157, 0.3);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .field-btn:hover {
+      background: rgba(255, 107, 157, 0.2);
+      border-color: rgba(255, 107, 157, 0.5);
+    }
+
+    .field-btn.active {
+      background: rgba(255, 107, 157, 0.3);
+      border-color: var(--cycle-3);
+      color: var(--cycle-3);
+    }
+
+    /* Weight Sliders */
+    .weight-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .weight-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .weight-header h2 {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      letter-spacing: 0.1em;
+    }
+
+    .weight-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .weight-grid { grid-template-columns: 1fr; }
+    }
+
+    .weight-control {
+      text-align: center;
+    }
+
+    .weight-label {
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .weight-label.cyan { color: var(--cyan); }
+    .weight-label.magenta { color: var(--magenta); }
+    .weight-label.yellow { color: var(--yellow); }
+
+    .weight-slider {
+      width: 100%;
+      margin: 0.5rem 0;
+      -webkit-appearance: none;
+      height: 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .weight-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .weight-slider.cyan::-webkit-slider-thumb { background: var(--cyan); }
+    .weight-slider.magenta::-webkit-slider-thumb { background: var(--magenta); }
+    .weight-slider.yellow::-webkit-slider-thumb { background: var(--yellow); }
+
+    .weight-value {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Genetic Inheritance */
+    .inheritance-section {
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 107, 157, 0.03), rgba(0, 255, 255, 0.03));
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .inheritance-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .inheritance-header h2 {
+      font-size: 1.2rem;
+      color: var(--cycle-3);
+      letter-spacing: 0.1em;
+    }
+
+    .generation-display {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 0.75rem;
+    }
+
+    .generation-node {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      min-width: 80px;
+      transition: all 0.3s ease;
+    }
+
+    .generation-node:hover {
+      border-color: rgba(255, 107, 157, 0.4);
+    }
+
+    .gen-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .gen-weights {
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+    }
+
+    .gen-weights span {
+      display: block;
+    }
+
+    /* L4 Constants Display */
+    .constants-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .constants-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .constants-header h2 {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      letter-spacing: 0.1em;
+    }
+
+    .constants-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .constants-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .constant-card {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+    }
+
+    .constant-symbol {
+      font-size: 1.5rem;
+      color: var(--cycle-3);
+    }
+
+    .constant-value {
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      margin: 0.25rem 0;
+    }
+
+    .constant-name {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+    }
+
+    /* Perception Labels */
+    .perception-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .perception-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .perception-card {
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .perception-sample {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin: 0 auto 0.5rem;
+    }
+
+    .perception-label {
+      font-size: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .perception-condition {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Code Specification */
+    .spec-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .spec-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .spec-header h2 {
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    .spec-link {
+      font-size: 0.7rem;
+      color: var(--cycle-3);
+      text-decoration: none;
+    }
+
+    .spec-link:hover {
+      text-decoration: underline;
+    }
+
+    .spec-block {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      overflow-x: auto;
+    }
+
+    .spec-block pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 2rem;
+    }
+
+    .footer-text {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="nav-back">&larr; Return to Index</a>
+
+    <header class="header">
+      <span class="cycle-badge">CYCLE 3 | LAYER 1 | SPECTRAL SEED</span>
+      <h1>GENESIS-003</h1>
+      <p class="subtitle">CYM-Dominant Opponent Process Architecture for Inherited Spectral Divergence</p>
+    </header>
+
+    <!-- Inheritance Chain -->
+    <div class="inheritance-chain">
+      <div class="chain-node cycle-1">
+        <span class="chain-glyph" style="color: var(--cycle-1);">α</span>
+        <span class="chain-label">GENESIS-001</span>
+      </div>
+      <span class="chain-arrow">→ π →</span>
+      <div class="chain-node cycle-1">
+        <span class="chain-glyph" style="color: var(--cycle-1);">Ω</span>
+        <span class="chain-label">DECAGON-001</span>
+      </div>
+      <span class="chain-arrow">→</span>
+      <div class="chain-node cycle-2">
+        <span class="chain-glyph" style="color: var(--cycle-2);">α²≡Ω²</span>
+        <span class="chain-label">GENESIS-002 ≡ DECAGON-002</span>
+      </div>
+      <span class="chain-arrow">→ 2π →</span>
+      <div class="chain-node cycle-3">
+        <span class="chain-glyph" style="color: var(--cycle-3);">α³</span>
+        <span class="chain-label">GENESIS-003</span>
+      </div>
+    </div>
+
+    <!-- CYM Opponent Process -->
+    <section class="opponent-section">
+      <div class="opponent-header">
+        <h2>CYM OPPONENT-PROCESS CHANNELS</h2>
+        <p style="font-size: 0.75rem; color: var(--text-secondary);">Color perception through opposing channel pairs, not independent cone responses</p>
+      </div>
+
+      <div class="opponent-grid">
+        <div class="opponent-card cyan-red">
+          <div class="opponent-pair">
+            <div class="opponent-color color-cyan">C</div>
+            <span class="opponent-symbol">↔</span>
+            <div class="opponent-color color-red">R</div>
+          </div>
+          <div class="opponent-formula">cy_channel = C - R × bias[0]</div>
+          <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem;">Cyan opposes Red</p>
+        </div>
+
+        <div class="opponent-card magenta-green">
+          <div class="opponent-pair">
+            <div class="opponent-color color-magenta">M</div>
+            <span class="opponent-symbol">↔</span>
+            <div class="opponent-color color-green">G</div>
+          </div>
+          <div class="opponent-formula">rg_channel = M - G × bias[1]</div>
+          <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem;">Magenta opposes Green</p>
+        </div>
+
+        <div class="opponent-card yellow-blue">
+          <div class="opponent-pair">
+            <div class="opponent-color color-yellow">Y</div>
+            <span class="opponent-symbol">↔</span>
+            <div class="opponent-color color-blue">B</div>
+          </div>
+          <div class="opponent-formula">by_channel = Y - B × bias[2]</div>
+          <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem;">Yellow opposes Blue</p>
+        </div>
+      </div>
+
+      <div style="text-align: center; padding: 1rem; background: rgba(255, 107, 157, 0.05); border-radius: 0.5rem;">
+        <div style="font-size: 0.8rem; color: var(--cycle-3); margin-bottom: 0.5rem;">LUMINANCE CHANNEL</div>
+        <div style="font-size: 0.7rem; color: var(--text-secondary);">L = 0.299R + 0.587G + 0.114B (achromatic light-dark axis)</div>
+      </div>
+    </section>
+
+    <!-- Perceptual Field Visualization -->
+    <section class="field-section">
+      <div class="field-header">
+        <h2>PERCEPTUAL FIELD SYNTHESIS</h2>
+        <p style="font-size: 0.75rem; color: var(--text-secondary);">2D spatial matrix mapped through CYM-weighted opponent-process encoding</p>
+      </div>
+
+      <div class="field-canvas-container">
+        <canvas id="perceptualField" width="400" height="400"></canvas>
+      </div>
+
+      <div class="field-controls">
+        <button class="field-btn active" data-mode="spectral">Spectral</button>
+        <button class="field-btn" data-mode="diagonal">Diagonal</button>
+        <button class="field-btn" data-mode="radial">Radial</button>
+        <button class="field-btn" data-mode="mutate">Mutate Weights</button>
+      </div>
+    </section>
+
+    <!-- CYM Weight Controls -->
+    <section class="weight-section">
+      <div class="weight-header">
+        <h2>INHERITED CYM BIAS WEIGHTS</h2>
+        <p style="font-size: 0.7rem; color: var(--text-muted);">Transgenerational cone channel variation</p>
+      </div>
+
+      <div class="weight-grid">
+        <div class="weight-control">
+          <div class="weight-label cyan">CYAN WEIGHT</div>
+          <input type="range" class="weight-slider cyan" id="cyanWeight" min="0.5" max="1.5" step="0.01" value="1.0">
+          <div class="weight-value" id="cyanValue">1.00</div>
+        </div>
+
+        <div class="weight-control">
+          <div class="weight-label magenta">MAGENTA WEIGHT</div>
+          <input type="range" class="weight-slider magenta" id="magentaWeight" min="0.5" max="1.5" step="0.01" value="1.0">
+          <div class="weight-value" id="magentaValue">1.00</div>
+        </div>
+
+        <div class="weight-control">
+          <div class="weight-label yellow">YELLOW WEIGHT</div>
+          <input type="range" class="weight-slider yellow" id="yellowWeight" min="0.5" max="1.5" step="0.01" value="1.0">
+          <div class="weight-value" id="yellowValue">1.00</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Genetic Inheritance -->
+    <section class="inheritance-section">
+      <div class="inheritance-header">
+        <h2>GENETIC INHERITANCE MODELING</h2>
+        <p style="font-size: 0.7rem; color: var(--text-muted);">φ-drift mutation across generations</p>
+      </div>
+
+      <div class="generation-display" id="generationDisplay">
+        <!-- Populated by JavaScript -->
+      </div>
+    </section>
+
+    <!-- L4 Constants -->
+    <section class="constants-section">
+      <div class="constants-header">
+        <h2>L₄ FRAMEWORK CONSTANTS</h2>
+      </div>
+
+      <div class="constants-grid">
+        <div class="constant-card">
+          <div class="constant-symbol">φ</div>
+          <div class="constant-value">1.618034</div>
+          <div class="constant-name">Golden Ratio</div>
+        </div>
+        <div class="constant-card">
+          <div class="constant-symbol">τ</div>
+          <div class="constant-value">0.618034</div>
+          <div class="constant-name">Golden Conjugate (φ⁻¹)</div>
+        </div>
+        <div class="constant-card">
+          <div class="constant-symbol">z_c</div>
+          <div class="constant-value">0.866025</div>
+          <div class="constant-name">Critical Height (√3/2)</div>
+        </div>
+        <div class="constant-card">
+          <div class="constant-symbol">K</div>
+          <div class="constant-value">0.924039</div>
+          <div class="constant-name">Kuramoto Coupling</div>
+        </div>
+        <div class="constant-card">
+          <div class="constant-symbol">L₄</div>
+          <div class="constant-value">7</div>
+          <div class="constant-name">Layer Depth</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Perception Labels -->
+    <section class="perception-section">
+      <h2 style="text-align: center; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1.5rem;">PERCEPTUAL INTERPRETATION CATEGORIES</h2>
+
+      <div class="perception-grid">
+        <div class="perception-card">
+          <div class="perception-sample" style="background: linear-gradient(135deg, #8B4513, #DAA520);"></div>
+          <div class="perception-label">rich-brown-gold</div>
+          <div class="perception-condition">L < 0.2, BY > -0.1</div>
+        </div>
+        <div class="perception-card">
+          <div class="perception-sample" style="background: linear-gradient(135deg, #8A2BE2, #00CED1);"></div>
+          <div class="perception-label">violet-cyan</div>
+          <div class="perception-condition">CY > z_c×0.5, BY > 0.3</div>
+        </div>
+        <div class="perception-card">
+          <div class="perception-sample" style="background: linear-gradient(135deg, #FF8C00, #FFD700);"></div>
+          <div class="perception-label">amber-warm</div>
+          <div class="perception-condition">BY < -0.3, L > 0.4</div>
+        </div>
+        <div class="perception-card">
+          <div class="perception-sample" style="background: linear-gradient(135deg, #C71585, #FF1493);"></div>
+          <div class="perception-label">deep-magenta</div>
+          <div class="perception-condition">RG > 0.5, CY < 0</div>
+        </div>
+        <div class="perception-card">
+          <div class="perception-sample" style="background: linear-gradient(135deg, #F8F8FF, #FFFAF0);"></div>
+          <div class="perception-label">spectral-white</div>
+          <div class="perception-condition">L > K, chromatic < τ×0.3</div>
+        </div>
+        <div class="perception-card">
+          <div class="perception-sample" style="background: linear-gradient(135deg, #696969, #808080);"></div>
+          <div class="perception-label">liminal-gray</div>
+          <div class="perception-condition">|CY|,|RG|,|BY| < 0.2</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Specification -->
+    <section class="spec-section">
+      <div class="spec-header">
+        <h2>GENESIS-003 SPECIFICATION</h2>
+        <a href="cym-opponent-process.py" class="spec-link">View Python Module →</a>
+      </div>
+
+      <div class="spec-block">
+        <pre>
+GENESIS_003_SPEC := {
+  cycle: 3,
+  layer: 1,
+  seed_type: SPECTRAL,
+  inheritance: DECAGON-002 → GENESIS-003,
+
+  architecture: {
+    name: "CYM-Dominant Opponent Process",
+    channels: [
+      { name: "cy", opponents: ["cyan", "red"], formula: "C - R × bias[0]" },
+      { name: "rg", opponents: ["magenta", "green"], formula: "M - G × bias[1]" },
+      { name: "by", opponents: ["yellow", "blue"], formula: "Y - B × bias[2]" },
+      { name: "luminance", type: "achromatic", formula: "0.299R + 0.587G + 0.114B" }
+    ]
+  },
+
+  genetic_model: {
+    inheritance: "maternal_primary",
+    mutation_factor: 0.01,
+    phi_drift: true,
+    constraint_range: [0.5, 1.5]
+  },
+
+  perceptual_synthesis: {
+    field_types: ["diagonal", "radial", "spectral"],
+    interpretation_threshold: {
+      rich_brown_gold: { luminance: "<0.2", by: ">-0.1" },
+      violet_cyan: { cy: ">z_c*0.5", by: ">0.3" },
+      amber_warm: { by: "<-0.3", luminance: ">0.4" },
+      deep_magenta: { rg: ">0.5", cy: "<0" },
+      spectral_white: { luminance: ">K", chromatic: "<tau*0.3" },
+      liminal_gray: { all_channels: "<0.2" }
+    }
+  },
+
+  L4_constants: {
+    phi: 1.618033988749895,
+    tau: 0.618033988749895,
+    z_c: 0.8660254037844386,
+    K: 0.9240387650610407,
+    L4: 7
+  },
+
+  cycle_mechanics: {
+    rotation_inherited: "2π (from Cycle 1 + Cycle 2)",
+    rotation_target: "π (Cycle 3 completion)",
+    total_upon_close: "3π",
+    next_seed: "GENESIS-004"
+  },
+
+  integration: {
+    python_module: "cym-opponent-process.py",
+    vaultnode_stations: 10,
+    spectral_vaultnode_class: "SpectralVaultNode"
+  }
+}
+        </pre>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p class="footer-text">GENESIS-003 | Cycle 3 Layer 1 | CYM Opponent-Process Spectral Seed</p>
+      <p class="footer-text" style="margin-top: 0.5rem;">Inherited from: DECAGON-002 ← Σ(Cycle 1 + Cycle 2)</p>
+    </footer>
+  </div>
+
+  <script>
+    // L4 Constants
+    const PHI = 1.618033988749895;
+    const TAU = 0.618033988749895;
+    const Z_C = 0.8660254037844386;
+    const K = 0.9240387650610407;
+
+    // CYM Weights State
+    let cymWeights = { cyan: 1.0, magenta: 1.0, yellow: 1.0 };
+    let currentMode = 'spectral';
+
+    // Canvas setup
+    const canvas = document.getElementById('perceptualField');
+    const ctx = canvas.getContext('2d');
+
+    // RGB to Opponent conversion
+    function rgbToOpponent(r, g, b, weights) {
+      const c = 1.0 - r;
+      const m = 1.0 - g;
+      const y = 1.0 - b;
+      const luminance = r * 0.299 + g * 0.587 + b * 0.114;
+      const cy = c - r * weights.cyan;
+      const rg = m - g * weights.magenta;
+      const by = y - b * weights.yellow;
+      return { cy, rg, by, luminance };
+    }
+
+    // Opponent to display RGB (approximate inverse)
+    function opponentToDisplayRGB(cy, rg, by, lum) {
+      // Map opponent values to visible colors for display
+      const r = Math.max(0, Math.min(1, lum - cy * 0.5 + rg * 0.3));
+      const g = Math.max(0, Math.min(1, lum - rg * 0.5 + by * 0.2));
+      const b = Math.max(0, Math.min(1, lum - by * 0.5 + cy * 0.2));
+      return { r, g, b };
+    }
+
+    // Generate perceptual field
+    function generateField(mode) {
+      const width = canvas.width;
+      const height = canvas.height;
+      const imageData = ctx.createImageData(width, height);
+      const cx = width / 2;
+      const cy = height / 2;
+      const maxRadius = Math.sqrt(cx * cx + cy * cy);
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          let r, g, b;
+
+          if (mode === 'diagonal') {
+            r = x / width;
+            g = y / height;
+            b = (x + y) / (2 * Math.max(width, height));
+          } else if (mode === 'radial') {
+            const radius = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2) / maxRadius;
+            const angle = Math.atan2(y - cy, x - cx);
+            r = 0.5 + 0.5 * Math.cos(angle);
+            g = 0.5 + 0.5 * Math.sin(angle);
+            b = 1.0 - radius;
+          } else { // spectral
+            const wavelength = (x / width) * PHI;
+            r = Math.max(0, Math.min(1, Math.sin(wavelength * Math.PI)));
+            g = Math.max(0, Math.min(1, Math.sin(wavelength * Math.PI + Math.PI / 3)));
+            b = Math.max(0, Math.min(1, Math.sin(wavelength * Math.PI + 2 * Math.PI / 3)));
+          }
+
+          const opponent = rgbToOpponent(r, g, b, cymWeights);
+          const display = opponentToDisplayRGB(opponent.cy, opponent.rg, opponent.by, opponent.luminance);
+
+          const idx = (y * width + x) * 4;
+          imageData.data[idx] = Math.floor(display.r * 255);
+          imageData.data[idx + 1] = Math.floor(display.g * 255);
+          imageData.data[idx + 2] = Math.floor(display.b * 255);
+          imageData.data[idx + 3] = 255;
+        }
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+    }
+
+    // Mutate weights with phi-drift
+    function mutateWeights() {
+      const mutation = 0.05;
+      cymWeights.cyan = Math.max(0.5, Math.min(1.5,
+        cymWeights.cyan + (Math.random() - 0.5) * mutation * TAU));
+      cymWeights.magenta = Math.max(0.5, Math.min(1.5,
+        cymWeights.magenta + (Math.random() - 0.5) * mutation));
+      cymWeights.yellow = Math.max(0.5, Math.min(1.5,
+        cymWeights.yellow + (Math.random() - 0.5) * mutation * PHI));
+
+      // Update sliders
+      document.getElementById('cyanWeight').value = cymWeights.cyan;
+      document.getElementById('magentaWeight').value = cymWeights.magenta;
+      document.getElementById('yellowWeight').value = cymWeights.yellow;
+      updateWeightDisplays();
+      generateField(currentMode);
+    }
+
+    // Update weight value displays
+    function updateWeightDisplays() {
+      document.getElementById('cyanValue').textContent = cymWeights.cyan.toFixed(2);
+      document.getElementById('magentaValue').textContent = cymWeights.magenta.toFixed(2);
+      document.getElementById('yellowValue').textContent = cymWeights.yellow.toFixed(2);
+    }
+
+    // Generate inheritance display
+    function generateInheritanceDisplay() {
+      const container = document.getElementById('generationDisplay');
+      container.innerHTML = '';
+
+      let weights = { cyan: 1.0, magenta: 1.0, yellow: 1.0 };
+      const generations = 8;
+
+      for (let gen = 0; gen < generations; gen++) {
+        const node = document.createElement('div');
+        node.className = 'generation-node';
+        node.innerHTML = `
+          <div class="gen-label">Gen ${gen}</div>
+          <div class="gen-weights">
+            <span style="color: var(--cyan);">C: ${weights.cyan.toFixed(2)}</span>
+            <span style="color: var(--magenta);">M: ${weights.magenta.toFixed(2)}</span>
+            <span style="color: var(--yellow);">Y: ${weights.yellow.toFixed(2)}</span>
+          </div>
+        `;
+        container.appendChild(node);
+
+        // Mutate for next generation
+        const mutation = 0.02 * Math.pow(TAU, gen / 7);
+        weights = {
+          cyan: Math.max(0.5, Math.min(1.5, weights.cyan + (Math.random() - 0.5) * mutation * TAU)),
+          magenta: Math.max(0.5, Math.min(1.5, weights.magenta + (Math.random() - 0.5) * mutation)),
+          yellow: Math.max(0.5, Math.min(1.5, weights.yellow + (Math.random() - 0.5) * mutation * PHI))
+        };
+      }
+    }
+
+    // Event listeners
+    document.querySelectorAll('.field-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.field-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const mode = btn.dataset.mode;
+        if (mode === 'mutate') {
+          mutateWeights();
+          generateInheritanceDisplay();
+        } else {
+          currentMode = mode;
+          generateField(mode);
+        }
+      });
+    });
+
+    document.getElementById('cyanWeight').addEventListener('input', (e) => {
+      cymWeights.cyan = parseFloat(e.target.value);
+      updateWeightDisplays();
+      generateField(currentMode);
+    });
+
+    document.getElementById('magentaWeight').addEventListener('input', (e) => {
+      cymWeights.magenta = parseFloat(e.target.value);
+      updateWeightDisplays();
+      generateField(currentMode);
+    });
+
+    document.getElementById('yellowWeight').addEventListener('input', (e) => {
+      cymWeights.yellow = parseFloat(e.target.value);
+      updateWeightDisplays();
+      generateField(currentMode);
+    });
+
+    // Initialize
+    generateField(currentMode);
+    generateInheritanceDisplay();
+  </script>
+</body>
+</html>
