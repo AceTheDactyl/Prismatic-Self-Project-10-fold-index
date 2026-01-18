@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-004 | GENESIS-003 Closure | Cycle 4 Dual System Closure</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a0a0a0;
+      --text-muted: #606060;
+      --border-subtle: rgba(255, 255, 255, 0.1);
+
+      /* Cycle Colors */
+      --cycle-1: #ffd700;
+      --cycle-2: #00ff88;
+      --cycle-3: #ff6b9d;
+      --cycle-4: #8a2be2;
+
+      /* Omega Colors */
+      --omega-primary: #ff4500;
+      --omega-glow: rgba(255, 69, 0, 0.3);
+
+      /* VN-004 SOVEREIGN */
+      --sovereign: #9370db;
+
+      /* Constants */
+      --phi: 1.618033988749895;
+      --tau: 0.618033988749895;
+      --z-c-omega: 1.224744871391589;
+      --z-c-standard: 0.8660254037844386;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Navigation */
+    .nav-back {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.75rem;
+      transition: all 0.3s ease;
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-back:hover {
+      background: rgba(138, 43, 226, 0.1);
+      color: var(--cycle-4);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(180deg,
+        rgba(138, 43, 226, 0.1) 0%,
+        rgba(255, 69, 0, 0.08) 50%,
+        rgba(147, 112, 219, 0.05) 100%);
+      border: 2px solid rgba(138, 43, 226, 0.4);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at center,
+        rgba(255, 69, 0, 0.1) 0%,
+        transparent 50%);
+      animation: omega-pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes omega-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(90deg, var(--sovereign), var(--omega-primary), var(--cycle-4));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header .cycle-badge {
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      background: rgba(138, 43, 226, 0.2);
+      border: 1px solid rgba(138, 43, 226, 0.5);
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      color: var(--cycle-4);
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Omega Point Display */
+    .omega-section {
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 69, 0, 0.05), rgba(138, 43, 226, 0.05));
+      border: 1px solid rgba(255, 69, 0, 0.3);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .omega-value {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+
+    .omega-card {
+      padding: 1.5rem 2rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      text-align: center;
+    }
+
+    .omega-card.highlight {
+      border-color: var(--omega-primary);
+      box-shadow: 0 0 30px var(--omega-glow);
+    }
+
+    .omega-symbol {
+      font-size: 2.5rem;
+      color: var(--omega-primary);
+    }
+
+    .omega-formula {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin: 0.5rem 0;
+    }
+
+    .omega-result {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Cycle Progression */
+    .cycle-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .cycle-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .cycle-header h2 {
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+      color: var(--cycle-4);
+    }
+
+    .cycle-flow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 1.5rem;
+    }
+
+    .cycle-node {
+      text-align: center;
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+    }
+
+    .cycle-node.c1 {
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.4);
+    }
+
+    .cycle-node.c2 {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid rgba(0, 255, 136, 0.4);
+    }
+
+    .cycle-node.c3 {
+      background: rgba(255, 107, 157, 0.1);
+      border: 1px solid rgba(255, 107, 157, 0.4);
+    }
+
+    .cycle-node.c4 {
+      background: rgba(138, 43, 226, 0.15);
+      border: 2px solid rgba(138, 43, 226, 0.5);
+      box-shadow: 0 0 20px rgba(138, 43, 226, 0.2);
+    }
+
+    .cycle-node.closure {
+      background: linear-gradient(135deg, rgba(255, 69, 0, 0.15), rgba(138, 43, 226, 0.15));
+      border: 2px solid var(--omega-primary);
+      box-shadow: 0 0 30px var(--omega-glow);
+    }
+
+    .cycle-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .cycle-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .cycle-arrow {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+    }
+
+    /* Stream Display */
+    .stream-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stream-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .stream-grid { grid-template-columns: 1fr; }
+    }
+
+    .stream-card {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+    }
+
+    .stream-card:hover {
+      border-color: rgba(138, 43, 226, 0.4);
+    }
+
+    .stream-card.genesis {
+      border-color: rgba(255, 107, 157, 0.4);
+    }
+
+    .stream-card.sovereign {
+      border-color: rgba(147, 112, 219, 0.5);
+      background: rgba(147, 112, 219, 0.05);
+    }
+
+    .stream-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .stream-name {
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .stream-status {
+      font-size: 0.7rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      background: rgba(0, 255, 136, 0.15);
+      color: #00ff88;
+    }
+
+    .stream-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    .metric {
+      text-align: center;
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 0.5rem;
+    }
+
+    .metric-value {
+      font-size: 1rem;
+      color: var(--cycle-4);
+    }
+
+    .metric-label {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+    }
+
+    /* VaultNode Traversal */
+    .traversal-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .traversal-grid {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      padding: 1rem;
+    }
+
+    .vn-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.7rem;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .vn-badge.active {
+      background: rgba(138, 43, 226, 0.15);
+      border-color: rgba(138, 43, 226, 0.4);
+      color: var(--cycle-4);
+    }
+
+    /* Closure Summary */
+    .closure-section {
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(138, 43, 226, 0.08), rgba(255, 69, 0, 0.08));
+      border: 2px solid rgba(138, 43, 226, 0.4);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .closure-achieved {
+      font-size: 1.5rem;
+      color: var(--omega-primary);
+      margin-bottom: 1rem;
+    }
+
+    .closure-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    /* Specification Block */
+    .spec-block {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      overflow-x: auto;
+    }
+
+    .spec-block pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+
+    .pulse { animation: pulse 2s ease-in-out infinite; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 2rem;
+    }
+
+    .footer-text {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="nav-back">&larr; Return to Index</a>
+
+    <header class="header">
+      <span class="cycle-badge">CYCLE 4 | DUAL SYSTEM CLOSURE | 4π ACHIEVED</span>
+      <h1>VN-004: GENESIS-003 CLOSURE</h1>
+      <p class="subtitle">Omega-Point Architecture | z_c = √(3/2) | SOVEREIGN Boundary Closure</p>
+    </header>
+
+    <!-- Omega Point Display -->
+    <section class="omega-section">
+      <h2 style="font-size: 1.1rem; color: var(--omega-primary); margin-bottom: 1rem;">OMEGA-POINT CRITICAL HEIGHT</h2>
+
+      <div class="omega-value">
+        <div class="omega-card">
+          <div class="omega-symbol">z_c</div>
+          <div class="omega-formula">√3/2</div>
+          <div class="omega-result">0.8660254038</div>
+          <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem;">Standard</div>
+        </div>
+
+        <div style="font-size: 2rem; color: var(--text-muted);">→</div>
+
+        <div class="omega-card highlight">
+          <div class="omega-symbol pulse">Ω</div>
+          <div class="omega-formula">√(3/2)</div>
+          <div class="omega-result">1.2247448714</div>
+          <div style="font-size: 0.65rem; color: var(--omega-primary); margin-top: 0.5rem;">Omega Point</div>
+        </div>
+
+        <div style="font-size: 2rem; color: var(--text-muted);">=</div>
+
+        <div class="omega-card">
+          <div class="omega-symbol">√2</div>
+          <div class="omega-formula">ratio</div>
+          <div class="omega-result">1.4142135624</div>
+          <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem;">Elevation Factor</div>
+        </div>
+      </div>
+
+      <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 1rem;">
+        z_c(Ω) / z_c(standard) = √2 — The omega-point elevates by the square root of 2
+      </p>
+    </section>
+
+    <!-- Cycle Progression -->
+    <section class="cycle-section">
+      <div class="cycle-header">
+        <h2>DUAL SYSTEM CLOSURE PROGRESSION</h2>
+        <p style="font-size: 0.75rem; color: var(--text-secondary);">4π = Cycle 1 + Cycle 2 + Cycle 3 + Cycle 4</p>
+      </div>
+
+      <div class="cycle-flow">
+        <div class="cycle-node c1">
+          <div class="cycle-value" style="color: var(--cycle-1);">π</div>
+          <div class="cycle-label">CYCLE 1</div>
+        </div>
+        <span class="cycle-arrow">+</span>
+        <div class="cycle-node c2">
+          <div class="cycle-value" style="color: var(--cycle-2);">π</div>
+          <div class="cycle-label">CYCLE 2</div>
+        </div>
+        <span class="cycle-arrow">=</span>
+        <div class="cycle-node c2">
+          <div class="cycle-value" style="color: var(--cycle-2);">2π</div>
+          <div class="cycle-label">FIRST CLOSURE</div>
+        </div>
+        <span class="cycle-arrow">+</span>
+        <div class="cycle-node c3">
+          <div class="cycle-value" style="color: var(--cycle-3);">π</div>
+          <div class="cycle-label">CYCLE 3</div>
+        </div>
+        <span class="cycle-arrow">+</span>
+        <div class="cycle-node c4">
+          <div class="cycle-value" style="color: var(--cycle-4);">π</div>
+          <div class="cycle-label">CYCLE 4</div>
+        </div>
+        <span class="cycle-arrow">=</span>
+        <div class="cycle-node closure">
+          <div class="cycle-value pulse" style="color: var(--omega-primary);">4π</div>
+          <div class="cycle-label">DUAL CLOSURE</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- n=4 Parallel Streams -->
+    <section class="stream-section">
+      <h2 style="text-align: center; font-size: 1.1rem; color: var(--cycle-4); margin-bottom: 1.5rem;">n=4 PARALLEL CLOSURE STREAMS</h2>
+
+      <div class="stream-grid">
+        <div class="stream-card genesis">
+          <div class="stream-header">
+            <span class="stream-name">S0: FIBONACCI_OMEGA</span>
+            <span class="stream-status">✓ CLOSED</span>
+          </div>
+          <div class="stream-metrics">
+            <div class="metric">
+              <div class="metric-value">6.283</div>
+              <div class="metric-label">PHASE (rad)</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">1.359</div>
+              <div class="metric-label">FINAL Z</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">4</div>
+              <div class="metric-label">POINTS</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value" style="color: var(--cycle-3);">GEN-003</div>
+              <div class="metric-label">LINEAGE</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stream-card">
+          <div class="stream-header">
+            <span class="stream-name">S1: GOLDEN_SPIRAL</span>
+            <span class="stream-status">✓ CLOSED</span>
+          </div>
+          <div class="stream-metrics">
+            <div class="metric">
+              <div class="metric-value">9.425</div>
+              <div class="metric-label">PHASE (rad)</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">1.499</div>
+              <div class="metric-label">FINAL Z</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">4</div>
+              <div class="metric-label">POINTS</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">φ</div>
+              <div class="metric-label">RESONANCE</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stream-card">
+          <div class="stream-header">
+            <span class="stream-name">S2: CLOSURE_HARMONIC</span>
+            <span class="stream-status">✓ CLOSED</span>
+          </div>
+          <div class="stream-metrics">
+            <div class="metric">
+              <div class="metric-value">12.566</div>
+              <div class="metric-label">PHASE (rad)</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">1.323</div>
+              <div class="metric-label">FINAL Z</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">4</div>
+              <div class="metric-label">POINTS</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">4π</div>
+              <div class="metric-label">APPROACH</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stream-card sovereign">
+          <div class="stream-header">
+            <span class="stream-name">S3: SOVEREIGN_BOUNDARY</span>
+            <span class="stream-status">✓ CLOSED</span>
+          </div>
+          <div class="stream-metrics">
+            <div class="metric">
+              <div class="metric-value">15.708</div>
+              <div class="metric-label">PHASE (rad)</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">1.312</div>
+              <div class="metric-label">FINAL Z</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">R²=R</div>
+              <div class="metric-label">CONDITION</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value" style="color: var(--sovereign);">VN-004</div>
+              <div class="metric-label">STATION</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 1.5rem; padding: 1rem; background: rgba(0, 0, 0, 0.2); border-radius: 0.5rem;">
+        <div style="font-size: 0.8rem; color: var(--text-primary);">TOTAL SYSTEM PHASE</div>
+        <div style="font-size: 1.5rem; color: var(--omega-primary); margin: 0.5rem 0;">43.982 rad = 350% of 4π</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted);">Exceeds closure threshold — system hyperstable</div>
+      </div>
+    </section>
+
+    <!-- VaultNode Traversal -->
+    <section class="traversal-section">
+      <h2 style="text-align: center; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1.5rem;">VAULTNODE TRAVERSAL PATTERN</h2>
+
+      <div class="traversal-grid">
+        <div class="vn-badge active">GENESIS ×2</div>
+        <div class="vn-badge active">DYAD ×2</div>
+        <div class="vn-badge active">TRIAD ×2</div>
+        <div class="vn-badge active">HEXAGON ×2</div>
+        <div class="vn-badge active" style="border-color: var(--sovereign); color: var(--sovereign);">SOVEREIGN ×2</div>
+        <div class="vn-badge active">PRISM ×2</div>
+        <div class="vn-badge active">HEPTAGON ×2</div>
+        <div class="vn-badge active">OCTAGON ×2</div>
+        <div class="vn-badge active">ENNEAGON ×2</div>
+      </div>
+
+      <p style="text-align: center; font-size: 0.7rem; color: var(--text-muted); margin-top: 1rem;">
+        Each station visited twice across the 4 parallel streams — symmetric closure
+      </p>
+    </section>
+
+    <!-- Closure Summary -->
+    <section class="closure-section">
+      <div class="closure-achieved pulse">✓ DUAL SYSTEM CLOSURE ACHIEVED</div>
+
+      <div class="closure-formula">
+        GENESIS-003 → VN-004 (SOVEREIGN) → CLOSURE<br>
+        z_c = √(3/2) | n=4 | R² = R
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 1.5rem;">
+        <div style="text-align: center;">
+          <div style="font-size: 2rem; color: var(--cycle-1);">π</div>
+          <div style="font-size: 0.6rem; color: var(--text-muted);">Cycle 1</div>
+        </div>
+        <div style="font-size: 1.5rem; color: var(--text-muted);">+</div>
+        <div style="text-align: center;">
+          <div style="font-size: 2rem; color: var(--cycle-2);">π</div>
+          <div style="font-size: 0.6rem; color: var(--text-muted);">Cycle 2</div>
+        </div>
+        <div style="font-size: 1.5rem; color: var(--text-muted);">+</div>
+        <div style="text-align: center;">
+          <div style="font-size: 2rem; color: var(--cycle-3);">π</div>
+          <div style="font-size: 0.6rem; color: var(--text-muted);">Cycle 3</div>
+        </div>
+        <div style="font-size: 1.5rem; color: var(--text-muted);">+</div>
+        <div style="text-align: center;">
+          <div style="font-size: 2rem; color: var(--cycle-4);">π</div>
+          <div style="font-size: 0.6rem; color: var(--text-muted);">Cycle 4</div>
+        </div>
+        <div style="font-size: 1.5rem; color: var(--text-muted);">=</div>
+        <div style="text-align: center;">
+          <div style="font-size: 2.5rem; color: var(--omega-primary);">4π</div>
+          <div style="font-size: 0.6rem; color: var(--omega-primary);">DUAL CLOSURE</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Specification -->
+    <section class="spec-block">
+      <pre>
+VN_004_GENESIS_003_CLOSURE_SPEC := {
+  cycle: 4,
+  closure_type: DUAL_SYSTEM,
+  target_phase: 4π,
+  achieved_phase: 43.982 rad (350%),
+
+  omega_point: {
+    z_c: √(3/2) = 1.2247448714,
+    z_c_standard: √3/2 = 0.8660254038,
+    elevation_ratio: √2 = 1.4142135624
+  },
+
+  parallel_streams: {
+    n: 4,
+    configuration: [
+      { id: 0, name: "fibonacci_omega", phase: 6.283, z: 1.359, lineage: "GENESIS-003" },
+      { id: 1, name: "golden_spiral", phase: 9.425, z: 1.499, resonance: "φ" },
+      { id: 2, name: "closure_harmonic", phase: 12.566, z: 1.323, approach: "4π" },
+      { id: 3, name: "sovereign_boundary", phase: 15.708, z: 1.312, condition: "R²=R" }
+    ]
+  },
+
+  vn_004_sovereign: {
+    station: 4,
+    name: "SOVEREIGN",
+    boundary_condition: "R² = R (idempotent)",
+    role: "GENESIS-003 closure boundary",
+    visits: 2
+  },
+
+  genesis_003_state: {
+    stream: "fibonacci_omega",
+    phase: 6.283185307179586,
+    final_z: 1.3592968480109933,
+    closed: true
+  },
+
+  cycle_progression: {
+    "cycle_1": "π (GENESIS-001 → DECAGON-001)",
+    "cycle_2": "π (GENESIS-002 ≡ DECAGON-002)",
+    "first_closure": "2π",
+    "cycle_3": "π (GENESIS-003 spectral seed)",
+    "cycle_4": "π (VN-004 SOVEREIGN boundary)",
+    "dual_closure": "4π"
+  },
+
+  L4_constants: {
+    phi: 1.618033988749895,
+    tau: 0.618033988749895,
+    K: 0.9240387650610407,
+    L4: 7
+  },
+
+  computational_module: "omega-point-closure.py"
+}
+      </pre>
+    </section>
+
+    <footer class="footer">
+      <p class="footer-text">VN-004 | GENESIS-003 Closure | Cycle 4 | Dual System Closure (4π)</p>
+      <p class="footer-text" style="margin-top: 0.5rem;">z_c = √(3/2) | SOVEREIGN Boundary | R² = R</p>
+    </footer>
+  </div>
+</body>
+</html>
