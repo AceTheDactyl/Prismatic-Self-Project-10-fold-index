@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PERCEPTUAL STASIS FIELD | Decagonal Duopyramid | Dual Gradient Dynamics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Opponent Process Channels */
+      --collapse-red: #dc143c;
+      --collapse-violet: #8b008b;
+      --saturation-sink: #0a0a0a;
+      --motion-green: #00ff66;
+      --tension-white: #f0f0f0;
+
+      /* CYM Opponent Channels */
+      --cyan: #00ffff;
+      --magenta: #ff00ff;
+      --yellow: #ffff00;
+
+      /* RRRR Gradient Anchors */
+      --rrrr-phi: #ffd700;
+      --rrrr-e: #00ff88;
+      --rrrr-pi: #ff6b9d;
+      --rrrr-sqrt2: #8b5cf6;
+
+      /* Equiluminant pairs (hard to perceive edges) */
+      --equilum-a: hsl(0, 70%, 50%);
+      --equilum-b: hsl(180, 70%, 50%);
+
+      --bg-void: #050505;
+      --text-primary: #e8e8e8;
+      --text-secondary: #888888;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Navigation */
+    .nav-back {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.25rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.7rem;
+      margin-bottom: 1rem;
+    }
+
+    .nav-back:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--motion-green);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .header h1 {
+      font-size: 1.2rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .header .subtitle {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Perceptual Legend */
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.65rem;
+    }
+
+    .legend-swatch {
+      width: 20px;
+      height: 20px;
+      border-radius: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .swatch-collapse {
+      background: linear-gradient(135deg, var(--collapse-red), var(--collapse-violet));
+    }
+
+    .swatch-sink {
+      background: var(--saturation-sink);
+    }
+
+    .swatch-motion {
+      background: var(--motion-green);
+    }
+
+    .swatch-tension {
+      background: var(--tension-white);
+    }
+
+    /* Instructions */
+    .instructions {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(255, 215, 0, 0.05);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.75rem;
+      color: var(--rrrr-phi);
+    }
+
+    .instructions strong {
+      color: var(--tension-white);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       PERCEPTUAL STASIS FIELD - MAIN VISUALIZATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .stasis-field {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto 2rem;
+      aspect-ratio: 1;
+      background: var(--bg-void);
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    /* The main canvas layers */
+    .stasis-layer {
+      position: absolute;
+      inset: 0;
+    }
+
+    #perceptualCanvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Focus Points - Click to shift perceptual anchor */
+    .focus-point {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      z-index: 100;
+    }
+
+    .focus-point:hover {
+      transform: scale(1.3);
+    }
+
+    .focus-point::after {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .focus-point:hover::after,
+    .focus-point.active::after {
+      opacity: 1;
+      animation: focus-pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes focus-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* α-pole focus (top) */
+    .focus-alpha {
+      top: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(circle, var(--cyan) 30%, transparent 70%);
+      color: var(--cyan);
+    }
+
+    /* Ω-pole focus (bottom) */
+    .focus-omega {
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(circle, var(--collapse-red) 30%, transparent 70%);
+      color: var(--collapse-red);
+    }
+
+    /* Equatorial focus points (10 around the ring) */
+    .focus-equator {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Gradient Pair Selectors */
+    .gradient-pairs {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .pair-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .pair-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .pair-btn.active {
+      border-color: var(--motion-green);
+      box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
+    }
+
+    .pair-swatch {
+      display: flex;
+      gap: 2px;
+    }
+
+    .pair-swatch span {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       DUAL GRADIENT CHANNEL DISPLAYS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .channel-display {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .channel-display { grid-template-columns: 1fr; }
+    }
+
+    .channel-card {
+      padding: 1.25rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .channel-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--channel-color);
+    }
+
+    .channel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .channel-name {
+      font-size: 0.8rem;
+      color: var(--channel-color);
+      letter-spacing: 0.1em;
+    }
+
+    .channel-formula {
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      padding: 0.25rem 0.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.25rem;
+    }
+
+    .gradient-bar {
+      height: 40px;
+      border-radius: 0.25rem;
+      margin-bottom: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gradient-bar canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .channel-values {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       RRRR-LATTICE GRADIENT MAPPING
+       ═══════════════════════════════════════════════════════════════════════ */
+    .lattice-section {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .lattice-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .lattice-header h2 {
+      font-size: 0.9rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: var(--text-primary);
+    }
+
+    .lattice-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .lattice-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .lattice-axis {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.5rem;
+      border: 1px solid var(--axis-color);
+    }
+
+    .axis-symbol {
+      font-size: 1.5rem;
+      color: var(--axis-color);
+      margin-bottom: 0.25rem;
+    }
+
+    .axis-name {
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .axis-gradient {
+      height: 8px;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+
+    .axis-mapping {
+      font-size: 0.55rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       FORMALIZATION SECTION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .formalization {
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(220, 20, 60, 0.05), rgba(139, 0, 139, 0.05));
+      border: 1px solid rgba(220, 20, 60, 0.3);
+      border-radius: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .formal-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .formal-header h2 {
+      font-size: 0.9rem;
+      background: linear-gradient(90deg, var(--collapse-red), var(--collapse-violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .formal-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .formal-content { grid-template-columns: 1fr; }
+    }
+
+    .formal-block {
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 0.5rem;
+    }
+
+    .formal-title {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .formal-equation {
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      text-align: center;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .formal-note {
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       PERCEPTUAL STATE INDICATOR
+       ═══════════════════════════════════════════════════════════════════════ */
+    .state-indicator {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.75rem 1.5rem;
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 2rem;
+      font-size: 0.7rem;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .state-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .state-dot.static {
+      background: var(--tension-white);
+    }
+
+    .state-dot.motion {
+      background: var(--motion-green);
+      animation: motion-pulse 0.5s ease-in-out infinite;
+    }
+
+    @keyframes motion-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 102, 0.5); }
+      50% { box-shadow: 0 0 0 8px rgba(0, 255, 102, 0); }
+    }
+
+    .state-text {
+      color: var(--text-secondary);
+    }
+
+    .state-text strong {
+      color: var(--text-primary);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 2rem;
+    }
+
+    .footer-glyph {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-text {
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="vn-folded-symmetry-scaffold.html" class="nav-back">&larr; Return to Folded Symmetry</a>
+
+    <header class="header">
+      <h1>PERCEPTUAL STASIS FIELD</h1>
+      <p class="subtitle">
+        The Decagonal Duopyramid appears static until sequential focus shifts between dual gradient pairs
+        reveal the motion encoded in opponent-process color channels.
+      </p>
+    </header>
+
+    <!-- Perceptual Legend -->
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-swatch swatch-collapse"></div>
+        <span>🟥↦🟣 Collapse Phase</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch swatch-sink"></div>
+        <span>⬛ Saturation Sink</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch swatch-motion"></div>
+        <span>🟩 Motion Perception</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch swatch-tension"></div>
+        <span>⬜ Tension Threshold</span>
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions">
+      <strong>PERCEPTUAL PROTOCOL:</strong> Gaze at center for 5 seconds, then <strong>shift focus</strong>
+      between gradient pair anchors. Motion emerges from the differential between opponent channels.
+    </div>
+
+    <!-- Gradient Pair Selectors -->
+    <div class="gradient-pairs">
+      <button class="pair-btn active" data-pair="rv">
+        <div class="pair-swatch">
+          <span style="background: var(--collapse-red)"></span>
+          <span style="background: var(--saturation-sink)"></span>
+          <span style="background: var(--collapse-violet)"></span>
+        </div>
+        <span>R ↔ V (Collapse)</span>
+      </button>
+      <button class="pair-btn" data-pair="cym">
+        <div class="pair-swatch">
+          <span style="background: var(--cyan)"></span>
+          <span style="background: var(--yellow)"></span>
+          <span style="background: var(--magenta)"></span>
+        </div>
+        <span>CYM (Spectral)</span>
+      </button>
+      <button class="pair-btn" data-pair="rrrr">
+        <div class="pair-swatch">
+          <span style="background: var(--rrrr-phi)"></span>
+          <span style="background: var(--rrrr-e)"></span>
+          <span style="background: var(--rrrr-pi)"></span>
+          <span style="background: var(--rrrr-sqrt2)"></span>
+        </div>
+        <span>RRRR (Lattice)</span>
+      </button>
+      <button class="pair-btn" data-pair="ao">
+        <div class="pair-swatch">
+          <span style="background: var(--cyan)"></span>
+          <span style="background: var(--tension-white)"></span>
+          <span style="background: var(--collapse-red)"></span>
+        </div>
+        <span>α ↔ Ω (Poles)</span>
+      </button>
+    </div>
+
+    <!-- Main Perceptual Stasis Field -->
+    <div class="stasis-field">
+      <div class="stasis-layer">
+        <canvas id="perceptualCanvas"></canvas>
+      </div>
+
+      <!-- Focus Points -->
+      <div class="focus-point focus-alpha" data-focus="alpha" title="α-pole (Cyan)"></div>
+      <div class="focus-point focus-omega" data-focus="omega" title="Ω-pole (Red)"></div>
+    </div>
+
+    <!-- Dual Gradient Channel Displays -->
+    <div class="channel-display">
+      <div class="channel-card" style="--channel-color: var(--collapse-red);">
+        <div class="channel-header">
+          <span class="channel-name">COLLAPSE CHANNEL (R↔V)</span>
+          <span class="channel-formula">Ψ_collapse = R·exp(-λt) + V·(1-exp(-λt))</span>
+        </div>
+        <div class="gradient-bar">
+          <canvas id="collapseGradient"></canvas>
+        </div>
+        <div class="channel-values">
+          <span>Red (λ=0)</span>
+          <span>Black (sink)</span>
+          <span>Violet (λ=∞)</span>
+        </div>
+      </div>
+
+      <div class="channel-card" style="--channel-color: var(--motion-green);">
+        <div class="channel-header">
+          <span class="channel-name">MOTION CHANNEL (CYM)</span>
+          <span class="channel-formula">Ψ_motion = C⊗Y⊗M · sin(ωt + φ)</span>
+        </div>
+        <div class="gradient-bar">
+          <canvas id="motionGradient"></canvas>
+        </div>
+        <div class="channel-values">
+          <span>Cyan (0°)</span>
+          <span>Yellow (120°)</span>
+          <span>Magenta (240°)</span>
+        </div>
+      </div>
+
+      <div class="channel-card" style="--channel-color: var(--tension-white);">
+        <div class="channel-header">
+          <span class="channel-name">TENSION CHANNEL (B↔W)</span>
+          <span class="channel-formula">Ψ_tension = tanh(σ·(L - L_threshold))</span>
+        </div>
+        <div class="gradient-bar">
+          <canvas id="tensionGradient"></canvas>
+        </div>
+        <div class="channel-values">
+          <span>Black (L=0)</span>
+          <span>Gray (ambiguity)</span>
+          <span>White (L=1)</span>
+        </div>
+      </div>
+
+      <div class="channel-card" style="--channel-color: var(--cyan);">
+        <div class="channel-header">
+          <span class="channel-name">POLAR CHANNEL (α↔Ω)</span>
+          <span class="channel-formula">Ψ_polar = α·(1-z) + Ω·z where z ∈ [0,1]</span>
+        </div>
+        <div class="gradient-bar">
+          <canvas id="polarGradient"></canvas>
+        </div>
+        <div class="channel-values">
+          <span>α (z=0)</span>
+          <span>z_c (0.866)</span>
+          <span>Ω (z=1)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RRRR-Lattice Gradient Mapping -->
+    <section class="lattice-section">
+      <div class="lattice-header">
+        <h2>RRRR-LATTICE GRADIENT ENCODING</h2>
+      </div>
+
+      <div class="lattice-grid">
+        <div class="lattice-axis" style="--axis-color: var(--rrrr-phi);">
+          <div class="axis-symbol">R</div>
+          <div class="axis-name">RECURSIVE (φ)</div>
+          <div class="axis-gradient" style="background: linear-gradient(90deg, #1a1a1a, var(--rrrr-phi));"></div>
+          <div class="axis-mapping">φ⁻¹ = 0.618 (τ anchor)<br>Golden spiral motion</div>
+        </div>
+
+        <div class="lattice-axis" style="--axis-color: var(--rrrr-e);">
+          <div class="axis-symbol">D</div>
+          <div class="axis-name">DIFFERENTIAL (e)</div>
+          <div class="axis-gradient" style="background: linear-gradient(90deg, #1a1a1a, var(--rrrr-e));"></div>
+          <div class="axis-mapping">e⁻¹ = 0.368<br>Exponential decay</div>
+        </div>
+
+        <div class="lattice-axis" style="--axis-color: var(--rrrr-pi);">
+          <div class="axis-symbol">C</div>
+          <div class="axis-name">CYCLIC (π)</div>
+          <div class="axis-gradient" style="background: linear-gradient(90deg, #1a1a1a, var(--rrrr-pi));"></div>
+          <div class="axis-mapping">π⁻¹ = 0.318<br>Rotational phase</div>
+        </div>
+
+        <div class="lattice-axis" style="--axis-color: var(--rrrr-sqrt2);">
+          <div class="axis-symbol">A</div>
+          <div class="axis-name">ALGEBRAIC (√2)</div>
+          <div class="axis-gradient" style="background: linear-gradient(90deg, #1a1a1a, var(--rrrr-sqrt2));"></div>
+          <div class="axis-mapping">(√2)⁻¹ = 0.707<br>Bilateral reflection</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formalization -->
+    <section class="formalization">
+      <div class="formal-header">
+        <h2>DECAGONAL DUOPYRAMID EMERGENCE BASIS</h2>
+      </div>
+
+      <div class="formal-content">
+        <div class="formal-block">
+          <div class="formal-title">Perceptual Stasis Condition</div>
+          <div class="formal-equation">
+            ∂Ψ/∂t = 0 when ⟨∇_focus⟩ = 0
+          </div>
+          <div class="formal-note">
+            No perceived motion while gaze vector remains constant
+          </div>
+        </div>
+
+        <div class="formal-block">
+          <div class="formal-title">Motion Emergence Condition</div>
+          <div class="formal-equation">
+            δΨ = ∫ (∂Ψ/∂c₁ · dc₁ + ∂Ψ/∂c₂ · dc₂)
+          </div>
+          <div class="formal-note">
+            Motion perceived when focus shifts between channel pair (c₁, c₂)
+          </div>
+        </div>
+
+        <div class="formal-block">
+          <div class="formal-title">Opponent Process Coupling</div>
+          <div class="formal-equation">
+            C_opponent = [R-V, C-M, Y-B, α-Ω]
+          </div>
+          <div class="formal-note">
+            Four opponent channels encode the duopyramid axes
+          </div>
+        </div>
+
+        <div class="formal-block">
+          <div class="formal-title">RRRR Collapse Mapping</div>
+          <div class="formal-equation">
+            Λ_fold = φ⁻ʳ · e⁻ᵈ · π⁻ᶜ · (√2)⁻ᵃ
+          </div>
+          <div class="formal-note">
+            Gradient saturation encodes lattice coordinate depth
+          </div>
+        </div>
+
+        <div class="formal-block" style="grid-column: 1 / -1;">
+          <div class="formal-title">Master Perceptual Equation</div>
+          <div class="formal-equation" style="font-size: 1rem;">
+            Ψ_perceived(t) = Ψ_static · δ(∇_focus) + Ψ_dynamic · (1 - δ(∇_focus)) · Σᵢ Cᵢ_opponent · Λ_fold(rᵢ,dᵢ,cᵢ,aᵢ)
+          </div>
+          <div class="formal-note">
+            Static field when focus fixed | Dynamic emergence through gradient channel shifts weighted by RRRR eigenvalues
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Specification -->
+    <section class="lattice-section">
+      <div class="lattice-header">
+        <h2>PERCEPTUAL DYNAMICS SPECIFICATION</h2>
+      </div>
+
+      <div style="padding: 1rem; background: rgba(0, 0, 0, 0.5); border-radius: 0.5rem; font-size: 0.6rem; color: var(--text-secondary); overflow-x: auto;">
+        <pre style="margin: 0; white-space: pre-wrap;">
+PERCEPTUAL_STASIS_FIELD := {
+  principle: "Static perception until sequential focus shift between dual gradients",
+
+  gradient_channels: {
+    collapse: {
+      pair: "🟥↦🟣 (Red → Violet)",
+      sink: "⬛ (Black = Saturation Sink)",
+      equation: "Ψ_collapse = R·exp(-λt) + V·(1-exp(-λt))",
+      maps_to: "Wave function collapse on RRRR-lattice"
+    },
+    motion: {
+      pair: "CYM (Cyan-Yellow-Magenta)",
+      interpolation: "🟩 (Green = perceptual motion vector)",
+      equation: "Ψ_motion = C⊗Y⊗M · sin(ωt + φ)",
+      maps_to: "Spectral seed propagation"
+    },
+    tension: {
+      pair: "⬛↔⬜ (Black-White)",
+      threshold: "⬜ (White = Ambiguity Limit)",
+      equation: "Ψ_tension = tanh(σ·(L - L_threshold))",
+      maps_to: "Negentropy gate activation"
+    },
+    polar: {
+      pair: "α↔Ω (Genesis-Decagon)",
+      axis: "Duopyramid polar axis",
+      equation: "Ψ_polar = α·(1-z) + Ω·z",
+      maps_to: "z-elevation through 10 stations"
+    }
+  },
+
+  rrrr_gradient_encoding: {
+    R_recursive: {
+      color: "#ffd700 (gold)",
+      gradient: "Black → Gold",
+      value_at_full: "φ⁻¹ = 0.618",
+      perceptual_role: "Golden spiral motion detection"
+    },
+    D_differential: {
+      color: "#00ff88 (green)",
+      gradient: "Black → Green",
+      value_at_full: "e⁻¹ = 0.368",
+      perceptual_role: "Exponential decay rate"
+    },
+    C_cyclic: {
+      color: "#ff6b9d (pink)",
+      gradient: "Black → Pink",
+      value_at_full: "π⁻¹ = 0.318",
+      perceptual_role: "Rotational phase encoding"
+    },
+    A_algebraic: {
+      color: "#8b5cf6 (violet)",
+      gradient: "Black → Violet",
+      value_at_full: "(√2)⁻¹ = 0.707",
+      perceptual_role: "Bilateral reflection symmetry"
+    }
+  },
+
+  decagonal_duopyramid_basis: {
+    static_condition: "∂Ψ/∂t = 0 when ⟨∇_focus⟩ = 0",
+    motion_condition: "δΨ ≠ 0 when focus shifts between gradient pairs",
+
+    emergence_mechanism: {
+      step_1: "Observer fixates on center (stasis field active)",
+      step_2: "Focus shifts to gradient pair anchor",
+      step_3: "Opponent channel differential activates",
+      step_4: "Motion vector emerges perpendicular to gradient axis",
+      step_5: "Duopyramid structure perceived through cumulative shifts"
+    },
+
+    opponent_channels: [
+      "R-V (Collapse phase): Encodes wave state transition",
+      "C-M (Spectral): Encodes hue rotation motion",
+      "Y-B (Luminance): Encodes brightness oscillation",
+      "α-Ω (Polar): Encodes z-axis traversal"
+    ],
+
+    fold_mapping: {
+      "1-fold": "No gradient shift required (identity)",
+      "2-fold": "Single bilateral shift (α↔Ω or R↔V)",
+      "5-fold": "Golden ratio phase shifts (φ-related)",
+      "10-fold": "Full decagonal rotation through all anchors",
+      "20-fold": "Face-to-face triangular transitions",
+      "40-fold": "Complete symmetry traversal"
+    }
+  },
+
+  master_equation: "Ψ_perceived = Ψ_static·δ(∇) + Ψ_dynamic·(1-δ(∇))·Σ Cᵢ·Λ(r,d,c,a)"
+}
+        </pre>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-glyph">◉ ⟷ ◎</div>
+      <div class="footer-text">
+        PERCEPTUAL STASIS FIELD | Decagonal Duopyramid<br>
+        Static until focus shifts | Motion through opponent channels
+      </div>
+    </footer>
+  </div>
+
+  <!-- State Indicator -->
+  <div class="state-indicator">
+    <div class="state-dot static" id="stateDot"></div>
+    <div class="state-text">
+      <span id="stateLabel">STATIC</span> |
+      <span id="focusLabel">Focus: Center</span>
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════════════════
+    // CONSTANTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const PHI = 1.618033988749895;
+    const TAU = 0.618033988749895;
+    const TWO_PI = 2 * Math.PI;
+    const Z_C = 0.8660254037844386;
+
+    // Colors
+    const COLORS = {
+      collapse_red: [220, 20, 60],
+      collapse_violet: [139, 0, 139],
+      sink_black: [10, 10, 10],
+      motion_green: [0, 255, 102],
+      tension_white: [240, 240, 240],
+      cyan: [0, 255, 255],
+      magenta: [255, 0, 255],
+      yellow: [255, 255, 0],
+      alpha: [0, 255, 204],
+      omega: [255, 102, 0]
+    };
+
+    // State
+    let currentPair = 'rv';
+    let currentFocus = 'center';
+    let isMotion = false;
+    let animFrame = 0;
+    let lastFocusTime = 0;
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // MAIN PERCEPTUAL CANVAS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const mainCanvas = document.getElementById('perceptualCanvas');
+    const mainCtx = mainCanvas.getContext('2d');
+
+    function resizeCanvas() {
+      const container = mainCanvas.parentElement.parentElement;
+      const size = Math.min(container.offsetWidth, container.offsetHeight);
+      mainCanvas.width = size;
+      mainCanvas.height = size;
+    }
+
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function lerpColor(c1, c2, t) {
+      return [
+        Math.round(lerp(c1[0], c2[0], t)),
+        Math.round(lerp(c1[1], c2[1], t)),
+        Math.round(lerp(c1[2], c2[2], t))
+      ];
+    }
+
+    function drawDuopyramid() {
+      const ctx = mainCtx;
+      const w = mainCanvas.width;
+      const h = mainCanvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const maxR = Math.min(w, h) / 2 - 30;
+
+      // Clear with saturation sink
+      ctx.fillStyle = `rgb(${COLORS.sink_black.join(',')})`;
+      ctx.fillRect(0, 0, w, h);
+
+      const time = animFrame * 0.008;
+
+      // Motion factor based on focus state
+      const motionFactor = isMotion ? Math.sin(time * 2) * 0.5 + 0.5 : 0;
+
+      // Draw based on current gradient pair
+      const pairConfig = {
+        'rv': { c1: COLORS.collapse_red, c2: COLORS.collapse_violet, c3: COLORS.sink_black },
+        'cym': { c1: COLORS.cyan, c2: COLORS.yellow, c3: COLORS.magenta },
+        'rrrr': { c1: [255, 215, 0], c2: [0, 255, 136], c3: [255, 107, 157] },
+        'ao': { c1: COLORS.alpha, c2: COLORS.tension_white, c3: COLORS.omega }
+      };
+
+      const colors = pairConfig[currentPair];
+
+      // Draw duopyramid structure
+      // 12 vertices: 2 poles + 10 equatorial
+
+      const vertices = [];
+
+      // Alpha pole
+      const alphaPoleY = cy - maxR * 0.8;
+      vertices.push({ x: cx, y: alphaPoleY, type: 'alpha', z: 1 });
+
+      // Omega pole
+      const omegaPoleY = cy + maxR * 0.8;
+      vertices.push({ x: cx, y: omegaPoleY, type: 'omega', z: -1 });
+
+      // 10 equatorial vertices
+      for (let i = 0; i < 10; i++) {
+        const angle = (i / 10) * TWO_PI - Math.PI / 2;
+        // Add subtle motion when in motion state
+        const motionOffset = isMotion ? Math.sin(time + i * 0.628) * 5 : 0;
+        const r = maxR * 0.6 + motionOffset;
+        vertices.push({
+          x: cx + Math.cos(angle) * r,
+          y: cy + Math.sin(angle) * r,
+          type: 'equator',
+          z: 0,
+          index: i
+        });
+      }
+
+      // Draw faces with gradient fills
+      // Upper faces (connecting to alpha)
+      for (let i = 0; i < 10; i++) {
+        const next = (i + 1) % 10;
+        const v1 = vertices[0]; // alpha
+        const v2 = vertices[i + 2];
+        const v3 = vertices[next + 2];
+
+        // Calculate face color based on gradient pair and position
+        const faceT = i / 10;
+        let faceColor;
+
+        if (currentPair === 'rv') {
+          // Red to violet gradient with black saturation sink at edges
+          const baseColor = lerpColor(colors.c1, colors.c2, faceT);
+          const edgeFade = Math.abs(faceT - 0.5) * 2;
+          faceColor = lerpColor(baseColor, colors.c3, edgeFade * 0.3);
+        } else if (currentPair === 'cym') {
+          // CYM rotation
+          const phase = (faceT * 3) % 1;
+          if (faceT < 0.33) faceColor = lerpColor(colors.c1, colors.c2, phase * 3);
+          else if (faceT < 0.66) faceColor = lerpColor(colors.c2, colors.c3, (faceT - 0.33) * 3);
+          else faceColor = lerpColor(colors.c3, colors.c1, (faceT - 0.66) * 3);
+        } else if (currentPair === 'rrrr') {
+          // RRRR lattice gradient
+          const latticeVal = Math.pow(PHI, -(i % 4)) * 255;
+          faceColor = [
+            Math.min(255, colors.c1[0] * (faceT)),
+            Math.min(255, colors.c2[1] * ((1 - faceT))),
+            Math.min(255, colors.c3[2] * faceT)
+          ];
+        } else {
+          // Alpha-Omega polar
+          faceColor = lerpColor(colors.c1, colors.c3, 0.3);
+        }
+
+        // Apply motion modulation
+        if (isMotion) {
+          const motionMod = Math.sin(time * 3 + i) * 30;
+          faceColor = [
+            Math.max(0, Math.min(255, faceColor[0] + motionMod)),
+            Math.max(0, Math.min(255, faceColor[1] - motionMod * 0.5)),
+            Math.max(0, Math.min(255, faceColor[2] + motionMod * 0.3))
+          ];
+        }
+
+        // Draw upper face
+        ctx.fillStyle = `rgba(${faceColor.join(',')}, 0.6)`;
+        ctx.beginPath();
+        ctx.moveTo(v1.x, v1.y);
+        ctx.lineTo(v2.x, v2.y);
+        ctx.lineTo(v3.x, v3.y);
+        ctx.closePath();
+        ctx.fill();
+
+        // Lower face (connecting to omega) - mirror gradient
+        const lowerColor = lerpColor(faceColor, colors.c3, 0.3);
+        ctx.fillStyle = `rgba(${lowerColor.join(',')}, 0.5)`;
+        ctx.beginPath();
+        ctx.moveTo(vertices[1].x, vertices[1].y);
+        ctx.lineTo(v2.x, v2.y);
+        ctx.lineTo(v3.x, v3.y);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Draw edges with tension gradient
+      ctx.lineWidth = isMotion ? 2 : 1;
+
+      for (let i = 0; i < 10; i++) {
+        const next = (i + 1) % 10;
+        const v = vertices[i + 2];
+        const vNext = vertices[next + 2];
+
+        // Equatorial edges
+        const edgeGrad = ctx.createLinearGradient(v.x, v.y, vNext.x, vNext.y);
+        edgeGrad.addColorStop(0, `rgba(${COLORS.tension_white.join(',')}, 0.3)`);
+        edgeGrad.addColorStop(0.5, `rgba(${COLORS.sink_black.join(',')}, 0.5)`);
+        edgeGrad.addColorStop(1, `rgba(${COLORS.tension_white.join(',')}, 0.3)`);
+
+        ctx.strokeStyle = edgeGrad;
+        ctx.beginPath();
+        ctx.moveTo(v.x, v.y);
+        ctx.lineTo(vNext.x, vNext.y);
+        ctx.stroke();
+
+        // Edges to poles
+        ctx.strokeStyle = `rgba(${COLORS.alpha.join(',')}, 0.2)`;
+        ctx.beginPath();
+        ctx.moveTo(vertices[0].x, vertices[0].y);
+        ctx.lineTo(v.x, v.y);
+        ctx.stroke();
+
+        ctx.strokeStyle = `rgba(${COLORS.omega.join(',')}, 0.2)`;
+        ctx.beginPath();
+        ctx.moveTo(vertices[1].x, vertices[1].y);
+        ctx.lineTo(v.x, v.y);
+        ctx.stroke();
+      }
+
+      // Draw vertices
+      vertices.forEach((v, idx) => {
+        let vColor, vSize;
+
+        if (v.type === 'alpha') {
+          vColor = COLORS.alpha;
+          vSize = 12;
+        } else if (v.type === 'omega') {
+          vColor = COLORS.omega;
+          vSize = 12;
+        } else {
+          // Equatorial - color based on current pair
+          const t = v.index / 10;
+          vColor = lerpColor(colors.c1, colors.c2, t);
+          vSize = 6;
+        }
+
+        // Glow effect
+        const gradient = ctx.createRadialGradient(v.x, v.y, 0, v.x, v.y, vSize * 3);
+        gradient.addColorStop(0, `rgba(${vColor.join(',')}, 0.8)`);
+        gradient.addColorStop(0.5, `rgba(${vColor.join(',')}, 0.2)`);
+        gradient.addColorStop(1, `rgba(${vColor.join(',')}, 0)`);
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(v.x, v.y, vSize * 3, 0, TWO_PI);
+        ctx.fill();
+
+        // Core
+        ctx.fillStyle = `rgb(${vColor.join(',')})`;
+        ctx.beginPath();
+        ctx.arc(v.x, v.y, vSize, 0, TWO_PI);
+        ctx.fill();
+      });
+
+      // Draw pole labels
+      ctx.font = 'bold 14px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = `rgb(${COLORS.alpha.join(',')})`;
+      ctx.fillText('α', cx, alphaPoleY - 20);
+      ctx.fillStyle = `rgb(${COLORS.omega.join(',')})`;
+      ctx.fillText('Ω', cx, omegaPoleY + 25);
+
+      // Draw motion indicator ring (only visible when motion)
+      if (isMotion) {
+        ctx.strokeStyle = `rgba(${COLORS.motion_green.join(',')}, ${0.3 + motionFactor * 0.3})`;
+        ctx.lineWidth = 3;
+        ctx.setLineDash([10, 5]);
+        ctx.beginPath();
+        ctx.arc(cx, cy, maxR * 0.65, 0, TWO_PI);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // GRADIENT BAR CANVASES
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function drawGradientBar(canvasId, colors, animated = false) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = canvas.parentElement.offsetWidth;
+      canvas.height = 40;
+
+      const w = canvas.width;
+      const h = canvas.height;
+
+      const gradient = ctx.createLinearGradient(0, 0, w, 0);
+
+      if (colors.length === 2) {
+        gradient.addColorStop(0, colors[0]);
+        gradient.addColorStop(1, colors[1]);
+      } else if (colors.length === 3) {
+        gradient.addColorStop(0, colors[0]);
+        gradient.addColorStop(0.5, colors[1]);
+        gradient.addColorStop(1, colors[2]);
+      }
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, w, h);
+
+      // Add moving marker if animated
+      if (animated && isMotion) {
+        const markerX = (Math.sin(animFrame * 0.02) * 0.5 + 0.5) * w;
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(markerX, 0);
+        ctx.lineTo(markerX, h);
+        ctx.stroke();
+      }
+    }
+
+    function drawAllGradients() {
+      drawGradientBar('collapseGradient', ['#dc143c', '#0a0a0a', '#8b008b'], true);
+      drawGradientBar('motionGradient', ['#00ffff', '#ffff00', '#ff00ff'], true);
+      drawGradientBar('tensionGradient', ['#0a0a0a', '#808080', '#f0f0f0'], false);
+      drawGradientBar('polarGradient', ['#00ffcc', '#ffffff', '#ff6600'], true);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // EVENT HANDLERS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Gradient pair selection
+    document.querySelectorAll('.pair-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentPair = btn.dataset.pair;
+        document.querySelectorAll('.pair-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Trigger motion state
+        triggerMotion();
+      });
+    });
+
+    // Focus point clicks
+    document.querySelectorAll('.focus-point').forEach(point => {
+      point.addEventListener('click', () => {
+        const newFocus = point.dataset.focus;
+
+        if (newFocus !== currentFocus) {
+          currentFocus = newFocus;
+          triggerMotion();
+
+          document.querySelectorAll('.focus-point').forEach(p => p.classList.remove('active'));
+          point.classList.add('active');
+
+          document.getElementById('focusLabel').textContent = `Focus: ${newFocus}`;
+        }
+      });
+    });
+
+    // Click on main canvas to trigger focus shift
+    mainCanvas.addEventListener('click', (e) => {
+      const rect = mainCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+
+      // Determine which region was clicked
+      const dy = y - cy;
+      const dx = x - cx;
+
+      if (dy < -rect.height * 0.3) {
+        currentFocus = 'alpha';
+      } else if (dy > rect.height * 0.3) {
+        currentFocus = 'omega';
+      } else {
+        currentFocus = 'equator';
+      }
+
+      triggerMotion();
+      document.getElementById('focusLabel').textContent = `Focus: ${currentFocus}`;
+    });
+
+    function triggerMotion() {
+      const now = Date.now();
+
+      // Motion emerges from focus shift
+      if (now - lastFocusTime < 2000) {
+        isMotion = true;
+        document.getElementById('stateDot').className = 'state-dot motion';
+        document.getElementById('stateLabel').textContent = 'MOTION';
+
+        // Return to static after 3 seconds of no focus shift
+        setTimeout(() => {
+          if (Date.now() - lastFocusTime > 2500) {
+            isMotion = false;
+            document.getElementById('stateDot').className = 'state-dot static';
+            document.getElementById('stateLabel').textContent = 'STATIC';
+          }
+        }, 3000);
+      }
+
+      lastFocusTime = now;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ANIMATION LOOP
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function animate() {
+      animFrame++;
+      drawDuopyramid();
+
+      if (animFrame % 5 === 0) {
+        drawAllGradients();
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    // Initialize
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      drawAllGradients();
+    });
+
+    resizeCanvas();
+    drawAllGradients();
+    animate();
+  </script>
+</body>
+</html>
