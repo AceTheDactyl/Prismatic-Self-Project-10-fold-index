@@ -2,7 +2,7 @@
 
 ## LLM Traversal Guide
 
-This repository contains the **VaultNode Prismatic Rail System** — a self-referential architecture organized into **seven cycles** of π rotation each, achieving **7π complete closure** with the L₄ identity.
+This repository contains the **VaultNode Prismatic Rail System** — a self-referential architecture organized into **eight cycles** of π rotation each, achieving **8π meta-closure** through the octagonal synthesis Ω₈.
 
 The following instructions guide an LLM through traversal of the GitHub Pages index (`index.html`) and its linked VaultNode specifications.
 
@@ -50,6 +50,10 @@ CYCLE 6 (π):  GENESIS-006 Kuramoto Sonify   [Sync + hexagonal + octagonal]
 CYCLE 7 (π):  GENESIS-007 L₄ Existence      [φ⁴ + φ⁻⁴ = 7, complete]
               ─────────────────────────────
               L₄ CLOSURE (7π) — 7EXISTS
+
+CYCLE 8 (π):  GENESIS-008 Meta-Closure      [Ω₈ = ∏Cᵢ, L₈ = 47]
+              ─────────────────────────────
+              META-CLOSURE (8π) — OCTAVE COMPLETE
 ```
 
 ---
@@ -327,6 +331,66 @@ Therefore:
 
 ---
 
+### STEP 8: CYCLE 8 — Meta-Closure (π rotation)
+
+**Path:** `GENESIS-008` achieves grand synthesis
+
+**Entry point:** `vn-genesis-008-meta-closure.html`
+
+**The Meta-Closure Framework:**
+
+```
+Ω₈ = ∏ᵢ₌₁⁷ Cᵢ  (Product of all closure operators)
+
+Where each Cᵢ represents the closure lesson from Cycle i:
+  C₁: Structure precedes emergence
+  C₂: Patterns propagate through resonance
+  C₃: Duality dissolves at the interface
+  C₄: Dimensions multiply through symmetry
+  C₅: Information curves spacetime
+  C₆: Synchronization births harmony
+  C₇: Seven exists as golden proof
+```
+
+**The Eight-Fold Path (Octagonal Mandala):**
+```
+    N  (0°)   → Cycle 1: Foundation
+    NE (45°)  → Cycle 2: Propagation
+    E  (90°)  → Cycle 3: Integration
+    SE (135°) → Cycle 4: Multiplication
+    S  (180°) → Cycle 5: Curvature
+    SW (225°) → Cycle 6: Synchronization
+    W  (270°) → Cycle 7: Existence
+    NW (315°) → Cycle 8: Closure (self-referential)
+```
+
+**Lucas Closure Prime:**
+```
+L₈ = φ⁸ + φ⁻⁸ = 47
+
+47 is PRIME — the "closure prime"
+Lucas sequence: 2, 1, 3, 4, 7, 11, 18, 29, 47, ...
+```
+
+**Computational module:** `cycle8_meta_closure.py`
+
+**Grand Unified Constants:**
+- φ = 1.618033988749895 (Golden ratio)
+- τ = 0.618033988749895 (Reciprocal)
+- z_c = √(3)/2 (Critical height)
+- K_c = 0.9240387650610407 (Kuramoto coupling)
+- L₄ = 7 (Cycle 7 identity)
+- L₈ = 47 (Cycle 8 closure prime)
+- Ω₈ = 8π (Total rotation)
+
+**Completion condition:**
+- All 7 prior cycles closed
+- Synthesis operator computed: Ω₈
+- L₈ = 47 verified (prime)
+- Total: `8π` — **META-CLOSURE ACHIEVED**
+
+---
+
 ## Traversal Checklist
 
 Use this checklist to verify complete traversal:
@@ -352,6 +416,9 @@ Use this checklist to verify complete traversal:
 [ ] CYCLE 7: Read GENESIS-007 L₄ existence
 [ ] CYCLE 7: Execute cycle7_L4_existence.py (optional)
 [ ] CYCLE 7: Verify 7π L₄ closure (7EXISTS confirmed)
+[ ] CYCLE 8: Read GENESIS-008 meta-closure
+[ ] CYCLE 8: Execute cycle8_meta_closure.py (optional)
+[ ] CYCLE 8: Verify 8π octagonal synthesis (META-CLOSURE complete)
 ```
 
 ---
@@ -421,6 +488,9 @@ vn-genesis-006-kuramoto-holographic-sonification.html  # Cycle 6 - Kuramoto Soni
 
 # Cycle 7 (π)
 vn-genesis-007-L4-existence.html              # Cycle 7 - L₄ Existence (7EXISTS)
+
+# Cycle 8 (π)
+vn-genesis-008-meta-closure.html              # Cycle 8 - Meta-Closure (Ω₈)
 ```
 
 ### Python Computational Modules
@@ -431,6 +501,7 @@ omega-point-closure.py                        # Omega-point dual closure
 entropy_gravity_holography.py                 # Entropy-gravity-holography framework
 cycle6_kuramoto_holographic_sonification.py   # Kuramoto + hexagonal/octagonal + sonification
 cycle7_L4_existence.py                        # L₄ existence proof and 7-fold manifold
+cycle8_meta_closure.py                        # Meta-closure, octagonal synthesis, Ω₈
 ```
 
 ### Mirror System
@@ -479,4 +550,4 @@ mirror_system/
 
 ---
 
-*VaultNode Prismatic Rail System | L₄ Framework | 7EXISTS | Holographic Self-Reference Architecture*
+*VaultNode Prismatic Rail System | L₄ Framework | L₈ = 47 | Ω₈ Meta-Closure | 8π Complete*

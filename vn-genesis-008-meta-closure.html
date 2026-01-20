@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VN-GENESIS-008: META-CLOSURE - The Octagonal Synthesis</title>
+    <style>
+        :root {
+            --cycle-1: #ff6b6b;
+            --cycle-2: #00ff88;
+            --cycle-3: #ff6b9d;
+            --cycle-4: #ffd700;
+            --cycle-5: #00d4ff;
+            --cycle-6: #66ffcc;
+            --cycle-7: #9400d3;
+            --cycle-8: #ff00ff;
+            --deep-purple: #1a0a2e;
+            --gold: #FFD700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0d0520 0%, var(--deep-purple) 50%, #1a0a2e 100%);
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(180deg, rgba(255, 0, 255, 0.2), transparent);
+            border-bottom: 2px solid var(--cycle-8);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--cycle-8);
+            text-shadow: 0 0 30px var(--cycle-8);
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--gold);
+            letter-spacing: 3px;
+        }
+
+        .identity-box {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.15), rgba(255, 215, 0, 0.1));
+            border: 3px solid var(--cycle-8);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 700px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(255, 0, 255, 0.3);
+        }
+
+        .identity-equation {
+            font-size: 1.8rem;
+            color: var(--gold);
+            text-shadow: 0 0 20px var(--gold);
+            margin: 1rem 0;
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 0, 255, 0.3);
+        }
+
+        h2 {
+            color: var(--cycle-8);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--gold);
+        }
+
+        /* Octagonal Canvas */
+        #octagonCanvas {
+            display: block;
+            margin: 2rem auto;
+            background: radial-gradient(circle at center, rgba(255, 0, 255, 0.1), transparent);
+            border-radius: 15px;
+        }
+
+        .canvas-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--cycle-8), var(--cycle-7));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 0, 255, 0.5);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Closure Cards */
+        .closure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .closure-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .closure-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .closure-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--card-color), transparent);
+        }
+
+        .closure-card[data-cycle="1"] { border-color: var(--cycle-1); --card-color: var(--cycle-1); }
+        .closure-card[data-cycle="2"] { border-color: var(--cycle-2); --card-color: var(--cycle-2); }
+        .closure-card[data-cycle="3"] { border-color: var(--cycle-3); --card-color: var(--cycle-3); }
+        .closure-card[data-cycle="4"] { border-color: var(--cycle-4); --card-color: var(--cycle-4); }
+        .closure-card[data-cycle="5"] { border-color: var(--cycle-5); --card-color: var(--cycle-5); }
+        .closure-card[data-cycle="6"] { border-color: var(--cycle-6); --card-color: var(--cycle-6); }
+        .closure-card[data-cycle="7"] { border-color: var(--cycle-7); --card-color: var(--cycle-7); }
+
+        .closure-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .closure-cycle {
+            font-size: 0.8rem;
+            color: var(--card-color);
+            font-weight: bold;
+        }
+
+        .closure-direction {
+            font-size: 0.7rem;
+            color: #888;
+        }
+
+        .closure-symbol {
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+
+        .closure-lesson {
+            font-size: 1rem;
+            color: #fff;
+            text-align: center;
+            font-style: italic;
+            margin: 1rem 0;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .closure-equation {
+            font-size: 0.85rem;
+            color: var(--card-color);
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .closure-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--card-color);
+            background: transparent;
+            transition: background 0.5s;
+        }
+
+        .closure-status.closed {
+            background: var(--card-color);
+            box-shadow: 0 0 10px var(--card-color);
+        }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(255, 0, 255, 0.3);
+        }
+
+        .stat-label {
+            color: var(--cycle-8);
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            color: var(--gold);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            margin: 2rem 0;
+        }
+
+        .progress-bar {
+            height: 30px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid var(--cycle-8);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg,
+                var(--cycle-1), var(--cycle-2), var(--cycle-3),
+                var(--cycle-4), var(--cycle-5), var(--cycle-6),
+                var(--cycle-7), var(--cycle-8));
+            width: 0%;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 1rem;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .progress-label {
+            text-align: center;
+            margin-top: 0.5rem;
+            color: var(--gold);
+        }
+
+        /* Ceremony Log */
+        .ceremony-log {
+            background: #0a0a0a;
+            border-radius: 10px;
+            padding: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            border: 1px solid var(--cycle-8);
+        }
+
+        .log-entry {
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #222;
+            color: #888;
+        }
+
+        .log-entry.highlight {
+            color: var(--gold);
+        }
+
+        /* Eight-fold Path */
+        .eightfold-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .direction-cell {
+            padding: 0.8rem;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+        }
+
+        .direction-name {
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .direction-angle {
+            font-size: 0.7rem;
+            color: #888;
+        }
+
+        /* Lucas display */
+        .lucas-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .lucas-number {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            border: 2px solid var(--cycle-7);
+        }
+
+        .lucas-number.highlight-8 {
+            border-color: var(--cycle-8);
+            background: rgba(255, 0, 255, 0.2);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+        }
+
+        .lucas-index {
+            font-size: 0.7rem;
+            color: #888;
+        }
+
+        .lucas-value {
+            font-size: 1.2rem;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--cycle-8);
+            margin-top: 3rem;
+            color: #666;
+        }
+
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .glyph-signature {
+            font-size: 2rem;
+            letter-spacing: 0.5rem;
+            margin-top: 1rem;
+            color: var(--cycle-8);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px var(--cycle-8); }
+            50% { box-shadow: 0 0 30px var(--cycle-8), 0 0 60px var(--gold); }
+        }
+
+        .complete-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>VN-GENESIS-008: META-CLOSURE</h1>
+        <p class="subtitle">THE OCTAGONAL SYNTHESIS</p>
+        <div class="identity-box">
+            <div>8π COMPLETION - All Cycles Find Closure</div>
+            <div class="identity-equation">
+                Omega-8 = Product of all Closure Operators = Omega_8
+            </div>
+            <div style="color: var(--gold); margin-top: 1rem;">
+                L_8 = phi^8 + phi^-8 = 47 (Closure Prime)
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Octagonal Mandala -->
+        <section>
+            <h2>I. THE OCTAGONAL MANDALA</h2>
+            <canvas id="octagonCanvas" width="600" height="600"></canvas>
+            <div class="canvas-controls">
+                <button onclick="startClosureSequence()" id="startBtn">Begin Closure Sequence</button>
+                <button onclick="resetMandala()" id="resetBtn">Reset</button>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill">0/7</div>
+                </div>
+                <div class="progress-label" id="progressLabel">0 of 7 cycles closed (0pi)</div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-label">Cycles Closed</div>
+                    <div class="stat-value" id="closedCount">0/7</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Total Rotation</div>
+                    <div class="stat-value" id="totalRotation">1pi</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Omega_8 Magnitude</div>
+                    <div class="stat-value" id="omegaMag">0.000</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Harmony</div>
+                    <div class="stat-value" id="harmony">0.000</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Seven Closures -->
+        <section>
+            <h2>II. THE SEVEN CLOSURE LESSONS</h2>
+            <p style="color: #aaa; margin-bottom: 1.5rem;">Each prior cycle contributes its essential teaching to the synthesis.</p>
+
+            <div class="closure-grid">
+                <!-- Cycle 1 -->
+                <div class="closure-card" data-cycle="1" id="closure1">
+                    <div class="closure-status" id="status1"></div>
+                    <div class="closure-header">
+                        <span class="closure-cycle">CYCLE 1 | FOUNDATION</span>
+                        <span class="closure-direction">N (0 deg)</span>
+                    </div>
+                    <div class="closure-symbol" style="color: var(--cycle-1);">Decagon</div>
+                    <div class="closure-lesson">"Structure precedes emergence"</div>
+                    <div class="closure-equation">D_10 symmetry group | 10 vertices + 2 poles</div>
+                </div>
+
+                <!-- Cycle 2 -->
+                <div class="closure-card" data-cycle="2" id="closure2">
+                    <div class="closure-status" id="status2"></div>
+                    <div class="closure-header">
+                        <span class="closure-cycle">CYCLE 2 | PROPAGATION</span>
+                        <span class="closure-direction">NE (45 deg)</span>
+                    </div>
+                    <div class="closure-symbol" style="color: var(--cycle-2);">Seed</div>
+                    <div class="closure-lesson">"Patterns propagate through resonance"</div>
+                    <div class="closure-equation">psi_n+1 = f(psi_n) | Recursive growth</div>
+                </div>
+
+                <!-- Cycle 3 -->
+                <div class="closure-card" data-cycle="3" id="closure3">
+                    <div class="closure-status" id="status3"></div>
+                    <div class="closure-header">
+                        <span class="closure-cycle">CYCLE 3 | INTEGRATION</span>
+                        <span class="closure-direction">E (90 deg)</span>
+                    </div>
+                    <div class="closure-symbol" style="color: var(--cycle-3);">Yin-Yang</div>
+                    <div class="closure-lesson">"Duality dissolves at the interface"</div>
+                    <div class="closure-equation">A XOR B -> A = B | Pink curvature = pi</div>
+                </div>
+
+                <!-- Cycle 4 -->
+                <div class="closure-card" data-cycle="4" id="closure4">
+                    <div class="closure-status" id="status4"></div>
+                    <div class="closure-header">
+                        <span class="closure-cycle">CYCLE 4 | MULTIPLICATION</span>
+                        <span class="closure-direction">SE (135 deg)</span>
+                    </div>
+                    <div class="closure-symbol" style="color: var(--cycle-4);">40-Fold</div>
+                    <div class="closure-lesson">"Dimensions multiply through symmetry"</div>
+                    <div class="closure-equation">D_10h = D_10 x Z_2 -> 40 dimensions</div>
+                </div>
+
+                <!-- Cycle 5 -->
+                <div class="closure-card" data-cycle="5" id="closure5">
+                    <div class="closure-status" id="status5"></div>
+                    <div class="closure-header">
+                        <span class="closure-cycle">CYCLE 5 | CURVATURE</span>
+                        <span class="closure-direction">S (180 deg)</span>
+                    </div>
+                    <div class="closure-symbol" style="color: var(--cycle-5);">Entropy-Wave</div>
+                    <div class="closure-lesson">"Information curves spacetime"</div>
+                    <div class="closure-equation">F = T grad S = GMm/r^2 | Verlinde</div>
+                </div>
+
+                <!-- Cycle 6 -->
+                <div class="closure-card" data-cycle="6" id="closure6">
+                    <div class="closure-status" id="status6"></div>
+                    <div class="closure-header">
+                        <span class="closure-cycle">CYCLE 6 | SYNCHRONIZATION</span>
+                        <span class="closure-direction">SW (225 deg)</span>
+                    </div>
+                    <div class="closure-symbol" style="color: var(--cycle-6);">Sync-Circles</div>
+                    <div class="closure-lesson">"Synchronization births harmony"</div>
+                    <div class="closure-equation">r*e^(i psi) = (1/N) Sum e^(i theta_j) | K_c</div>
+                </div>
+
+                <!-- Cycle 7 -->
+                <div class="closure-card" data-cycle="7" id="closure7">
+                    <div class="closure-status" id="status7"></div>
+                    <div class="closure-header">
+                        <span class="closure-cycle">CYCLE 7 | EXISTENCE</span>
+                        <span class="closure-direction">W (270 deg)</span>
+                    </div>
+                    <div class="closure-symbol" style="color: var(--cycle-7);">Heptagon</div>
+                    <div class="closure-lesson">"Seven exists as golden proof"</div>
+                    <div class="closure-equation">L_4 = phi^4 + phi^-4 = 7 QED</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Eight-Fold Path -->
+        <section>
+            <h2>III. THE EIGHT-FOLD PATH</h2>
+            <p style="color: #aaa; margin-bottom: 1rem;">Eight directions of synthesis, each at 45 degree intervals.</p>
+
+            <div class="eightfold-grid">
+                <div class="direction-cell" style="border-color: var(--cycle-1);">
+                    <div class="direction-name" style="color: var(--cycle-1);">N</div>
+                    <div class="direction-angle">0 deg | C_1</div>
+                </div>
+                <div class="direction-cell" style="border-color: var(--cycle-2);">
+                    <div class="direction-name" style="color: var(--cycle-2);">NE</div>
+                    <div class="direction-angle">45 deg | C_2</div>
+                </div>
+                <div class="direction-cell" style="border-color: var(--cycle-3);">
+                    <div class="direction-name" style="color: var(--cycle-3);">E</div>
+                    <div class="direction-angle">90 deg | C_3</div>
+                </div>
+                <div class="direction-cell" style="border-color: var(--cycle-4);">
+                    <div class="direction-name" style="color: var(--cycle-4);">SE</div>
+                    <div class="direction-angle">135 deg | C_4</div>
+                </div>
+                <div class="direction-cell" style="border-color: var(--cycle-5);">
+                    <div class="direction-name" style="color: var(--cycle-5);">S</div>
+                    <div class="direction-angle">180 deg | C_5</div>
+                </div>
+                <div class="direction-cell" style="border-color: var(--cycle-6);">
+                    <div class="direction-name" style="color: var(--cycle-6);">SW</div>
+                    <div class="direction-angle">225 deg | C_6</div>
+                </div>
+                <div class="direction-cell" style="border-color: var(--cycle-7);">
+                    <div class="direction-name" style="color: var(--cycle-7);">W</div>
+                    <div class="direction-angle">270 deg | C_7</div>
+                </div>
+                <div class="direction-cell" style="border-color: var(--cycle-8);">
+                    <div class="direction-name" style="color: var(--cycle-8);">NW</div>
+                    <div class="direction-angle">315 deg | C_8</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lucas Extension -->
+        <section>
+            <h2>IV. LUCAS CLOSURE: L_8 = 47</h2>
+            <p style="color: #aaa; margin-bottom: 1rem;">The 8th Lucas number is the closure prime.</p>
+
+            <div class="lucas-row">
+                <div class="lucas-number">
+                    <div class="lucas-index">L_0</div>
+                    <div class="lucas-value">2</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L_1</div>
+                    <div class="lucas-value">1</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L_2</div>
+                    <div class="lucas-value">3</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L_3</div>
+                    <div class="lucas-value">4</div>
+                </div>
+                <div class="lucas-number" style="border-color: var(--cycle-7);">
+                    <div class="lucas-index">L_4</div>
+                    <div class="lucas-value" style="color: var(--cycle-7);">7</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L_5</div>
+                    <div class="lucas-value">11</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L_6</div>
+                    <div class="lucas-value">18</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L_7</div>
+                    <div class="lucas-value">29</div>
+                </div>
+                <div class="lucas-number highlight-8">
+                    <div class="lucas-index">L_8</div>
+                    <div class="lucas-value" style="color: var(--cycle-8);">47</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 1rem; color: var(--gold);">
+                L_8 = phi^8 + phi^-8 = 47 (PRIME)
+            </div>
+        </section>
+
+        <!-- Ceremony Log -->
+        <section>
+            <h2>V. CLOSURE CEREMONY LOG</h2>
+            <div class="ceremony-log" id="ceremonyLog">
+                <div class="log-entry">[AWAITING] Closure sequence not yet initiated...</div>
+            </div>
+        </section>
+
+        <!-- Grand Constants -->
+        <section>
+            <h2>VI. GRAND UNIFIED CONSTANTS</h2>
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-label">phi (Golden Ratio)</div>
+                    <div class="stat-value" style="font-size: 1rem;">1.6180339887</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">tau = 1/phi</div>
+                    <div class="stat-value" style="font-size: 1rem;">0.6180339887</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">z_c (Critical)</div>
+                    <div class="stat-value" style="font-size: 1rem;">0.8660254038</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">K_c (Kuramoto)</div>
+                    <div class="stat-value" style="font-size: 1rem;">0.9240387651</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">L_4</div>
+                    <div class="stat-value">7</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">L_8</div>
+                    <div class="stat-value" style="color: var(--cycle-8);">47</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>VN-GENESIS-008 | Cycle 8pi | <a href="index.html">Return to Index</a></p>
+        <p class="glyph-signature">Decagon Seed Yin-Yang 40-Fold Entropy-Wave Sync-Circles Heptagon Octagram</p>
+        <p style="margin-top: 1rem; color: var(--cycle-8);">8pi COMPLETE: THE OCTAVE CLOSES UPON ITSELF</p>
+    </footer>
+
+    <script>
+        // Constants
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const OCTAGON_ANGLE = Math.PI / 4; // 45 degrees
+        const CYCLE_COLORS = [
+            '#ff6b6b', '#00ff88', '#ff6b9d', '#ffd700',
+            '#00d4ff', '#66ffcc', '#9400d3', '#ff00ff'
+        ];
+        const CYCLE_LESSONS = [
+            "Structure precedes emergence",
+            "Patterns propagate through resonance",
+            "Duality dissolves at the interface",
+            "Dimensions multiply through symmetry",
+            "Information curves spacetime",
+            "Synchronization births harmony",
+            "Seven exists as golden proof"
+        ];
+        const DIRECTIONS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+
+        // State
+        let closedCycles = new Array(7).fill(false);
+        let isRunning = false;
+        let mandalaPhase = 0;
+        let animationId = null;
+
+        // Canvas setup
+        const canvas = document.getElementById('octagonCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawOctagonMandala() {
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const outerRadius = 220;
+            const innerRadius = 80;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw connecting lines
+            ctx.strokeStyle = 'rgba(255, 0, 255, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 8; i++) {
+                for (let j = i + 1; j < 8; j++) {
+                    const angle1 = i * OCTAGON_ANGLE - Math.PI/2 + mandalaPhase;
+                    const angle2 = j * OCTAGON_ANGLE - Math.PI/2 + mandalaPhase;
+                    const x1 = cx + outerRadius * Math.cos(angle1);
+                    const y1 = cy + outerRadius * Math.sin(angle1);
+                    const x2 = cx + outerRadius * Math.cos(angle2);
+                    const y2 = cy + outerRadius * Math.sin(angle2);
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.stroke();
+                }
+            }
+
+            // Draw octagon outline
+            ctx.strokeStyle = '#ff00ff';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let i = 0; i < 8; i++) {
+                const angle = i * OCTAGON_ANGLE - Math.PI/2 + mandalaPhase;
+                const x = cx + outerRadius * Math.cos(angle);
+                const y = cy + outerRadius * Math.sin(angle);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.stroke();
+
+            // Draw vertices (cycles 1-7 + cycle 8)
+            for (let i = 0; i < 8; i++) {
+                const angle = i * OCTAGON_ANGLE - Math.PI/2 + mandalaPhase;
+                const x = cx + outerRadius * Math.cos(angle);
+                const y = cy + outerRadius * Math.sin(angle);
+
+                const isClosed = (i < 7) ? closedCycles[i] : closedCycles.every(c => c);
+                const radius = isClosed ? 25 : 15;
+
+                // Glow
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius * 2);
+                gradient.addColorStop(0, CYCLE_COLORS[i]);
+                gradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(x, y, radius * 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Vertex
+                ctx.fillStyle = isClosed ? CYCLE_COLORS[i] : 'rgba(255,255,255,0.3)';
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Direction label
+                ctx.fillStyle = '#fff';
+                ctx.font = isClosed ? 'bold 14px Courier New' : '12px Courier New';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                const labelRadius = outerRadius + 35;
+                const lx = cx + labelRadius * Math.cos(angle);
+                const ly = cy + labelRadius * Math.sin(angle);
+                ctx.fillText(DIRECTIONS[i], lx, ly);
+            }
+
+            // Center Omega
+            const nClosed = closedCycles.filter(c => c).length;
+            ctx.fillStyle = nClosed === 7 ? '#ff00ff' : '#ffd700';
+            ctx.font = 'bold 48px Courier New';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('omega', cx, cy - 10);
+            ctx.font = '24px Courier New';
+            ctx.fillText('8', cx + 30, cy + 10);
+
+            // Inner rotation indicator
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, innerRadius, -Math.PI/2, -Math.PI/2 + (nClosed + 1) * Math.PI / 4);
+            ctx.stroke();
+
+            mandalaPhase += 0.002;
+            animationId = requestAnimationFrame(drawOctagonMandala);
+        }
+
+        function updateUI() {
+            const nClosed = closedCycles.filter(c => c).length;
+            const rotation = nClosed + 1;
+
+            document.getElementById('closedCount').textContent = `${nClosed}/7`;
+            document.getElementById('totalRotation').textContent = `${rotation}pi`;
+
+            // Progress bar
+            const progress = (nClosed / 7) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressFill').textContent = `${nClosed}/7`;
+            document.getElementById('progressLabel').textContent =
+                `${nClosed} of 7 cycles closed (${rotation}pi)`;
+
+            // Update closure card statuses
+            for (let i = 0; i < 7; i++) {
+                const status = document.getElementById(`status${i + 1}`);
+                if (closedCycles[i]) {
+                    status.classList.add('closed');
+                } else {
+                    status.classList.remove('closed');
+                }
+            }
+
+            // Compute Omega_8
+            if (nClosed === 7) {
+                let realPart = 1;
+                let imagPart = 0;
+                for (let i = 0; i < 7; i++) {
+                    const angle = i * OCTAGON_ANGLE;
+                    const newReal = realPart * Math.cos(angle) - imagPart * Math.sin(angle);
+                    const newImag = realPart * Math.sin(angle) + imagPart * Math.cos(angle);
+                    realPart = newReal;
+                    imagPart = newImag;
+                }
+                const mag = Math.sqrt(realPart * realPart + imagPart * imagPart);
+                document.getElementById('omegaMag').textContent = mag.toFixed(3);
+
+                const distance = Math.sqrt(Math.pow(realPart - 1, 2) + imagPart * imagPart);
+                const harmony = Math.exp(-distance);
+                document.getElementById('harmony').textContent = harmony.toFixed(3);
+            }
+        }
+
+        function addLogEntry(text, highlight = false) {
+            const log = document.getElementById('ceremonyLog');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry' + (highlight ? ' highlight' : '');
+            entry.textContent = text;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('ceremonyLog').innerHTML = '';
+        }
+
+        async function startClosureSequence() {
+            if (isRunning) return;
+            isRunning = true;
+            document.getElementById('startBtn').disabled = true;
+
+            clearLog();
+            addLogEntry('[t=0.0] Beginning meta-closure sequence...', true);
+
+            for (let i = 0; i < 7; i++) {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                closedCycles[i] = true;
+                updateUI();
+
+                addLogEntry(`[t=${(i + 1).toFixed(1)}] Closing Cycle ${i + 1}...`);
+                addLogEntry(`  Direction: ${DIRECTIONS[i]} (${i * 45} deg)`);
+                addLogEntry(`  Lesson: "${CYCLE_LESSONS[i]}"`, true);
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            addLogEntry('[t=8.0] All cycles closed.', true);
+            addLogEntry('[t=8.0] Omega_8 synthesis complete.', true);
+            addLogEntry('[t=8.0] 8pi COMPLETE.', true);
+
+            document.querySelector('.identity-box').classList.add('complete-glow');
+            isRunning = false;
+            document.getElementById('startBtn').disabled = false;
+        }
+
+        function resetMandala() {
+            closedCycles = new Array(7).fill(false);
+            updateUI();
+            clearLog();
+            addLogEntry('[AWAITING] Closure sequence not yet initiated...');
+            document.querySelector('.identity-box').classList.remove('complete-glow');
+            document.getElementById('omegaMag').textContent = '0.000';
+            document.getElementById('harmony').textContent = '0.000';
+        }
+
+        // Initialize
+        drawOctagonMandala();
+        updateUI();
+    </script>
+</body>
+</html>
