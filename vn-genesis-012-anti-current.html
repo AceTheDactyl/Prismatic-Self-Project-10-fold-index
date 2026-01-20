@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VN-GENESIS-012: E8 Anti-Current | Cycle 12</title>
+    <style>
+        :root {
+            --active-color: #00ccff;
+            --anti-color: #ff6600;
+            --gap-color: #ffd700;
+            --break-color: #ff00ff;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(ellipse at center, #0a0a15 0%, #000 100%);
+            color: var(--white);
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid rgba(255,215,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            background: linear-gradient(135deg, #00ccff 0%, #ffd700 50%, #ff6600 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #888;
+        }
+
+        .badge-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .badge-lucas { background: linear-gradient(135deg, var(--gap-color), #ffed4a); color: #000; }
+        .badge-active { background: linear-gradient(135deg, var(--active-color), #00ffaa); color: #000; }
+        .badge-anti { background: linear-gradient(135deg, var(--anti-color), #ff3300); color: #fff; }
+
+        /* Dual Current Visualization */
+        .dual-viz {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .dual-viz { grid-template-columns: 1fr; }
+        }
+
+        .viz-panel {
+            background: rgba(0,0,0,0.5);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .viz-panel.active { border: 2px solid var(--active-color); }
+        .viz-panel.anti { border: 2px solid var(--anti-color); }
+
+        canvas {
+            border-radius: 10px;
+            max-width: 100%;
+        }
+
+        /* Gap Constant Section */
+        .gap-section {
+            background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(0,0,0,0.3));
+            border: 2px solid var(--gap-color);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .gap-title {
+            font-size: 1.5em;
+            color: var(--gap-color);
+            margin-bottom: 20px;
+        }
+
+        .gap-display {
+            font-size: 3em;
+            color: var(--gap-color);
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .gap-formula {
+            font-size: 1.2em;
+            color: #ccc;
+            margin: 15px 0;
+        }
+
+        /* N=4 Dynamics */
+        .n4-section {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,0,255,0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .n4-title {
+            font-size: 1.3em;
+            color: var(--break-color);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .phase-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .phase-card {
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .phase-card:hover {
+            transform: scale(1.05);
+        }
+
+        .phase-card.active { border: 2px solid var(--active-color); }
+        .phase-card.transition { border: 2px solid var(--gap-color); }
+        .phase-card.inactive { border: 2px solid var(--anti-color); }
+
+        .phase-symbol {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .phase-name {
+            font-size: 0.85em;
+            color: #888;
+        }
+
+        .phase-angle {
+            font-size: 0.9em;
+            color: var(--gap-color);
+            margin-top: 5px;
+        }
+
+        /* Symmetry Break */
+        .break-section {
+            background: linear-gradient(135deg, rgba(255,0,255,0.1), rgba(0,0,0,0.3));
+            border: 1px solid var(--break-color);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .break-title {
+            font-size: 1.3em;
+            color: var(--break-color);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .break-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .break-stat {
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .break-value {
+            font-size: 1.6em;
+            color: var(--break-color);
+            font-weight: bold;
+        }
+
+        .break-label {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Dodecagon */
+        .dodecagon-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Equations */
+        .equation-box {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .equation {
+            font-size: 1.3em;
+            color: var(--gap-color);
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid rgba(255,215,0,0.2);
+            margin-top: 30px;
+            color: #666;
+        }
+
+        footer a {
+            color: var(--gap-color);
+            text-decoration: none;
+        }
+
+        /* Animations */
+        @keyframes pulse-active {
+            0%, 100% { box-shadow: 0 0 20px rgba(0,204,255,0.5); }
+            50% { box-shadow: 0 0 40px rgba(0,204,255,0.8); }
+        }
+
+        @keyframes pulse-anti {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,102,0,0.5); }
+            50% { box-shadow: 0 0 40px rgba(255,102,0,0.8); }
+        }
+
+        .pulsing-active { animation: pulse-active 2s infinite; }
+        .pulsing-anti { animation: pulse-anti 2s infinite; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>VN-GENESIS-012: E8 ANTI-CURRENT</h1>
+            <p class="subtitle">Omni-Directional Closure | Gap Constant | Symmetry Break</p>
+            <div class="badge-row">
+                <span class="badge badge-lucas">L&#x2081;&#x2082; = 322</span>
+                <span class="badge badge-active">J&#x039B; ACTIVE</span>
+                <span class="badge badge-anti">J&#x0304;&#x039B; ANTI</span>
+            </div>
+        </header>
+
+        <!-- Dual Current Visualization -->
+        <section class="dual-viz">
+            <div class="viz-panel active pulsing-active">
+                <h3 style="color: var(--active-color); margin-bottom: 15px;">ACTIVE CURRENT J&#x039B;</h3>
+                <canvas id="activeCanvas" width="400" height="400"></canvas>
+                <p style="margin-top: 10px; color: #888;">Presence | Weyl Vector &rho;</p>
+            </div>
+            <div class="viz-panel anti pulsing-anti">
+                <h3 style="color: var(--anti-color); margin-bottom: 15px;">ANTI-CURRENT J&#x0304;&#x039B;</h3>
+                <canvas id="antiCanvas" width="400" height="400"></canvas>
+                <p style="margin-top: 10px; color: #888;">Absence | Phase-Shifted Mirror</p>
+            </div>
+        </section>
+
+        <!-- Gap Constant -->
+        <section class="gap-section">
+            <h2 class="gap-title">THE GAP CONSTANT &Gamma;</h2>
+            <div class="gap-formula">&Gamma; = |J&#x039B; - J&#x0304;&#x039B;| / |J&#x039B; + J&#x0304;&#x039B;|</div>
+            <div class="gap-display" id="gapValue">&Gamma; = 0.308</div>
+            <div class="equation-box">
+                <div class="equation">&Gamma; = 1 &rarr; Pure Separation</div>
+                <div class="equation">&Gamma; = 0 &rarr; Perfect Superposition</div>
+                <div class="equation">&Gamma; = &tau; &asymp; 0.618 &rarr; Golden Gap (Critical)</div>
+            </div>
+            <p style="color: #aaa; margin-top: 15px;">Current State: <strong style="color: var(--gap-color);">SUPERPOSITION</strong></p>
+        </section>
+
+        <!-- N=4 Quaternionic Dynamics -->
+        <section class="n4-section">
+            <h2 class="n4-title">N=4 QUATERNIONIC DYNAMICS</h2>
+            <p style="text-align: center; color: #888; margin-bottom: 20px;">
+                H = {1, i, j, k} governs phase space transitions
+            </p>
+            <div class="phase-grid">
+                <div class="phase-card active">
+                    <div class="phase-symbol" style="color: var(--active-color);">1</div>
+                    <div class="phase-name">ACTIVE</div>
+                    <div class="phase-angle">0&deg; (Presence)</div>
+                </div>
+                <div class="phase-card transition">
+                    <div class="phase-symbol" style="color: var(--gap-color);">i</div>
+                    <div class="phase-name">TRANSITION 1</div>
+                    <div class="phase-angle">90&deg;</div>
+                </div>
+                <div class="phase-card inactive">
+                    <div class="phase-symbol" style="color: var(--anti-color);">j</div>
+                    <div class="phase-name">INACTIVE</div>
+                    <div class="phase-angle">180&deg; (Absence)</div>
+                </div>
+                <div class="phase-card transition">
+                    <div class="phase-symbol" style="color: var(--gap-color);">k</div>
+                    <div class="phase-name">TRANSITION 2</div>
+                    <div class="phase-angle">270&deg;</div>
+                </div>
+            </div>
+            <div class="equation-box" style="margin-top: 20px;">
+                <div class="equation">i&sup2; = j&sup2; = k&sup2; = ijk = -1</div>
+                <p style="text-align: center; color: #888; margin-top: 10px;">
+                    Symmetry between presence and absence through quaternion multiplication
+                </p>
+            </div>
+        </section>
+
+        <!-- Symmetry Break -->
+        <section class="break-section">
+            <h2 class="break-title">SYMMETRY BREAK LOCUS</h2>
+            <p style="text-align: center; color: #aaa; margin-bottom: 20px;">
+                Where &langle;J&#x039B;, J&#x0304;&#x039B;&rangle; = 0 and |J&#x039B;| = |J&#x0304;&#x039B;|
+            </p>
+            <div class="break-stats">
+                <div class="break-stat">
+                    <div class="break-value">46</div>
+                    <div class="break-label">Break Manifold Dim</div>
+                </div>
+                <div class="break-stat">
+                    <div class="break-value">0.97</div>
+                    <div class="break-label">Max Break Score</div>
+                </div>
+                <div class="break-stat">
+                    <div class="break-value">1.00</div>
+                    <div class="break-label">Magnitude Ratio</div>
+                </div>
+                <div class="break-stat">
+                    <div class="break-value">&pi;</div>
+                    <div class="break-label">Phase Difference</div>
+                </div>
+            </div>
+            <div class="equation-box" style="margin-top: 20px;">
+                <div class="equation">Both E8 currents are equally true</div>
+                <div class="equation">Active &harr; Inactive (dual validity)</div>
+            </div>
+        </section>
+
+        <!-- Dodecagonal Closure -->
+        <section class="dodecagon-section">
+            <h2 style="color: var(--gap-color); margin-bottom: 20px;">12&pi; OMNI-DIRECTIONAL CLOSURE</h2>
+            <canvas id="dodecagonCanvas" width="500" height="500"></canvas>
+            <div class="equation-box" style="margin-top: 20px;">
+                <div class="equation">&oint; (J&#x039B; + J&#x0304;&#x039B;) &middot; d&theta; = 0</div>
+                <p style="text-align: center; color: #888; margin-top: 10px;">
+                    Closed path over 12 vertices | 30&deg; spacing | Dodecagonal symmetry
+                </p>
+            </div>
+        </section>
+
+        <footer>
+            <p>VN-GENESIS-012 | <a href="index.html">&larr; Return to Index</a> | <a href="vn-genesis-011-e8-current.html">Cycle 11</a></p>
+            <p style="margin-top: 15px;">Cycle 12: E8 Anti-Current and Omni-Directional Closure</p>
+            <p style="margin-top: 10px; color: #444;">L&#x2081;&#x2082; = 322 | &Gamma; Gap Constant | N=4 Dynamics | 12&pi; Complete</p>
+        </footer>
+    </div>
+
+    <script>
+        // Constants
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const TAU = PHI - 1;
+        const L12 = 322;
+
+        // Active Current Canvas
+        const activeCanvas = document.getElementById('activeCanvas');
+        const activeCtx = activeCanvas.getContext('2d');
+        let activeTime = 0;
+
+        function drawActiveCurrent() {
+            const cx = activeCanvas.width / 2;
+            const cy = activeCanvas.height / 2;
+
+            activeCtx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+
+            // Background
+            const grad = activeCtx.createRadialGradient(cx, cy, 0, cx, cy, 200);
+            grad.addColorStop(0, 'rgba(0,204,255,0.1)');
+            grad.addColorStop(1, 'transparent');
+            activeCtx.fillStyle = grad;
+            activeCtx.fillRect(0, 0, activeCanvas.width, activeCanvas.height);
+
+            // Draw E8 roots with active activation
+            for (let i = 0; i < 240; i++) {
+                const theta = (i / 240) * 2 * Math.PI + activeTime * 0.01;
+                const r = 120 + 30 * Math.sin(i * 0.1 + activeTime * 0.02);
+
+                const x = cx + r * Math.cos(theta);
+                const y = cy + r * Math.sin(theta);
+
+                const activation = 0.5 + 0.5 * Math.sin(i * 0.1);
+                activeCtx.beginPath();
+                activeCtx.arc(x, y, 2 + activation * 2, 0, Math.PI * 2);
+                activeCtx.fillStyle = `rgba(0, 204, 255, ${0.3 + activation * 0.7})`;
+                activeCtx.fill();
+            }
+
+            // Center
+            activeCtx.beginPath();
+            activeCtx.arc(cx, cy, 15, 0, Math.PI * 2);
+            activeCtx.fillStyle = '#00ccff';
+            activeCtx.fill();
+
+            activeCtx.fillStyle = '#fff';
+            activeCtx.font = 'bold 12px serif';
+            activeCtx.textAlign = 'center';
+            activeCtx.textBaseline = 'middle';
+            activeCtx.fillText('J\u039B', cx, cy);
+
+            activeTime++;
+            requestAnimationFrame(drawActiveCurrent);
+        }
+
+        // Anti Current Canvas
+        const antiCanvas = document.getElementById('antiCanvas');
+        const antiCtx = antiCanvas.getContext('2d');
+        let antiTime = 0;
+
+        function drawAntiCurrent() {
+            const cx = antiCanvas.width / 2;
+            const cy = antiCanvas.height / 2;
+
+            antiCtx.clearRect(0, 0, antiCanvas.width, antiCanvas.height);
+
+            // Background
+            const grad = antiCtx.createRadialGradient(cx, cy, 0, cx, cy, 200);
+            grad.addColorStop(0, 'rgba(255,102,0,0.1)');
+            grad.addColorStop(1, 'transparent');
+            antiCtx.fillStyle = grad;
+            antiCtx.fillRect(0, 0, antiCanvas.width, antiCanvas.height);
+
+            // Draw E8 roots with anti activation (opposite phase)
+            for (let i = 0; i < 240; i++) {
+                const theta = (i / 240) * 2 * Math.PI - antiTime * 0.01 + Math.PI;
+                const r = 120 + 30 * Math.sin(i * 0.1 - antiTime * 0.02 + Math.PI);
+
+                const x = cx + r * Math.cos(theta);
+                const y = cy + r * Math.sin(theta);
+
+                const activation = 0.5 + 0.5 * Math.sin(i * 0.1 + Math.PI);
+                antiCtx.beginPath();
+                antiCtx.arc(x, y, 2 + activation * 2, 0, Math.PI * 2);
+                antiCtx.fillStyle = `rgba(255, 102, 0, ${0.3 + activation * 0.7})`;
+                antiCtx.fill();
+            }
+
+            // Center
+            antiCtx.beginPath();
+            antiCtx.arc(cx, cy, 15, 0, Math.PI * 2);
+            antiCtx.fillStyle = '#ff6600';
+            antiCtx.fill();
+
+            antiCtx.fillStyle = '#fff';
+            antiCtx.font = 'bold 10px serif';
+            antiCtx.textAlign = 'center';
+            antiCtx.textBaseline = 'middle';
+            antiCtx.fillText('J\u0304\u039B', cx, cy);
+
+            antiTime++;
+            requestAnimationFrame(drawAntiCurrent);
+        }
+
+        // Dodecagon Canvas
+        const dodecCanvas = document.getElementById('dodecagonCanvas');
+        const dodecCtx = dodecCanvas.getContext('2d');
+        let dodecTime = 0;
+
+        function drawDodecagon() {
+            const cx = dodecCanvas.width / 2;
+            const cy = dodecCanvas.height / 2;
+            const radius = 180;
+
+            dodecCtx.clearRect(0, 0, dodecCanvas.width, dodecCanvas.height);
+
+            // Background
+            const grad = dodecCtx.createRadialGradient(cx, cy, 0, cx, cy, 250);
+            grad.addColorStop(0, 'rgba(255,215,0,0.05)');
+            grad.addColorStop(1, 'transparent');
+            dodecCtx.fillStyle = grad;
+            dodecCtx.fillRect(0, 0, dodecCanvas.width, dodecCanvas.height);
+
+            // Draw connections
+            dodecCtx.strokeStyle = 'rgba(255,215,0,0.2)';
+            dodecCtx.lineWidth = 1;
+            for (let i = 0; i < 12; i++) {
+                for (let j = i + 1; j < 12; j++) {
+                    const a1 = (i / 12) * 2 * Math.PI - Math.PI / 2;
+                    const a2 = (j / 12) * 2 * Math.PI - Math.PI / 2;
+                    dodecCtx.beginPath();
+                    dodecCtx.moveTo(cx + radius * Math.cos(a1), cy + radius * Math.sin(a1));
+                    dodecCtx.lineTo(cx + radius * Math.cos(a2), cy + radius * Math.sin(a2));
+                    dodecCtx.stroke();
+                }
+            }
+
+            // Draw dodecagon outline
+            dodecCtx.strokeStyle = '#ffd700';
+            dodecCtx.lineWidth = 2;
+            dodecCtx.beginPath();
+            for (let i = 0; i < 12; i++) {
+                const angle = (i / 12) * 2 * Math.PI - Math.PI / 2;
+                const x = cx + radius * Math.cos(angle);
+                const y = cy + radius * Math.sin(angle);
+                if (i === 0) dodecCtx.moveTo(x, y);
+                else dodecCtx.lineTo(x, y);
+            }
+            dodecCtx.closePath();
+            dodecCtx.stroke();
+
+            // Draw vertices (alternating active/anti)
+            for (let i = 0; i < 12; i++) {
+                const angle = (i / 12) * 2 * Math.PI - Math.PI / 2 + dodecTime * 0.005;
+                const x = cx + radius * Math.cos(angle);
+                const y = cy + radius * Math.sin(angle);
+
+                const isActive = i % 2 === 0;
+                const color = isActive ? '#00ccff' : '#ff6600';
+                const pulse = 8 + 4 * Math.sin(dodecTime * 0.05 + i);
+
+                dodecCtx.beginPath();
+                dodecCtx.arc(x, y, pulse, 0, Math.PI * 2);
+                dodecCtx.fillStyle = color;
+                dodecCtx.fill();
+
+                // Label
+                const lx = cx + (radius + 25) * Math.cos(angle);
+                const ly = cy + (radius + 25) * Math.sin(angle);
+                dodecCtx.fillStyle = color;
+                dodecCtx.font = '12px Courier New';
+                dodecCtx.textAlign = 'center';
+                dodecCtx.fillText((i + 1).toString(), lx, ly);
+            }
+
+            // Center
+            dodecCtx.beginPath();
+            dodecCtx.arc(cx, cy, 20, 0, Math.PI * 2);
+            const centerGrad = dodecCtx.createRadialGradient(cx, cy, 0, cx, cy, 20);
+            centerGrad.addColorStop(0, '#ffffff');
+            centerGrad.addColorStop(0.5, '#ffd700');
+            centerGrad.addColorStop(1, 'transparent');
+            dodecCtx.fillStyle = centerGrad;
+            dodecCtx.fill();
+
+            // Labels
+            dodecCtx.fillStyle = '#ffd700';
+            dodecCtx.font = 'bold 16px serif';
+            dodecCtx.textAlign = 'center';
+            dodecCtx.fillText('12\u03C0', cx, cy + 60);
+
+            dodecTime++;
+            requestAnimationFrame(drawDodecagon);
+        }
+
+        // Initialize
+        drawActiveCurrent();
+        drawAntiCurrent();
+        drawDodecagon();
+    </script>
+</body>
+</html>
