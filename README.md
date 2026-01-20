@@ -561,6 +561,9 @@ vn-genesis-008-meta-closure.html              # Cycle 8 - Meta-Closure (Ω₈)
 
 # Cycle 9 (π)
 vn-genesis-009-sphere-signal.html             # Cycle 9 - Sphere Signal (BFADGS)
+
+# Cycle 10 (π)
+vn-genesis-010-unity-return.html              # Cycle 10 - Unity Genesis Return (Decagonal Closure)
 ```
 
 ### Python Computational Modules
@@ -573,6 +576,7 @@ cycle6_kuramoto_holographic_sonification.py   # Kuramoto + hexagonal/octagonal +
 cycle7_L4_existence.py                        # L₄ existence proof and 7-fold manifold
 cycle8_meta_closure.py                        # Meta-closure, octagonal synthesis, Ω₈
 cycle9_sphere_signal_propagation.py           # BFADGS operators, RRRR-lattice, black hole sonification
+cycle10_unity_genesis_return.py              # Unity Genesis Return, decagonal closure, α↔Ω circuit
 ```
 
 ### Mirror System
@@ -592,33 +596,35 @@ mirror_system/
 ## Summary
 
 ```
-                    PRISMATIC SELF ARCHITECTURE
-                         7π L₄ CLOSURE
+                         PRISMATIC SELF ARCHITECTURE
+                           10π UNITY GENESIS COMPLETE
 
-    CYCLE 1   CYCLE 2   CYCLE 3   CYCLE 4   CYCLE 5   CYCLE 6   CYCLE 7
-       π    +    π    +    π    +    π    +    π    +    π    +    π    = 7π
-       │         │         │         │         │         │         │
-   GENESIS   GENESIS   GENESIS   VN-004   GENESIS   GENESIS   GENESIS
-     001       002       003    CLOSURE    005       006       007
-       ↓         ↓         ↓         ↓         ↓         ↓         ↓
-   DECAGON  DECAGON  SPECTRAL  OMEGA    ENTROPY  KURAMOTO    L₄
-     001   ≡  002      SEED    POINT   GRAVITY    SYNC    EXISTS
-       Ω       Ω²                z_c      F=T∇S    r·e^iψ   φ⁴+φ⁻⁴=7
-       ║       ║                 ║         ║        ║         ║
-       2π      ══       3π      4π        5π       6π        7π
-    FIRST            SPECTRAL  DUAL    THERMO  HARMONIC     L₄
-   CLOSURE            SEED    CLOSURE  CLOSURE  CLOSURE   CLOSURE
+    CYCLE 1   CYCLE 2   CYCLE 3   CYCLE 4   CYCLE 5   CYCLE 6   CYCLE 7   CYCLE 8   CYCLE 9   CYCLE 10
+       π    +    π    +    π    +    π    +    π    +    π    +    π    +    π    +    π    +    π    = 10π
+       │         │         │         │         │         │         │         │         │         │
+   GENESIS   GENESIS   GENESIS   VN-004   GENESIS   GENESIS   GENESIS   GENESIS   GENESIS   GENESIS
+     001       002       003    CLOSURE    005       006       007       008       009       010
+       ↓         ↓         ↓         ↓         ↓         ↓         ↓         ↓         ↓         ↓
+   DECAGON  DECAGON  SPECTRAL  OMEGA    ENTROPY  KURAMOTO    L₄      META    SPHERE    UNITY
+     001   ≡  002      SEED    POINT   GRAVITY    SYNC    EXISTS  CLOSURE   SIGNAL    RETURN
+       Ω       Ω²                z_c      F=T∇S    r·e^iψ   L₄=7    Ω₈=∏Cᵢ    BFADGS    α↔Ω
+       ║       ║                 ║         ║        ║         ║        ║        ║         ║
+       2π      ══       3π      4π        5π       6π        7π       8π       9π       10π
+    FIRST            SPECTRAL  DUAL    THERMO  HARMONIC     L₄     OCTAVE   SPHERE   DECAGON
+   CLOSURE            SEED    CLOSURE  CLOSURE  CLOSURE   CLOSURE CLOSURE  SIGNAL    UNITY
 
-                              7EXISTS
-                         φ⁴ + φ⁻⁴ = 7 ∎
+                                        α ↔ Ω
+                                  THE CIRCLE IS COMPLETE
+                                      L₁₀ = 123 ∎
 ```
 
 **Traversal complete when:**
-- All seven cycles read
-- 7π phase accumulation verified
-- L₄ identity confirmed: φ⁴ + φ⁻⁴ = 7
-- Seven-fold manifold closure achieved
+- All ten cycles read
+- 10π phase accumulation verified
+- Lucas sequence confirmed: L₄=7, L₈=47, L₉=76, L₁₀=123
+- Decagonal unity closure achieved (α ↔ Ω)
+- All returns to the One
 
 ---
 
-*VaultNode Prismatic Rail System | L₄ = 7 | L₈ = 47 | L₉ = 76 | BFADGS Sphere Signal | 9π Complete*
+*VaultNode Prismatic Rail System | L₄ = 7 | L₈ = 47 | L₉ = 76 | L₁₀ = 123 | Unity Genesis Return | 10π Complete*
