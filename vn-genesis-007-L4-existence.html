@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VN-GENESIS-007: 7EXISTS - The L4 Existence Proof</title>
+    <style>
+        :root {
+            --gold: #FFD700;
+            --deep-purple: #1a0a2e;
+            --violet: #7B68EE;
+            --emerald: #50C878;
+            --ruby: #E0115F;
+            --sapphire: #0F52BA;
+            --amber: #FFBF00;
+            --seven-red: #FF0000;
+            --seven-orange: #FF7F00;
+            --seven-yellow: #FFFF00;
+            --seven-green: #00FF00;
+            --seven-blue: #0000FF;
+            --seven-indigo: #4B0082;
+            --seven-violet: #9400D3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--deep-purple) 0%, #0d0520 50%, #1a0a2e 100%);
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(180deg, rgba(123, 104, 238, 0.3), transparent);
+            border-bottom: 2px solid var(--gold);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--gold);
+            text-shadow: 0 0 30px var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--violet);
+            letter-spacing: 3px;
+        }
+
+        .identity-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(123, 104, 238, 0.1));
+            border: 3px solid var(--gold);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .identity-equation {
+            font-size: 2.5rem;
+            color: var(--gold);
+            text-shadow: 0 0 20px var(--gold);
+            margin: 1rem 0;
+        }
+
+        .identity-equation .seven {
+            font-size: 3.5rem;
+            color: #fff;
+            animation: pulse-seven 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-seven {
+            0%, 100% { text-shadow: 0 0 20px var(--gold), 0 0 40px var(--gold); }
+            50% { text-shadow: 0 0 40px #fff, 0 0 80px var(--gold), 0 0 120px var(--violet); }
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 1px solid rgba(123, 104, 238, 0.3);
+        }
+
+        h2 {
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--violet);
+        }
+
+        .proof-container {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 1.5rem;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .proof-step {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(123, 104, 238, 0.1);
+            border-left: 4px solid var(--violet);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .proof-step .label {
+            color: var(--gold);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .proof-step .equation {
+            color: #fff;
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+
+        .qed {
+            text-align: right;
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-top: 1rem;
+        }
+
+        /* Heptagon Canvas */
+        #heptagonCanvas {
+            display: block;
+            margin: 2rem auto;
+            background: radial-gradient(circle at center, rgba(123, 104, 238, 0.2), transparent);
+            border-radius: 50%;
+        }
+
+        .canvas-container {
+            text-align: center;
+            position: relative;
+        }
+
+        .canvas-label {
+            color: var(--violet);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Seven Layers */
+        .layers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .layer-card {
+            background: linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.3));
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .layer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .layer-card:nth-child(1) { border-color: var(--seven-red); }
+        .layer-card:nth-child(2) { border-color: var(--seven-orange); }
+        .layer-card:nth-child(3) { border-color: var(--seven-yellow); }
+        .layer-card:nth-child(4) { border-color: var(--seven-green); }
+        .layer-card:nth-child(5) { border-color: var(--seven-blue); }
+        .layer-card:nth-child(6) { border-color: var(--seven-indigo); }
+        .layer-card:nth-child(7) { border-color: var(--seven-violet); }
+
+        .layer-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .layer-card:nth-child(1) .layer-number { color: var(--seven-red); }
+        .layer-card:nth-child(2) .layer-number { color: var(--seven-orange); }
+        .layer-card:nth-child(3) .layer-number { color: var(--seven-yellow); }
+        .layer-card:nth-child(4) .layer-number { color: var(--seven-green); }
+        .layer-card:nth-child(5) .layer-number { color: var(--seven-blue); }
+        .layer-card:nth-child(6) .layer-number { color: var(--seven-indigo); }
+        .layer-card:nth-child(7) .layer-number { color: var(--seven-violet); }
+
+        .layer-name {
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .layer-desc {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+
+        /* Lucas Sequence */
+        .lucas-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .lucas-number {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            border: 2px solid var(--violet);
+            transition: all 0.3s;
+        }
+
+        .lucas-number.highlight {
+            border-color: var(--gold);
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .lucas-index {
+            color: var(--violet);
+            font-size: 0.8rem;
+        }
+
+        .lucas-value {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .lucas-number.highlight .lucas-value {
+            color: var(--gold);
+            font-size: 2rem;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--violet), var(--sapphire));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(123, 104, 238, 0.5);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(123, 104, 238, 0.5);
+        }
+
+        .stat-label {
+            color: var(--violet);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            color: var(--gold);
+            font-size: 1.3rem;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Bridge visualization */
+        #bridgeCanvas {
+            display: block;
+            margin: 2rem auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+
+        /* Kuramoto display */
+        .kuramoto-display {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .oscillator {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: conic-gradient(var(--gold) 0deg, transparent 30deg);
+            border: 2px solid var(--violet);
+            transition: transform 0.1s;
+        }
+
+        .oscillator:nth-child(1) { border-color: var(--seven-red); }
+        .oscillator:nth-child(2) { border-color: var(--seven-orange); }
+        .oscillator:nth-child(3) { border-color: var(--seven-yellow); }
+        .oscillator:nth-child(4) { border-color: var(--seven-green); }
+        .oscillator:nth-child(5) { border-color: var(--seven-blue); }
+        .oscillator:nth-child(6) { border-color: var(--seven-indigo); }
+        .oscillator:nth-child(7) { border-color: var(--seven-violet); }
+
+        /* Code display */
+        .code-block {
+            background: #0a0a0a;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            border: 1px solid rgba(123, 104, 238, 0.3);
+        }
+
+        .code-block code {
+            color: #00ff00;
+        }
+
+        .code-comment {
+            color: #666;
+        }
+
+        .code-keyword {
+            color: var(--violet);
+        }
+
+        .code-number {
+            color: var(--gold);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--violet);
+            margin-top: 3rem;
+            color: #666;
+        }
+
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .glyph-signature {
+            font-size: 2rem;
+            letter-spacing: 0.5rem;
+            margin-top: 1rem;
+            color: var(--violet);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>VN-GENESIS-007: 7EXISTS</h1>
+        <p class="subtitle">THE L4 EXISTENCE PROOF</p>
+        <div class="identity-box">
+            <div>Lucas Number Identity</div>
+            <div class="identity-equation">
+                L<sub>4</sub> = <span style="font-family: serif;">&#966;</span><sup>4</sup> +
+                <span style="font-family: serif;">&#966;</span><sup>-4</sup> =
+                <span class="seven">7</span>
+            </div>
+            <div style="color: var(--violet);">The Fourth Lucas Number Exists as Seven</div>
+        </div>
+    </header>
+
+    <main>
+        <!-- The Proof -->
+        <section>
+            <h2>I. THE EXISTENCE PROOF</h2>
+            <div class="proof-container">
+                <div class="proof-step">
+                    <div class="label">Step 1: Golden Ratio Identity</div>
+                    <div class="equation">&#966;&#178; = &#966; + 1</div>
+                    <div style="color: #888; font-size: 0.9rem; margin-top: 0.5rem;">From the defining equation &#966;&#178; - &#966; - 1 = 0</div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="label">Step 2: Fourth Power of &#966;</div>
+                    <div class="equation">&#966;&#8308; = (&#966;&#178;)&#178; = (&#966; + 1)&#178; = &#966;&#178; + 2&#966; + 1 = (&#966; + 1) + 2&#966; + 1 = 3&#966; + 2</div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="label">Step 3: Reciprocal Identity</div>
+                    <div class="equation">&#964;&#178; = 1 - &#964; where &#964; = &#966;&#8315;&#185;</div>
+                    <div style="color: #888; font-size: 0.9rem; margin-top: 0.5rem;">&#964; satisfies &#964;&#178; + &#964; - 1 = 0</div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="label">Step 4: Negative Fourth Power</div>
+                    <div class="equation">&#966;&#8315;&#8308; = &#964;&#8308; = (&#964;&#178;)&#178; = (1 - &#964;)&#178; = 1 - 2&#964; + &#964;&#178; = 1 - 2&#964; + (1 - &#964;) = 2 - 3&#964; = 5 - 3&#966;</div>
+                </div>
+
+                <div class="proof-step" style="background: rgba(255, 215, 0, 0.15); border-color: var(--gold);">
+                    <div class="label">Step 5: The Sum</div>
+                    <div class="equation">L&#8324; = &#966;&#8308; + &#966;&#8315;&#8308; = (3&#966; + 2) + (5 - 3&#966;) = 7</div>
+                </div>
+
+                <div class="qed">&#8718;</div>
+            </div>
+        </section>
+
+        <!-- Seven-Fold Manifold -->
+        <section>
+            <h2>II. THE SEVEN-FOLD EXISTENCE MANIFOLD</h2>
+            <div class="canvas-container">
+                <canvas id="heptagonCanvas" width="500" height="500"></canvas>
+                <p class="canvas-label">Interactive Heptagon - Click to rotate through existence layers</p>
+            </div>
+
+            <div class="layers-grid">
+                <div class="layer-card">
+                    <div class="layer-number">1</div>
+                    <div class="layer-name">PHYSICAL</div>
+                    <div class="layer-desc">Material Reality</div>
+                </div>
+                <div class="layer-card">
+                    <div class="layer-number">2</div>
+                    <div class="layer-name">ETHERIC</div>
+                    <div class="layer-desc">Life Force</div>
+                </div>
+                <div class="layer-card">
+                    <div class="layer-number">3</div>
+                    <div class="layer-name">ASTRAL</div>
+                    <div class="layer-desc">Emotional Body</div>
+                </div>
+                <div class="layer-card">
+                    <div class="layer-number">4</div>
+                    <div class="layer-name">MENTAL</div>
+                    <div class="layer-desc">Thought Forms</div>
+                </div>
+                <div class="layer-card">
+                    <div class="layer-number">5</div>
+                    <div class="layer-name">CAUSAL</div>
+                    <div class="layer-desc">Karmic Patterns</div>
+                </div>
+                <div class="layer-card">
+                    <div class="layer-number">6</div>
+                    <div class="layer-name">BUDDHIC</div>
+                    <div class="layer-desc">Intuitive Wisdom</div>
+                </div>
+                <div class="layer-card">
+                    <div class="layer-number">7</div>
+                    <div class="layer-name">ATMIC</div>
+                    <div class="layer-desc">Divine Will</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lucas Sequence -->
+        <section>
+            <h2>III. THE LUCAS SEQUENCE</h2>
+            <p style="margin-bottom: 1rem; color: #aaa;">L<sub>n</sub> = &#966;<sup>n</sup> + &#966;<sup>-n</sup> produces integers for all n</p>
+
+            <div class="lucas-container">
+                <div class="lucas-number">
+                    <div class="lucas-index">L<sub>0</sub></div>
+                    <div class="lucas-value">2</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L<sub>1</sub></div>
+                    <div class="lucas-value">1</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L<sub>2</sub></div>
+                    <div class="lucas-value">3</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L<sub>3</sub></div>
+                    <div class="lucas-value">4</div>
+                </div>
+                <div class="lucas-number highlight">
+                    <div class="lucas-index">L<sub>4</sub></div>
+                    <div class="lucas-value">7</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L<sub>5</sub></div>
+                    <div class="lucas-value">11</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L<sub>6</sub></div>
+                    <div class="lucas-value">18</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L<sub>7</sub></div>
+                    <div class="lucas-value">29</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L<sub>8</sub></div>
+                    <div class="lucas-value">47</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L<sub>9</sub></div>
+                    <div class="lucas-value">76</div>
+                </div>
+                <div class="lucas-number">
+                    <div class="lucas-index">L<sub>10</sub></div>
+                    <div class="lucas-value">123</div>
+                </div>
+            </div>
+
+            <p style="text-align: center; margin-top: 1rem; color: var(--violet);">Recurrence: L<sub>n</sub> = L<sub>n-1</sub> + L<sub>n-2</sub></p>
+        </section>
+
+        <!-- Duopyramid Bridge -->
+        <section>
+            <h2>IV. THE DUOPYRAMID BRIDGE</h2>
+            <p style="margin-bottom: 1rem; color: #aaa;">10 - 3 = 7: The bridge between decagonal duopyramid and triangular faces</p>
+
+            <canvas id="bridgeCanvas" width="700" height="300"></canvas>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-label">Duopyramid Vertices</div>
+                    <div class="stat-value">10</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Triangle Vertices</div>
+                    <div class="stat-value">3</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">L4 Bridge</div>
+                    <div class="stat-value">7</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Holographic Dimensions</div>
+                    <div class="stat-value">40</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kuramoto L4 Sync -->
+        <section>
+            <h2>V. KURAMOTO L4 SYNCHRONIZATION</h2>
+            <p style="margin-bottom: 1rem; color: #aaa;">7 oscillators synchronized through Lucas-weighted frequencies</p>
+
+            <div class="controls">
+                <button onclick="startKuramoto()">Start Sync</button>
+                <button onclick="stopKuramoto()">Stop</button>
+                <button onclick="resetKuramoto()">Reset</button>
+            </div>
+
+            <div class="kuramoto-display" id="kuramotoDisplay">
+                <div class="oscillator" id="osc0"></div>
+                <div class="oscillator" id="osc1"></div>
+                <div class="oscillator" id="osc2"></div>
+                <div class="oscillator" id="osc3"></div>
+                <div class="oscillator" id="osc4"></div>
+                <div class="oscillator" id="osc5"></div>
+                <div class="oscillator" id="osc6"></div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-label">Order Parameter r</div>
+                    <div class="stat-value" id="orderR">0.000</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Mean Phase &#936;</div>
+                    <div class="stat-value" id="orderPsi">0.000</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">L4 Coherence</div>
+                    <div class="stat-value" id="coherence">0.000</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Coupling K</div>
+                    <div class="stat-value">0.924</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Constants -->
+        <section>
+            <h2>VI. FUNDAMENTAL CONSTANTS</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-label">&#966; (Golden Ratio)</div>
+                    <div class="stat-value" style="font-size: 1rem;">1.6180339887</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">&#964; = 1/&#966;</div>
+                    <div class="stat-value" style="font-size: 1rem;">0.6180339887</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">&#966;&#8308;</div>
+                    <div class="stat-value" style="font-size: 1rem;">6.8541019662</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">&#966;&#8315;&#8308;</div>
+                    <div class="stat-value" style="font-size: 1rem;">0.1458980338</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Heptagon Angle</div>
+                    <div class="stat-value" style="font-size: 1rem;">51.4286&#176;</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">z<sub>c</sub> (Critical Height)</div>
+                    <div class="stat-value" style="font-size: 1rem;">0.8660254038</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Python Implementation -->
+        <section>
+            <h2>VII. IMPLEMENTATION</h2>
+            <div class="code-block">
+                <code>
+<span class="code-comment"># cycle7_L4_existence.py</span>
+<span class="code-keyword">from</span> dataclasses <span class="code-keyword">import</span> dataclass
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+
+PHI = (<span class="code-number">1</span> + np.sqrt(<span class="code-number">5</span>)) / <span class="code-number">2</span>  <span class="code-comment"># &#966; &#8776; 1.618</span>
+
+<span class="code-keyword">@dataclass</span>
+<span class="code-keyword">class</span> LucasIdentity:
+    n: int
+
+    <span class="code-keyword">@property</span>
+    <span class="code-keyword">def</span> value(self) -> float:
+        <span class="code-keyword">return</span> PHI ** self.n + PHI ** (-self.n)
+
+<span class="code-comment"># THE CORE IDENTITY</span>
+L4 = LucasIdentity(<span class="code-number">4</span>).value  <span class="code-comment"># = 7 EXACTLY</span>
+                </code>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>VN-GENESIS-007 | Cycle 7&#960; | <a href="index.html">Return to Index</a></p>
+        <p class="glyph-signature">&#10038; &#8635; &#966; &#8734; &#9671; &#8853; &#8779; &#8706; &#937; &#923;</p>
+        <p style="margin-top: 1rem;">7EXISTS: L&#8324; = &#966;&#8308; + &#966;&#8315;&#8308; = 7</p>
+    </footer>
+
+    <script>
+        // Constants
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const TAU = PHI - 1;
+        const HEPTAGON_ANGLE = (2 * Math.PI) / 7;
+        const K_KURAMOTO = 2 * TAU + Math.pow(PHI, -3);
+        const LUCAS = [2, 1, 3, 4, 7, 11, 18];
+        const SPECTRAL_COLORS = [
+            '#FF0000', '#FF7F00', '#FFFF00', '#00FF00',
+            '#0000FF', '#4B0082', '#9400D3'
+        ];
+
+        // ===========================================
+        // HEPTAGON VISUALIZATION
+        // ===========================================
+        const heptCanvas = document.getElementById('heptagonCanvas');
+        const heptCtx = heptCanvas.getContext('2d');
+        let heptPhase = 0;
+        let activeLayer = -1;
+
+        function drawHeptagon() {
+            const cx = heptCanvas.width / 2;
+            const cy = heptCanvas.height / 2;
+            const radius = 180;
+
+            heptCtx.clearRect(0, 0, heptCanvas.width, heptCanvas.height);
+
+            // Draw connecting lines (all diagonals)
+            heptCtx.strokeStyle = 'rgba(123, 104, 238, 0.2)';
+            heptCtx.lineWidth = 1;
+            for (let i = 0; i < 7; i++) {
+                for (let j = i + 1; j < 7; j++) {
+                    const angle1 = i * HEPTAGON_ANGLE + heptPhase - Math.PI/2;
+                    const angle2 = j * HEPTAGON_ANGLE + heptPhase - Math.PI/2;
+                    const x1 = cx + radius * Math.cos(angle1);
+                    const y1 = cy + radius * Math.sin(angle1);
+                    const x2 = cx + radius * Math.cos(angle2);
+                    const y2 = cy + radius * Math.sin(angle2);
+
+                    heptCtx.beginPath();
+                    heptCtx.moveTo(x1, y1);
+                    heptCtx.lineTo(x2, y2);
+                    heptCtx.stroke();
+                }
+            }
+
+            // Draw heptagon edges
+            heptCtx.strokeStyle = '#FFD700';
+            heptCtx.lineWidth = 3;
+            heptCtx.beginPath();
+            for (let i = 0; i < 7; i++) {
+                const angle = i * HEPTAGON_ANGLE + heptPhase - Math.PI/2;
+                const x = cx + radius * Math.cos(angle);
+                const y = cy + radius * Math.sin(angle);
+                if (i === 0) {
+                    heptCtx.moveTo(x, y);
+                } else {
+                    heptCtx.lineTo(x, y);
+                }
+            }
+            heptCtx.closePath();
+            heptCtx.stroke();
+
+            // Draw vertices
+            for (let i = 0; i < 7; i++) {
+                const angle = i * HEPTAGON_ANGLE + heptPhase - Math.PI/2;
+                const x = cx + radius * Math.cos(angle);
+                const y = cy + radius * Math.sin(angle);
+
+                const isActive = (i === activeLayer);
+                const vertexRadius = isActive ? 20 : 12;
+
+                // Glow
+                const gradient = heptCtx.createRadialGradient(x, y, 0, x, y, vertexRadius * 2);
+                gradient.addColorStop(0, SPECTRAL_COLORS[i]);
+                gradient.addColorStop(1, 'transparent');
+                heptCtx.fillStyle = gradient;
+                heptCtx.beginPath();
+                heptCtx.arc(x, y, vertexRadius * 2, 0, Math.PI * 2);
+                heptCtx.fill();
+
+                // Vertex
+                heptCtx.fillStyle = SPECTRAL_COLORS[i];
+                heptCtx.beginPath();
+                heptCtx.arc(x, y, vertexRadius, 0, Math.PI * 2);
+                heptCtx.fill();
+
+                // Label
+                heptCtx.fillStyle = '#fff';
+                heptCtx.font = isActive ? 'bold 16px Courier New' : '12px Courier New';
+                heptCtx.textAlign = 'center';
+                heptCtx.textBaseline = 'middle';
+                heptCtx.fillText(i + 1, x, y);
+            }
+
+            // Center "7"
+            heptCtx.fillStyle = '#FFD700';
+            heptCtx.font = 'bold 60px Courier New';
+            heptCtx.textAlign = 'center';
+            heptCtx.textBaseline = 'middle';
+            heptCtx.fillText('7', cx, cy);
+
+            heptPhase += 0.005;
+            requestAnimationFrame(drawHeptagon);
+        }
+
+        heptCanvas.addEventListener('click', () => {
+            activeLayer = (activeLayer + 1) % 8;
+            if (activeLayer === 7) activeLayer = -1;
+        });
+
+        // ===========================================
+        // BRIDGE VISUALIZATION
+        // ===========================================
+        const bridgeCanvas = document.getElementById('bridgeCanvas');
+        const bridgeCtx = bridgeCanvas.getContext('2d');
+
+        function drawBridge() {
+            const width = bridgeCanvas.width;
+            const height = bridgeCanvas.height;
+
+            bridgeCtx.clearRect(0, 0, width, height);
+
+            // Duopyramid (10 vertices on left)
+            const duoX = 150;
+            const duoY = 150;
+            const duoRadius = 80;
+
+            bridgeCtx.strokeStyle = '#7B68EE';
+            bridgeCtx.lineWidth = 2;
+            bridgeCtx.beginPath();
+            for (let i = 0; i < 10; i++) {
+                const angle = (i * Math.PI * 2 / 10) - Math.PI/2;
+                const x = duoX + duoRadius * Math.cos(angle);
+                const y = duoY + duoRadius * Math.sin(angle);
+                if (i === 0) bridgeCtx.moveTo(x, y);
+                else bridgeCtx.lineTo(x, y);
+            }
+            bridgeCtx.closePath();
+            bridgeCtx.stroke();
+
+            // Vertices
+            for (let i = 0; i < 10; i++) {
+                const angle = (i * Math.PI * 2 / 10) - Math.PI/2;
+                const x = duoX + duoRadius * Math.cos(angle);
+                const y = duoY + duoRadius * Math.sin(angle);
+                bridgeCtx.fillStyle = '#7B68EE';
+                bridgeCtx.beginPath();
+                bridgeCtx.arc(x, y, 8, 0, Math.PI * 2);
+                bridgeCtx.fill();
+            }
+
+            bridgeCtx.fillStyle = '#7B68EE';
+            bridgeCtx.font = '24px Courier New';
+            bridgeCtx.textAlign = 'center';
+            bridgeCtx.fillText('10', duoX, duoY + 5);
+            bridgeCtx.font = '14px Courier New';
+            bridgeCtx.fillText('Duopyramid', duoX, duoY + 120);
+
+            // Minus sign
+            bridgeCtx.fillStyle = '#FFD700';
+            bridgeCtx.font = 'bold 40px Courier New';
+            bridgeCtx.fillText('-', 280, 155);
+
+            // Triangle (3 vertices)
+            const triX = 380;
+            const triY = 150;
+            const triRadius = 50;
+
+            bridgeCtx.strokeStyle = '#E0115F';
+            bridgeCtx.lineWidth = 2;
+            bridgeCtx.beginPath();
+            for (let i = 0; i < 3; i++) {
+                const angle = (i * Math.PI * 2 / 3) - Math.PI/2;
+                const x = triX + triRadius * Math.cos(angle);
+                const y = triY + triRadius * Math.sin(angle);
+                if (i === 0) bridgeCtx.moveTo(x, y);
+                else bridgeCtx.lineTo(x, y);
+            }
+            bridgeCtx.closePath();
+            bridgeCtx.stroke();
+
+            for (let i = 0; i < 3; i++) {
+                const angle = (i * Math.PI * 2 / 3) - Math.PI/2;
+                const x = triX + triRadius * Math.cos(angle);
+                const y = triY + triRadius * Math.sin(angle);
+                bridgeCtx.fillStyle = '#E0115F';
+                bridgeCtx.beginPath();
+                bridgeCtx.arc(x, y, 8, 0, Math.PI * 2);
+                bridgeCtx.fill();
+            }
+
+            bridgeCtx.fillStyle = '#E0115F';
+            bridgeCtx.font = '24px Courier New';
+            bridgeCtx.fillText('3', triX, triY + 5);
+            bridgeCtx.font = '14px Courier New';
+            bridgeCtx.fillText('Triangle', triX, triY + 100);
+
+            // Equals
+            bridgeCtx.fillStyle = '#FFD700';
+            bridgeCtx.font = 'bold 40px Courier New';
+            bridgeCtx.fillText('=', 470, 155);
+
+            // Heptagon (7 vertices)
+            const hepX = 580;
+            const hepY = 150;
+            const hepRadius = 70;
+
+            bridgeCtx.strokeStyle = '#FFD700';
+            bridgeCtx.lineWidth = 3;
+            bridgeCtx.beginPath();
+            for (let i = 0; i < 7; i++) {
+                const angle = (i * Math.PI * 2 / 7) - Math.PI/2;
+                const x = hepX + hepRadius * Math.cos(angle);
+                const y = hepY + hepRadius * Math.sin(angle);
+                if (i === 0) bridgeCtx.moveTo(x, y);
+                else bridgeCtx.lineTo(x, y);
+            }
+            bridgeCtx.closePath();
+            bridgeCtx.stroke();
+
+            for (let i = 0; i < 7; i++) {
+                const angle = (i * Math.PI * 2 / 7) - Math.PI/2;
+                const x = hepX + hepRadius * Math.cos(angle);
+                const y = hepY + hepRadius * Math.sin(angle);
+                bridgeCtx.fillStyle = SPECTRAL_COLORS[i];
+                bridgeCtx.beginPath();
+                bridgeCtx.arc(x, y, 8, 0, Math.PI * 2);
+                bridgeCtx.fill();
+            }
+
+            bridgeCtx.fillStyle = '#FFD700';
+            bridgeCtx.font = 'bold 32px Courier New';
+            bridgeCtx.fillText('7', hepX, hepY + 8);
+            bridgeCtx.font = '14px Courier New';
+            bridgeCtx.fillText('L\u2084 Existence', hepX, hepY + 110);
+        }
+
+        // ===========================================
+        // KURAMOTO SYNCHRONIZATION
+        // ===========================================
+        let kuramotoRunning = false;
+        let kuramotoInterval = null;
+        let phases = [];
+        let naturalFreqs = [];
+
+        function initKuramoto() {
+            phases = [];
+            naturalFreqs = [];
+            for (let i = 0; i < 7; i++) {
+                phases.push((i * HEPTAGON_ANGLE));
+                naturalFreqs.push(LUCAS[i] / 7);
+            }
+        }
+
+        function kuramotoStep(dt) {
+            const newPhases = [];
+            for (let i = 0; i < 7; i++) {
+                let couplingSum = 0;
+                for (let j = 0; j < 7; j++) {
+                    couplingSum += Math.sin(phases[j] - phases[i]);
+                }
+                const dtheta = naturalFreqs[i] + (K_KURAMOTO / 7) * couplingSum;
+                newPhases.push((phases[i] + dtheta * dt) % (2 * Math.PI));
+            }
+            phases = newPhases;
+        }
+
+        function computeOrderParameter() {
+            let realSum = 0;
+            let imagSum = 0;
+            for (let i = 0; i < 7; i++) {
+                realSum += Math.cos(phases[i]);
+                imagSum += Math.sin(phases[i]);
+            }
+            const r = Math.sqrt(realSum*realSum + imagSum*imagSum) / 7;
+            const psi = Math.atan2(imagSum, realSum);
+            return { r, psi };
+        }
+
+        function updateKuramotoDisplay() {
+            for (let i = 0; i < 7; i++) {
+                const osc = document.getElementById('osc' + i);
+                const deg = (phases[i] * 180 / Math.PI);
+                osc.style.background = `conic-gradient(${SPECTRAL_COLORS[i]} 0deg, ${SPECTRAL_COLORS[i]} 30deg, transparent 30deg)`;
+                osc.style.transform = `rotate(${deg}deg)`;
+            }
+
+            const { r, psi } = computeOrderParameter();
+            document.getElementById('orderR').textContent = r.toFixed(3);
+            document.getElementById('orderPsi').textContent = psi.toFixed(3);
+
+            // L4 coherence
+            const sortedPhases = [...phases].sort((a, b) => a - b);
+            let diffs = [];
+            for (let i = 0; i < 6; i++) {
+                diffs.push(sortedPhases[i+1] - sortedPhases[i]);
+            }
+            diffs.push(2*Math.PI - sortedPhases[6] + sortedPhases[0]);
+
+            const idealDiff = HEPTAGON_ANGLE;
+            let variance = 0;
+            for (const d of diffs) {
+                variance += Math.pow(d - idealDiff, 2);
+            }
+            variance /= 7;
+            const alignment = Math.max(0, 1 - Math.sqrt(variance) / idealDiff);
+            const coherence = r * alignment;
+
+            document.getElementById('coherence').textContent = coherence.toFixed(3);
+        }
+
+        function startKuramoto() {
+            if (kuramotoRunning) return;
+            kuramotoRunning = true;
+            kuramotoInterval = setInterval(() => {
+                kuramotoStep(0.05);
+                updateKuramotoDisplay();
+            }, 50);
+        }
+
+        function stopKuramoto() {
+            kuramotoRunning = false;
+            if (kuramotoInterval) {
+                clearInterval(kuramotoInterval);
+                kuramotoInterval = null;
+            }
+        }
+
+        function resetKuramoto() {
+            stopKuramoto();
+            initKuramoto();
+            updateKuramotoDisplay();
+        }
+
+        // Initialize
+        drawHeptagon();
+        drawBridge();
+        initKuramoto();
+        updateKuramotoDisplay();
+    </script>
+</body>
+</html>
