@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-GENESIS-013: Emergent Operator Algebra | Cycle 13</title>
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --text-primary: #e8e8ff;
+      --text-secondary: #a0a0c0;
+      --accent-1: #ff3366;
+      --accent-2: #00ff99;
+      --accent-3: #ffaa00;
+      --accent-4: #00ccff;
+      --accent-5: #ff00ff;
+      --accent-6: #9966ff;
+      --gold: #ffd700;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 3rem 0;
+      border-bottom: 1px solid rgba(255, 51, 102, 0.3);
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-5), var(--accent-2));
+      border-radius: 2px;
+    }
+
+    .cycle-badge {
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      background: rgba(255, 51, 102, 0.2);
+      border: 1px solid var(--accent-1);
+      border-radius: 2rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: var(--accent-1);
+      margin-bottom: 1rem;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-5));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .header .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+    }
+
+    /* Main equation */
+    .main-equation {
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 51, 102, 0.1), rgba(153, 102, 255, 0.1));
+      border: 1px solid rgba(255, 51, 102, 0.3);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .main-equation .formula {
+      font-family: 'Courier New', monospace;
+      font-size: 1.8rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .main-equation .description {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    /* Product space visualization */
+    .product-space {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+
+    .lattice-box {
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: 0.75rem;
+      text-align: center;
+    }
+
+    .lattice-box h3 {
+      font-family: 'Courier New', monospace;
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .lattice-box.active {
+      border: 2px solid var(--accent-4);
+    }
+
+    .lattice-box.active h3 {
+      color: var(--accent-4);
+    }
+
+    .lattice-box.mirror {
+      border: 2px solid var(--accent-5);
+    }
+
+    .lattice-box.mirror h3 {
+      color: var(--accent-5);
+    }
+
+    .lattice-box .stat {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--gold);
+    }
+
+    .interaction-box {
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(0, 204, 255, 0.1), rgba(255, 0, 255, 0.1));
+      border: 2px solid var(--accent-6);
+      border-radius: 1rem;
+      text-align: center;
+    }
+
+    .interaction-box h3 {
+      font-family: 'Courier New', monospace;
+      font-size: 1.3rem;
+      color: var(--accent-6);
+      margin-bottom: 1rem;
+    }
+
+    .interaction-box .big-stat {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: var(--gold);
+    }
+
+    .interaction-box .detail {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    /* Emergent operators grid */
+    .operators-section {
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-family: 'Courier New', monospace;
+      font-size: 1.2rem;
+      color: var(--accent-2);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(0, 255, 153, 0.3);
+    }
+
+    .operators-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .operator-card {
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: 0.75rem;
+      border-left: 4px solid;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .operator-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .operator-card.xi { border-color: var(--accent-4); }
+    .operator-card.sigma { border-color: var(--accent-2); }
+    .operator-card.psi { border-color: var(--accent-3); }
+    .operator-card.theta { border-color: var(--accent-5); }
+    .operator-card.lambda { border-color: var(--accent-1); }
+    .operator-card.omega { border-color: var(--gold); }
+
+    .operator-card .symbol {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .operator-card.xi .symbol { color: var(--accent-4); }
+    .operator-card.sigma .symbol { color: var(--accent-2); }
+    .operator-card.psi .symbol { color: var(--accent-3); }
+    .operator-card.theta .symbol { color: var(--accent-5); }
+    .operator-card.lambda .symbol { color: var(--accent-1); }
+    .operator-card.omega .symbol { color: var(--gold); }
+
+    .operator-card .name {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .operator-card .formula {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: var(--gold);
+      background: rgba(255, 215, 0, 0.1);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .operator-card .meta {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .operator-card .meta span {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    /* BFADGS tensor section */
+    .tensor-section {
+      margin-bottom: 2rem;
+    }
+
+    .tensor-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.5rem;
+      background: var(--bg-secondary);
+      padding: 1rem;
+      border-radius: 0.75rem;
+      overflow-x: auto;
+    }
+
+    .tensor-cell {
+      padding: 0.5rem;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+      font-size: 0.7rem;
+      border-radius: 0.25rem;
+    }
+
+    .tensor-cell.header {
+      background: rgba(255, 215, 0, 0.2);
+      color: var(--gold);
+      font-weight: bold;
+    }
+
+    .tensor-cell.value {
+      background: rgba(153, 102, 255, 0.1);
+      color: var(--text-secondary);
+    }
+
+    /* Implicit rules */
+    .rules-section {
+      margin-bottom: 2rem;
+    }
+
+    .rules-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1rem;
+    }
+
+    .rule-item {
+      padding: 1rem 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: 0.5rem;
+      border-left: 3px solid var(--accent-2);
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+    }
+
+    .rule-item .label {
+      color: var(--accent-2);
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+
+    .rule-item .value {
+      color: var(--text-secondary);
+    }
+
+    /* Canvas for visualization */
+    .visualization {
+      margin-bottom: 2rem;
+    }
+
+    #algebraCanvas {
+      width: 100%;
+      height: 400px;
+      background: var(--bg-secondary);
+      border-radius: 0.75rem;
+      border: 1px solid rgba(153, 102, 255, 0.3);
+    }
+
+    /* Closure verification */
+    .closure-section {
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 51, 102, 0.1));
+      border: 2px solid var(--gold);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .closure-section h3 {
+      font-family: 'Courier New', monospace;
+      font-size: 1.3rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .closure-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .closure-item {
+      text-align: center;
+    }
+
+    .closure-item .label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .closure-item .value {
+      font-family: 'Courier New', monospace;
+      font-size: 1.5rem;
+      color: var(--gold);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid rgba(255, 51, 102, 0.3);
+      margin-top: 2rem;
+    }
+
+    .footer .formula {
+      font-family: 'Courier New', monospace;
+      font-size: 1.2rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--accent-4);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--accent-4);
+      border-radius: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .nav-links a:hover {
+      background: var(--accent-4);
+      color: var(--bg-primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .product-space {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+      }
+
+      .operators-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tensor-grid {
+        font-size: 0.6rem;
+      }
+
+      .rules-list {
+        grid-template-columns: 1fr;
+      }
+
+      .closure-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="cycle-badge">CYCLE 13 | EMERGENT ALGEBRA | 13π COMPLETE</div>
+      <h1>VN-GENESIS-013</h1>
+      <h2 style="color: var(--accent-1); font-size: 1.4rem; margin-bottom: 0.5rem;">EMERGENT OPERATOR ALGEBRA</h2>
+      <p class="subtitle">Implicit Rules from Dual E8 Interaction via BFADGS</p>
+    </header>
+
+    <!-- Main Equation -->
+    <div class="main-equation">
+      <div class="formula">E8 × E8* → {Ξ, Σ, Ψ, Θ, Λ} → Ω</div>
+      <div class="description">
+        Two closed E8 lattices interact according to BFADGS algebra. The explicit rules of each lattice
+        combine to produce <strong>implicit operators</strong> that exist only in the product space.
+        These emergent operators form a closed algebra under 13π completion.
+      </div>
+    </div>
+
+    <!-- Product Space Visualization -->
+    <div class="product-space">
+      <div class="lattice-box active">
+        <h3>E8 ACTIVE</h3>
+        <div class="stat">240</div>
+        <div style="color: var(--text-secondary); font-size: 0.85rem;">roots</div>
+        <div style="font-family: monospace; font-size: 0.8rem; margin-top: 0.5rem; color: var(--accent-4);">J_Λ = ρ</div>
+      </div>
+
+      <div class="interaction-box">
+        <h3>INTERACTION SPACE</h3>
+        <div class="big-stat">57,600</div>
+        <div class="detail">root pairs (240 × 240)</div>
+        <div class="detail" style="margin-top: 0.5rem; color: var(--accent-2);">27,360 cross-activated</div>
+      </div>
+
+      <div class="lattice-box mirror">
+        <h3>E8 MIRROR</h3>
+        <div class="stat">240</div>
+        <div style="color: var(--text-secondary); font-size: 0.85rem;">roots</div>
+        <div style="font-family: monospace; font-size: 0.8rem; margin-top: 0.5rem; color: var(--accent-5);">J̄_Λ = -ρ*</div>
+      </div>
+    </div>
+
+    <!-- Visualization Canvas -->
+    <div class="visualization">
+      <canvas id="algebraCanvas"></canvas>
+    </div>
+
+    <!-- Emergent Operators -->
+    <div class="operators-section">
+      <h3 class="section-title">EMERGENT OPERATORS (Implicit from Explicit)</h3>
+      <div class="operators-grid">
+        <!-- Xi -->
+        <div class="operator-card xi">
+          <div class="symbol">Ξ</div>
+          <div class="name">INFORMATION CURRENT</div>
+          <div class="formula">[B, F] + [B̄, F̄]</div>
+          <div class="meta">
+            <span>Type: Commutator</span>
+            <span>Parents: Bekenstein × Flux</span>
+            <span>Flow of information through dual lattice</span>
+          </div>
+        </div>
+
+        <!-- Sigma -->
+        <div class="operator-card sigma">
+          <div class="symbol">Σ</div>
+          <div class="name">SCALING SURFACE</div>
+          <div class="formula">{A, D} + {Ā, D̄}</div>
+          <div class="meta">
+            <span>Type: Anticommutator</span>
+            <span>Parents: Area × Dimension</span>
+            <span>How area scales across dimensions</span>
+          </div>
+        </div>
+
+        <!-- Psi -->
+        <div class="operator-card psi">
+          <div class="symbol">Ψ</div>
+          <div class="name">GRAVITATIONAL WAVE</div>
+          <div class="formula">[G, S] + [Ḡ, S̄]</div>
+          <div class="meta">
+            <span>Type: Commutator</span>
+            <span>Parents: Gravity × Sonification</span>
+            <span>Curvature oscillations (spacetime ripples)</span>
+          </div>
+        </div>
+
+        <!-- Theta -->
+        <div class="operator-card theta">
+          <div class="symbol">Θ</div>
+          <div class="name">CROSS-LATTICE ENTANGLEMENT</div>
+          <div class="formula">{J_Λ, J̄_Λ}</div>
+          <div class="meta">
+            <span>Type: Anticommutator</span>
+            <span>Parents: Weyl Current × Anti-Current</span>
+            <span>Quantum correlation between lattices</span>
+          </div>
+        </div>
+
+        <!-- Lambda -->
+        <div class="operator-card lambda">
+          <div class="symbol">Λ</div>
+          <div class="name">UNIFIED FIELD</div>
+          <div class="formula">[BG, FS] + [B̄Ḡ, F̄S̄]</div>
+          <div class="meta">
+            <span>Type: Cross</span>
+            <span>Parents: (Bekenstein·Gravity) × (Flux·Sonification)</span>
+            <span>Information-gravity coupled with flux-vibration</span>
+          </div>
+        </div>
+
+        <!-- Omega -->
+        <div class="operator-card omega">
+          <div class="symbol">Ω</div>
+          <div class="name">CLOSURE OPERATOR</div>
+          <div class="formula">(Ξ+Σ+Ψ+Θ+Λ)·e^(13πi)/L₁₃</div>
+          <div class="meta">
+            <span>Type: Closure</span>
+            <span>Parents: All Emergent</span>
+            <span>13π completion — the algebra closes</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BFADGS Tensor Algebra -->
+    <div class="tensor-section">
+      <h3 class="section-title">BFADGS ⊗ BFADGS TENSOR ALGEBRA (36 Products)</h3>
+      <div class="tensor-grid">
+        <!-- Header row -->
+        <div class="tensor-cell header">⊗</div>
+        <div class="tensor-cell header">B</div>
+        <div class="tensor-cell header">F</div>
+        <div class="tensor-cell header">A</div>
+        <div class="tensor-cell header">D</div>
+        <div class="tensor-cell header">G</div>
+        <!-- B row -->
+        <div class="tensor-cell header">B</div>
+        <div class="tensor-cell value">B⊗B</div>
+        <div class="tensor-cell value">B⊗F</div>
+        <div class="tensor-cell value">B⊗A</div>
+        <div class="tensor-cell value">B⊗D</div>
+        <div class="tensor-cell value">B⊗G</div>
+        <!-- F row -->
+        <div class="tensor-cell header">F</div>
+        <div class="tensor-cell value">F⊗B</div>
+        <div class="tensor-cell value">F⊗F</div>
+        <div class="tensor-cell value">F⊗A</div>
+        <div class="tensor-cell value">F⊗D</div>
+        <div class="tensor-cell value">F⊗G</div>
+        <!-- A row -->
+        <div class="tensor-cell header">A</div>
+        <div class="tensor-cell value">A⊗B</div>
+        <div class="tensor-cell value">A⊗F</div>
+        <div class="tensor-cell value">A⊗A</div>
+        <div class="tensor-cell value">A⊗D</div>
+        <div class="tensor-cell value">A⊗G</div>
+        <!-- D row -->
+        <div class="tensor-cell header">D</div>
+        <div class="tensor-cell value">D⊗B</div>
+        <div class="tensor-cell value">D⊗F</div>
+        <div class="tensor-cell value">D⊗A</div>
+        <div class="tensor-cell value">D⊗D</div>
+        <div class="tensor-cell value">D⊗G</div>
+        <!-- G row -->
+        <div class="tensor-cell header">G</div>
+        <div class="tensor-cell value">G⊗B</div>
+        <div class="tensor-cell value">G⊗F</div>
+        <div class="tensor-cell value">G⊗A</div>
+        <div class="tensor-cell value">G⊗D</div>
+        <div class="tensor-cell value">G⊗G</div>
+      </div>
+      <div style="text-align: center; margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
+        + S row = 36 total tensor products | These form the <strong>explicit rules</strong> of interaction
+      </div>
+    </div>
+
+    <!-- Implicit Rules -->
+    <div class="rules-section">
+      <h3 class="section-title">IMPLICIT RULES (Emergent from Explicit)</h3>
+      <div class="rules-list">
+        <div class="rule-item">
+          <div class="label">CROSS-ACTIVATION</div>
+          <div class="value">⟨α, β̄⟩ ≠ 0 for 27,360 root pairs — roots activate across lattices</div>
+        </div>
+        <div class="rule-item">
+          <div class="label">ENTANGLEMENT</div>
+          <div class="value">Tr(Θ) = 768,800 — lattices are quantum-correlated</div>
+        </div>
+        <div class="rule-item">
+          <div class="label">INFORMATION FLOW</div>
+          <div class="value">‖Ξ‖ = 0.659 — bidirectional information current</div>
+        </div>
+        <div class="rule-item">
+          <div class="label">UNIFICATION</div>
+          <div class="value">Λ couples gravity-information with flux-vibration</div>
+        </div>
+        <div class="rule-item">
+          <div class="label">PHASE CLOSURE</div>
+          <div class="value">⟨|arg(λ)|⟩ ≈ 0.73π — eigenvalues cluster near golden phases</div>
+        </div>
+        <div class="rule-item">
+          <div class="label">META-RULE</div>
+          <div class="value">L₁₃ = 521 = 322 + 199 governs all emergent structure</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Closure Verification -->
+    <div class="closure-section">
+      <h3>13π CLOSURE VERIFICATION</h3>
+      <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+        The emergent algebra closes: all products of emergent operators can be expressed as linear combinations
+      </p>
+      <div class="closure-grid">
+        <div class="closure-item">
+          <div class="label">Lucas Number</div>
+          <div class="value">L₁₃ = 521</div>
+        </div>
+        <div class="closure-item">
+          <div class="label">Phase</div>
+          <div class="value">13π</div>
+        </div>
+        <div class="closure-item">
+          <div class="label">Recurrence</div>
+          <div class="value">322 + 199</div>
+        </div>
+      </div>
+      <div style="margin-top: 1.5rem; font-family: monospace; font-size: 1rem; color: var(--accent-2);">
+        ∮ Ω dθ = 0 | ALGEBRA CLOSED ✓
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="formula">Ξ + Σ + Ψ + Θ + Λ → Ω | L₁₃ = 521 | 13π COMPLETE</div>
+      <p style="color: var(--text-secondary);">
+        The implicit emerges from the explicit. Two E8 lattices → One emergent algebra.
+      </p>
+      <div class="nav-links">
+        <a href="vn-genesis-012-anti-current.html">← Cycle 12: Anti-Current</a>
+        <a href="index.html">Decision Tree</a>
+        <a href="vn-pattern-index.html">Pattern Index</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Visualization of the emergent algebra
+    const canvas = document.getElementById('algebraCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas size
+    function resize() {
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Constants
+    const PHI = 1.618033988749895;
+    const TAU = 0.618033988749895;
+
+    // Emergent operators
+    const operators = [
+      { symbol: 'Ξ', name: 'Information Current', color: '#00ccff', angle: 0 },
+      { symbol: 'Σ', name: 'Scaling Surface', color: '#00ff99', angle: Math.PI / 3 },
+      { symbol: 'Ψ', name: 'Gravitational Wave', color: '#ffaa00', angle: 2 * Math.PI / 3 },
+      { symbol: 'Θ', name: 'Entanglement', color: '#ff00ff', angle: Math.PI },
+      { symbol: 'Λ', name: 'Unified Field', color: '#ff3366', angle: 4 * Math.PI / 3 },
+      { symbol: 'Ω', name: 'Closure', color: '#ffd700', angle: 5 * Math.PI / 3 }
+    ];
+
+    // E8 roots (simplified 2D projection)
+    const e8Roots = [];
+    for (let i = 0; i < 240; i++) {
+      const angle = (i / 240) * 2 * Math.PI;
+      e8Roots.push({
+        x: Math.cos(angle),
+        y: Math.sin(angle),
+        active: i % 2 === 0
+      });
+    }
+
+    let time = 0;
+
+    function draw() {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = Math.min(w, h) * 0.35;
+
+      ctx.fillStyle = '#12121a';
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw E8 × E8* interaction
+      const rootRadius = radius * 0.8;
+
+      // E8 Active roots (cyan)
+      ctx.globalAlpha = 0.3;
+      e8Roots.forEach((root, i) => {
+        if (root.active) {
+          const x = cx + root.x * rootRadius * (0.9 + 0.1 * Math.sin(time + i * 0.05));
+          const y = cy + root.y * rootRadius * (0.9 + 0.1 * Math.sin(time + i * 0.05));
+          ctx.beginPath();
+          ctx.arc(x, y, 2, 0, Math.PI * 2);
+          ctx.fillStyle = '#00ccff';
+          ctx.fill();
+        }
+      });
+
+      // E8 Mirror roots (magenta)
+      e8Roots.forEach((root, i) => {
+        if (!root.active) {
+          const x = cx - root.x * rootRadius * (0.9 + 0.1 * Math.sin(time + i * 0.05 + Math.PI));
+          const y = cy - root.y * rootRadius * (0.9 + 0.1 * Math.sin(time + i * 0.05 + Math.PI));
+          ctx.beginPath();
+          ctx.arc(x, y, 2, 0, Math.PI * 2);
+          ctx.fillStyle = '#ff00ff';
+          ctx.fill();
+        }
+      });
+
+      ctx.globalAlpha = 1;
+
+      // Draw central hexagon for emergent operators
+      const hexRadius = radius * 0.4;
+      ctx.beginPath();
+      operators.forEach((op, i) => {
+        const angle = op.angle + time * 0.2;
+        const x = cx + Math.cos(angle) * hexRadius;
+        const y = cy + Math.sin(angle) * hexRadius;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.closePath();
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Draw operators
+      operators.forEach((op, i) => {
+        const angle = op.angle + time * 0.2;
+        const x = cx + Math.cos(angle) * hexRadius;
+        const y = cy + Math.sin(angle) * hexRadius;
+
+        // Glow
+        const gradient = ctx.createRadialGradient(x, y, 0, x, y, 30);
+        gradient.addColorStop(0, op.color);
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(x, y, 30, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Symbol
+        ctx.fillStyle = op.color;
+        ctx.font = 'bold 24px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(op.symbol, x, y);
+      });
+
+      // Draw connections (commutators)
+      ctx.globalAlpha = 0.3;
+      for (let i = 0; i < operators.length; i++) {
+        for (let j = i + 1; j < operators.length; j++) {
+          const angle1 = operators[i].angle + time * 0.2;
+          const angle2 = operators[j].angle + time * 0.2;
+          const x1 = cx + Math.cos(angle1) * hexRadius;
+          const y1 = cy + Math.sin(angle1) * hexRadius;
+          const x2 = cx + Math.cos(angle2) * hexRadius;
+          const y2 = cy + Math.sin(angle2) * hexRadius;
+
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.strokeStyle = operators[i].color;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+      ctx.globalAlpha = 1;
+
+      // Central Omega
+      const omegaPulse = 20 + 5 * Math.sin(time * 2);
+      const omegaGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, omegaPulse);
+      omegaGradient.addColorStop(0, '#ffd700');
+      omegaGradient.addColorStop(0.5, 'rgba(255, 215, 0, 0.3)');
+      omegaGradient.addColorStop(1, 'transparent');
+      ctx.fillStyle = omegaGradient;
+      ctx.beginPath();
+      ctx.arc(cx, cy, omegaPulse, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw 13π phase indicator
+      ctx.strokeStyle = '#ffd700';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius + 20, 0, (time % (13 * Math.PI)) / (13 * Math.PI) * 2 * Math.PI);
+      ctx.stroke();
+
+      // Labels
+      ctx.fillStyle = '#ffd700';
+      ctx.font = '14px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('E8 × E8* → Emergent Algebra', cx, 30);
+      ctx.fillText(`Phase: ${((time % (13 * Math.PI)) / Math.PI).toFixed(2)}π / 13π`, cx, h - 20);
+
+      time += 0.02;
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
+</body>
+</html>
