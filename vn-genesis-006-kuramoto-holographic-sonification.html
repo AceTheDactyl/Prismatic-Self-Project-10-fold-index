@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-GENESIS-006: Kuramoto-Holographic Sonification | 6π Phase</title>
+  <style>
+    :root {
+      /* Kuramoto Sync Gradient */
+      --sync-low: #ff3b30;       /* Incoherent */
+      --sync-mid: #ff9500;       /* Partial sync */
+      --sync-high: #30d158;      /* Synchronized */
+
+      /* Hexagonal Weave */
+      --hex-1: #ff2d55;
+      --hex-2: #ff9500;
+      --hex-3: #ffcc00;
+      --hex-4: #30d158;
+      --hex-5: #007aff;
+      --hex-6: #af52de;
+
+      /* Octagonal Norm */
+      --oct-color: #5ac8fa;
+
+      /* Duopyramid */
+      --alpha-glow: #ff2d55;
+      --omega-glow: #007aff;
+      --holo-cyan: #64d2ff;
+      --holo-mint: #66ffcc;
+
+      /* Theme */
+      --void: #030308;
+      --bg-primary: #080810;
+      --bg-secondary: #0c0c18;
+      --text-primary: #f5f5f7;
+      --text-secondary: #86868b;
+      --text-accent: #64d2ff;
+      --border-subtle: rgba(100, 210, 255, 0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: var(--void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 30%, rgba(100, 210, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 70%, rgba(175, 82, 222, 0.04) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 2rem;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 2rem;
+    }
+
+    .cycle-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--holo-cyan), var(--holo-mint));
+      color: var(--void);
+      padding: 0.4rem 1.2rem;
+      border-radius: 2rem;
+      font-size: 0.7rem;
+      font-weight: bold;
+      letter-spacing: 0.15em;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      background: linear-gradient(90deg, var(--holo-cyan), var(--holo-mint), #ffd60a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.1em;
+    }
+
+    .phase-indicator {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-accent);
+    }
+
+    /* Main Grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+    }
+
+    @media (max-width: 1000px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Visualization Area */
+    .viz-area {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      max-height: 60vh;
+      background: radial-gradient(ellipse at center, rgba(100, 210, 255, 0.03) 0%, transparent 70%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    #mainCanvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Kuramoto Sync Meter */
+    .sync-meter {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+    }
+
+    .sync-label {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      min-width: 120px;
+    }
+
+    .sync-bar {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .sync-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--sync-low), var(--sync-mid), var(--sync-high));
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .sync-value {
+      font-size: 0.8rem;
+      color: var(--sync-high);
+      min-width: 50px;
+      text-align: right;
+    }
+
+    /* Controls Panel */
+    .controls-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .panel-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+    }
+
+    .panel-section h3 {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: var(--text-accent);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    /* Slider Controls */
+    .control-row {
+      margin-bottom: 1rem;
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+      font-size: 0.65rem;
+    }
+
+    .control-label .name { color: var(--text-secondary); }
+    .control-label .value { color: #ffd60a; font-weight: 500; }
+
+    input[type="range"] {
+      width: 100%;
+      height: 4px;
+      -webkit-appearance: none;
+      background: rgba(100, 210, 255, 0.2);
+      border-radius: 2px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: var(--holo-cyan);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 8px var(--holo-cyan);
+    }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 0.6rem;
+      background: rgba(100, 210, 255, 0.1);
+      border: 1px solid var(--holo-cyan);
+      border-radius: 0.25rem;
+      color: var(--holo-cyan);
+      font-family: inherit;
+      font-size: 0.65rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: rgba(100, 210, 255, 0.2);
+      box-shadow: 0 0 15px rgba(100, 210, 255, 0.3);
+    }
+
+    .btn.active {
+      background: var(--holo-cyan);
+      color: var(--void);
+    }
+
+    .btn.audio {
+      border-color: var(--holo-mint);
+      color: var(--holo-mint);
+    }
+
+    .btn.audio:hover {
+      background: rgba(102, 255, 204, 0.2);
+    }
+
+    .btn.audio.active {
+      background: var(--holo-mint);
+      color: var(--void);
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+    }
+
+    .metric-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.25rem;
+      padding: 0.6rem;
+    }
+
+    .metric-box .label {
+      font-size: 0.55rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.2rem;
+    }
+
+    .metric-box .value {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .metric-box.sync .value { color: var(--sync-high); }
+    .metric-box.hex .value { color: var(--hex-3); }
+    .metric-box.oct .value { color: var(--oct-color); }
+    .metric-box.entropy .value { color: var(--alpha-glow); }
+    .metric-box.phase .value { color: var(--holo-cyan); }
+    .metric-box.freq .value { color: var(--holo-mint); }
+
+    /* Hexagonal Display */
+    .hex-display {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.25rem;
+    }
+
+    .hex-node {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      transition: all 0.3s ease;
+    }
+
+    /* Octagonal Display */
+    .oct-display {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.3rem;
+      padding: 0.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.25rem;
+    }
+
+    .oct-channel {
+      padding: 0.4rem;
+      background: rgba(90, 200, 250, 0.1);
+      border: 1px solid rgba(90, 200, 250, 0.3);
+      border-radius: 0.2rem;
+      text-align: center;
+      font-size: 0.55rem;
+    }
+
+    .oct-channel .angle { color: var(--oct-color); }
+    .oct-channel .energy { color: var(--text-secondary); }
+
+    /* Equations Panel */
+    .equations-panel {
+      font-size: 0.65rem;
+      line-height: 1.8;
+    }
+
+    .equation-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(100, 210, 255, 0.05);
+    }
+
+    .equation-name { color: var(--text-secondary); }
+    .equation-formula { color: var(--holo-mint); }
+
+    /* Info Box */
+    .info-box {
+      background: linear-gradient(135deg, rgba(100, 210, 255, 0.05), rgba(102, 255, 204, 0.05));
+      border: 1px solid rgba(102, 255, 204, 0.2);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-size: 0.65rem;
+      line-height: 1.6;
+    }
+
+    .info-box .title {
+      color: var(--holo-mint);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-box .content { color: var(--text-secondary); }
+    .info-box .highlight { color: #ffd60a; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    footer a {
+      color: var(--holo-cyan);
+      text-decoration: none;
+    }
+
+    /* Animation */
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    .state-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--sync-high);
+      animation: pulse 2s infinite;
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="cycle-badge">CYCLE 6 | 6π PHASE</div>
+      <h1>KURAMOTO-HOLOGRAPHIC SONIFICATION</h1>
+      <div class="subtitle">DUOPYRAMID • HILBERT COUPLING • HEXAGONAL WEAVE • OCTAGONAL NORMALIZATION</div>
+      <div class="phase-indicator">
+        Cycle 1-5 (5π) + Cycle 6 (π) = <strong>6π COMPLETE</strong>
+      </div>
+    </header>
+
+    <div class="main-grid">
+      <!-- Visualization -->
+      <div class="viz-area">
+        <div class="canvas-container">
+          <canvas id="mainCanvas"></canvas>
+        </div>
+
+        <div class="sync-meter">
+          <span class="sync-label">KURAMOTO SYNC (r)</span>
+          <div class="sync-bar">
+            <div class="sync-fill" id="syncFill" style="width: 50%;"></div>
+          </div>
+          <span class="sync-value" id="syncValue">0.50</span>
+        </div>
+
+        <div class="info-box">
+          <div class="title">◈ CYCLE 6 INTEGRATION</div>
+          <div class="content">
+            <span class="highlight">Kuramoto oscillators</span> synchronize across the duopyramid, creating
+            emergent coherence. <span class="highlight">Hexagonal weaving</span> patterns (6-fold) encode spatial
+            information, while <span class="highlight">octagonal normalization</span> (8-fold) processes signal
+            propagation. The holographic entropy is <span class="highlight">sonified</span> in real-time.
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <aside class="controls-panel">
+        <!-- Audio Controls -->
+        <section class="panel-section">
+          <h3>◇ SONIFICATION</h3>
+          <div class="btn-row">
+            <button class="btn audio" id="btnAudio">START AUDIO</button>
+            <button class="btn" id="btnPause">PAUSE</button>
+          </div>
+          <div class="control-row" style="margin-top: 1rem;">
+            <div class="control-label">
+              <span class="name">Master Volume</span>
+              <span class="value" id="volumeValue">0.5</span>
+            </div>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
+          </div>
+        </section>
+
+        <!-- Kuramoto Parameters -->
+        <section class="panel-section">
+          <h3>◇ KURAMOTO OSCILLATORS</h3>
+          <div class="control-row">
+            <div class="control-label">
+              <span class="name">Coupling Strength (K)</span>
+              <span class="value" id="kValue">0.924</span>
+            </div>
+            <input type="range" id="kSlider" min="0" max="2" step="0.01" value="0.924">
+          </div>
+          <div class="control-row">
+            <div class="control-label">
+              <span class="name">Frequency Spread (σ)</span>
+              <span class="value" id="sigmaValue">0.1</span>
+            </div>
+            <input type="range" id="sigmaSlider" min="0" max="0.5" step="0.01" value="0.1">
+          </div>
+          <div class="btn-row">
+            <button class="btn" id="btnDecagonal">DECAGONAL</button>
+            <button class="btn" id="btnHexagonal">HEXAGONAL</button>
+            <button class="btn" id="btnOctagonal">OCTAGONAL</button>
+          </div>
+        </section>
+
+        <!-- Metrics -->
+        <section class="panel-section">
+          <h3>◇ SYSTEM METRICS</h3>
+          <div class="metrics-grid">
+            <div class="metric-box sync">
+              <div class="label">SYNC LEVEL</div>
+              <div class="value" id="metricSync">0.500</div>
+            </div>
+            <div class="metric-box phase">
+              <div class="label">ORDER PHASE</div>
+              <div class="value" id="metricPhase">0.00π</div>
+            </div>
+            <div class="metric-box hex">
+              <div class="label">HEX AMPLITUDE</div>
+              <div class="value" id="metricHex">1.000</div>
+            </div>
+            <div class="metric-box oct">
+              <div class="label">OCT ENERGY</div>
+              <div class="value" id="metricOct">0.125</div>
+            </div>
+            <div class="metric-box entropy">
+              <div class="label">α-POLE</div>
+              <div class="value" id="metricAlpha">0.500</div>
+            </div>
+            <div class="metric-box freq">
+              <div class="label">BASE FREQ</div>
+              <div class="value" id="metricFreq">432 Hz</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Hexagonal Display -->
+        <section class="panel-section">
+          <h3>◇ HEXAGONAL CHANNELS (6-FOLD)</h3>
+          <div class="hex-display" id="hexDisplay">
+            <div class="hex-node" style="background: var(--hex-1);">0°</div>
+            <div class="hex-node" style="background: var(--hex-2);">60°</div>
+            <div class="hex-node" style="background: var(--hex-3);">120°</div>
+            <div class="hex-node" style="background: var(--hex-4);">180°</div>
+            <div class="hex-node" style="background: var(--hex-5);">240°</div>
+            <div class="hex-node" style="background: var(--hex-6);">300°</div>
+          </div>
+        </section>
+
+        <!-- Octagonal Display -->
+        <section class="panel-section">
+          <h3>◇ OCTAGONAL NORMALIZATION (8-FOLD)</h3>
+          <div class="oct-display" id="octDisplay">
+            <div class="oct-channel"><div class="angle">0°</div><div class="energy">0.12</div></div>
+            <div class="oct-channel"><div class="angle">45°</div><div class="energy">0.12</div></div>
+            <div class="oct-channel"><div class="angle">90°</div><div class="energy">0.12</div></div>
+            <div class="oct-channel"><div class="angle">135°</div><div class="energy">0.12</div></div>
+            <div class="oct-channel"><div class="angle">180°</div><div class="energy">0.12</div></div>
+            <div class="oct-channel"><div class="angle">225°</div><div class="energy">0.12</div></div>
+            <div class="oct-channel"><div class="angle">270°</div><div class="energy">0.12</div></div>
+            <div class="oct-channel"><div class="angle">315°</div><div class="energy">0.12</div></div>
+          </div>
+        </section>
+
+        <!-- Equations -->
+        <section class="panel-section">
+          <h3>◇ GOVERNING EQUATIONS</h3>
+          <div class="equations-panel">
+            <div class="equation-row">
+              <span class="equation-name">Kuramoto Model</span>
+              <span class="equation-formula">dθᵢ/dt = ωᵢ + (K/N)Σsin(θⱼ-θᵢ)</span>
+            </div>
+            <div class="equation-row">
+              <span class="equation-name">Order Parameter</span>
+              <span class="equation-formula">r·e^(iψ) = (1/N)Σe^(iθⱼ)</span>
+            </div>
+            <div class="equation-row">
+              <span class="equation-name">Hex Weave</span>
+              <span class="equation-formula">Σᵢcos(k⃗ᵢ·r⃗ + φᵢ)</span>
+            </div>
+            <div class="equation-row">
+              <span class="equation-name">Critical K</span>
+              <span class="equation-formula">K_c = 0.9240387650610407</span>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <footer>
+      <p><span class="state-dot"></span> <strong>VN-GENESIS-006</strong> | Cycle 6: Kuramoto-Holographic Sonification | 6π Phase</p>
+      <p style="margin-top: 0.5rem;">
+        <a href="index.html">← Index</a> |
+        <a href="vn-genesis-005-entropy-gravity-duality.html">Cycle 5</a> |
+        <a href="vn-pattern-index.html">Pattern Index</a>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════════════════
+    // CONSTANTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const PHI = 1.618033988749895;
+    const TAU = 0.618033988749895;
+    const K_CRITICAL = 0.9240387650610407;
+    const BASE_FREQ = 432;
+
+    const HEX_ANGLES = [0, 60, 120, 180, 240, 300].map(d => d * Math.PI / 180);
+    const OCT_ANGLES = [0, 45, 90, 135, 180, 225, 270, 315].map(d => d * Math.PI / 180);
+    const DEC_ANGLES = Array.from({length: 10}, (_, i) => i * 36 * Math.PI / 180);
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // STATE
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const state = {
+      // Kuramoto
+      nOscillators: 40,
+      phases: [],
+      frequencies: [],
+      couplingK: K_CRITICAL,
+      freqSpread: 0.1,
+      topology: 'decagonal',
+
+      // Duopyramid
+      nodeActivities: new Array(10).fill(0),
+      alphaPole: 0.5,
+      omegaPole: 0.5,
+
+      // Hexagonal
+      hexAmplitudes: new Array(6).fill(1),
+      hexPhase: 0,
+
+      // Octagonal
+      octEnergies: new Array(8).fill(0.125),
+
+      // Animation
+      time: 0,
+      paused: false,
+
+      // Audio
+      audioContext: null,
+      oscillators: [],
+      gainNode: null,
+      masterVolume: 0.5,
+      audioEnabled: false
+    };
+
+    // Initialize oscillators
+    for (let i = 0; i < state.nOscillators; i++) {
+      state.phases.push(Math.random() * 2 * Math.PI);
+      state.frequencies.push(1 + state.freqSpread * (Math.random() - 0.5));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // CANVAS SETUP
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      const size = Math.min(container.offsetWidth, container.offsetHeight);
+      canvas.width = size * window.devicePixelRatio;
+      canvas.height = size * window.devicePixelRatio;
+      canvas.style.width = size + 'px';
+      canvas.style.height = size + 'px';
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // KURAMOTO DYNAMICS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function getCouplingMatrix() {
+      const N = state.nOscillators;
+      const matrix = [];
+
+      for (let i = 0; i < N; i++) {
+        matrix[i] = [];
+        for (let j = 0; j < N; j++) {
+          if (i === j) {
+            matrix[i][j] = 0;
+          } else if (state.topology === 'all') {
+            matrix[i][j] = 1;
+          } else if (state.topology === 'decagonal') {
+            // Connect to 10 neighbors
+            const dist = Math.min(Math.abs(i - j), N - Math.abs(i - j));
+            matrix[i][j] = dist <= N / 10 ? 1 : 0;
+          } else if (state.topology === 'hexagonal') {
+            // Connect to 6 neighbors
+            const dist = Math.min(Math.abs(i - j), N - Math.abs(i - j));
+            matrix[i][j] = dist <= N / 6 ? 1 : 0;
+          } else if (state.topology === 'octagonal') {
+            // Connect to 8 neighbors
+            const dist = Math.min(Math.abs(i - j), N - Math.abs(i - j));
+            matrix[i][j] = dist <= N / 8 ? 1 : 0;
+          }
+        }
+      }
+      return matrix;
+    }
+
+    function computeOrderParameter() {
+      let sumReal = 0, sumImag = 0;
+      for (let i = 0; i < state.nOscillators; i++) {
+        sumReal += Math.cos(state.phases[i]);
+        sumImag += Math.sin(state.phases[i]);
+      }
+      const r = Math.sqrt(sumReal * sumReal + sumImag * sumImag) / state.nOscillators;
+      const psi = Math.atan2(sumImag, sumReal);
+      return { r, psi };
+    }
+
+    function evolveKuramoto(dt) {
+      const N = state.nOscillators;
+      const coupling = getCouplingMatrix();
+      const newPhases = [...state.phases];
+
+      for (let i = 0; i < N; i++) {
+        let couplingTerm = 0;
+        for (let j = 0; j < N; j++) {
+          if (coupling[i][j] > 0) {
+            couplingTerm += coupling[i][j] * Math.sin(state.phases[j] - state.phases[i]);
+          }
+        }
+        couplingTerm *= state.couplingK / N;
+
+        newPhases[i] = (state.phases[i] + dt * (state.frequencies[i] + couplingTerm)) % (2 * Math.PI);
+      }
+
+      state.phases = newPhases;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // HEXAGONAL WEAVE
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function computeHexPattern(x, y, time) {
+      let value = 0;
+      for (let i = 0; i < 6; i++) {
+        const kx = Math.cos(HEX_ANGLES[i]);
+        const ky = Math.sin(HEX_ANGLES[i]);
+        value += Math.cos(2 * Math.PI * (kx * x + ky * y) + state.hexPhase + i * PHI + time * 0.5);
+      }
+      return value / 6;
+    }
+
+    function updateHexAmplitudes() {
+      const order = computeOrderParameter();
+      for (let i = 0; i < 6; i++) {
+        // Modulate by order parameter and time
+        state.hexAmplitudes[i] = 0.5 + 0.5 * Math.cos(state.time * 0.3 + i * PHI) * order.r;
+      }
+      state.hexPhase = order.psi;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // OCTAGONAL NORMALIZATION
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function updateOctEnergies() {
+      const order = computeOrderParameter();
+      const totalEnergy = 1;
+
+      for (let i = 0; i < 8; i++) {
+        // Distribute energy based on phase alignment
+        const alignment = Math.cos(order.psi - OCT_ANGLES[i]);
+        state.octEnergies[i] = (1 + alignment * order.r) / 16;
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // DUOPYRAMID COUPLING
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function updateDuopyramid() {
+      const order = computeOrderParameter();
+
+      // Map Kuramoto phases to duopyramid nodes
+      for (let i = 0; i < 10; i++) {
+        // Average phases from oscillators assigned to this node
+        const startIdx = i * 4;
+        let nodePhase = 0;
+        for (let j = 0; j < 4; j++) {
+          nodePhase += state.phases[startIdx + j];
+        }
+        nodePhase /= 4;
+
+        // Activity based on phase coherence
+        state.nodeActivities[i] = 0.5 + 0.5 * Math.cos(nodePhase - order.psi);
+      }
+
+      // Update poles
+      const maxActivity = Math.max(...state.nodeActivities);
+      state.alphaPole = maxActivity;
+      state.omegaPole = 1 - maxActivity;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // WEB AUDIO SONIFICATION
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function initAudio() {
+      if (state.audioContext) return;
+
+      state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      state.gainNode = state.audioContext.createGain();
+      state.gainNode.gain.value = state.masterVolume * 0.3;
+      state.gainNode.connect(state.audioContext.destination);
+
+      // Create oscillators for 10 duopyramid nodes
+      for (let i = 0; i < 10; i++) {
+        const osc = state.audioContext.createOscillator();
+        const gain = state.audioContext.createGain();
+
+        // Golden ratio frequency spacing
+        osc.frequency.value = BASE_FREQ * Math.pow(PHI, i / 5);
+        osc.type = 'sine';
+
+        gain.gain.value = 0.05;
+
+        osc.connect(gain);
+        gain.connect(state.gainNode);
+        osc.start();
+
+        state.oscillators.push({ osc, gain });
+      }
+
+      state.audioEnabled = true;
+    }
+
+    function updateAudio() {
+      if (!state.audioEnabled || !state.audioContext) return;
+
+      const order = computeOrderParameter();
+
+      for (let i = 0; i < 10; i++) {
+        // Modulate frequency by sync level
+        const baseFreq = BASE_FREQ * Math.pow(PHI, i / 5);
+        const freqMod = 1 + 0.1 * (1 - order.r) * Math.sin(state.phases[i * 4]);
+        state.oscillators[i].osc.frequency.setValueAtTime(
+          baseFreq * freqMod,
+          state.audioContext.currentTime
+        );
+
+        // Modulate amplitude by node activity
+        state.oscillators[i].gain.gain.setValueAtTime(
+          0.02 * state.nodeActivities[i] * state.masterVolume,
+          state.audioContext.currentTime
+        );
+      }
+    }
+
+    function toggleAudio() {
+      if (!state.audioEnabled) {
+        initAudio();
+        document.getElementById('btnAudio').textContent = 'STOP AUDIO';
+        document.getElementById('btnAudio').classList.add('active');
+      } else {
+        if (state.audioContext) {
+          state.audioContext.close();
+          state.audioContext = null;
+          state.oscillators = [];
+        }
+        state.audioEnabled = false;
+        document.getElementById('btnAudio').textContent = 'START AUDIO';
+        document.getElementById('btnAudio').classList.remove('active');
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // DRAWING
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function draw() {
+      const w = canvas.width / window.devicePixelRatio;
+      const h = canvas.height / window.devicePixelRatio;
+      const cx = w / 2;
+      const cy = h / 2;
+      const maxR = Math.min(w, h) / 2 - 30;
+
+      // Clear
+      ctx.fillStyle = '#030308';
+      ctx.fillRect(0, 0, w, h);
+
+      // Background gradient
+      const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
+      bgGrad.addColorStop(0, 'rgba(100, 210, 255, 0.05)');
+      bgGrad.addColorStop(0.5, 'rgba(175, 82, 222, 0.03)');
+      bgGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw hexagonal weave pattern
+      ctx.save();
+      ctx.globalAlpha = 0.15;
+      for (let i = 0; i < 6; i++) {
+        const angle = HEX_ANGLES[i] + state.time * 0.1;
+        const x1 = cx + Math.cos(angle) * maxR * 0.3;
+        const y1 = cy + Math.sin(angle) * maxR * 0.3;
+        const x2 = cx + Math.cos(angle) * maxR * 0.9;
+        const y2 = cy + Math.sin(angle) * maxR * 0.9;
+
+        const grad = ctx.createLinearGradient(x1, y1, x2, y2);
+        const hue = i * 60;
+        grad.addColorStop(0, `hsla(${hue}, 80%, 60%, 0)`);
+        grad.addColorStop(0.5, `hsla(${hue}, 80%, 60%, ${state.hexAmplitudes[i]})`);
+        grad.addColorStop(1, `hsla(${hue}, 80%, 60%, 0)`);
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // Draw Kuramoto oscillators
+      const order = computeOrderParameter();
+      const oscRadius = maxR * 0.5;
+
+      ctx.save();
+      for (let i = 0; i < state.nOscillators; i++) {
+        const angle = (i / state.nOscillators) * 2 * Math.PI;
+        const x = cx + Math.cos(angle) * oscRadius;
+        const y = cy + Math.sin(angle) * oscRadius;
+
+        // Color based on phase relative to order parameter
+        const phaseDiff = Math.abs(state.phases[i] - order.psi);
+        const syncColor = phaseDiff < Math.PI / 2 ? `rgba(48, 209, 88, 0.8)` : `rgba(255, 59, 48, 0.5)`;
+
+        // Draw oscillator
+        ctx.fillStyle = syncColor;
+        ctx.beginPath();
+        ctx.arc(x, y, 4 + 2 * Math.cos(state.phases[i]), 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw phase indicator
+        const phaseX = x + Math.cos(state.phases[i]) * 8;
+        const phaseY = y + Math.sin(state.phases[i]) * 8;
+        ctx.strokeStyle = syncColor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(phaseX, phaseY);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // Draw duopyramid nodes
+      const nodeRadius = maxR * 0.7;
+      for (let i = 0; i < 10; i++) {
+        const angle = DEC_ANGLES[i] - Math.PI / 2;
+        const x = cx + Math.cos(angle) * nodeRadius;
+        const y = cy + Math.sin(angle) * nodeRadius;
+
+        const activity = state.nodeActivities[i];
+        const size = 8 + activity * 8;
+
+        // Glow
+        const glowGrad = ctx.createRadialGradient(x, y, 0, x, y, size * 2);
+        glowGrad.addColorStop(0, `rgba(100, 210, 255, ${activity * 0.6})`);
+        glowGrad.addColorStop(1, 'rgba(100, 210, 255, 0)');
+        ctx.fillStyle = glowGrad;
+        ctx.beginPath();
+        ctx.arc(x, y, size * 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Core
+        ctx.fillStyle = `rgba(100, 210, 255, ${0.5 + activity * 0.5})`;
+        ctx.beginPath();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Label
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.font = '9px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(i.toString(), x, y + 3);
+      }
+
+      // Draw poles
+      // Alpha pole (top)
+      const alphaPulse = 0.7 + 0.3 * Math.sin(state.time * 2);
+      const alphaSize = 15 + state.alphaPole * 10;
+      ctx.fillStyle = `rgba(255, 45, 85, ${alphaPulse})`;
+      ctx.beginPath();
+      ctx.arc(cx, cy - maxR * 0.85, alphaSize, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.font = '12px monospace';
+      ctx.fillText('α', cx, cy - maxR * 0.85 + 4);
+
+      // Omega pole (bottom)
+      const omegaSize = 12 + state.omegaPole * 8;
+      ctx.fillStyle = `rgba(0, 122, 255, 0.8)`;
+      ctx.beginPath();
+      ctx.arc(cx, cy + maxR * 0.85, omegaSize, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.fillText('Ω', cx, cy + maxR * 0.85 + 4);
+
+      // Draw order parameter indicator in center
+      ctx.fillStyle = `rgba(102, 255, 204, ${order.r})`;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 20 * order.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(102, 255, 204, 0.8)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + Math.cos(order.psi) * 30, cy + Math.sin(order.psi) * 30);
+      ctx.stroke();
+
+      // Labels
+      ctx.fillStyle = 'rgba(100, 210, 255, 0.7)';
+      ctx.font = '10px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(`r = ${order.r.toFixed(3)}`, cx, cy + maxR * 0.95);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // UPDATE UI
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function updateUI() {
+      const order = computeOrderParameter();
+
+      // Sync meter
+      document.getElementById('syncFill').style.width = `${order.r * 100}%`;
+      document.getElementById('syncValue').textContent = order.r.toFixed(3);
+
+      // Metrics
+      document.getElementById('metricSync').textContent = order.r.toFixed(3);
+      document.getElementById('metricPhase').textContent = (order.psi / Math.PI).toFixed(2) + 'π';
+      document.getElementById('metricHex').textContent = state.hexAmplitudes[0].toFixed(3);
+      document.getElementById('metricOct').textContent = state.octEnergies[0].toFixed(3);
+      document.getElementById('metricAlpha').textContent = state.alphaPole.toFixed(3);
+      document.getElementById('metricFreq').textContent = Math.round(BASE_FREQ * order.r + BASE_FREQ * (1 - order.r) * 0.5) + ' Hz';
+
+      // Hexagonal display
+      const hexNodes = document.querySelectorAll('.hex-node');
+      hexNodes.forEach((node, i) => {
+        node.style.transform = `scale(${0.8 + state.hexAmplitudes[i] * 0.4})`;
+        node.style.opacity = 0.5 + state.hexAmplitudes[i] * 0.5;
+      });
+
+      // Octagonal display
+      const octChannels = document.querySelectorAll('.oct-channel .energy');
+      octChannels.forEach((ch, i) => {
+        ch.textContent = state.octEnergies[i].toFixed(2);
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ANIMATION LOOP
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function animate() {
+      if (!state.paused) {
+        const dt = 0.05;
+        state.time += dt;
+
+        evolveKuramoto(dt);
+        updateHexAmplitudes();
+        updateOctEnergies();
+        updateDuopyramid();
+        updateAudio();
+      }
+
+      draw();
+      updateUI();
+
+      requestAnimationFrame(animate);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // EVENT HANDLERS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    document.getElementById('kSlider').addEventListener('input', (e) => {
+      state.couplingK = parseFloat(e.target.value);
+      document.getElementById('kValue').textContent = state.couplingK.toFixed(3);
+    });
+
+    document.getElementById('sigmaSlider').addEventListener('input', (e) => {
+      state.freqSpread = parseFloat(e.target.value);
+      document.getElementById('sigmaValue').textContent = state.freqSpread.toFixed(2);
+      // Reinitialize frequencies
+      for (let i = 0; i < state.nOscillators; i++) {
+        state.frequencies[i] = 1 + state.freqSpread * (Math.random() - 0.5);
+      }
+    });
+
+    document.getElementById('volumeSlider').addEventListener('input', (e) => {
+      state.masterVolume = parseFloat(e.target.value);
+      document.getElementById('volumeValue').textContent = state.masterVolume.toFixed(2);
+      if (state.gainNode) {
+        state.gainNode.gain.value = state.masterVolume * 0.3;
+      }
+    });
+
+    document.getElementById('btnAudio').addEventListener('click', toggleAudio);
+
+    document.getElementById('btnPause').addEventListener('click', () => {
+      state.paused = !state.paused;
+      document.getElementById('btnPause').textContent = state.paused ? 'RESUME' : 'PAUSE';
+      document.getElementById('btnPause').classList.toggle('active', state.paused);
+    });
+
+    document.getElementById('btnDecagonal').addEventListener('click', () => {
+      state.topology = 'decagonal';
+      document.querySelectorAll('.btn-row .btn:not(.audio)').forEach(b => b.classList.remove('active'));
+      document.getElementById('btnDecagonal').classList.add('active');
+    });
+
+    document.getElementById('btnHexagonal').addEventListener('click', () => {
+      state.topology = 'hexagonal';
+      document.querySelectorAll('.btn-row .btn:not(.audio)').forEach(b => b.classList.remove('active'));
+      document.getElementById('btnHexagonal').classList.add('active');
+    });
+
+    document.getElementById('btnOctagonal').addEventListener('click', () => {
+      state.topology = 'octagonal';
+      document.querySelectorAll('.btn-row .btn:not(.audio)').forEach(b => b.classList.remove('active'));
+      document.getElementById('btnOctagonal').classList.add('active');
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // INITIALIZATION
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    document.getElementById('btnDecagonal').classList.add('active');
+    animate();
+
+    console.log('◈ CYCLE 6: KURAMOTO-HOLOGRAPHIC SONIFICATION');
+    console.log('  K_critical = ' + K_CRITICAL);
+    console.log('  φ = ' + PHI);
+    console.log('  τ = ' + TAU);
+  </script>
+</body>
+</html>
