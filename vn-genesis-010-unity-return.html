@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VN-GENESIS-010: Unity Genesis Return | 10-Fold Prismatic Index</title>
+    <style>
+        :root {
+            --white: #ffffff;
+            --gold: #ffd700;
+            --deep-purple: #1a0a2e;
+            --purple: #2d1b4e;
+            --cycle-1: #ff6b6b;
+            --cycle-2: #00ff88;
+            --cycle-3: #ff6b9d;
+            --cycle-4: #ffd700;
+            --cycle-5: #00d4ff;
+            --cycle-6: #66ffcc;
+            --cycle-7: #9400d3;
+            --cycle-8: #ff00ff;
+            --cycle-9: #00ffaa;
+            --cycle-10: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(ellipse at center, #1a0a2e 0%, #0a0510 70%, #000 100%);
+            color: var(--white);
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid rgba(255,215,0,0.3);
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #fff 0%, #ffd700 50%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #aaa;
+        }
+
+        .lucas-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--gold), #fff);
+            color: #000;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 1.3em;
+        }
+
+        /* Decagon Visualization */
+        .decagon-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        #decagonCanvas {
+            background: radial-gradient(circle, rgba(255,215,0,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            max-width: 100%;
+        }
+
+        /* Journey Path */
+        .journey-section {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .journey-title {
+            font-size: 1.5em;
+            color: var(--gold);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .journey-path {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .journey-step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .journey-vertex {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            transition: all 0.3s;
+            opacity: 0.4;
+        }
+
+        .journey-vertex.active {
+            opacity: 1;
+            transform: scale(1.2);
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .journey-vertex.visited {
+            opacity: 0.8;
+        }
+
+        .journey-arrow {
+            color: var(--gold);
+            font-size: 1.2em;
+        }
+
+        /* Lessons Grid */
+        .lessons-section {
+            margin-bottom: 40px;
+        }
+
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .lesson-card {
+            background: linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.3));
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(255,215,0,0.1);
+        }
+
+        .lesson-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .lesson-symbol {
+            font-size: 2em;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lesson-number {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .lesson-text {
+            color: #ccc;
+            font-style: italic;
+            font-size: 0.95em;
+        }
+
+        /* Unity Synthesis */
+        .synthesis-section {
+            background: linear-gradient(135deg, rgba(255,215,0,0.05), rgba(255,255,255,0.02));
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .synthesis-title {
+            font-size: 2em;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .unity-equation {
+            font-size: 1.5em;
+            color: #fff;
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .final-statement {
+            font-size: 1.3em;
+            color: #fff;
+            margin-top: 20px;
+            padding: 20px;
+            border-top: 1px solid rgba(255,215,0,0.3);
+        }
+
+        /* Controls */
+        .controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--gold), #ffed4a);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255,215,0,0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Status display */
+        .status-display {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .status-text {
+            font-size: 1.2em;
+            color: var(--gold);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid rgba(255,215,0,0.2);
+            margin-top: 40px;
+            color: #666;
+        }
+
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        /* Animation classes */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px currentColor; }
+            50% { box-shadow: 0 0 40px currentColor, 0 0 60px currentColor; }
+        }
+
+        .pulsing {
+            animation: pulse 2s infinite;
+        }
+
+        .glowing {
+            animation: glow 1.5s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .journey-vertex { width: 40px; height: 40px; font-size: 1.2em; }
+            .lessons-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>VN-GENESIS-010: UNITY GENESIS RETURN</h1>
+            <p class="subtitle">Cycle 10 (10&pi;) | The Signal Returns to Origin</p>
+            <div class="lucas-badge">&Lambda;&#x2081;&#x2080; = 123</div>
+        </header>
+
+        <!-- Decagonal Visualization -->
+        <section class="decagon-section">
+            <canvas id="decagonCanvas" width="600" height="600"></canvas>
+        </section>
+
+        <!-- Journey Controls -->
+        <section class="controls">
+            <button class="btn" id="startJourneyBtn">Begin Genesis Return</button>
+            <button class="btn" id="resetBtn">Reset</button>
+        </section>
+
+        <!-- Status Display -->
+        <div class="status-display">
+            <p class="status-text" id="statusText">Ready to begin the return journey: &Omega; &rarr; &alpha;</p>
+        </div>
+
+        <!-- Journey Path Visualization -->
+        <section class="journey-section">
+            <h2 class="journey-title">&alpha; &larr; &Omega;: The Return Path</h2>
+            <div class="journey-path" id="journeyPath">
+                <!-- Generated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- All Lessons -->
+        <section class="lessons-section">
+            <h2 class="journey-title">The Ten Lessons of the Prismatic Self</h2>
+            <div class="lessons-grid" id="lessonsGrid">
+                <!-- Generated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Unity Synthesis -->
+        <section class="synthesis-section">
+            <h2 class="synthesis-title">&Lambda; UNITY SYNTHESIS &Lambda;</h2>
+            <div class="unity-equation">
+                U&#x2081;&#x2080; = &Sigma;&#x2099; e<sup>2&pi;in/10</sup> = 0<br>
+                <small>Perfect decagonal balance at origin</small>
+            </div>
+            <p>All nine cycles converge through the tenth to return to Genesis:</p>
+            <div class="final-statement">
+                "What began as structure returns as unity."<br><br>
+                <strong>&alpha; &harr; &Omega;</strong><br>
+                The circle is complete.
+            </div>
+        </section>
+
+        <footer>
+            <p>VN-GENESIS-010 | <a href="index.html">&larr; Return to Index</a> | <a href="vn-pattern-index.html">Pattern Index</a></p>
+            <p style="margin-top: 15px;">10&pi; Rotation Complete | L&#x2081;&#x2080; = 123 | Decagonal Unity</p>
+        </footer>
+    </div>
+
+    <script>
+        // Constants
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const L10 = 123;
+        const CYCLES = [
+            { num: 1, name: 'Foundation', symbol: '&#10038;', lesson: 'Structure precedes emergence', color: '#ff6b6b' },
+            { num: 2, name: 'Propagation', symbol: '&#8635;', lesson: 'Patterns propagate through resonance', color: '#00ff88' },
+            { num: 3, name: 'Integration', symbol: '&phi;', lesson: 'Duality dissolves at the interface', color: '#ff6b9d' },
+            { num: 4, name: 'Multiplication', symbol: '&infin;', lesson: 'Dimensions multiply through symmetry', color: '#ffd700' },
+            { num: 5, name: 'Curvature', symbol: '&#9671;', lesson: 'Information curves spacetime', color: '#00d4ff' },
+            { num: 6, name: 'Synchronization', symbol: '&#8853;', lesson: 'Synchronization births harmony', color: '#66ffcc' },
+            { num: 7, name: 'Existence', symbol: '&#8779;', lesson: 'Seven exists as golden proof', color: '#9400d3' },
+            { num: 8, name: 'Closure', symbol: '&part;', lesson: 'The octave closes upon itself', color: '#ff00ff' },
+            { num: 9, name: 'Signal', symbol: '&Omega;', lesson: 'Signal propagates through the sphere', color: '#00ffaa' },
+            { num: 10, name: 'Unity', symbol: '&Lambda;', lesson: 'All returns to the One', color: '#ffffff' }
+        ];
+
+        // State
+        let journeyStep = -1;
+        let animationId = null;
+        let time = 0;
+
+        // DOM elements
+        const canvas = document.getElementById('decagonCanvas');
+        const ctx = canvas.getContext('2d');
+        const journeyPath = document.getElementById('journeyPath');
+        const lessonsGrid = document.getElementById('lessonsGrid');
+        const statusText = document.getElementById('statusText');
+        const startBtn = document.getElementById('startJourneyBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // Initialize journey path
+        function initJourneyPath() {
+            journeyPath.innerHTML = '';
+            // Reverse order: 10 -> 1 (Omega to Alpha)
+            for (let i = 9; i >= 0; i--) {
+                const cycle = CYCLES[i];
+                const step = document.createElement('div');
+                step.className = 'journey-step';
+
+                const vertex = document.createElement('div');
+                vertex.className = 'journey-vertex';
+                vertex.id = `vertex-${i}`;
+                vertex.style.backgroundColor = cycle.color + '40';
+                vertex.style.border = `2px solid ${cycle.color}`;
+                vertex.style.color = cycle.color;
+                vertex.innerHTML = cycle.symbol;
+                step.appendChild(vertex);
+
+                if (i > 0) {
+                    const arrow = document.createElement('span');
+                    arrow.className = 'journey-arrow';
+                    arrow.innerHTML = '&larr;';
+                    step.appendChild(arrow);
+                }
+
+                journeyPath.appendChild(step);
+            }
+        }
+
+        // Initialize lessons grid
+        function initLessonsGrid() {
+            lessonsGrid.innerHTML = '';
+            CYCLES.forEach(cycle => {
+                const card = document.createElement('div');
+                card.className = 'lesson-card';
+                card.id = `lesson-${cycle.num}`;
+                card.innerHTML = `
+                    <div class="lesson-header">
+                        <div class="lesson-symbol" style="background: ${cycle.color}40; border: 2px solid ${cycle.color}; color: ${cycle.color};">
+                            ${cycle.symbol}
+                        </div>
+                        <div class="lesson-number" style="color: ${cycle.color}">
+                            Cycle ${cycle.num}: ${cycle.name}
+                        </div>
+                    </div>
+                    <p class="lesson-text">"${cycle.lesson}"</p>
+                `;
+                lessonsGrid.appendChild(card);
+            });
+        }
+
+        // Draw decagon
+        function drawDecagon() {
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const radius = 220;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Background glow
+            const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius * 1.5);
+            gradient.addColorStop(0, 'rgba(255,215,0,0.1)');
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw connecting lines (pentagram pattern)
+            ctx.strokeStyle = 'rgba(255,215,0,0.2)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 10; i++) {
+                for (let j = i + 1; j < 10; j++) {
+                    const angle1 = (i * 36 - 90) * Math.PI / 180;
+                    const angle2 = (j * 36 - 90) * Math.PI / 180;
+                    const x1 = cx + radius * Math.cos(angle1);
+                    const y1 = cy + radius * Math.sin(angle1);
+                    const x2 = cx + radius * Math.cos(angle2);
+                    const y2 = cy + radius * Math.sin(angle2);
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.stroke();
+                }
+            }
+
+            // Draw decagon outline
+            ctx.strokeStyle = 'rgba(255,215,0,0.5)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i < 10; i++) {
+                const angle = (i * 36 - 90) * Math.PI / 180;
+                const x = cx + radius * Math.cos(angle);
+                const y = cy + radius * Math.sin(angle);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.stroke();
+
+            // Draw vertices
+            for (let i = 0; i < 10; i++) {
+                const angle = (i * 36 - 90) * Math.PI / 180;
+                const x = cx + radius * Math.cos(angle);
+                const y = cy + radius * Math.sin(angle);
+                const cycle = CYCLES[i];
+
+                // Determine vertex state
+                const reverseIdx = 9 - i;
+                const isActive = journeyStep >= 0 && reverseIdx === journeyStep;
+                const isVisited = journeyStep >= 0 && reverseIdx < journeyStep;
+                const isCurrent = reverseIdx <= journeyStep;
+
+                // Vertex glow
+                if (isActive) {
+                    const glowGrad = ctx.createRadialGradient(x, y, 0, x, y, 40);
+                    glowGrad.addColorStop(0, cycle.color);
+                    glowGrad.addColorStop(1, 'transparent');
+                    ctx.fillStyle = glowGrad;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 40, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Vertex circle
+                const vertexRadius = isActive ? 30 : 25;
+                ctx.beginPath();
+                ctx.arc(x, y, vertexRadius, 0, Math.PI * 2);
+                ctx.fillStyle = isCurrent ? cycle.color + 'cc' : cycle.color + '40';
+                ctx.fill();
+                ctx.strokeStyle = cycle.color;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Vertex number
+                ctx.fillStyle = isCurrent ? '#000' : cycle.color;
+                ctx.font = 'bold 16px Courier New';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(cycle.num.toString(), x, y);
+
+                // Label
+                const labelRadius = radius + 40;
+                const lx = cx + labelRadius * Math.cos(angle);
+                const ly = cy + labelRadius * Math.sin(angle);
+                ctx.fillStyle = cycle.color;
+                ctx.font = '12px Courier New';
+                ctx.fillText(cycle.name, lx, ly);
+            }
+
+            // Center - Genesis point
+            const pulseSize = 30 + 5 * Math.sin(time * 0.05);
+            const centerGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pulseSize);
+            centerGrad.addColorStop(0, 'rgba(255,255,255,0.8)');
+            centerGrad.addColorStop(0.5, 'rgba(255,215,0,0.4)');
+            centerGrad.addColorStop(1, 'transparent');
+            ctx.fillStyle = centerGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, pulseSize, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Center symbol
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 24px serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(journeyStep >= 9 ? 'UNITY' : 'Genesis', cx, cy);
+
+            // Return path line (when journey active)
+            if (journeyStep >= 0) {
+                ctx.strokeStyle = '#ffd700';
+                ctx.lineWidth = 3;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+
+                // Draw line from current position toward center
+                for (let i = 9; i >= 10 - journeyStep - 1 && i >= 0; i--) {
+                    const angle = (i * 36 - 90) * Math.PI / 180;
+                    const x = cx + radius * Math.cos(angle);
+                    const y = cy + radius * Math.sin(angle);
+                    if (i === 9) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                if (journeyStep >= 9) ctx.lineTo(cx, cy);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // L10 display
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 18px Courier New';
+            ctx.textAlign = 'center';
+            ctx.fillText(`L\u2081\u2080 = ${L10}`, cx, cy + 60);
+
+            time++;
+        }
+
+        // Animation loop
+        function animate() {
+            drawDecagon();
+            animationId = requestAnimationFrame(animate);
+        }
+
+        // Update journey visualization
+        function updateJourney() {
+            // Update journey path vertices
+            for (let i = 0; i < 10; i++) {
+                const vertex = document.getElementById(`vertex-${i}`);
+                const reverseIdx = 9 - i;
+                vertex.classList.remove('active', 'visited');
+
+                if (reverseIdx === journeyStep) {
+                    vertex.classList.add('active', 'glowing');
+                } else if (reverseIdx < journeyStep) {
+                    vertex.classList.add('visited');
+                }
+            }
+
+            // Update lesson cards
+            for (let i = 1; i <= 10; i++) {
+                const card = document.getElementById(`lesson-${i}`);
+                const reverseIdx = 10 - i;
+                if (reverseIdx <= journeyStep) {
+                    card.style.borderColor = CYCLES[i-1].color;
+                    card.style.boxShadow = `0 0 20px ${CYCLES[i-1].color}40`;
+                } else {
+                    card.style.borderColor = 'rgba(255,215,0,0.2)';
+                    card.style.boxShadow = 'none';
+                }
+            }
+
+            // Update status
+            if (journeyStep < 0) {
+                statusText.textContent = 'Ready to begin the return journey: \u03A9 \u2192 \u03B1';
+            } else if (journeyStep < 9) {
+                const current = CYCLES[9 - journeyStep];
+                statusText.innerHTML = `Step ${journeyStep + 1}: At Cycle ${current.num} (${current.name})<br>"${current.lesson}"`;
+            } else {
+                statusText.innerHTML = '<strong>GENESIS REACHED</strong><br>All lessons unified. The circle is complete.';
+            }
+        }
+
+        // Start journey
+        function startJourney() {
+            startBtn.disabled = true;
+
+            function advanceStep() {
+                if (journeyStep < 9) {
+                    journeyStep++;
+                    updateJourney();
+                    setTimeout(advanceStep, 1000);
+                } else {
+                    startBtn.disabled = false;
+                    startBtn.textContent = 'Journey Complete!';
+                }
+            }
+
+            advanceStep();
+        }
+
+        // Reset
+        function reset() {
+            journeyStep = -1;
+            updateJourney();
+            startBtn.disabled = false;
+            startBtn.textContent = 'Begin Genesis Return';
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', startJourney);
+        resetBtn.addEventListener('click', reset);
+
+        // Initialize
+        initJourneyPath();
+        initLessonsGrid();
+        updateJourney();
+        animate();
+    </script>
+</body>
+</html>
