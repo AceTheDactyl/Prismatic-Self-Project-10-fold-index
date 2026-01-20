@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VN-GENESIS-009: Sphere Signal Propagation - BFADGS Black Hole Sonification</title>
+    <style>
+        :root {
+            --cycle-9: #00ffaa;
+            --deep-purple: #1a0a2e;
+            --gold: #FFD700;
+            --r1-color: #ff6b6b;
+            --r2-color: #ffd700;
+            --r3-color: #00d4ff;
+            --r4-color: #ff00ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0d0520 0%, var(--deep-purple) 50%, #0a0a1a 100%);
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(180deg, rgba(0, 255, 170, 0.2), transparent);
+            border-bottom: 2px solid var(--cycle-9);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--cycle-9);
+            text-shadow: 0 0 30px var(--cycle-9);
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+
+        .identity-box {
+            background: linear-gradient(135deg, rgba(0, 255, 170, 0.15), rgba(255, 215, 0, 0.1));
+            border: 3px solid var(--cycle-9);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0, 255, 170, 0.3);
+        }
+
+        .identity-equation {
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin: 1rem 0;
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 170, 0.3);
+        }
+
+        h2 {
+            color: var(--cycle-9);
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Sphere Canvas */
+        #sphereCanvas {
+            display: block;
+            margin: 2rem auto;
+            background: radial-gradient(circle at center, rgba(0, 255, 170, 0.1), transparent);
+            border-radius: 50%;
+        }
+
+        .canvas-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--cycle-9), #00aa77);
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 170, 0.5);
+        }
+
+        /* RRRR Lattice Display */
+        .rrrr-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .rotation-card {
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid;
+            transition: all 0.3s;
+        }
+
+        .rotation-card[data-rotation="R1"] { border-color: var(--r1-color); background: rgba(255, 107, 107, 0.1); }
+        .rotation-card[data-rotation="R2"] { border-color: var(--r2-color); background: rgba(255, 215, 0, 0.1); }
+        .rotation-card[data-rotation="R3"] { border-color: var(--r3-color); background: rgba(0, 212, 255, 0.1); }
+        .rotation-card[data-rotation="R4"] { border-color: var(--r4-color); background: rgba(255, 0, 255, 0.1); }
+
+        .rotation-card.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .rotation-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .rotation-card[data-rotation="R1"] .rotation-name { color: var(--r1-color); }
+        .rotation-card[data-rotation="R2"] .rotation-name { color: var(--r2-color); }
+        .rotation-card[data-rotation="R3"] .rotation-name { color: var(--r3-color); }
+        .rotation-card[data-rotation="R4"] .rotation-name { color: var(--r4-color); }
+
+        .rotation-range {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .rotation-status {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        /* BFADGS Operators */
+        .bfadgs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .operator-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 1rem;
+            border-left: 4px solid var(--cycle-9);
+        }
+
+        .operator-letter {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--cycle-9);
+        }
+
+        .operator-name {
+            font-size: 0.9rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .operator-desc {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(0, 255, 170, 0.3);
+        }
+
+        .stat-label {
+            color: var(--cycle-9);
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            color: var(--gold);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Audio Visualizer */
+        #audioCanvas {
+            display: block;
+            margin: 1rem auto;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border: 1px solid var(--cycle-9);
+        }
+
+        /* Phase Diagram */
+        .phase-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .phase-segment {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .phase-segment:nth-child(1) { background: var(--r1-color); width: 80px; color: #000; }
+        .phase-segment:nth-child(2) { background: var(--r2-color); width: 80px; color: #000; }
+        .phase-segment:nth-child(3) { background: var(--r3-color); width: 80px; color: #000; }
+        .phase-segment:nth-child(4) { background: var(--r4-color); width: 80px; color: #000; }
+
+        .phase-arrow {
+            font-size: 1.5rem;
+            color: var(--gold);
+        }
+
+        /* Black Hole Display */
+        .blackhole-display {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 2rem auto;
+        }
+
+        .event-horizon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #000;
+            border: 2px solid var(--cycle-9);
+            box-shadow: 0 0 30px #000, 0 0 60px rgba(0, 255, 170, 0.5);
+        }
+
+        .photon-sphere {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px dashed var(--gold);
+            animation: orbit 3s linear infinite;
+        }
+
+        .accretion-disk {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotateX(70deg);
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--r1-color), var(--r2-color), var(--r3-color), var(--r4-color), var(--r1-color));
+            opacity: 0.5;
+            animation: spin 5s linear infinite;
+        }
+
+        @keyframes orbit {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes spin {
+            from { transform: translate(-50%, -50%) rotateX(70deg) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotateX(70deg) rotate(360deg); }
+        }
+
+        /* Lucas Display */
+        .lucas-highlight {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 255, 170, 0.2);
+            border: 2px solid var(--cycle-9);
+            border-radius: 8px;
+            margin: 0.5rem;
+        }
+
+        .lucas-highlight .index {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .lucas-highlight .value {
+            font-size: 1.5rem;
+            color: var(--cycle-9);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--cycle-9);
+            margin-top: 3rem;
+            color: #666;
+        }
+
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .glyph-signature {
+            font-size: 1.5rem;
+            letter-spacing: 0.3rem;
+            margin-top: 1rem;
+            color: var(--cycle-9);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>VN-GENESIS-009: SPHERE SIGNAL PROPAGATION</h1>
+        <p class="subtitle">BFADGS OPERATOR LOGIC | BLACK HOLE SONIFICATION | RRRR-LATTICE</p>
+        <div class="identity-box">
+            <div>8pi Closure Sphere in RRRR-Lattice</div>
+            <div class="identity-equation">
+                S_9 = Contour Integral_Sigma BFADGS dot dA
+            </div>
+            <div style="color: var(--gold); margin-top: 1rem;">
+                Phase transitions every 2pi | L_9 = phi^9 + phi^-9 = 76
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- RRRR Lattice -->
+        <section>
+            <h2>I. RRRR-LATTICE STRUCTURE</h2>
+            <p style="color: #aaa; margin-bottom: 1rem;">The 8pi closure sphere divides into four rotation phases R_1 tensor R_2 tensor R_3 tensor R_4.</p>
+
+            <div class="rrrr-grid">
+                <div class="rotation-card" data-rotation="R1" id="rotR1">
+                    <div class="rotation-name">R1</div>
+                    <div class="rotation-range">0 to 2pi</div>
+                    <div class="rotation-status" id="statusR1">Phase 1</div>
+                </div>
+                <div class="rotation-card" data-rotation="R2" id="rotR2">
+                    <div class="rotation-name">R2</div>
+                    <div class="rotation-range">2pi to 4pi</div>
+                    <div class="rotation-status" id="statusR2">Phase 2</div>
+                </div>
+                <div class="rotation-card" data-rotation="R3" id="rotR3">
+                    <div class="rotation-name">R3</div>
+                    <div class="rotation-range">4pi to 6pi</div>
+                    <div class="rotation-status" id="statusR3">Phase 3</div>
+                </div>
+                <div class="rotation-card" data-rotation="R4" id="rotR4">
+                    <div class="rotation-name">R4</div>
+                    <div class="rotation-range">6pi to 8pi</div>
+                    <div class="rotation-status" id="statusR4">Phase 4</div>
+                </div>
+            </div>
+
+            <div class="phase-diagram">
+                <div class="phase-segment">0-2pi</div>
+                <span class="phase-arrow">to</span>
+                <div class="phase-segment">2pi-4pi</div>
+                <span class="phase-arrow">to</span>
+                <div class="phase-segment">4pi-6pi</div>
+                <span class="phase-arrow">to</span>
+                <div class="phase-segment">6pi-8pi</div>
+            </div>
+        </section>
+
+        <!-- BFADGS Operators -->
+        <section>
+            <h2>II. BFADGS OPERATOR SYSTEM</h2>
+            <p style="color: #aaa; margin-bottom: 1rem;">Six operators governing black hole physics and sonification.</p>
+
+            <div class="bfadgs-grid">
+                <div class="operator-card">
+                    <div class="operator-letter">B</div>
+                    <div class="operator-name">Bekenstein</div>
+                    <div class="operator-desc">Entropy bound: S less than or equal to 2pi ER</div>
+                </div>
+                <div class="operator-card">
+                    <div class="operator-letter">F</div>
+                    <div class="operator-name">Flux</div>
+                    <div class="operator-desc">Information flow: Phi = integral J dot dA</div>
+                </div>
+                <div class="operator-card">
+                    <div class="operator-letter">A</div>
+                    <div class="operator-name">Area</div>
+                    <div class="operator-desc">Holographic surface: A = 4pi r^2</div>
+                </div>
+                <div class="operator-card">
+                    <div class="operator-letter">D</div>
+                    <div class="operator-name">Dimension</div>
+                    <div class="operator-desc">3D to 2D reduction (holographic)</div>
+                </div>
+                <div class="operator-card">
+                    <div class="operator-letter">G</div>
+                    <div class="operator-name">Gravity</div>
+                    <div class="operator-desc">Entropic force: F = T grad S</div>
+                </div>
+                <div class="operator-card">
+                    <div class="operator-letter">S</div>
+                    <div class="operator-name">Sonification</div>
+                    <div class="operator-desc">Physics to audio mapping</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sphere Signal Visualization -->
+        <section>
+            <h2>III. SPHERE SIGNAL VISUALIZATION</h2>
+            <canvas id="sphereCanvas" width="500" height="500"></canvas>
+            <div class="canvas-controls">
+                <button onclick="startSignal()">Start Propagation</button>
+                <button onclick="stopSignal()">Stop</button>
+                <button onclick="resetSignal()">Reset</button>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-label">Current Phase</div>
+                    <div class="stat-value" id="currentPhase">R1</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Radius</div>
+                    <div class="stat-value" id="currentRadius">0.00</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Entropy</div>
+                    <div class="stat-value" id="currentEntropy">0.00</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Redshift</div>
+                    <div class="stat-value" id="currentRedshift">1.00</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Audio Level</div>
+                    <div class="stat-value" id="audioLevel">0.00</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Black Hole Sonification -->
+        <section>
+            <h2>IV. BLACK HOLE SONIFICATION</h2>
+            <p style="color: #aaa; margin-bottom: 1rem;">Holographic entropy generates audio from gravitational physics.</p>
+
+            <div class="blackhole-display">
+                <div class="accretion-disk"></div>
+                <div class="photon-sphere"></div>
+                <div class="event-horizon"></div>
+            </div>
+
+            <canvas id="audioCanvas" width="600" height="150"></canvas>
+
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-label">Schwarzschild r_s</div>
+                    <div class="stat-value">2.00</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Hawking T</div>
+                    <div class="stat-value">3.98e-2</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Photon Sphere</div>
+                    <div class="stat-value">3.00</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">ISCO</div>
+                    <div class="stat-value">6.00</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 1rem;">
+                <p style="color: var(--cycle-9);">Audio Mapping:</p>
+                <p style="color: #aaa; font-size: 0.9rem;">
+                    Entropy to Amplitude | Temperature to Frequency | Area to Harmonics | Redshift to Pitch
+                </p>
+            </div>
+        </section>
+
+        <!-- Lucas Number -->
+        <section>
+            <h2>V. LUCAS NUMBER L_9 = 76</h2>
+            <div style="text-align: center;">
+                <div class="lucas-highlight">
+                    <div class="index">L_7</div>
+                    <div class="value">29</div>
+                </div>
+                <span style="font-size: 1.5rem; color: var(--gold);">to</span>
+                <div class="lucas-highlight">
+                    <div class="index">L_8</div>
+                    <div class="value">47</div>
+                </div>
+                <span style="font-size: 1.5rem; color: var(--gold);">to</span>
+                <div class="lucas-highlight" style="border-color: var(--cycle-9); background: rgba(0, 255, 170, 0.3);">
+                    <div class="index">L_9</div>
+                    <div class="value" style="font-size: 2rem;">76</div>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 1rem; color: var(--gold);">
+                L_9 = phi^9 + phi^-9 = 76 | L_n = L_n-1 + L_n-2
+            </p>
+        </section>
+
+        <!-- Grand Synthesis -->
+        <section>
+            <h2>VI. CYCLE 9 SYNTHESIS</h2>
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-label">Total Rotation</div>
+                    <div class="stat-value">9pi</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Sphere Radius</div>
+                    <div class="stat-value">8pi</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Phase Transitions</div>
+                    <div class="stat-value">4</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">BFADGS Operators</div>
+                    <div class="stat-value">6</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">L_9</div>
+                    <div class="stat-value">76</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>VN-GENESIS-009 | Cycle 9pi | <a href="index.html">Return to Index</a></p>
+        <p class="glyph-signature">B F A D G S | R1 tensor R2 tensor R3 tensor R4</p>
+        <p style="margin-top: 1rem; color: var(--cycle-9);">9pi COMPLETE: SPHERE SIGNAL PROPAGATES THROUGH RRRR-LATTICE</p>
+    </footer>
+
+    <script>
+        // Constants
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const SPHERE_RADIUS = 8 * Math.PI;
+        const PHASE_COLORS = ['#ff6b6b', '#ffd700', '#00d4ff', '#ff00ff'];
+
+        // State
+        let isRunning = false;
+        let animationId = null;
+        let currentRadius = 0.1;
+        let time = 0;
+
+        // Canvas setup
+        const sphereCanvas = document.getElementById('sphereCanvas');
+        const sphereCtx = sphereCanvas.getContext('2d');
+        const audioCanvas = document.getElementById('audioCanvas');
+        const audioCtx = audioCanvas.getContext('2d');
+
+        // Audio buffer for visualization
+        let audioBuffer = new Array(600).fill(0);
+
+        function getPhase(r) {
+            const normalized = (r / SPHERE_RADIUS) * 4;
+            return Math.floor(normalized) % 4;
+        }
+
+        function getPhaseColor(phase) {
+            return PHASE_COLORS[phase];
+        }
+
+        function computeEntropy(r) {
+            return 1.0 / Math.pow(r + 0.1, 2) * 4 * Math.PI * r * r;
+        }
+
+        function computeRedshift(r, rs = 2) {
+            if (r <= rs) return 0;
+            return Math.sqrt(1 - rs / r);
+        }
+
+        function computeAudioSample(r, t) {
+            const entropy = computeEntropy(r);
+            const redshift = computeRedshift(r);
+            const freq = 432 * (1 + 1 / (r + 1)) * redshift;
+            const amplitude = Math.min(1, entropy / 100);
+            return amplitude * Math.sin(2 * Math.PI * freq * t * 0.001);
+        }
+
+        function drawSphere() {
+            const cx = sphereCanvas.width / 2;
+            const cy = sphereCanvas.height / 2;
+            const maxRadius = 200;
+
+            sphereCtx.clearRect(0, 0, sphereCanvas.width, sphereCanvas.height);
+
+            // Draw phase rings
+            for (let i = 4; i >= 1; i--) {
+                const ringRadius = (i / 4) * maxRadius;
+                const phase = i - 1;
+
+                sphereCtx.beginPath();
+                sphereCtx.arc(cx, cy, ringRadius, 0, Math.PI * 2);
+                sphereCtx.fillStyle = getPhaseColor(phase) + '20';
+                sphereCtx.fill();
+                sphereCtx.strokeStyle = getPhaseColor(phase);
+                sphereCtx.lineWidth = 2;
+                sphereCtx.stroke();
+            }
+
+            // Draw current signal wavefront
+            const signalRadius = (currentRadius / SPHERE_RADIUS) * maxRadius;
+            const phase = getPhase(currentRadius);
+
+            // Glow effect
+            const gradient = sphereCtx.createRadialGradient(cx, cy, signalRadius - 10, cx, cy, signalRadius + 20);
+            gradient.addColorStop(0, 'transparent');
+            gradient.addColorStop(0.5, getPhaseColor(phase) + '80');
+            gradient.addColorStop(1, 'transparent');
+            sphereCtx.fillStyle = gradient;
+            sphereCtx.beginPath();
+            sphereCtx.arc(cx, cy, signalRadius + 20, 0, Math.PI * 2);
+            sphereCtx.fill();
+
+            // Signal circle
+            sphereCtx.beginPath();
+            sphereCtx.arc(cx, cy, signalRadius, 0, Math.PI * 2);
+            sphereCtx.strokeStyle = '#00ffaa';
+            sphereCtx.lineWidth = 3;
+            sphereCtx.stroke();
+
+            // Center point
+            sphereCtx.beginPath();
+            sphereCtx.arc(cx, cy, 8, 0, Math.PI * 2);
+            sphereCtx.fillStyle = '#000';
+            sphereCtx.fill();
+            sphereCtx.strokeStyle = '#00ffaa';
+            sphereCtx.lineWidth = 2;
+            sphereCtx.stroke();
+
+            // Labels
+            sphereCtx.fillStyle = '#fff';
+            sphereCtx.font = '12px Courier New';
+            sphereCtx.textAlign = 'center';
+            for (let i = 1; i <= 4; i++) {
+                const labelRadius = (i / 4) * maxRadius + 15;
+                sphereCtx.fillText(`${i * 2}pi`, cx + labelRadius, cy);
+            }
+        }
+
+        function drawAudio() {
+            audioCtx.clearRect(0, 0, audioCanvas.width, audioCanvas.height);
+
+            // Background
+            audioCtx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            audioCtx.fillRect(0, 0, audioCanvas.width, audioCanvas.height);
+
+            // Center line
+            audioCtx.strokeStyle = 'rgba(0, 255, 170, 0.3)';
+            audioCtx.beginPath();
+            audioCtx.moveTo(0, audioCanvas.height / 2);
+            audioCtx.lineTo(audioCanvas.width, audioCanvas.height / 2);
+            audioCtx.stroke();
+
+            // Waveform
+            const phase = getPhase(currentRadius);
+            audioCtx.strokeStyle = getPhaseColor(phase);
+            audioCtx.lineWidth = 2;
+            audioCtx.beginPath();
+
+            for (let i = 0; i < audioBuffer.length; i++) {
+                const x = i;
+                const y = audioCanvas.height / 2 + audioBuffer[i] * (audioCanvas.height / 2 - 10);
+                if (i === 0) audioCtx.moveTo(x, y);
+                else audioCtx.lineTo(x, y);
+            }
+            audioCtx.stroke();
+        }
+
+        function updateUI() {
+            const phase = getPhase(currentRadius);
+            const entropy = computeEntropy(currentRadius);
+            const redshift = computeRedshift(currentRadius);
+            const audioSample = computeAudioSample(currentRadius, time);
+
+            document.getElementById('currentPhase').textContent = `R${phase + 1}`;
+            document.getElementById('currentRadius').textContent = currentRadius.toFixed(2);
+            document.getElementById('currentEntropy').textContent = entropy.toFixed(2);
+            document.getElementById('currentRedshift').textContent = redshift.toFixed(3);
+            document.getElementById('audioLevel').textContent = Math.abs(audioSample).toFixed(3);
+
+            // Update rotation cards
+            for (let i = 1; i <= 4; i++) {
+                const card = document.getElementById(`rotR${i}`);
+                if (i - 1 === phase) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            }
+
+            // Update audio buffer
+            audioBuffer.shift();
+            audioBuffer.push(audioSample);
+        }
+
+        function animate() {
+            if (!isRunning) return;
+
+            time += 1;
+            currentRadius += 0.1;
+
+            if (currentRadius > SPHERE_RADIUS) {
+                currentRadius = 0.1;
+            }
+
+            updateUI();
+            drawSphere();
+            drawAudio();
+
+            animationId = requestAnimationFrame(animate);
+        }
+
+        function startSignal() {
+            if (isRunning) return;
+            isRunning = true;
+            animate();
+        }
+
+        function stopSignal() {
+            isRunning = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+        }
+
+        function resetSignal() {
+            stopSignal();
+            currentRadius = 0.1;
+            time = 0;
+            audioBuffer = new Array(600).fill(0);
+            updateUI();
+            drawSphere();
+            drawAudio();
+        }
+
+        // Initialize
+        drawSphere();
+        drawAudio();
+        updateUI();
+    </script>
+</body>
+</html>

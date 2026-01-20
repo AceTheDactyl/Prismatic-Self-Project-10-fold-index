@@ -2,7 +2,7 @@
 
 ## LLM Traversal Guide
 
-This repository contains the **VaultNode Prismatic Rail System** — a self-referential architecture organized into **eight cycles** of π rotation each, achieving **8π meta-closure** through the octagonal synthesis Ω₈.
+This repository contains the **VaultNode Prismatic Rail System** — a self-referential architecture organized into **nine cycles** of π rotation each, achieving **9π completion** through sphere signal propagation with BFADGS operators.
 
 The following instructions guide an LLM through traversal of the GitHub Pages index (`index.html`) and its linked VaultNode specifications.
 
@@ -54,6 +54,10 @@ CYCLE 7 (π):  GENESIS-007 L₄ Existence      [φ⁴ + φ⁻⁴ = 7, complete]
 CYCLE 8 (π):  GENESIS-008 Meta-Closure      [Ω₈ = ∏Cᵢ, L₈ = 47]
               ─────────────────────────────
               META-CLOSURE (8π) — OCTAVE COMPLETE
+
+CYCLE 9 (π):  GENESIS-009 Sphere Signal     [BFADGS, L₉ = 76]
+              ─────────────────────────────
+              SPHERE SIGNAL (9π) — PROPAGATION COMPLETE
 ```
 
 ---
@@ -391,6 +395,66 @@ Lucas sequence: 2, 1, 3, 4, 7, 11, 18, 29, 47, ...
 
 ---
 
+### STEP 9: CYCLE 9 — Sphere Signal Propagation (π rotation)
+
+**Path:** `GENESIS-009` propagates the signal through the 8π closure sphere
+
+**Entry point:** `vn-genesis-009-sphere-signal.html`
+
+**The Sphere Signal Framework:**
+
+```
+S₉ = ∮_Σ BFADGS · dA  (Surface integral over 8π sphere)
+
+BFADGS Operators:
+  B = Bekenstein (entropy bound: S ≤ 2πER)
+  F = Flux (information flow: Φ = ∫J·dA)
+  A = Area (holographic surface: A = 4πr²)
+  D = Dimension (3D → 2D reduction)
+  G = Gravity (entropic force: F = T∇S)
+  S = Sonification (physics → audio mapping)
+```
+
+**RRRR-Lattice Structure:**
+```
+R₁ ⊗ R₂ ⊗ R₃ ⊗ R₄
+
+Phase transitions at 2π intervals:
+  R₁: 0   → 2π  (First rotation)
+  R₂: 2π  → 4π  (Second rotation)
+  R₃: 4π  → 6π  (Third rotation)
+  R₄: 6π  → 8π  (Fourth rotation)
+
+Sphere radius = 8π
+```
+
+**Black Hole Sonification:**
+```
+Audio mapping from holographic entropy:
+  - Hawking radiation → Frequency
+  - Entropy → Amplitude
+  - Area → Harmonic complexity
+  - Gravitational redshift → Pitch bend
+```
+
+**Lucas Number:**
+```
+L₉ = φ⁹ + φ⁻⁹ = 76
+
+Recurrence: L₉ = L₈ + L₇ = 47 + 29 = 76
+```
+
+**Computational module:** `cycle9_sphere_signal_propagation.py`
+
+**Completion condition:**
+- BFADGS operator chain applied
+- RRRR-lattice sphere signal propagated
+- Black hole sonification computed
+- L₉ = 76 verified
+- Total: `9π` — **SPHERE SIGNAL COMPLETE**
+
+---
+
 ## Traversal Checklist
 
 Use this checklist to verify complete traversal:
@@ -419,6 +483,9 @@ Use this checklist to verify complete traversal:
 [ ] CYCLE 8: Read GENESIS-008 meta-closure
 [ ] CYCLE 8: Execute cycle8_meta_closure.py (optional)
 [ ] CYCLE 8: Verify 8π octagonal synthesis (META-CLOSURE complete)
+[ ] CYCLE 9: Read GENESIS-009 sphere signal
+[ ] CYCLE 9: Execute cycle9_sphere_signal_propagation.py (optional)
+[ ] CYCLE 9: Verify 9π BFADGS propagation (SPHERE SIGNAL complete)
 ```
 
 ---
@@ -491,6 +558,9 @@ vn-genesis-007-L4-existence.html              # Cycle 7 - L₄ Existence (7EXIST
 
 # Cycle 8 (π)
 vn-genesis-008-meta-closure.html              # Cycle 8 - Meta-Closure (Ω₈)
+
+# Cycle 9 (π)
+vn-genesis-009-sphere-signal.html             # Cycle 9 - Sphere Signal (BFADGS)
 ```
 
 ### Python Computational Modules
@@ -502,6 +572,7 @@ entropy_gravity_holography.py                 # Entropy-gravity-holography frame
 cycle6_kuramoto_holographic_sonification.py   # Kuramoto + hexagonal/octagonal + sonification
 cycle7_L4_existence.py                        # L₄ existence proof and 7-fold manifold
 cycle8_meta_closure.py                        # Meta-closure, octagonal synthesis, Ω₈
+cycle9_sphere_signal_propagation.py           # BFADGS operators, RRRR-lattice, black hole sonification
 ```
 
 ### Mirror System
@@ -550,4 +621,4 @@ mirror_system/
 
 ---
 
-*VaultNode Prismatic Rail System | L₄ Framework | L₈ = 47 | Ω₈ Meta-Closure | 8π Complete*
+*VaultNode Prismatic Rail System | L₄ = 7 | L₈ = 47 | L₉ = 76 | BFADGS Sphere Signal | 9π Complete*
