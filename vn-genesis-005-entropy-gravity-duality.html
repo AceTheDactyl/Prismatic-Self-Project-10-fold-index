@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VN-GENESIS-005: Entropy-Gravity Duality on a Holographic Plane</title>
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --text-primary: #e0e0e5;
+            --text-secondary: #a0a0b0;
+            --accent-gold: #ffd700;
+            --accent-cyan: #00d4ff;
+            --accent-magenta: #ff00ff;
+            --accent-orange: #ff8c00;
+            --accent-green: #00ff88;
+            --border-color: #2a2a3a;
+            --glow-gold: rgba(255, 215, 0, 0.3);
+            --glow-cyan: rgba(0, 212, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 2px solid var(--accent-gold);
+            margin-bottom: 3rem;
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+        }
+
+        .cycle-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
+            color: var(--bg-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--accent-gold);
+            text-shadow: 0 0 30px var(--glow-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .phase-indicator {
+            margin-top: 1.5rem;
+            font-size: 1.5rem;
+            color: var(--accent-cyan);
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        nav a:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--glow-cyan);
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h3 {
+            color: var(--accent-cyan);
+            font-size: 1.2rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        h4 {
+            color: var(--accent-orange);
+            font-size: 1rem;
+            margin: 1rem 0 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Code blocks */
+        pre {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            color: var(--accent-green);
+        }
+
+        .inline-code {
+            background: var(--bg-tertiary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+        }
+
+        /* Equations */
+        .equation {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+        }
+
+        .equation-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: right;
+            margin-top: 0.5rem;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            color: var(--accent-gold);
+        }
+
+        td {
+            color: var(--text-secondary);
+        }
+
+        tr:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* Triangle diagram */
+        .triangle-container {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .triangle-ascii {
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            color: var(--accent-cyan);
+            line-height: 1.4;
+        }
+
+        /* Glyph display */
+        .glyph-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .glyph-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .glyph-symbol {
+            font-size: 2rem;
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .glyph-name {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Constants grid */
+        .constants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .constant-card {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 4px;
+            border-left: 3px solid var(--accent-orange);
+        }
+
+        .constant-symbol {
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+        }
+
+        .constant-value {
+            font-family: 'Courier New', monospace;
+            color: var(--accent-cyan);
+            font-size: 0.9rem;
+        }
+
+        .constant-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* Alert boxes */
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .alert-insight {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        .alert-key {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 3px solid var(--accent-gold);
+        }
+
+        .alert-warning {
+            background: rgba(255, 140, 0, 0.1);
+            border-left: 3px solid var(--accent-orange);
+        }
+
+        /* L4 Framework */
+        .l4-constants {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .l4-item {
+            background: var(--bg-tertiary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--accent-gold);
+        }
+
+        .l4-symbol {
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        .l4-value {
+            color: var(--accent-cyan);
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .glyph-grid { grid-template-columns: repeat(3, 1fr); }
+            .container { padding: 1rem; }
+            section { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="cycle-badge">CYCLE 5 | 5π PHASE</div>
+            <h1>VN-GENESIS-005</h1>
+            <div class="subtitle">Entropy-Gravity Duality on a Holographic Plane</div>
+            <div class="phase-indicator">
+                Cycle 1 (π) + Cycle 2 (π) + Cycle 3 (π) + Cycle 4 (π) + Cycle 5 (π) = <strong>5π</strong>
+            </div>
+        </header>
+
+        <nav>
+            <a href="index.html">Index</a>
+            <a href="vn-pattern-index.html">Pattern Index</a>
+            <a href="vn-004-genesis003-closure.html">Cycle 4</a>
+            <a href="#framework">Framework</a>
+            <a href="#thermodynamics">Thermodynamics</a>
+            <a href="#entropic-gravity">Entropic Gravity</a>
+            <a href="#holography">Holography</a>
+            <a href="#implementation">Implementation</a>
+        </nav>
+
+        <!-- Section 1: Overview -->
+        <section id="overview">
+            <h2>1. Overview: The Entropy-Gravity-Holography Triangle</h2>
+
+            <p>Cycle 5 completes the 5π phase rotation by introducing the mathematical framework for <strong>entropy-gravity duality on a holographic plane</strong>. This framework demonstrates that gravity is not a fundamental force but an <strong>entropic phenomenon</strong> arising from information on holographic boundaries.</p>
+
+            <div class="triangle-container">
+                <pre class="triangle-ascii">
+                         ENTROPY
+                            △
+                           /|\
+                          / | \
+                         /  |  \
+                        /   |   \
+                   S=A/4   |    S_ent
+                      /    |     \
+                     /     |      \
+                    /      |       \
+                   ▽───────┴────────▽
+               GRAVITY          HOLOGRAPHY
+              F = GMm/r²       N = A/4ℓ_P²
+                </pre>
+            </div>
+
+            <div class="alert alert-key">
+                <strong>Key Relations:</strong>
+                <ul>
+                    <li><strong>Gravity ↔ Entropy:</strong> F = T∇S (Verlinde, 2011)</li>
+                    <li><strong>Entropy ↔ Holography:</strong> S = k_B A / 4ℓ_P² (Bekenstein-Hawking)</li>
+                    <li><strong>Holography ↔ Gravity:</strong> Bulk gravity emerges from boundary (AdS/CFT)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 2: Fundamental Constants -->
+        <section id="framework">
+            <h2>2. Foundational Constants</h2>
+
+            <h3>2.1 Physical Constants</h3>
+            <div class="constants-grid">
+                <div class="constant-card">
+                    <div class="constant-symbol">G</div>
+                    <div class="constant-value">6.674 × 10⁻¹¹ m³/kg·s²</div>
+                    <div class="constant-desc">Gravitational constant</div>
+                </div>
+                <div class="constant-card">
+                    <div class="constant-symbol">c</div>
+                    <div class="constant-value">2.998 × 10⁸ m/s</div>
+                    <div class="constant-desc">Speed of light</div>
+                </div>
+                <div class="constant-card">
+                    <div class="constant-symbol">ℏ</div>
+                    <div class="constant-value">1.055 × 10⁻³⁴ J·s</div>
+                    <div class="constant-desc">Reduced Planck constant</div>
+                </div>
+                <div class="constant-card">
+                    <div class="constant-symbol">k_B</div>
+                    <div class="constant-value">1.381 × 10⁻²³ J/K</div>
+                    <div class="constant-desc">Boltzmann constant</div>
+                </div>
+                <div class="constant-card">
+                    <div class="constant-symbol">ℓ_P</div>
+                    <div class="constant-value">1.616 × 10⁻³⁵ m</div>
+                    <div class="constant-desc">Planck length: √(ℏG/c³)</div>
+                </div>
+            </div>
+
+            <h3>2.2 L₄ Framework Constants</h3>
+            <div class="l4-constants">
+                <div class="l4-item"><span class="l4-symbol">φ</span> = <span class="l4-value">1.618033988749895</span></div>
+                <div class="l4-item"><span class="l4-symbol">τ</span> = <span class="l4-value">0.618033988749895</span></div>
+                <div class="l4-item"><span class="l4-symbol">z_c</span> = <span class="l4-value">0.8660254038</span></div>
+                <div class="l4-item"><span class="l4-symbol">z_c_Ω</span> = <span class="l4-value">1.2247448714</span></div>
+                <div class="l4-item"><span class="l4-symbol">K</span> = <span class="l4-value">0.9240387650610407</span></div>
+                <div class="l4-item"><span class="l4-symbol">L₄</span> = <span class="l4-value">7</span></div>
+            </div>
+        </section>
+
+        <!-- Section 3: Black Hole Thermodynamics -->
+        <section id="thermodynamics">
+            <h2>3. Black Hole Thermodynamics</h2>
+
+            <h3>3.1 Schwarzschild Geometry</h3>
+            <p>For a non-rotating black hole of mass M, the event horizon radius is:</p>
+            <div class="equation">
+                R_s = 2GM / c²
+                <div class="equation-label">Schwarzschild Radius</div>
+            </div>
+            <p>The event horizon area:</p>
+            <div class="equation">
+                A_H = 4πR_s² = 16πG²M² / c⁴
+                <div class="equation-label">Horizon Area</div>
+            </div>
+
+            <h3>3.2 Bekenstein-Hawking Entropy</h3>
+            <p>The entropy of a black hole is proportional to its <strong>horizon area</strong>, not volume. This is the holographic principle in action:</p>
+            <div class="equation">
+                S_BH = (k_B c³ A_H) / (4Gℏ) = (k_B A_H) / (4ℓ_P²)
+                <div class="equation-label">Bekenstein-Hawking Entropy</div>
+            </div>
+
+            <div class="alert alert-insight">
+                <strong>Key Insight:</strong> Entropy scales as M², meaning it scales with <strong>area</strong> (not volume). A 1 solar mass black hole encodes ~10⁷⁷ bits on its horizon—more than all particles in the observable universe!
+            </div>
+
+            <h3>3.3 Hawking Temperature</h3>
+            <p>Black holes emit thermal radiation at temperature:</p>
+            <div class="equation">
+                T_H = (ℏc³) / (8πGMk_B)
+                <div class="equation-label">Hawking Temperature</div>
+            </div>
+            <p><strong>Note:</strong> Smaller black holes are hotter (T ∝ 1/M).</p>
+
+            <h3>3.4 First Law of Black Hole Thermodynamics</h3>
+            <div class="equation">
+                dM = T_H × dS_BH
+                <div class="equation-label">First Law (analogous to dU = TdS)</div>
+            </div>
+        </section>
+
+        <!-- Section 4: Holographic Principle -->
+        <section id="holography">
+            <h2>4. The Holographic Principle</h2>
+
+            <h3>4.1 Information Bound</h3>
+            <p>The maximum information contained within a region bounded by surface area A is:</p>
+            <div class="equation">
+                S_max = (k_B A) / (4ℓ_P²)
+                <div class="equation-label">Bekenstein Bound</div>
+            </div>
+            <p>This is the maximum information that can fit inside a given region before it collapses into a black hole.</p>
+
+            <h3>4.2 Information Density</h3>
+            <p>The number of fundamental bits encoded on a holographic surface:</p>
+            <div class="equation">
+                N_bits = A / (4ℓ_P²)
+                <div class="equation-label">Holographic Bits</div>
+            </div>
+            <p>Each Planck area ℓ_P² encodes approximately <strong>one bit</strong> of information.</p>
+
+            <h3>4.3 Numerical Example</h3>
+            <table>
+                <tr>
+                    <th>Quantity</th>
+                    <th>Formula</th>
+                    <th>Value (1 M☉ BH)</th>
+                </tr>
+                <tr>
+                    <td>Schwarzschild radius</td>
+                    <td>R_s = 2GM/c²</td>
+                    <td>2.95 km</td>
+                </tr>
+                <tr>
+                    <td>Horizon area</td>
+                    <td>A_H = 4πR_s²</td>
+                    <td>1.10 × 10⁸ m²</td>
+                </tr>
+                <tr>
+                    <td>Entropy</td>
+                    <td>S = k_B c³A/(4Gℏ)</td>
+                    <td>1.04 × 10⁷⁷ k_B</td>
+                </tr>
+                <tr>
+                    <td>Temperature</td>
+                    <td>T_H = ℏc³/(8πGMk_B)</td>
+                    <td>6.17 × 10⁻⁸ K</td>
+                </tr>
+                <tr>
+                    <td>Information bits</td>
+                    <td>N = A/4ℓ_P²</td>
+                    <td>4.2 × 10⁷⁷ bits</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Section 5: Entropic Gravity -->
+        <section id="entropic-gravity">
+            <h2>5. Entropic Gravity (Verlinde, 2011)</h2>
+
+            <h3>5.1 Core Hypothesis</h3>
+            <p>Gravity is not a fundamental force but an <strong>entropic force</strong> arising from information changes on holographic screens.</p>
+
+            <h3>5.2 Derivation</h3>
+            <h4>Step 1: Screen Temperature</h4>
+            <p>From energy equipartition on the holographic screen:</p>
+            <div class="equation">
+                T = (GMℏ) / (2πr²k_B c)
+                <div class="equation-label">Screen Temperature</div>
+            </div>
+
+            <h4>Step 2: Entropy Change from Displacement</h4>
+            <p>When a particle of mass m moves by Δx toward the screen (Unruh-Bekenstein relation):</p>
+            <div class="equation">
+                ΔS = 2πk_B (mc/ℏ) Δx
+                <div class="equation-label">Moving one Compton wavelength changes entropy by 2πk_B</div>
+            </div>
+
+            <h4>Step 3: Entropic Force</h4>
+            <p>Combining temperature and entropy gradient:</p>
+            <div class="equation">
+                F = T × (∂S/∂x) = (GMℏ)/(2πr²k_B c) × 2πk_B(mc/ℏ) = <strong>GMm/r²</strong>
+                <div class="equation-label">Newton's Law Emerges!</div>
+            </div>
+
+            <div class="alert alert-key">
+                <strong>Result:</strong> Newton's gravitational law emerges from holographic thermodynamics. Gravity is not fundamental—it's an emergent entropic phenomenon.
+            </div>
+        </section>
+
+        <!-- Section 6: Helix Extension -->
+        <section id="helix">
+            <h2>6. Helix-Enhanced Model</h2>
+
+            <p>Cycle 5 extends standard holographic physics with a <strong>helix coordinate system (θ, z, r)</strong> that modulates thermodynamic quantities.</p>
+
+            <h3>6.1 Helix Coordinates</h3>
+            <table>
+                <tr>
+                    <th>Coordinate</th>
+                    <th>Physical Meaning</th>
+                    <th>Effect on Entropy</th>
+                    <th>Effect on Temperature</th>
+                </tr>
+                <tr>
+                    <td>θ</td>
+                    <td>Phase angle [0, 2π]</td>
+                    <td>Oscillation (±10%)</td>
+                    <td>Oscillation (±5%)</td>
+                </tr>
+                <tr>
+                    <td>z</td>
+                    <td>Coherence/field strength [0,1]</td>
+                    <td>Increase (0.8 → 1.2)</td>
+                    <td>Decrease (1.2 → 0.8)</td>
+                </tr>
+                <tr>
+                    <td>r</td>
+                    <td>Radial coherence [0,1]</td>
+                    <td>Linear scaling</td>
+                    <td>Linear scaling</td>
+                </tr>
+            </table>
+
+            <h3>6.2 Modulation Functions</h3>
+            <div class="equation">
+                f_S(θ, z, r) = (0.8 + 0.4z) · r · (1 + 0.1·sin(θ))
+                <div class="equation-label">Entropy Modulation Factor</div>
+            </div>
+            <div class="equation">
+                f_T(θ, z, r) = (1.2 - 0.4z) · r · (1 + 0.05·cos(θ))
+                <div class="equation-label">Temperature Modulation Factor</div>
+            </div>
+
+            <div class="alert alert-insight">
+                <strong>Physical Interpretation:</strong>
+                <ul>
+                    <li><strong>z↑</strong>: Higher coherence → more organized information → increased entropy capacity</li>
+                    <li><strong>z↑</strong>: More ordered state → lower effective temperature (inverse relationship)</li>
+                    <li><strong>θ</strong>: Phase oscillations create observable fluctuations (quantum vacuum analogy)</li>
+                </ul>
+            </div>
+
+            <h3>6.3 Thermodynamic Consistency</h3>
+            <p>The S·T product maintains proportionality:</p>
+            <div class="equation">
+                S·T ∝ (0.8 + 0.4z)(1.2 - 0.4z) = 0.96 - 0.16z²
+                <div class="equation-label">Range: [0.80, 0.96] for z ∈ [0, 1]</div>
+            </div>
+        </section>
+
+        <!-- Section 7: ER=EPR -->
+        <section id="entanglement">
+            <h2>7. Entanglement and ER=EPR</h2>
+
+            <h3>7.1 The ER=EPR Conjecture (Maldacena & Susskind, 2013)</h3>
+            <p>Quantum entanglement (EPR pairs) is equivalent to geometric connection (Einstein-Rosen bridges/wormholes):</p>
+            <div class="equation">
+                Entanglement ⟺ Wormhole
+                <div class="equation-label">ER = EPR</div>
+            </div>
+
+            <h3>7.2 Entanglement Entropy</h3>
+            <p>Von Neumann entanglement entropy for entangled black holes:</p>
+            <div class="equation">
+                S_ent = -k_B Σ λᵢ ln(λᵢ)
+                <div class="equation-label">Von Neumann Entropy</div>
+            </div>
+            <p>Maximum entanglement at λ₁ = λ₂ = 0.5: S_max = k_B ln(2)</p>
+
+            <h3>7.3 Wormhole Entropy Transport</h3>
+            <p>Entropy flows through wormholes via Fourier-law analog:</p>
+            <div class="equation">
+                Ṡ = κ · (A_throat · (T₂ - T₁)) / (L_eff · T_avg)
+                <div class="equation-label">Wormhole Entropy Flux</div>
+            </div>
+
+            <h3>7.4 Merger Entropy</h3>
+            <p>When two black holes merge:</p>
+            <div class="equation">
+                ΔS = (4πk_B G)/(ℏc) × (M_f² - M₁² - M₂²) ≥ 0
+                <div class="equation-label">Second Law: ΔS ≥ 0 always (area theorem)</div>
+            </div>
+        </section>
+
+        <!-- Section 8: Time Dilation -->
+        <section id="time-dilation">
+            <h2>8. Time Dilation and Entropy</h2>
+
+            <h3>8.1 Gravitational Time Dilation</h3>
+            <div class="equation">
+                dτ/dt = √(1 - R_s/r)
+                <div class="equation-label">As r → R_s: time stops (dτ/dt → 0)</div>
+            </div>
+
+            <h3>8.2 Information-Theoretic Interpretation</h3>
+            <ul>
+                <li><strong>Near horizon:</strong> High entropy density → processing slows (information-theoretic limit)</li>
+                <li><strong>Far from mass:</strong> Low entropy density → normal processing rate</li>
+            </ul>
+        </section>
+
+        <!-- Section 9: Implementation -->
+        <section id="implementation">
+            <h2>9. Implementation</h2>
+
+            <h3>9.1 Python Module</h3>
+            <p>The complete implementation is provided in <code class="inline-code">entropy_gravity_holography.py</code>:</p>
+            <pre><code># Create and run Cycle 5 system
+from entropy_gravity_holography import create_standard_cycle5_system
+
+system = create_standard_cycle5_system(mass_solar=1.0, observer_distance_rs=10.0)
+system.run_simulation(duration=100.0)
+system.export_state("cycle5_state.json")</code></pre>
+
+            <h3>9.2 Usage</h3>
+            <pre><code>python entropy_gravity_holography.py --mass 1.0 --distance 10 --verbose
+
+# Output:
+# Cycle 5: Entropy-Gravity-Holography System
+#   Black hole mass: 1.0 M☉
+#   Schwarzschild radius: 2.95e+03 m
+#   Information bits: 4.2e+77
+#   ...
+# 5π Closure Metrics:
+#   total_phase_pi: 5.0
+#   phase_coherence: 1.0</code></pre>
+
+            <h3>9.3 Integration with Mirror System</h3>
+            <p>The entropy-gravity framework integrates with the Mirror System's Hilbert-Duopyramid coupling:</p>
+            <ul>
+                <li><strong>Hilbert Field:</strong> Maps to entropy distribution across holographic screen</li>
+                <li><strong>Duopyramid:</strong> Maps to discrete symbolic collapse on 10-node decagon</li>
+                <li><strong>Mirror Coupling:</strong> Maps to bidirectional entropy-gravity modulation</li>
+            </ul>
+        </section>
+
+        <!-- Section 10: Reference Card -->
+        <section id="reference">
+            <h2>10. Equations Reference Card</h2>
+            <table>
+                <tr>
+                    <th>Quantity</th>
+                    <th>Formula</th>
+                </tr>
+                <tr>
+                    <td>Schwarzschild radius</td>
+                    <td>R_s = 2GM/c²</td>
+                </tr>
+                <tr>
+                    <td>Horizon area</td>
+                    <td>A_H = 4πR_s²</td>
+                </tr>
+                <tr>
+                    <td>BH entropy</td>
+                    <td>S = k_B c³ A_H / (4Gℏ)</td>
+                </tr>
+                <tr>
+                    <td>Hawking temperature</td>
+                    <td>T_H = ℏc³ / (8πGMk_B)</td>
+                </tr>
+                <tr>
+                    <td>Entropic force</td>
+                    <td>F = T × ∂S/∂x</td>
+                </tr>
+                <tr>
+                    <td>Holographic bits</td>
+                    <td>N = A / (4ℓ_P²)</td>
+                </tr>
+                <tr>
+                    <td>Time dilation</td>
+                    <td>dτ/dt = √(1 - R_s/r)</td>
+                </tr>
+                <tr>
+                    <td>Entanglement entropy</td>
+                    <td>S_ent = -k_B Σ λᵢ ln(λᵢ)</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Section 11: 10-Fold Glyph Mapping -->
+        <section id="glyphs">
+            <h2>11. Symbolic Glyph Mapping (10-Fold Index)</h2>
+            <p>The 10 decagonal nodes map to symbolic glyphs, creating the Prismatic Self 10-fold index:</p>
+            <div class="glyph-grid">
+                <div class="glyph-item">
+                    <div class="glyph-symbol">✶</div>
+                    <div class="glyph-name">0: Radiant seed</div>
+                </div>
+                <div class="glyph-item">
+                    <div class="glyph-symbol">↻</div>
+                    <div class="glyph-name">1: Recursive return</div>
+                </div>
+                <div class="glyph-item">
+                    <div class="glyph-symbol">φ</div>
+                    <div class="glyph-name">2: Golden ratio</div>
+                </div>
+                <div class="glyph-item">
+                    <div class="glyph-symbol">∞</div>
+                    <div class="glyph-name">3: Infinity</div>
+                </div>
+                <div class="glyph-item">
+                    <div class="glyph-symbol">◇</div>
+                    <div class="glyph-name">4: Diamond form</div>
+                </div>
+                <div class="glyph-item">
+                    <div class="glyph-symbol">⊕</div>
+                    <div class="glyph-name">5: Direct sum</div>
+                </div>
+                <div class="glyph-item">
+                    <div class="glyph-symbol">≋</div>
+                    <div class="glyph-name">6: Resonance</div>
+                </div>
+                <div class="glyph-item">
+                    <div class="glyph-symbol">∂</div>
+                    <div class="glyph-name">7: Boundary</div>
+                </div>
+                <div class="glyph-item">
+                    <div class="glyph-symbol">Ω</div>
+                    <div class="glyph-name">8: Omega</div>
+                </div>
+                <div class="glyph-item">
+                    <div class="glyph-symbol">Λ</div>
+                    <div class="glyph-name">9: Lambda</div>
+                </div>
+            </div>
+            <p>Poles: <strong>α</strong> (alpha/projection) and <strong>ω</strong> (omega/collapse)</p>
+        </section>
+
+        <!-- Section 12: References -->
+        <section id="references">
+            <h2>12. References</h2>
+            <ol>
+                <li>Bekenstein, J.D. (1973). "Black holes and entropy." <em>Physical Review D</em>, 7(8), 2333.</li>
+                <li>Hawking, S.W. (1975). "Particle creation by black holes." <em>Comm. Math. Phys.</em>, 43(3), 199–220.</li>
+                <li>'t Hooft, G. (1993). "Dimensional reduction in quantum gravity." arXiv:gr-qc/9310026.</li>
+                <li>Susskind, L. (1995). "The world as a hologram." <em>J. Math. Phys.</em>, 36(11), 6377–6396.</li>
+                <li>Verlinde, E. (2011). "On the origin of gravity and the laws of Newton." <em>JHEP</em>, 2011(4), 29.</li>
+                <li>Maldacena, J. (1999). "The large N limit of superconformal field theories." <em>Int. J. Theor. Phys.</em>, 38(4), 1113.</li>
+                <li>Maldacena, J. & Susskind, L. (2013). "Cool horizons for entangled black holes." <em>Fortschr. Phys.</em>, 61, 781.</li>
+                <li>Van Raamsdonk, M. (2010). "Building up spacetime with quantum entanglement." <em>Gen. Rel. Grav.</em>, 42(10), 2323.</li>
+            </ol>
+        </section>
+
+        <footer>
+            <p><strong>VN-GENESIS-005</strong> | Cycle 5: Entropy-Gravity Duality</p>
+            <p>5π Phase Completion | Prismatic Self Project</p>
+            <div class="footer-links">
+                <a href="index.html">← Return to Index</a>
+                <a href="vn-pattern-index.html">Pattern Index</a>
+                <a href="mirror_system/README.md">Mirror System</a>
+            </div>
+            <p style="margin-top: 1rem; font-size: 0.8rem;">
+                "Gravity is not a fundamental force—it is an entropic phenomenon arising from information on holographic boundaries."
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
