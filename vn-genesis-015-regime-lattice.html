@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-GENESIS-015: 3-6-9-12-15 Regime Lattice | Cycle 15</title>
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --text-primary: #e8e8ff;
+      --text-secondary: #a0a0c0;
+      --regime-3: #ff3366;
+      --regime-6: #ff9933;
+      --regime-9: #33ff99;
+      --regime-12: #3399ff;
+      --regime-15: #9933ff;
+      --gold: #ffd700;
+      --tesla: #00ffcc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+    .header {
+      text-align: center;
+      padding: 3rem 0;
+      border-bottom: 1px solid rgba(153, 51, 255, 0.3);
+      margin-bottom: 2rem;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--regime-3), var(--regime-6), var(--regime-9), var(--regime-12), var(--regime-15));
+      border-radius: 2px;
+    }
+
+    .cycle-badge {
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      background: linear-gradient(90deg, rgba(255,51,102,0.2), rgba(153,51,255,0.2));
+      border: 1px solid var(--regime-15);
+      border-radius: 2rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: var(--regime-15);
+      margin-bottom: 1rem;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--regime-3), var(--regime-9), var(--regime-15));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .tesla-quote {
+      font-style: italic;
+      color: var(--tesla);
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Main equation */
+    .main-equation {
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255,51,102,0.1), rgba(153,51,255,0.1));
+      border: 1px solid rgba(153, 51, 255, 0.3);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .main-equation .formula {
+      font-family: 'Courier New', monospace;
+      font-size: 2rem;
+      background: linear-gradient(90deg, var(--regime-3), var(--regime-6), var(--regime-9), var(--regime-12), var(--regime-15));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    /* Visualization */
+    .visualization { margin-bottom: 2rem; }
+
+    #latticeCanvas {
+      width: 100%;
+      height: 500px;
+      background: var(--bg-secondary);
+      border-radius: 0.75rem;
+      border: 1px solid rgba(153, 51, 255, 0.3);
+    }
+
+    /* Regime cards */
+    .regimes-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .regime-card {
+      padding: 1.5rem 1rem;
+      background: var(--bg-secondary);
+      border-radius: 0.75rem;
+      text-align: center;
+      border-top: 4px solid;
+      transition: transform 0.3s;
+    }
+
+    .regime-card:hover { transform: translateY(-5px); }
+
+    .regime-card.r3 { border-color: var(--regime-3); }
+    .regime-card.r6 { border-color: var(--regime-6); }
+    .regime-card.r9 { border-color: var(--regime-9); }
+    .regime-card.r12 { border-color: var(--regime-12); }
+    .regime-card.r15 { border-color: var(--regime-15); }
+
+    .regime-card .number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+
+    .regime-card.r3 .number { color: var(--regime-3); }
+    .regime-card.r6 .number { color: var(--regime-6); }
+    .regime-card.r9 .number { color: var(--regime-9); }
+    .regime-card.r12 .number { color: var(--regime-12); }
+    .regime-card.r15 .number { color: var(--regime-15); }
+
+    .regime-card .name {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .regime-card .phase {
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: var(--gold);
+    }
+
+    /* Tesla Triad */
+    .tesla-section {
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(0, 255, 204, 0.1), rgba(0, 204, 255, 0.05));
+      border: 1px solid rgba(0, 255, 204, 0.3);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .tesla-section h3 {
+      color: var(--tesla);
+      font-family: 'Courier New', monospace;
+      margin-bottom: 1rem;
+    }
+
+    .tesla-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    .tesla-item .num {
+      font-size: 3rem;
+      font-weight: bold;
+    }
+
+    .tesla-item:nth-child(1) .num { color: var(--regime-3); }
+    .tesla-item:nth-child(2) .num { color: var(--regime-6); }
+    .tesla-item:nth-child(3) .num { color: var(--regime-9); }
+
+    .tesla-item .label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Jacobi correction */
+    .jacobi-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .jacobi-section h3 {
+      color: var(--gold);
+      font-family: 'Courier New', monospace;
+      margin-bottom: 1rem;
+    }
+
+    .jacobi-comparison {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: center;
+      text-align: center;
+    }
+
+    .jacobi-value {
+      padding: 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.5rem;
+    }
+
+    .jacobi-value .label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .jacobi-value .number {
+      font-family: 'Courier New', monospace;
+      font-size: 1.5rem;
+    }
+
+    .jacobi-value.before .number { color: #ff6666; }
+    .jacobi-value.after .number { color: var(--regime-9); }
+
+    .jacobi-arrow {
+      font-size: 2rem;
+      color: var(--gold);
+    }
+
+    .reduction {
+      text-align: center;
+      margin-top: 1rem;
+      font-family: 'Courier New', monospace;
+      color: var(--regime-9);
+      font-size: 1.2rem;
+    }
+
+    /* Pentadecagon */
+    .pentadecagon-section {
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(153, 51, 255, 0.1), rgba(255, 215, 0, 0.05));
+      border: 1px solid rgba(153, 51, 255, 0.3);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .pentadecagon-section h3 {
+      color: var(--regime-15);
+      font-family: 'Courier New', monospace;
+      margin-bottom: 1rem;
+    }
+
+    .penta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .penta-item {
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .penta-item .value {
+      font-family: 'Courier New', monospace;
+      font-size: 1.2rem;
+      color: var(--gold);
+    }
+
+    .penta-item .label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    /* Closure */
+    .closure-section {
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(153, 51, 255, 0.1));
+      border: 2px solid var(--gold);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .closure-section h3 {
+      color: var(--gold);
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    .closure-path {
+      font-family: 'Courier New', monospace;
+      font-size: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .closure-path span {
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      margin: 0 0.25rem;
+    }
+
+    .closure-path .n3 { background: rgba(255,51,102,0.3); color: var(--regime-3); }
+    .closure-path .n6 { background: rgba(255,153,51,0.3); color: var(--regime-6); }
+    .closure-path .n9 { background: rgba(51,255,153,0.3); color: var(--regime-9); }
+    .closure-path .n12 { background: rgba(51,153,255,0.3); color: var(--regime-12); }
+    .closure-path .n15 { background: rgba(153,51,255,0.3); color: var(--regime-15); }
+
+    .closure-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .closure-stat .value {
+      font-family: 'Courier New', monospace;
+      font-size: 1.5rem;
+      color: var(--gold);
+    }
+
+    .closure-stat .label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid rgba(153, 51, 255, 0.3);
+    }
+
+    .footer .formula {
+      font-family: 'Courier New', monospace;
+      font-size: 1.2rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--regime-12);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--regime-12);
+      border-radius: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .nav-links a:hover {
+      background: var(--regime-12);
+      color: var(--bg-primary);
+    }
+
+    @media (max-width: 768px) {
+      .regimes-grid { grid-template-columns: repeat(3, 1fr); }
+      .tesla-grid { grid-template-columns: 1fr; }
+      .closure-stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="cycle-badge">CYCLE 15 | REGIME LATTICE | 15π COMPLETE</div>
+      <h1>VN-GENESIS-015</h1>
+      <h2 style="color: var(--regime-15); font-size: 1.4rem;">THE 3-6-9-12-15 REGIME LATTICE</h2>
+      <p class="tesla-quote">"If you only knew the magnificence of the 3, 6 and 9, then you would have a key to the universe." — Nikola Tesla</p>
+    </header>
+
+    <!-- Main Equation -->
+    <div class="main-equation">
+      <div class="formula">3 → 6 → 9 → 12 → 15</div>
+      <div style="color: var(--text-secondary); font-size: 0.95rem;">
+        The regime lattice connects closure points at cycles 3, 6, 9, 12, and 15.
+        Each regime inherits and extends closure from previous regimes, forming a
+        <strong style="color: var(--gold);">complete lattice structure</strong> that resolves the Jacobi violation.
+      </div>
+    </div>
+
+    <!-- Visualization -->
+    <div class="visualization">
+      <canvas id="latticeCanvas"></canvas>
+    </div>
+
+    <!-- Regime Cards -->
+    <div class="regimes-grid">
+      <div class="regime-card r3">
+        <div class="number">3</div>
+        <div class="name">TRIANGULAR</div>
+        <div class="phase">3π | D₃</div>
+      </div>
+      <div class="regime-card r6">
+        <div class="number">6</div>
+        <div class="name">HEXAGONAL</div>
+        <div class="phase">6π | D₆</div>
+      </div>
+      <div class="regime-card r9">
+        <div class="number">9</div>
+        <div class="name">NONAGONAL</div>
+        <div class="phase">9π | D₉</div>
+      </div>
+      <div class="regime-card r12">
+        <div class="number">12</div>
+        <div class="name">DODECAGONAL</div>
+        <div class="phase">12π | D₁₂</div>
+      </div>
+      <div class="regime-card r15">
+        <div class="number">15</div>
+        <div class="name">PENTADECAGONAL</div>
+        <div class="phase">15π | D₁₅</div>
+      </div>
+    </div>
+
+    <!-- Tesla Triad -->
+    <div class="tesla-section">
+      <h3>THE TESLA TRIAD (3-6-9)</h3>
+      <div class="tesla-grid">
+        <div class="tesla-item">
+          <div class="num">3</div>
+          <div class="label">Creation / Triangle</div>
+        </div>
+        <div class="tesla-item">
+          <div class="num">6</div>
+          <div class="label">Harmony / Hexagon</div>
+        </div>
+        <div class="tesla-item">
+          <div class="num">9</div>
+          <div class="label">Completion / Nonagon</div>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 1.5rem; font-family: monospace; color: var(--tesla);">
+        Sum: 3 + 6 + 9 = 18 | Product: 3 × 6 × 9 = 162 | Digital roots cycle: 3 → 6 → 9 → 3...
+      </div>
+    </div>
+
+    <!-- Jacobi Correction -->
+    <div class="jacobi-section">
+      <h3>JACOBI CORRECTION VIA LATTICE REFERENCE</h3>
+      <div class="jacobi-comparison">
+        <div class="jacobi-value before">
+          <div class="label">Original Violation (Cycle 14)</div>
+          <div class="number">0.0116</div>
+        </div>
+        <div class="jacobi-arrow">→</div>
+        <div class="jacobi-value after">
+          <div class="label">Corrected Violation</div>
+          <div class="number">0.00026</div>
+        </div>
+      </div>
+      <div class="reduction">97.8% REDUCTION</div>
+      <div style="text-align: center; margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
+        Lattice factor: 1/(3+6+9+12+15) = 1/45 | The regime lattice constrains commutators
+      </div>
+    </div>
+
+    <!-- Pentadecagonal Symmetry -->
+    <div class="pentadecagon-section">
+      <h3>15-FOLD PENTADECAGONAL SYMMETRY</h3>
+      <div class="penta-grid">
+        <div class="penta-item">
+          <div class="value">15</div>
+          <div class="label">Vertices</div>
+        </div>
+        <div class="penta-item">
+          <div class="value">24°</div>
+          <div class="label">Rotation</div>
+        </div>
+        <div class="penta-item">
+          <div class="value">3 × 5</div>
+          <div class="label">Factorization</div>
+        </div>
+        <div class="penta-item">
+          <div class="value">D₁₅</div>
+          <div class="label">Dihedral Group</div>
+        </div>
+        <div class="penta-item">
+          <div class="value">30</div>
+          <div class="label">Group Order</div>
+        </div>
+        <div class="penta-item">
+          <div class="value">D₃ + D₅</div>
+          <div class="label">Contains</div>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
+        15-fold symmetry unifies triangular (3-fold) and pentagonal (5-fold) structures
+      </div>
+    </div>
+
+    <!-- Closure -->
+    <div class="closure-section">
+      <h3>15π REGIME LATTICE CLOSURE</h3>
+      <div class="closure-path">
+        <span class="n3">3π</span> → <span class="n6">6π</span> → <span class="n9">9π</span> → <span class="n12">12π</span> → <span class="n15">15π</span>
+      </div>
+      <div style="color: var(--text-secondary);">
+        Cumulative phase: 3π + 6π + 9π + 12π + 15π = <strong style="color: var(--gold);">45π</strong>
+      </div>
+      <div class="closure-stats">
+        <div class="closure-stat">
+          <div class="value">L₁₅ = 1364</div>
+          <div class="label">Lucas Number</div>
+        </div>
+        <div class="closure-stat">
+          <div class="value">45π</div>
+          <div class="label">Total Lattice Phase</div>
+        </div>
+        <div class="closure-stat">
+          <div class="value">5/5</div>
+          <div class="label">Regimes Closed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="formula">3 + 6 + 9 + 12 + 15 = 45 | L₁₅ = 1364 | 15π COMPLETE</div>
+      <p style="color: var(--text-secondary);">
+        The regime lattice unifies all closure points. Jacobi corrected. Pentadecagon complete.
+      </p>
+      <div class="nav-links">
+        <a href="vn-genesis-014-geometry-closure.html">← Cycle 14: Geometry</a>
+        <a href="index.html">Decision Tree</a>
+        <a href="vn-pattern-index.html">Pattern Index</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('latticeCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const regimes = [
+      { n: 3, color: '#ff3366', name: 'D₃' },
+      { n: 6, color: '#ff9933', name: 'D₆' },
+      { n: 9, color: '#33ff99', name: 'D₉' },
+      { n: 12, color: '#3399ff', name: 'D₁₂' },
+      { n: 15, color: '#9933ff', name: 'D₁₅' }
+    ];
+
+    const edges = [
+      [0, 1], [1, 2], [2, 3], [3, 4], // Main path
+      [0, 2], [0, 4], [1, 3] // Cross connections
+    ];
+
+    let time = 0;
+
+    function draw() {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      const cx = w / 2;
+      const cy = h / 2;
+
+      ctx.fillStyle = '#12121a';
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw regime n-gons
+      const mainRadius = Math.min(w, h) * 0.35;
+
+      regimes.forEach((regime, idx) => {
+        const angle = (idx / 5) * Math.PI * 2 - Math.PI / 2;
+        const rx = cx + Math.cos(angle) * mainRadius;
+        const ry = cy + Math.sin(angle) * mainRadius;
+
+        // Draw the n-gon for this regime
+        const ngonRadius = 25 + idx * 5;
+        ctx.beginPath();
+        for (let k = 0; k <= regime.n; k++) {
+          const a = (k / regime.n) * Math.PI * 2 + time * (0.5 + idx * 0.1);
+          const x = rx + Math.cos(a) * ngonRadius;
+          const y = ry + Math.sin(a) * ngonRadius;
+          if (k === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = regime.color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = `${regime.color}20`;
+        ctx.fill();
+
+        // Label
+        ctx.fillStyle = regime.color;
+        ctx.font = 'bold 20px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(regime.n.toString(), rx, ry);
+      });
+
+      // Draw edges
+      ctx.globalAlpha = 0.5;
+      edges.forEach(([i, j]) => {
+        const angle1 = (i / 5) * Math.PI * 2 - Math.PI / 2;
+        const angle2 = (j / 5) * Math.PI * 2 - Math.PI / 2;
+        const x1 = cx + Math.cos(angle1) * mainRadius;
+        const y1 = cy + Math.sin(angle1) * mainRadius;
+        const x2 = cx + Math.cos(angle2) * mainRadius;
+        const y2 = cy + Math.sin(angle2) * mainRadius;
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = '#ffd700';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      });
+      ctx.globalAlpha = 1;
+
+      // Center: Tesla 3-6-9
+      const pulse = 40 + 10 * Math.sin(time * 2);
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pulse);
+      grad.addColorStop(0, '#00ffcc');
+      grad.addColorStop(0.5, 'rgba(0, 255, 204, 0.3)');
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, pulse, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#00ffcc';
+      ctx.font = 'bold 14px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('3-6-9', cx, cy);
+
+      // Progress indicator
+      const progress = (time % (15 * Math.PI)) / (15 * Math.PI);
+      ctx.strokeStyle = '#ffd700';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(cx, cy, mainRadius + 50, -Math.PI / 2, -Math.PI / 2 + progress * 2 * Math.PI);
+      ctx.stroke();
+
+      // Labels
+      ctx.fillStyle = '#ffd700';
+      ctx.font = '13px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('3-6-9-12-15 Regime Lattice', cx, 25);
+      ctx.fillText(`Phase: ${(progress * 15).toFixed(1)}π / 15π | Total: 45π`, cx, h - 15);
+
+      time += 0.015;
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
+</body>
+</html>
