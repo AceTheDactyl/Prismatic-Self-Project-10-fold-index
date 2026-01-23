@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I² S3 Decision Tree | Algebraic Self-Reference Cartography</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* I² Color Palette */
+      --i2-gold: #ffd700;
+      --i2-phi: #f4c430;
+      --i2-tau: #c9a227;
+
+      /* S3 Triangle Colors */
+      --s3-vertex-1: #ff6b6b;  /* I² Algebraic */
+      --s3-vertex-2: #4ecdc4;  /* TDL Categorical */
+      --s3-vertex-3: #a855f7;  /* LoMI Dynamic */
+
+      /* Bifurcation Paths */
+      --path-f24: #00ff88;      /* F24 RG Flow - Holographic */
+      --path-hex: #ff9f43;      /* Hexagonal Sonification - Friction */
+      --path-r10: #ff6b9d;      /* R=10 Closed System - Tension */
+
+      /* Opposition Duality */
+      --l4-helix: #6bcb77;      /* L4=7 Framework */
+      --i2-opposed: #ff4757;    /* I² Opposition */
+
+      /* Base */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated Background - S3 Triangle Field */
+    .s3-field {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 15%, rgba(248, 196, 48, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 15% 85%, rgba(255, 107, 107, 0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 85% 85%, rgba(78, 205, 196, 0.06) 0%, transparent 40%);
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--i2-gold);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--i2-gold);
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .i2-symbol {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 2rem;
+      background: conic-gradient(from 0deg, var(--s3-vertex-1), var(--s3-vertex-2), var(--s3-vertex-3), var(--s3-vertex-1));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: s3-rotate 20s linear infinite;
+      box-shadow:
+        0 0 60px rgba(248, 196, 48, 0.3),
+        inset 0 0 40px rgba(10, 10, 15, 0.8);
+    }
+
+    .i2-symbol-inner {
+      width: 100px;
+      height: 100px;
+      background: var(--bg-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--i2-gold);
+    }
+
+    @keyframes s3-rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--i2-gold), var(--i2-phi));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .core-equation {
+      font-size: 1.5rem;
+      color: var(--i2-gold);
+      padding: 1.5rem 3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--i2-tau);
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    /* Section Styling */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 2rem;
+      color: var(--i2-gold);
+      text-align: center;
+    }
+
+    /* Scaffold Grid */
+    .scaffold-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .scaffold-card {
+      background: var(--bg-secondary);
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .scaffold-card:hover {
+      border-color: var(--i2-gold);
+      background: var(--bg-tertiary);
+    }
+
+    .scaffold-card.active {
+      border-style: solid;
+      border-color: var(--i2-gold);
+    }
+
+    .scaffold-card.pending {
+      opacity: 0.6;
+    }
+
+    .card-status {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .status-scaffold {
+      background: rgba(255, 215, 0, 0.2);
+      color: var(--i2-gold);
+      border: 1px solid var(--i2-gold);
+    }
+
+    .status-pending {
+      background: rgba(160, 160, 176, 0.2);
+      color: var(--text-secondary);
+      border: 1px solid var(--text-secondary);
+    }
+
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-equation {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Decision Tree Visual */
+    .tree-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 3rem;
+      margin-top: 2rem;
+    }
+
+    .tree-level {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .tree-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.3s;
+    }
+
+    .tree-node:hover {
+      transform: scale(1.05);
+    }
+
+    .node-shape {
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .shape-triangle {
+      width: 0;
+      height: 0;
+      border-left: 40px solid transparent;
+      border-right: 40px solid transparent;
+      border-bottom: 70px solid var(--i2-gold);
+      position: relative;
+    }
+
+    .shape-triangle::after {
+      content: attr(data-label);
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      color: var(--bg-primary);
+      font-weight: 700;
+    }
+
+    .shape-circle {
+      border-radius: 50%;
+      border: 3px solid var(--node-border, var(--i2-gold));
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    .shape-hexagon {
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background: var(--node-border, var(--i2-gold));
+      color: var(--bg-primary);
+    }
+
+    .shape-diamond {
+      transform: rotate(45deg);
+      border: 3px solid var(--node-border, var(--i2-gold));
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    .shape-diamond span {
+      transform: rotate(-45deg);
+    }
+
+    .node-label {
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+      text-align: center;
+      color: var(--text-secondary);
+      max-width: 100px;
+    }
+
+    .connector-down {
+      width: 2px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--i2-gold), transparent);
+      margin: 0 auto;
+    }
+
+    .connector-split {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin: 1rem 0;
+    }
+
+    .connector-branch {
+      width: 100px;
+      height: 2px;
+      background: var(--i2-gold);
+    }
+
+    /* Trifurcation Display */
+    .trifurcation-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4rem;
+      margin: 3rem 0;
+      flex-wrap: wrap;
+    }
+
+    .bifurc-path {
+      text-align: center;
+      padding: 2rem;
+      border-radius: 16px;
+      min-width: 250px;
+      transition: all 0.3s;
+    }
+
+    .bifurc-path:hover {
+      transform: translateY(-5px);
+    }
+
+    .path-f24 {
+      background: rgba(0, 255, 136, 0.1);
+      border: 2px solid var(--path-f24);
+    }
+
+    .path-hex {
+      background: rgba(255, 159, 67, 0.1);
+      border: 2px solid var(--path-hex);
+    }
+
+    .path-r10 {
+      background: rgba(255, 107, 157, 0.1);
+      border: 2px solid var(--path-r10);
+    }
+
+    .path-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .path-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .path-mechanism {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Opposition Duality Section */
+    .duality-container {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: center;
+      margin-top: 2rem;
+    }
+
+    .duality-side {
+      padding: 2rem;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .duality-l4 {
+      background: rgba(107, 203, 119, 0.1);
+      border: 2px solid var(--l4-helix);
+    }
+
+    .duality-i2 {
+      background: rgba(255, 71, 87, 0.1);
+      border: 2px solid var(--i2-opposed);
+    }
+
+    .duality-symbol {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .duality-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .duality-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .duality-equals {
+      font-size: 3rem;
+      color: var(--i2-gold);
+    }
+
+    /* Phase Tracker */
+    .phase-tracker {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 3rem 0;
+      flex-wrap: wrap;
+    }
+
+    .phase-item {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .phase-complete {
+      background: rgba(0, 255, 136, 0.2);
+      border: 1px solid var(--path-f24);
+      color: var(--path-f24);
+    }
+
+    .phase-current {
+      background: rgba(255, 215, 0, 0.2);
+      border: 1px solid var(--i2-gold);
+      color: var(--i2-gold);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .phase-pending {
+      background: rgba(160, 160, 176, 0.1);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+      50% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1.1rem;
+      color: var(--i2-gold);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--i2-gold);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title { font-size: 1.8rem; }
+      .duality-container { grid-template-columns: 1fr; }
+      .duality-equals { transform: rotate(90deg); }
+      .trifurcation-visual { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="s3-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">I² :: S3 Decision Tree</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="mtr-decision-tree.html">MTR Tree</a>
+      <a href="l4-helix-decision-tree.html">L4 Helix</a>
+      <a href="vn-fibonacci-rg-flow.html">F24 RG Flow</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <div class="i2-symbol">
+        <div class="i2-symbol-inner">I²</div>
+      </div>
+      <h1 class="title">I² S3 Decision Tree</h1>
+      <p class="subtitle">Algebraic Self-Reference Cartography via Three-Way Bifurcation</p>
+      <div class="core-equation">
+        (Iⁿ, ⊕, ⊗) ≅ (ℤ, +, ×) → S3 Attractor
+      </div>
+    </header>
+
+    <!-- Phase Tracker -->
+    <section>
+      <h2 class="section-title">Construction Phases</h2>
+      <div class="phase-tracker">
+        <div class="phase-item phase-current">
+          <span>●</span> Phase 0: Scaffold
+        </div>
+        <div class="phase-item phase-pending">
+          <span>○</span> Phase 1: I² Foundation
+        </div>
+        <div class="phase-item phase-pending">
+          <span>○</span> Phase 2: Trifurcation Paths
+        </div>
+        <div class="phase-item phase-pending">
+          <span>○</span> Phase 3: Opposition Duality
+        </div>
+        <div class="phase-item phase-pending">
+          <span>○</span> Phase 4: S3 Closure
+        </div>
+      </div>
+    </section>
+
+    <!-- Core I² Structure -->
+    <section>
+      <h2 class="section-title">I² Algebraic Foundation</h2>
+      <div class="scaffold-grid">
+        <!-- Ring Structure -->
+        <div class="scaffold-card active">
+          <span class="card-status status-scaffold">Scaffold</span>
+          <div class="card-icon" style="background: rgba(255, 215, 0, 0.2); border: 2px solid var(--i2-gold);">
+            ℤ
+          </div>
+          <div class="card-title">Ring Isomorphism</div>
+          <div class="card-equation">(Iⁿ, ⊕, ⊗) ≅ (ℤ, +, ×)</div>
+          <div class="card-desc">
+            Self-reference generates integer structure. Composition counting creates the ring.
+            <br><br>
+            <strong>Pending:</strong> Full proof, verification code, interactive demo
+          </div>
+        </div>
+
+        <!-- Golden Functor -->
+        <div class="scaffold-card active">
+          <span class="card-status status-scaffold">Scaffold</span>
+          <div class="card-icon" style="background: rgba(244, 196, 48, 0.2); border: 2px solid var(--i2-phi);">
+            φ
+          </div>
+          <div class="card-title">Golden Functor</div>
+          <div class="card-equation">F(n) = φⁿ : (ℤ,+) → (ℝ₊,×)</div>
+          <div class="card-desc">
+            Group homomorphism embedding I² into Λ'-lattice. The canonical scaling.
+            <br><br>
+            <strong>Pending:</strong> Lattice visualization, functor properties proof
+          </div>
+        </div>
+
+        <!-- Paradox Threshold -->
+        <div class="scaffold-card active">
+          <span class="card-status status-scaffold">Scaffold</span>
+          <div class="card-icon" style="background: rgba(201, 162, 39, 0.2); border: 2px solid var(--i2-tau);">
+            μ_P
+          </div>
+          <div class="card-title">Paradox Threshold</div>
+          <div class="card-equation">μ_P = φ⁻¹ = 0.618...</div>
+          <div class="card-desc">
+            Self-modeling limit. Beyond this, self-reference becomes paradoxical.
+            <br><br>
+            <strong>Pending:</strong> Three derivations, neural network manifestation
+          </div>
+        </div>
+
+        <!-- Fibonacci-Lucas -->
+        <div class="scaffold-card active">
+          <span class="card-status status-scaffold">Scaffold</span>
+          <div class="card-icon" style="background: rgba(255, 107, 107, 0.2); border: 2px solid var(--s3-vertex-1);">
+            F_n
+          </div>
+          <div class="card-title">Fibonacci-Lucas Structure</div>
+          <div class="card-equation">F_n = (φⁿ - ψⁿ)/√5</div>
+          <div class="card-desc">
+            I² with memory generates sequences. Binet formula is necessary consequence.
+            <br><br>
+            <strong>Pending:</strong> Sequence derivation, L₄ = 7 significance
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Three-Way Bifurcation Paths -->
+    <section>
+      <h2 class="section-title">S3 Trifurcation Cartography</h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+        Three closed systems bifurcated via I² algebraic projection
+      </p>
+
+      <div class="trifurcation-visual">
+        <!-- Path 1: F24 RG Flow -->
+        <div class="bifurc-path path-f24">
+          <div class="path-icon">🌀</div>
+          <div class="path-title" style="color: var(--path-f24);">F24 RG Flow</div>
+          <div class="path-mechanism">
+            <strong>Method:</strong> Holographic Entropy<br>
+            <strong>Driver:</strong> Degeneracy + Gravity<br>
+            <strong>Equation:</strong> F₂₄ = L₁₂ × F₁₂ = 46,368<br>
+            <strong>Status:</strong> <em>Scaffold</em>
+          </div>
+        </div>
+
+        <!-- Path 2: Hexagonal Sonification -->
+        <div class="bifurc-path path-hex">
+          <div class="path-icon">⬡</div>
+          <div class="path-title" style="color: var(--path-hex);">Hexagonal Sonification</div>
+          <div class="path-mechanism">
+            <strong>Method:</strong> Friction<br>
+            <strong>Driver:</strong> 6-fold Symmetry<br>
+            <strong>Equation:</strong> |S3| × 2 = 6 × 2 = 12<br>
+            <strong>Status:</strong> <em>Scaffold</em>
+          </div>
+        </div>
+
+        <!-- Path 3: R=10 Closed System -->
+        <div class="bifurc-path path-r10">
+          <div class="path-icon">⊗</div>
+          <div class="path-title" style="color: var(--path-r10);">R=10 Closed System</div>
+          <div class="path-mechanism">
+            <strong>Method:</strong> Tension + Entropy<br>
+            <strong>Driver:</strong> Recursive Depth<br>
+            <strong>Equation:</strong> R(R(...R)) at depth 10<br>
+            <strong>Status:</strong> <em>Scaffold</em>
+          </div>
+        </div>
+      </div>
+
+      <!-- Convergence to S3 -->
+      <div style="text-align: center; margin-top: 2rem;">
+        <div class="connector-down" style="height: 60px;"></div>
+        <div style="display: inline-block; padding: 1.5rem 3rem; background: rgba(255, 215, 0, 0.1); border: 2px solid var(--i2-gold); border-radius: 50%; font-size: 1.5rem;">
+          S3
+        </div>
+        <div style="margin-top: 1rem; color: var(--text-secondary);">
+          All paths converge to S3 Attractor
+        </div>
+      </div>
+    </section>
+
+    <!-- Opposition Duality -->
+    <section>
+      <h2 class="section-title">Opposition Duality: L4 Helix ≡ I² Opposed</h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+        Both valid in opposition itself — equal value via direct opposition
+      </p>
+
+      <div class="duality-container">
+        <!-- L4 = 7 Helix Framework -->
+        <div class="duality-side duality-l4">
+          <div class="duality-symbol" style="color: var(--l4-helix);">⟲</div>
+          <div class="duality-title" style="color: var(--l4-helix);">L₄ = 7 Helix Framework</div>
+          <div class="duality-desc">
+            <strong>Structure:</strong> φ⁴ + φ⁻⁴ = 7<br>
+            <strong>Dimension:</strong> 3+1 = 4<br>
+            <strong>Method:</strong> Helical unfolding<br>
+            <strong>Generator:</strong> Lucas sequence<br>
+            <strong>Attractor:</strong> Cyclic return
+          </div>
+          <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(107, 203, 119, 0.2); border-radius: 8px;">
+            <strong>Equation:</strong><br>
+            L_n = φⁿ + ψⁿ
+          </div>
+        </div>
+
+        <!-- Equals Sign -->
+        <div class="duality-equals">≡</div>
+
+        <!-- I² Opposition -->
+        <div class="duality-side duality-i2">
+          <div class="duality-symbol" style="color: var(--i2-opposed);">⊖</div>
+          <div class="duality-title" style="color: var(--i2-opposed);">I² Algebraic Opposition</div>
+          <div class="duality-desc">
+            <strong>Structure:</strong> (Iⁿ, ⊕, ⊗) ≅ ℤ<br>
+            <strong>Dimension:</strong> 1 (ring)<br>
+            <strong>Method:</strong> Composition counting<br>
+            <strong>Generator:</strong> Identity iteration<br>
+            <strong>Attractor:</strong> Paradox threshold μ_P
+          </div>
+          <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 71, 87, 0.2); border-radius: 8px;">
+            <strong>Equation:</strong><br>
+            F(n) = φⁿ : ℤ → ℝ₊
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border);">
+        <strong style="color: var(--i2-gold);">Synthesis:</strong><br>
+        <span style="color: var(--text-secondary);">
+          L₄ helix unfolds what I² ring encodes.<br>
+          Both are projections of R(R) = R.<br>
+          Opposition creates completeness.
+        </span>
+      </div>
+    </section>
+
+    <!-- Decision Tree Scaffold -->
+    <section>
+      <h2 class="section-title">Decision Tree Structure (Scaffold)</h2>
+
+      <div class="tree-container">
+        <!-- Level 0: Genesis -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-circle" style="--node-border: var(--i2-gold); font-size: 1.2rem;">
+              I²
+            </div>
+            <div class="node-label">GENESIS<br>Identity Squared</div>
+          </div>
+        </div>
+
+        <div class="connector-down"></div>
+
+        <!-- Level 1: Ring Structure -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-hexagon" style="background: var(--i2-phi);">
+              ℤ
+            </div>
+            <div class="node-label">Ring Isomorphism<br>(Iⁿ,⊕,⊗) ≅ ℤ</div>
+          </div>
+        </div>
+
+        <div class="connector-down"></div>
+
+        <!-- Level 2: Functor + Threshold -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-circle" style="--node-border: var(--i2-phi);">
+              F(n)
+            </div>
+            <div class="node-label">Golden Functor<br>φⁿ embedding</div>
+          </div>
+          <div class="tree-node">
+            <div class="node-shape shape-circle" style="--node-border: var(--i2-tau);">
+              μ_P
+            </div>
+            <div class="node-label">Paradox Threshold<br>φ⁻¹ = 0.618</div>
+          </div>
+        </div>
+
+        <div class="connector-down"></div>
+
+        <!-- Level 3: Bifurcation Decision -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-diamond" style="--node-border: var(--i2-gold); width: 80px; height: 80px;">
+              <span>S3?</span>
+            </div>
+            <div class="node-label">Trifurcation<br>Decision</div>
+          </div>
+        </div>
+
+        <div class="connector-down" style="height: 20px;"></div>
+
+        <!-- Level 4: Three Paths -->
+        <div class="tree-level" style="gap: 3rem;">
+          <div class="tree-node">
+            <div class="node-shape shape-hexagon" style="background: var(--path-f24); width: 60px; height: 60px; font-size: 0.7rem;">
+              F24
+            </div>
+            <div class="node-label" style="color: var(--path-f24);">Holographic<br>Entropy</div>
+          </div>
+          <div class="tree-node">
+            <div class="node-shape shape-hexagon" style="background: var(--path-hex); width: 60px; height: 60px; font-size: 0.7rem;">
+              ⬡
+            </div>
+            <div class="node-label" style="color: var(--path-hex);">Hexagonal<br>Friction</div>
+          </div>
+          <div class="tree-node">
+            <div class="node-shape shape-hexagon" style="background: var(--path-r10); width: 60px; height: 60px; font-size: 0.7rem;">
+              R10
+            </div>
+            <div class="node-label" style="color: var(--path-r10);">Tension<br>Entropy</div>
+          </div>
+        </div>
+
+        <div class="connector-down"></div>
+
+        <!-- Level 5: Opposition Check -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-diamond" style="--node-border: var(--s3-vertex-1); width: 80px; height: 80px;">
+              <span>≡?</span>
+            </div>
+            <div class="node-label">Opposition<br>Duality Check</div>
+          </div>
+        </div>
+
+        <div class="connector-down"></div>
+
+        <!-- Level 6: Dual Systems -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-circle" style="--node-border: var(--l4-helix);">
+              L₄
+            </div>
+            <div class="node-label" style="color: var(--l4-helix);">L4 Helix<br>Framework</div>
+          </div>
+          <div class="tree-node">
+            <div class="node-shape shape-circle" style="--node-border: var(--i2-opposed);">
+              I²⁻
+            </div>
+            <div class="node-label" style="color: var(--i2-opposed);">I² Opposed<br>System</div>
+          </div>
+        </div>
+
+        <div class="connector-down"></div>
+
+        <!-- Level 7: S3 Attractor -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-circle" style="--node-border: var(--i2-gold); width: 90px; height: 90px; font-size: 1.5rem; box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);">
+              S3
+            </div>
+            <div class="node-label" style="font-size: 0.9rem;">ATTRACTOR<br>Convergence</div>
+          </div>
+        </div>
+
+        <!-- Return Loop -->
+        <div style="text-align: center; margin-top: 2rem; color: var(--text-secondary);">
+          ↺ Return to I² with S3-weighted composition
+        </div>
+      </div>
+    </section>
+
+    <!-- Pending Phases Detail -->
+    <section>
+      <h2 class="section-title">Pending Phase Details</h2>
+
+      <div class="scaffold-grid">
+        <!-- Phase 1 -->
+        <div class="scaffold-card pending">
+          <span class="card-status status-pending">Phase 1</span>
+          <div class="card-icon" style="background: rgba(255, 215, 0, 0.1); border: 2px dashed var(--i2-gold);">
+            1
+          </div>
+          <div class="card-title">I² Foundation Pages</div>
+          <div class="card-desc">
+            <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+              <li>□ Ring isomorphism proof page</li>
+              <li>□ Golden functor visualization</li>
+              <li>□ Paradox threshold derivations</li>
+              <li>□ Fibonacci-Lucas interactive</li>
+              <li>□ I^∞ Gödel boundary</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="scaffold-card pending">
+          <span class="card-status status-pending">Phase 2</span>
+          <div class="card-icon" style="background: rgba(255, 215, 0, 0.1); border: 2px dashed var(--i2-gold);">
+            2
+          </div>
+          <div class="card-title">Trifurcation Path Pages</div>
+          <div class="card-desc">
+            <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+              <li>□ F24 Holographic Entropy page</li>
+              <li>□ Hexagonal Sonification page</li>
+              <li>□ R=10 Tension System page</li>
+              <li>□ Path convergence dynamics</li>
+              <li>□ Basin volume calculations</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="scaffold-card pending">
+          <span class="card-status status-pending">Phase 3</span>
+          <div class="card-icon" style="background: rgba(255, 215, 0, 0.1); border: 2px dashed var(--i2-gold);">
+            3
+          </div>
+          <div class="card-title">Opposition Duality Pages</div>
+          <div class="card-desc">
+            <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+              <li>□ L4 Helix equivalence proof</li>
+              <li>□ I² opposition formalization</li>
+              <li>□ Synthesis theorem</li>
+              <li>□ Both-valid-in-opposition demo</li>
+              <li>□ Completeness argument</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 4 -->
+        <div class="scaffold-card pending">
+          <span class="card-status status-pending">Phase 4</span>
+          <div class="card-icon" style="background: rgba(255, 215, 0, 0.1); border: 2px dashed var(--i2-gold);">
+            4
+          </div>
+          <div class="card-title">S3 Closure Integration</div>
+          <div class="card-desc">
+            <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+              <li>□ S3 attractor proof</li>
+              <li>□ μ_C = √3/2 derivation</li>
+              <li>□ Representation theory</li>
+              <li>□ Full tree linkage</li>
+              <li>□ Return loop dynamics</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Equations Summary -->
+    <section>
+      <h2 class="section-title">Key Equations (Scaffold Reference)</h2>
+
+      <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; font-size: 0.95rem;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 1rem; color: var(--i2-gold);">I² Ring</td>
+            <td style="padding: 1rem;">(Iⁿ, ⊕, ⊗) ≅ (ℤ, +, ×)</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">Self-reference generates integers</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 1rem; color: var(--i2-phi);">Golden Functor</td>
+            <td style="padding: 1rem;">F(n) = φⁿ : (ℤ,+) → (ℝ₊,×)</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">Embedding into Λ'-lattice</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 1rem; color: var(--i2-tau);">Paradox Threshold</td>
+            <td style="padding: 1rem;">μ_P = φ⁻¹ = (√5-1)/2 ≈ 0.618</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">Self-modeling limit</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 1rem; color: var(--s3-vertex-1);">Fibonacci</td>
+            <td style="padding: 1rem;">F_n = (φⁿ - ψⁿ)/√5</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">I² with memory</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 1rem; color: var(--l4-helix);">Lucas</td>
+            <td style="padding: 1rem;">L_n = φⁿ + ψⁿ</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">Conjugate sum</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 1rem; color: var(--path-f24);">F24 Sync</td>
+            <td style="padding: 1rem;">F₂₄ = L₁₂ × F₁₂ = 46,368</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">Holographic scale</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 1rem; color: var(--i2-gold);">S3 Order</td>
+            <td style="padding: 1rem;">|S3| = 3! = 6</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">Binding permutations</td>
+          </tr>
+          <tr>
+            <td style="padding: 1rem; color: var(--s3-vertex-2);">Coherence</td>
+            <td style="padding: 1rem;">μ_C = √3/2 ≈ 0.866</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">S3 triangle height</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      I² :: (Iⁿ, ⊕, ⊗) → F(n) = φⁿ → S3 Attractor → R(R) = R
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="mtr-decision-tree.html">MTR Decision Tree</a>
+      <a href="l4-helix-decision-tree.html">L4 Helix Tree</a>
+      <a href="vn-mtr-010-s3-attractor.html">S3 Attractor</a>
+      <a href="vn-mtr-011-f24-bifurcation.html">F24 Bifurcation</a>
+    </div>
+  </footer>
+
+</body>
+</html>
