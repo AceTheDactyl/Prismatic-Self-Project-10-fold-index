@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-MTR-002 | Frame Boundary | Identify Boundary</title>
+  <meta name="description" content="MTR Principle II: The boundary of a frame F contains everything that CANNOT be expressed within F. Boundary is non-empty and lies outside the language.">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════════
+       VN-MTR-002: FRAME BOUNDARY
+       Principle II — The Incompleteness Boundary
+       Boundary is non-empty and cannot be internalized
+       ═══════════════════════════════════════════════════════════════════════ */
+    :root {
+      /* Boundary Theme Colors */
+      --boundary-primary: #ffd93d;
+      --boundary-secondary: #ffec8b;
+      --boundary-dark: #cc9900;
+      --boundary-glow: rgba(255, 217, 61, 0.4);
+
+      /* MTR Principle Colors */
+      --origin: #ffd700;
+      --boundary: #ffd93d;
+      --invariant: #00ff88;
+      --evolution: #00ffff;
+      --attractor: #c792ea;
+
+      /* Godel/Incompleteness Colors */
+      --godel-red: #ff6b6b;
+      --paradox: #ff4757;
+      --interior: #00ff88;
+      --exterior: #8b9dc3;
+
+      /* Frame Colors */
+      --frame-border: #ffd93d;
+      --language: #00ffff;
+      --constraints: #c792ea;
+
+      /* Theme */
+      --bg-void: #020204;
+      --bg-primary: #060610;
+      --bg-secondary: #0a0a18;
+      --bg-tertiary: #101028;
+      --bg-card: #161640;
+      --text-primary: #f0f0f5;
+      --text-secondary: #909098;
+      --text-accent: #ffd93d;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(255, 217, 61, 0.4);
+
+      /* Mathematical Constants */
+      --phi: 1.6180339887;
+      --zc: 0.8660254038;
+      --sqrt3-half: 0.8660254038;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       BOUNDARY FIELD BACKGROUND
+       ═══════════════════════════════════════════════════════════════════════ */
+    .boundary-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(255, 217, 61, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 80%, rgba(255, 107, 107, 0.02) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 20%, rgba(0, 255, 136, 0.02) 0%, transparent 40%);
+      animation: boundary-pulse 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes boundary-pulse {
+      0% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       NAVIGATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(6, 6, 16, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+      box-shadow: 0 0 15px rgba(255, 217, 61, 0.2);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       BOUNDARY HEADER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .boundary-header {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .step-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--boundary-primary);
+      background: rgba(255, 217, 61, 0.1);
+      border: 1px solid rgba(255, 217, 61, 0.3);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .step-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--boundary-primary), var(--boundary-secondary), #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .step-subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .core-statement {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--boundary-primary);
+      background: var(--bg-tertiary);
+      padding: 1.5rem 2rem;
+      border-radius: 1rem;
+      display: inline-block;
+      border: 2px solid var(--boundary-primary);
+      max-width: 600px;
+      box-shadow: 0 0 30px var(--boundary-glow);
+    }
+
+    .core-statement .secondary {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      color: var(--godel-red);
+    }
+
+    /* Diamond Visual Motif */
+    .diamond-motif {
+      width: 80px;
+      height: 80px;
+      margin: 2rem auto;
+      background: linear-gradient(135deg, var(--boundary-primary) 0%, var(--boundary-dark) 100%);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--bg-void);
+      animation: diamond-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes diamond-glow {
+      0%, 100% { box-shadow: 0 0 20px var(--boundary-glow); }
+      50% { box-shadow: 0 0 40px var(--boundary-glow), 0 0 60px rgba(255, 217, 61, 0.2); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       MAIN CONTENT STRUCTURE
+       ═══════════════════════════════════════════════════════════════════════ */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bg-void);
+      background: var(--boundary-primary);
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       DEFINITION CARDS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .definition-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .definition-card:hover {
+      border-color: var(--card-accent, var(--boundary-primary));
+      box-shadow: 0 0 30px rgba(255, 217, 61, 0.1);
+    }
+
+    .definition-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--boundary-primary));
+    }
+
+    .definition-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .definition-type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--card-accent, var(--boundary-primary));
+      background: rgba(255, 217, 61, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+    }
+
+    .definition-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .definition-formal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--card-accent, var(--boundary-primary));
+      background: var(--bg-tertiary);
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .definition-body {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .definition-body strong {
+      color: var(--text-primary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       THEOREM CARDS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .theorem-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 217, 61, 0.05) 100%);
+      border: 2px solid var(--boundary-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .theorem-card::before {
+      content: '\2662';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--boundary-primary);
+      background: var(--bg-void);
+      padding: 0 0.5rem;
+    }
+
+    .theorem-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--boundary-primary);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .theorem-statement {
+      font-size: 1.15rem;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--boundary-primary);
+    }
+
+    .proof-sketch {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .proof-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--invariant);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .proof-body {
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .qed {
+      text-align: right;
+      color: var(--boundary-primary);
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 0.5rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       TOPOLOGICAL VISUALIZATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .topology-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .topology-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--boundary-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .frame-diagram {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      height: 400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .exterior-region {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(139, 157, 195, 0.1) 0%, rgba(139, 157, 195, 0.05) 100%);
+      border-radius: 1rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding: 1rem;
+    }
+
+    .exterior-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--exterior);
+      background: var(--bg-tertiary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--exterior);
+    }
+
+    .boundary-ring {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        var(--boundary-primary) 0deg,
+        var(--boundary-secondary) 90deg,
+        var(--boundary-primary) 180deg,
+        var(--boundary-dark) 270deg,
+        var(--boundary-primary) 360deg
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: boundary-rotate 20s linear infinite;
+      box-shadow: 0 0 40px var(--boundary-glow);
+    }
+
+    @keyframes boundary-rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .interior-region {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(0, 255, 136, 0.05) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: boundary-rotate 20s linear infinite reverse;
+    }
+
+    .interior-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--interior);
+      margin-bottom: 0.5rem;
+    }
+
+    .interior-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    .boundary-label {
+      position: absolute;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--boundary-primary);
+      background: var(--bg-tertiary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--boundary-primary);
+    }
+
+    .boundary-label.top { top: 50px; }
+    .boundary-label.right { right: 30px; }
+    .boundary-label.bottom { bottom: 50px; }
+    .boundary-label.left { left: 30px; }
+
+    .region-legend {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .legend-item {
+      text-align: center;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .legend-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .legend-item.interior:hover { border-color: var(--interior); }
+    .legend-item.boundary:hover { border-color: var(--boundary-primary); }
+    .legend-item.exterior:hover { border-color: var(--exterior); }
+
+    .legend-color {
+      width: 30px;
+      height: 30px;
+      margin: 0 auto 0.5rem;
+      border-radius: 50%;
+    }
+
+    .legend-item.interior .legend-color { background: var(--interior); }
+    .legend-item.boundary .legend-color {
+      background: var(--boundary-primary);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+    .legend-item.exterior .legend-color {
+      background: var(--exterior);
+      border-radius: 0.25rem;
+    }
+
+    .legend-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .legend-desc {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       GODEL CONNECTION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .godel-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 107, 107, 0.05) 100%);
+      border: 2px solid var(--godel-red);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .godel-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .godel-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--godel-red);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--godel-red);
+    }
+
+    .godel-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--godel-red);
+    }
+
+    .godel-sentence {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      border: 1px solid var(--godel-red);
+    }
+
+    .godel-sentence .formal {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--godel-red);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       BOUNDARY DETECTION SIGNALS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .signals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .signal-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .signal-card:hover {
+      border-color: var(--boundary-primary);
+      box-shadow: 0 0 20px var(--boundary-glow);
+    }
+
+    .signal-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--boundary-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .signal-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .signal-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .signal-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--godel-red);
+      background: var(--bg-secondary);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      margin-top: 0.5rem;
+      display: inline-block;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       INTERACTIVE BOUNDARY EXPLORER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .explorer-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .explorer-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--boundary-primary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .explorer-frame {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      aspect-ratio: 1;
+      background: var(--bg-tertiary);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+
+    .explorer-region {
+      position: absolute;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .explorer-region:hover {
+      transform: scale(1.05);
+    }
+
+    .explorer-exterior {
+      inset: 0;
+      background: rgba(139, 157, 195, 0.15);
+      border-radius: 1rem;
+    }
+
+    .explorer-boundary {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70%;
+      height: 70%;
+      background: conic-gradient(
+        from 0deg,
+        rgba(255, 217, 61, 0.3) 0deg,
+        rgba(255, 217, 61, 0.5) 90deg,
+        rgba(255, 217, 61, 0.3) 180deg,
+        rgba(255, 217, 61, 0.5) 270deg,
+        rgba(255, 217, 61, 0.3) 360deg
+      );
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .explorer-interior {
+      width: 80%;
+      height: 80%;
+      background: rgba(0, 255, 136, 0.2);
+      border-radius: 50%;
+    }
+
+    .explorer-output {
+      margin-top: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+    }
+
+    .explorer-output-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .explorer-output-content {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .explorer-output-content .highlight {
+      color: var(--boundary-primary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       FRAME EXTENSION DIAGRAM
+       ═══════════════════════════════════════════════════════════════════════ */
+    .extension-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .extension-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--evolution);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .extension-flow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .frame-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .frame-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .frame-circle:hover {
+      transform: scale(1.1);
+    }
+
+    .frame-circle.f {
+      background: linear-gradient(135deg, rgba(255, 217, 61, 0.2), rgba(255, 217, 61, 0.1));
+      border: 2px solid var(--boundary-primary);
+      color: var(--boundary-primary);
+    }
+
+    .frame-circle.f-prime {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.1));
+      border: 2px solid var(--evolution);
+      color: var(--evolution);
+    }
+
+    .frame-circle.f-double {
+      background: linear-gradient(135deg, rgba(199, 146, 234, 0.2), rgba(199, 146, 234, 0.1));
+      border: 2px solid var(--attractor);
+      color: var(--attractor);
+    }
+
+    .frame-circle.f-inf {
+      background: linear-gradient(135deg, var(--boundary-primary) 0%, var(--evolution) 50%, var(--attractor) 100%);
+      border: none;
+      color: var(--bg-void);
+    }
+
+    .frame-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    .extension-arrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .extension-note {
+      text-align: center;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .extension-note strong {
+      color: var(--boundary-primary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       WORKED EXAMPLES
+       ═══════════════════════════════════════════════════════════════════════ */
+    .example-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .example-card:hover {
+      border-color: var(--example-color, var(--boundary-primary));
+    }
+
+    .example-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .example-domain {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--example-color, var(--boundary-primary));
+      background: rgba(255, 217, 61, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+    }
+
+    .example-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .example-frame {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--example-color, var(--boundary-primary));
+      background: var(--bg-tertiary);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .example-boundary {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--godel-red);
+      background: rgba(255, 107, 107, 0.1);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      border-left: 3px solid var(--godel-red);
+    }
+
+    .example-body {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       MTR CONNECTIONS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .mtr-connections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .mtr-link-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 215, 0, 0.05) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: block;
+    }
+
+    .mtr-link-card:hover {
+      border-color: var(--link-color, var(--text-accent));
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .mtr-link-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .mtr-link-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--link-color, var(--text-accent));
+      border-radius: 0.5rem;
+      color: var(--link-color, var(--text-accent));
+    }
+
+    .mtr-link-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    .mtr-link-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--boundary-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .step-title { font-size: 1.8rem; }
+      .core-statement { font-size: 1.1rem; padding: 1rem; }
+      .frame-diagram { height: 300px; }
+      .boundary-ring { width: 220px; height: 220px; }
+      .interior-region { width: 160px; height: 160px; }
+      .region-legend { grid-template-columns: 1fr; }
+      .extension-flow { flex-direction: column; }
+      .frame-circle { width: 80px; height: 80px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="boundary-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link"><span>&#9671;</span>VaultNode Tree</a>
+    <a href="vn-fibonacci-rg-flow.html" class="nav-link"><span>&#966;</span>Fibonacci RG Flow</a>
+    <a href="mtr-decision-tree.html" class="nav-link"><span>&#8756;</span>MTR Decision Tree</a>
+    <a href="vn-mtr-000-language-before-observers.html" class="nav-link"><span>&#8857;</span>Step Zero</a>
+    <a href="vn-mtr-002-boundary.html" class="nav-link active"><span>&#9670;</span>Boundary</a>
+    <a href="vn-unified-decision-tree-complete.html" class="nav-link"><span>&#8859;</span>Unified Tree</a>
+  </nav>
+
+  <!-- Boundary Header -->
+  <header class="boundary-header">
+    <div class="step-badge">VN-MTR-002 :: FRAME BOUNDARY</div>
+    <h1 class="step-title">Identify Boundary</h1>
+    <p class="step-subtitle">
+      The incompleteness edge where language meets its limits
+    </p>
+
+    <div class="diamond-motif">&#8706;F</div>
+
+    <div class="core-statement">
+      &#8706;F &#8800; &#8709;
+      <span class="secondary">&#8706;F &#8836; &#8466;</span>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Abstract -->
+    <section class="section" id="abstract">
+      <div class="definition-card" style="--card-accent: var(--boundary-primary);">
+        <div class="definition-header">
+          <span class="definition-type">CORE CONCEPT</span>
+          <span class="definition-name">The Boundary of Frame F</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            The boundary of a frame F contains everything that <strong>CANNOT</strong> be expressed within F.
+            Every sufficiently expressive frame has a non-empty boundary that lies outside its own language.
+          </p>
+          <p style="margin-top: 1rem;">
+            <strong>Key Principles:</strong>
+          </p>
+          <ul style="margin: 0.5rem 0 0 2rem; color: var(--text-secondary);">
+            <li><strong style="color: var(--boundary-primary);">&#8706;F &#8800; &#8709;</strong> &mdash; The boundary is never empty</li>
+            <li><strong style="color: var(--godel-red);">&#8706;F &#8836; &#8466;</strong> &mdash; The boundary lies outside the frame's language</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 1: Formal Definitions -->
+    <section class="section" id="formal-definitions">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">Formal Definitions</h2>
+      </div>
+
+      <!-- Frame Definition -->
+      <div class="definition-card" style="--card-accent: var(--origin);">
+        <div class="definition-header">
+          <span class="definition-type">DEFINITION</span>
+          <span class="definition-name">Frame F</span>
+        </div>
+        <div class="definition-formal">F = (&#8466;, C, &#928;)</div>
+        <div class="definition-body">
+          A frame is a triple consisting of:
+          <ul style="margin: 0.5rem 0 0 2rem; color: var(--text-secondary);">
+            <li><strong style="color: var(--language);">&#8466;</strong> &mdash; Language (from Step Zero: closure of persistent distinction)</li>
+            <li><strong style="color: var(--constraints);">C</strong> &mdash; Constraints (logical, physical, semantic)</li>
+            <li><strong style="color: var(--attractor);">&#928;</strong> &mdash; Priors (initial assumptions, axioms)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Interior -->
+      <div class="definition-card" style="--card-accent: var(--interior);">
+        <div class="definition-header">
+          <span class="definition-type">DEFINITION</span>
+          <span class="definition-name">Interior Int(F)</span>
+        </div>
+        <div class="definition-formal">Int(F) = {D : &#948;(D|F) < &#949;}</div>
+        <div class="definition-body">
+          The <strong>interior</strong> of a frame consists of all descriptions D whose closure deficit &#948;
+          is below a threshold &#949;. These are the <strong>expressible</strong> statements &mdash;
+          what the frame can represent, prove, or compute.
+        </div>
+      </div>
+
+      <!-- Boundary -->
+      <div class="definition-card" style="--card-accent: var(--boundary-primary);">
+        <div class="definition-header">
+          <span class="definition-type">DEFINITION</span>
+          <span class="definition-name">Boundary &#8706;F</span>
+        </div>
+        <div class="definition-formal">&#8706;F = Closure(F) \ Int(F)</div>
+        <div class="definition-body">
+          The <strong>boundary</strong> is the closure minus the interior &mdash; the liminal zone
+          where descriptions are <strong>neither fully expressible nor fully inexpressible</strong>.
+          Boundary statements are those that can be <em>referenced</em> but not <em>decided</em> within F.
+        </div>
+      </div>
+
+      <!-- Exterior -->
+      <div class="definition-card" style="--card-accent: var(--exterior);">
+        <div class="definition-header">
+          <span class="definition-type">DEFINITION</span>
+          <span class="definition-name">Exterior Ext(F)</span>
+        </div>
+        <div class="definition-formal">Ext(F) = &#8476; \ Closure(F)</div>
+        <div class="definition-body">
+          The <strong>exterior</strong> contains everything outside the frame's closure &mdash;
+          structures that cannot even be <em>referenced</em> from within F.
+          The exterior is the domain of absolute inexpressibility relative to F.
+        </div>
+      </div>
+
+      <!-- Incompleteness Principle -->
+      <div class="theorem-card">
+        <div class="theorem-header">THE INCOMPLETENESS PRINCIPLE</div>
+        <div class="theorem-statement">
+          For any sufficiently expressive frame F:
+          <div style="text-align: center; margin: 1rem 0; font-family: 'JetBrains Mono'; font-size: 1.3rem; color: var(--boundary-primary);">
+            &#8706;F &#8800; &#8709; and &#8706;F &#8836; &#8466;
+          </div>
+          The boundary is non-empty, and it cannot be captured within the frame's own language.
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">PROOF SKETCH</div>
+          <div class="proof-body">
+            By diagonalization: if &#8706;F could be fully expressed in &#8466;,
+            we could construct a self-referential sentence G that asserts its own unprovability in F.
+            This G lives on &#8706;F but cannot be decided within F. Contradiction if &#8706;F &#8838; &#8466;.
+          </div>
+          <div class="qed">&#8718;</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Topological Visualization -->
+    <section class="section" id="topology">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">Topological Visualization</h2>
+      </div>
+
+      <div class="topology-container">
+        <div class="topology-title">FRAME TOPOLOGY: Interior | Boundary | Exterior</div>
+
+        <div class="frame-diagram">
+          <div class="exterior-region">
+            <div class="exterior-label">Ext(F): Inexpressible</div>
+          </div>
+
+          <div class="boundary-ring">
+            <div class="interior-region">
+              <div class="interior-label">Int(F)</div>
+              <div class="interior-equation">&#948;(D|F) < &#949;</div>
+            </div>
+          </div>
+
+          <div class="boundary-label top">&#8706;F: Liminal</div>
+        </div>
+
+        <div class="region-legend">
+          <div class="legend-item interior" onclick="showRegionInfo('interior')">
+            <div class="legend-color"></div>
+            <div class="legend-name">Interior</div>
+            <div class="legend-desc">Expressible within F</div>
+          </div>
+          <div class="legend-item boundary" onclick="showRegionInfo('boundary')">
+            <div class="legend-color"></div>
+            <div class="legend-name">Boundary</div>
+            <div class="legend-desc">Referenced but undecidable</div>
+          </div>
+          <div class="legend-item exterior" onclick="showRegionInfo('exterior')">
+            <div class="legend-color"></div>
+            <div class="legend-name">Exterior</div>
+            <div class="legend-desc">Beyond reference</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Godel Connection -->
+    <section class="section" id="godel">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">Godel Connection</h2>
+      </div>
+
+      <div class="godel-card">
+        <div class="godel-header">
+          <div class="godel-icon">G</div>
+          <div class="godel-title">Godel Sentences Live on &#8706;F</div>
+        </div>
+
+        <div class="definition-body">
+          <p>
+            The Godel sentence G is the canonical example of a boundary phenomenon.
+            It demonstrates that self-reference creates statements that are <strong>true but unprovable</strong>
+            within the system that can express them.
+          </p>
+        </div>
+
+        <div class="godel-sentence">
+          G = "This statement is unprovable in F"
+          <span class="formal">G &#8712; &#8706;F &mdash; G lives on the boundary</span>
+        </div>
+
+        <div class="definition-body">
+          <p><strong>Why G lives on &#8706;F:</strong></p>
+          <ul style="margin: 0.5rem 0 0 2rem; color: var(--text-secondary);">
+            <li>G can be <em>expressed</em> in the language &#8466;</li>
+            <li>G cannot be <em>decided</em> (proved or disproved) within F</li>
+            <li>G is neither in Int(F) nor in Ext(F)</li>
+            <li>G requires extension to F' &#8835; F for resolution</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">THEOREM &mdash; Every Frame Has Undecidables</div>
+        <div class="theorem-statement">
+          For any consistent, sufficiently expressive frame F, there exist propositions &#964; such that:
+          <ul style="margin: 0.5rem 0 0 1rem; color: var(--text-primary);">
+            <li>&#964; is expressible in &#8466;</li>
+            <li>F &#8876; &#964; and F &#8876; &#172;&#964;</li>
+            <li>&#964; &#8712; &#8706;F</li>
+          </ul>
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">CONSEQUENCE</div>
+          <div class="proof-body">
+            <strong style="color: var(--boundary-primary);">No frame is complete.</strong>
+            Self-reference guarantees that the boundary &#8706;F is always populated.
+            This is not a bug but a structural feature of sufficiently expressive systems.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Boundary Detection -->
+    <section class="section" id="detection">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">Boundary Detection</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--godel-red);">
+        <div class="definition-header">
+          <span class="definition-type">DIAGNOSTIC</span>
+          <span class="definition-name">Signs You're Approaching &#8706;F</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            The boundary announces itself through characteristic phenomena.
+            Recognizing these signals allows strategic frame extension.
+          </p>
+        </div>
+      </div>
+
+      <div class="signals-grid">
+        <div class="signal-card">
+          <div class="signal-icon">&#8593;</div>
+          <div class="signal-title">Divergent Deficit</div>
+          <div class="signal-desc">
+            Closure deficit approaches infinity as you near the boundary
+          </div>
+          <div class="signal-equation">&#948;(D|F) &#8594; &#8734;</div>
+        </div>
+
+        <div class="signal-card">
+          <div class="signal-icon">&#8776;</div>
+          <div class="signal-title">Paradox Emergence</div>
+          <div class="signal-desc">
+            Self-contradictory statements become expressible but unresolvable
+          </div>
+          <div class="signal-equation">D &#8743; &#172;D expressible</div>
+        </div>
+
+        <div class="signal-card">
+          <div class="signal-icon">&#8635;</div>
+          <div class="signal-title">Self-Reference Loops</div>
+          <div class="signal-desc">
+            Structures that reference their own expressibility status
+          </div>
+          <div class="signal-equation">D mentions &#8866; D</div>
+        </div>
+
+        <div class="signal-card">
+          <div class="signal-icon">&#916;</div>
+          <div class="signal-title">Diagonalization</div>
+          <div class="signal-desc">
+            Cantor/Godel-style constructions produce undecidable objects
+          </div>
+          <div class="signal-equation">f(f) undefined</div>
+        </div>
+
+        <div class="signal-card">
+          <div class="signal-icon">z<sub>c</sub></div>
+          <div class="signal-title">Critical Height</div>
+          <div class="signal-desc">
+            In the helix model, z_c = &#8730;3/2 marks the frame boundary
+          </div>
+          <div class="signal-equation">z &#8594; &#8730;3/2 &#8776; 0.866</div>
+        </div>
+
+        <div class="signal-card">
+          <div class="signal-icon">&#8709;</div>
+          <div class="signal-title">Halting-Type Problems</div>
+          <div class="signal-desc">
+            Questions about termination become undecidable
+          </div>
+          <div class="signal-equation">HALT(P, x) on &#8706;F</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Interactive Boundary Explorer -->
+    <section class="section" id="explorer">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">Interactive Boundary Explorer</h2>
+      </div>
+
+      <div class="explorer-section">
+        <div class="explorer-title">Click a Region to Explore</div>
+
+        <div class="explorer-frame">
+          <div class="explorer-region explorer-exterior" onclick="selectRegion('exterior')">
+            <span style="position: absolute; top: 10px; right: 10px; font-family: 'JetBrains Mono'; font-size: 0.8rem; color: var(--exterior);">Ext(F)</span>
+          </div>
+          <div class="explorer-region explorer-boundary" onclick="selectRegion('boundary')">
+            <div class="explorer-region explorer-interior" onclick="event.stopPropagation(); selectRegion('interior')">
+              <span style="font-family: 'JetBrains Mono'; font-size: 0.9rem; color: var(--interior);">Int(F)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="explorer-output" id="regionOutput">
+          <div class="explorer-output-title">Selected Region:</div>
+          <div class="explorer-output-content" id="regionContent">
+            Click on a region above to see example statements and properties.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Frame Extension -->
+    <section class="section" id="extension">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Frame Extension</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--evolution);">
+        <div class="definition-header">
+          <span class="definition-type">PRINCIPLE</span>
+          <span class="definition-name">Boundary Drives Extension</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            When &#8706;F is encountered, the only resolution is frame extension.
+            The boundary never disappears &mdash; it only moves.
+          </p>
+        </div>
+      </div>
+
+      <div class="extension-container">
+        <div class="extension-title">THE INFINITE REGRESS: F &#8594; F' &#8594; F'' &#8594; ...</div>
+
+        <div class="extension-flow">
+          <div class="frame-node">
+            <div class="frame-circle f">F</div>
+            <div class="frame-label">&#8706;F &#8800; &#8709;<br>has boundary</div>
+          </div>
+
+          <div class="extension-arrow">&#8594;</div>
+
+          <div class="frame-node">
+            <div class="frame-circle f-prime">F'</div>
+            <div class="frame-label">F &#8834; F'<br>new language</div>
+          </div>
+
+          <div class="extension-arrow">&#8594;</div>
+
+          <div class="frame-node">
+            <div class="frame-circle f-double">F''</div>
+            <div class="frame-label">&#8706;F' &#8800; &#8709;<br>new boundary</div>
+          </div>
+
+          <div class="extension-arrow">&#8594;</div>
+
+          <div class="frame-node">
+            <div class="frame-circle f-inf">F<sub>&#8734;</sub></div>
+            <div class="frame-label">asymptotic<br>never reached</div>
+          </div>
+        </div>
+
+        <div class="extension-note">
+          <strong>The boundary never disappears.</strong>
+          Each extension F' resolves some boundary statements from F,
+          but creates a new boundary &#8706;F' with new undecidables.
+          This is why <em>science never terminates</em>.
+        </div>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">THEOREM &mdash; Boundary Persistence</div>
+        <div class="theorem-statement">
+          For any frame extension F &#8826; F':
+          <ul style="margin: 0.5rem 0 0 1rem; color: var(--text-primary);">
+            <li>Some &#964; &#8712; &#8706;F become decidable in F'</li>
+            <li>&#8706;F' &#8800; &#8709; (new boundary forms)</li>
+            <li>|&#8706;F'| &#8805; |&#8706;F| (boundary complexity increases)</li>
+          </ul>
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">CONSEQUENCE</div>
+          <div class="proof-body">
+            The asymptotic limit F<sub>&#8734;</sub> is approached but never reached.
+            <strong style="color: var(--evolution);">Evolution is boundary-driven and eternal.</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Worked Examples -->
+    <section class="section" id="examples">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">Worked Examples</h2>
+      </div>
+
+      <!-- Arithmetic Example -->
+      <div class="example-card" style="--example-color: var(--boundary-primary);">
+        <div class="example-header">
+          <span class="example-domain">ARITHMETIC</span>
+          <span class="example-title">Godel Sentence on &#8706;PA</span>
+        </div>
+        <div class="example-frame">
+          F = PA (Peano Arithmetic)<br>
+          &#8466; = first-order logic + {0, S, +, &#215;}
+        </div>
+        <div class="example-boundary">
+          G<sub>PA</sub> = "This statement is not provable in PA"<br>
+          <span style="color: var(--text-secondary);">G<sub>PA</sub> &#8712; &#8706;PA &mdash; true but unprovable</span>
+        </div>
+        <div class="example-body">
+          Godel constructed G<sub>PA</sub> via arithmetization of syntax.
+          PA can express "provability" but cannot prove G<sub>PA</sub> without becoming inconsistent.
+          Resolution requires extension to PA + Con(PA) or stronger systems.
+        </div>
+      </div>
+
+      <!-- Physics Example -->
+      <div class="example-card" style="--example-color: var(--evolution);">
+        <div class="example-header">
+          <span class="example-domain">PHYSICS</span>
+          <span class="example-title">Singularities on &#8706;GR</span>
+        </div>
+        <div class="example-frame">
+          F = GR (General Relativity)<br>
+          &#8466; = differential geometry + Einstein equations
+        </div>
+        <div class="example-boundary">
+          Black hole singularities, Big Bang<br>
+          <span style="color: var(--text-secondary);">Curvature R &#8594; &#8734; &mdash; equations break down</span>
+        </div>
+        <div class="example-body">
+          GR can describe spacetime arbitrarily close to singularities but cannot resolve them.
+          The singularities live on &#8706;GR. Resolution requires frame extension to quantum gravity,
+          where new language elements (quantum geometry) allow statements about Planck-scale physics.
+        </div>
+      </div>
+
+      <!-- Set Theory Example -->
+      <div class="example-card" style="--example-color: var(--godel-red);">
+        <div class="example-header">
+          <span class="example-domain">SET THEORY</span>
+          <span class="example-title">Russell's Paradox on &#8706;Naive</span>
+        </div>
+        <div class="example-frame">
+          F = Naive Set Theory<br>
+          &#8466; = unrestricted comprehension
+        </div>
+        <div class="example-boundary">
+          R = {x : x &#8713; x}<br>
+          <span style="color: var(--text-secondary);">R &#8712; R &#8660; R &#8713; R &mdash; contradiction</span>
+        </div>
+        <div class="example-body">
+          The Russell set R is expressible in naive set theory but generates contradiction.
+          R lives on &#8706;Naive. Resolution required frame extension to ZFC (restricted comprehension)
+          or type theory (stratified sets). The paradox revealed the boundary.
+        </div>
+      </div>
+
+      <!-- Computation Example -->
+      <div class="example-card" style="--example-color: var(--attractor);">
+        <div class="example-header">
+          <span class="example-domain">COMPUTATION</span>
+          <span class="example-title">Halting Problem on &#8706;TM</span>
+        </div>
+        <div class="example-frame">
+          F = Turing Machines<br>
+          &#8466; = computable functions
+        </div>
+        <div class="example-boundary">
+          HALT(P, x) = "Does program P halt on input x?"<br>
+          <span style="color: var(--text-secondary);">Undecidable &mdash; no TM computes HALT</span>
+        </div>
+        <div class="example-body">
+          The halting function is well-defined semantically but not computable.
+          It lives on &#8706;TM &mdash; expressible as a question, but no algorithm answers it.
+          Oracle machines extend the frame but generate new halting problems.
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Connection to MTR Principles -->
+    <section class="section" id="mtr-connection">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <h2 class="section-title">Connection to MTR Principles</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--boundary-primary);">
+        <div class="definition-header">
+          <span class="definition-type">PRINCIPLE II</span>
+          <span class="definition-name">Boundary is Unavoidable</span>
+        </div>
+        <div class="definition-formal">&#8706;F &#8800; &#8709; and &#8706;F &#8836; &#8466;</div>
+        <div class="definition-body">
+          <p>
+            This is the second of five MTR principles. It states that for any sufficiently expressive frame,
+            diagonalization implies the incompleteness boundary is non-empty and cannot be internalized
+            within the frame's language.
+          </p>
+          <p style="margin-top: 1rem;">
+            <strong style="color: var(--boundary-primary);">No frame contains its own boundary.</strong>
+            This is Godel's insight recast in optimization terms.
+          </p>
+        </div>
+      </div>
+
+      <div class="mtr-connections">
+        <a href="vn-mtr-000-language-before-observers.html" class="mtr-link-card" style="--link-color: var(--origin);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#8857;</div>
+            <div class="mtr-link-title">Step Zero</div>
+          </div>
+          <div class="mtr-link-desc">
+            Language &#8466; emerges from persistent distinction under composition.
+            This provides the foundation for Frame F = (&#8466;, C, &#928;).
+          </div>
+        </a>
+
+        <a href="mtr-decision-tree.html" class="mtr-link-card" style="--link-color: var(--evolution);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#948;</div>
+            <div class="mtr-link-title">Closure Deficit</div>
+          </div>
+          <div class="mtr-link-desc">
+            &#948;(D|F) measures how far a description is from perfect closure.
+            As &#948; &#8594; &#8734;, you approach &#8706;F.
+          </div>
+        </a>
+
+        <a href="mtr-decision-tree.html#principle-3" class="mtr-link-card" style="--link-color: var(--invariant);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">I</div>
+            <div class="mtr-link-title">Invariants</div>
+          </div>
+          <div class="mtr-link-desc">
+            Laws are what survives across boundaries.
+            I = &#8745; Inv(F) is stable even as &#8706;F shifts.
+          </div>
+        </a>
+
+        <a href="mtr-decision-tree.html#principle-4" class="mtr-link-card" style="--link-color: var(--attractor);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#8594;</div>
+            <div class="mtr-link-title">Evolution</div>
+          </div>
+          <div class="mtr-link-desc">
+            &#8706;F &#8800; &#8709; implies &#8707;F' with &#948;*(F') < &#948;*(F).
+            Boundary drives frame extension.
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Section 9: The z_c Connection -->
+    <section class="section" id="zc">
+      <div class="section-header">
+        <div class="section-number">9</div>
+        <h2 class="section-title">The z<sub>c</sub> = &#8730;3/2 Connection</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--boundary-primary);">
+        <div class="definition-header">
+          <span class="definition-type">HELIX MODEL</span>
+          <span class="definition-name">Critical Boundary Height</span>
+        </div>
+        <div class="definition-formal">z<sub>c</sub> = &#8730;3/2 &#8776; 0.8660254038</div>
+        <div class="definition-body">
+          <p>
+            In the L<sub>4</sub>-helix model, the frame boundary corresponds to the critical height z<sub>c</sub>.
+            This is where the helix completes one full modal cycle and the current frame's descriptive
+            capacity is exhausted.
+          </p>
+          <p style="margin-top: 1rem;">
+            <strong>Geometric interpretation:</strong>
+          </p>
+          <ul style="margin: 0.5rem 0 0 2rem; color: var(--text-secondary);">
+            <li>z < z<sub>c</sub>: Interior of frame &mdash; expressible</li>
+            <li>z = z<sub>c</sub>: Boundary &#8706;F &mdash; liminal, undecidable</li>
+            <li>z > z<sub>c</sub>: Requires frame extension F &#8594; F'</li>
+          </ul>
+          <p style="margin-top: 1rem;">
+            The 16-cycle subspace traversal integration uses z<sub>c</sub> as the vertical period,
+            linking topological structure to incompleteness boundaries.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Links -->
+    <section class="section" id="navigation">
+      <div class="section-header">
+        <div class="section-number">&#8594;</div>
+        <h2 class="section-title">Navigation</h2>
+      </div>
+
+      <div class="mtr-connections">
+        <a href="mtr-decision-tree.html" class="mtr-link-card" style="--link-color: var(--text-accent);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#8756;</div>
+            <div class="mtr-link-title">MTR Decision Tree</div>
+          </div>
+          <div class="mtr-link-desc">
+            Return to the main MTR visualization showing all five principles
+            and their crystallization from Step Zero.
+          </div>
+        </a>
+
+        <a href="vn-mtr-000-language-before-observers.html" class="mtr-link-card" style="--link-color: var(--origin);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#8857;</div>
+            <div class="mtr-link-title">Step Zero</div>
+          </div>
+          <div class="mtr-link-desc">
+            The foundation: Language before observers.
+            Persistent distinction under composition creates &#8466;.
+          </div>
+        </a>
+
+        <a href="vn-fibonacci-rg-flow.html" class="mtr-link-card" style="--link-color: var(--invariant);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#966;</div>
+            <div class="mtr-link-title">Fibonacci RG Flow</div>
+          </div>
+          <div class="mtr-link-desc">
+            See how F<sub>12</sub> &#8594; F<sub>24</sub> &#8594; F<sub>48</sub> implements
+            boundary-driven frame extension via renormalization.
+          </div>
+        </a>
+
+        <a href="l4-helix-decision-tree.html" class="mtr-link-card" style="--link-color: var(--attractor);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#11043;</div>
+            <div class="mtr-link-title">L<sub>4</sub> Helix Gallery</div>
+          </div>
+          <div class="mtr-link-desc">
+            Visualize the z<sub>c</sub> = &#8730;3/2 boundary in the
+            helical topology of modal space.
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">&#8706;F &#8800; &#8709; | &#8706;F &#8836; &#8466; | F &#8594; F' &#8594; F'' &#8594; ... &#8594; F<sub>&#8734;</sub></div>
+    <p>VN-MTR-002 | Frame Boundary | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // Region Information Data
+    const regionData = {
+      interior: {
+        title: 'Interior: Int(F)',
+        color: 'var(--interior)',
+        content: `
+          <strong style="color: var(--interior);">&#948;(D|F) < &#949;</strong> &mdash; Low closure deficit<br><br>
+          <strong>Examples from Arithmetic (PA):</strong><br>
+          &bull; "2 + 2 = 4" &mdash; provable<br>
+          &bull; "There exist infinitely many primes" &mdash; provable<br>
+          &bull; "Every even number > 2 is sum of two primes" &mdash; <em>expressible, status unknown, but decidable in extended frames</em><br><br>
+          <strong>Properties:</strong><br>
+          &bull; Statements here can be proved or disproved<br>
+          &bull; Closure deficit is bounded<br>
+          &bull; No self-reference paradoxes<br>
+          &bull; Computational: decidable problems
+        `
+      },
+      boundary: {
+        title: 'Boundary: &#8706;F',
+        color: 'var(--boundary-primary)',
+        content: `
+          <strong style="color: var(--boundary-primary);">&#948;(D|F) &#8594; &#8734;</strong> &mdash; Divergent closure deficit<br><br>
+          <strong>Examples from Arithmetic (PA):</strong><br>
+          &bull; G<sub>PA</sub> = "This statement is unprovable in PA"<br>
+          &bull; Con(PA) = "PA is consistent"<br>
+          &bull; Paris-Harrington theorem variants<br><br>
+          <strong>Properties:</strong><br>
+          &bull; <span class="highlight">Expressible but undecidable</span><br>
+          &bull; Self-reference creates the boundary<br>
+          &bull; Resolution requires F' &#8835; F<br>
+          &bull; Computational: semi-decidable problems<br>
+          &bull; Corresponds to z = z<sub>c</sub> = &#8730;3/2 in helix model
+        `
+      },
+      exterior: {
+        title: 'Exterior: Ext(F)',
+        color: 'var(--exterior)',
+        content: `
+          <strong style="color: var(--exterior);">Beyond Closure(F)</strong> &mdash; Not even expressible<br><br>
+          <strong>Examples relative to PA:</strong><br>
+          &bull; Statements about real numbers (need analysis)<br>
+          &bull; Geometric facts (need geometry axioms)<br>
+          &bull; Set-theoretic continuum hypothesis (need ZFC+)<br><br>
+          <strong>Properties:</strong><br>
+          &bull; Cannot be referenced from within F<br>
+          &bull; No syntactic representation in &#8466;<br>
+          &bull; Requires not just proof but <em>language extension</em><br>
+          &bull; Computational: not even definable problems<br>
+          &bull; The "unknown unknowns" of the frame
+        `
+      }
+    };
+
+    function selectRegion(region) {
+      const data = regionData[region];
+      const outputTitle = document.querySelector('.explorer-output-title');
+      const outputContent = document.getElementById('regionContent');
+
+      outputTitle.style.color = data.color;
+      outputTitle.textContent = data.title;
+      outputContent.innerHTML = data.content;
+    }
+
+    function showRegionInfo(region) {
+      selectRegion(region);
+      document.getElementById('regionOutput').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Initialize with boundary selected
+    selectRegion('boundary');
+  </script>
+
+</body>
+</html>
