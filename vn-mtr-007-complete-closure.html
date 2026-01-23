@@ -1,0 +1,2265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-MTR-007 | Complete Closure | The Unreachable Attractor</title>
+  <meta name="description" content="MTR Decision Tree Level 5: HALT - Complete Closure. The theoretical limit where dF = empty, never actually reached for any sufficiently expressive system.">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ===============================================================================
+       VN-MTR-007: COMPLETE CLOSURE
+       Decision Tree Level 5 - The Unreachable Attractor
+       HALT: dF = empty (theoretically) | NEVER REACHED for expressive F
+       =============================================================================== */
+    :root {
+      /* Closure Theme - Ghosted/Faded Green for Unreachable */
+      --closure-primary: #6bcb77;
+      --closure-faded: rgba(107, 203, 119, 0.4);
+      --closure-ghost: rgba(107, 203, 119, 0.15);
+      --closure-dark: #4a9c54;
+      --closure-glow: rgba(107, 203, 119, 0.3);
+
+      /* MTR Principle Colors */
+      --origin: #ffd700;
+      --boundary: #ff6b6b;
+      --invariant: #00ff88;
+      --evolution: #4ecdc4;
+      --attractor: #c792ea;
+
+      /* Entropic/Thermodynamic Colors */
+      --entropy-high: #ff6b6b;
+      --entropy-low: #6bcb77;
+      --heat-death: #444455;
+
+      /* Critical Constants */
+      --zc: 0.8660254038;
+      --phi: 1.6180339887;
+
+      /* Theme */
+      --bg-void: #020204;
+      --bg-primary: #060610;
+      --bg-secondary: #0a0a18;
+      --bg-tertiary: #101028;
+      --bg-card: #161640;
+      --text-primary: #f0f0f5;
+      --text-secondary: #909098;
+      --text-accent: #6bcb77;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(107, 203, 119, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* ===============================================================================
+       GHOSTED BACKGROUND - Faded/Unreachable Feel
+       =============================================================================== */
+    .ghost-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 30%, var(--closure-ghost) 0%, transparent 50%),
+        radial-gradient(ellipse at 30% 70%, rgba(68, 68, 85, 0.1) 0%, transparent 40%),
+        radial-gradient(ellipse at 70% 60%, rgba(107, 203, 119, 0.05) 0%, transparent 40%);
+      animation: ghost-pulse 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes ghost-pulse {
+      0% { opacity: 0.4; }
+      100% { opacity: 0.7; }
+    }
+
+    /* Dashed border pattern for "unreachable" elements */
+    .unreachable-border {
+      border-style: dashed !important;
+    }
+
+    /* ===============================================================================
+       NAVIGATION
+       =============================================================================== */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(6, 6, 16, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+      box-shadow: 0 0 15px var(--closure-glow);
+    }
+
+    /* ===============================================================================
+       CLOSURE HEADER - Ghosted Circle
+       =============================================================================== */
+    .closure-header {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .step-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--closure-faded);
+      background: var(--closure-ghost);
+      border: 1px dashed var(--closure-faded);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .step-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--closure-faded), var(--closure-primary), var(--closure-faded));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0.85;
+    }
+
+    .step-subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Ghosted Circle - The Unreachable Symbol */
+    .ghost-circle {
+      width: 150px;
+      height: 150px;
+      margin: 2rem auto;
+      background: var(--closure-ghost);
+      border: 3px dashed var(--closure-faded);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--closure-faded);
+      animation: ghost-glow 4s ease-in-out infinite;
+      position: relative;
+    }
+
+    .ghost-circle::before {
+      content: '';
+      position: absolute;
+      inset: -10px;
+      border: 1px dashed var(--closure-ghost);
+      border-radius: 50%;
+      animation: ghost-ring 8s linear infinite;
+    }
+
+    @keyframes ghost-glow {
+      0%, 100% {
+        box-shadow: 0 0 20px var(--closure-ghost);
+        opacity: 0.7;
+      }
+      50% {
+        box-shadow: 0 0 40px var(--closure-glow), 0 0 60px var(--closure-ghost);
+        opacity: 0.9;
+      }
+    }
+
+    @keyframes ghost-ring {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .ghost-symbol {
+      font-size: 2.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .ghost-label {
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* Core Equation Display */
+    .core-equation-box {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border: 2px dashed var(--closure-faded);
+      border-radius: 1rem;
+    }
+
+    .equation-if {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--closure-primary);
+      margin-bottom: 1rem;
+    }
+
+    .equation-results {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .equation-result {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      padding: 0.5rem;
+      background: var(--bg-secondary);
+      border-radius: 0.25rem;
+    }
+
+    .equation-result span {
+      color: var(--closure-faded);
+    }
+
+    /* The BUT statement */
+    .but-statement {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(255, 107, 107, 0.1);
+      border: 2px solid var(--boundary);
+      border-radius: 1rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .but-keyword {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--boundary);
+      margin-bottom: 0.5rem;
+    }
+
+    .but-content {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    .but-reason {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    /* ===============================================================================
+       MAIN CONTENT STRUCTURE
+       =============================================================================== */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bg-void);
+      background: var(--closure-faded);
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    /* ===============================================================================
+       THEORETICAL LIMIT CARDS
+       =============================================================================== */
+    .limit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .limit-card {
+      background: var(--bg-secondary);
+      border: 1px dashed var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      opacity: 0.85;
+    }
+
+    .limit-card:hover {
+      opacity: 1;
+      border-color: var(--closure-faded);
+      box-shadow: 0 0 20px var(--closure-ghost);
+    }
+
+    .limit-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      color: var(--closure-faded);
+      margin-bottom: 1rem;
+    }
+
+    .limit-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .limit-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--closure-primary);
+      background: var(--bg-tertiary);
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .limit-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* ===============================================================================
+       THEOREM CARDS
+       =============================================================================== */
+    .theorem-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 107, 107, 0.05) 100%);
+      border: 2px solid var(--boundary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .theorem-card::before {
+      content: '\2205';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--boundary);
+      background: var(--bg-void);
+      padding: 0 0.5rem;
+    }
+
+    .theorem-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--boundary);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .theorem-statement {
+      font-size: 1.15rem;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--boundary);
+    }
+
+    .theorem-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--boundary);
+      background: var(--bg-tertiary);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      border: 1px solid var(--boundary);
+    }
+
+    .proof-section {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .proof-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--attractor);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .proof-step {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: start;
+    }
+
+    .proof-step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--attractor);
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(199, 146, 234, 0.1);
+      border: 1px solid var(--attractor);
+      border-radius: 50%;
+    }
+
+    .proof-step-content {
+      color: var(--text-secondary);
+    }
+
+    .proof-step-content strong {
+      color: var(--text-primary);
+    }
+
+    .proof-step-content code {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--boundary);
+      background: var(--bg-secondary);
+      padding: 0.1rem 0.3rem;
+      border-radius: 0.2rem;
+    }
+
+    /* ===============================================================================
+       DUAL SELF-REFERENCE COMPARISON
+       =============================================================================== */
+    .comparison-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .comparison-card {
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .comparison-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--card-color, var(--text-accent));
+    }
+
+    .comparison-card.godel {
+      --card-color: var(--entropy-high);
+      border: 1px solid var(--entropy-high);
+    }
+
+    .comparison-card.kael {
+      --card-color: var(--evolution);
+      border: 1px solid var(--evolution);
+    }
+
+    .comparison-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .comparison-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--card-color);
+      border-radius: 0.5rem;
+      color: var(--card-color);
+    }
+
+    .comparison-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .comparison-subtitle {
+      font-size: 0.8rem;
+      color: var(--card-color);
+    }
+
+    .comparison-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .comparison-list li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+
+    .comparison-list li:last-child {
+      border-bottom: none;
+    }
+
+    .comparison-list li::before {
+      content: attr(data-symbol);
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--card-color);
+      font-size: 0.9rem;
+    }
+
+    /* ===============================================================================
+       ENTROPIC LIMIT VISUALIZATION
+       =============================================================================== */
+    .entropic-container {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(68, 68, 85, 0.2) 100%);
+      border: 1px solid var(--heat-death);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .entropic-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--heat-death);
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .entropy-meter {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .entropy-bar {
+      display: grid;
+      grid-template-columns: 120px 1fr 80px;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .entropy-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .entropy-track {
+      height: 20px;
+      background: var(--bg-tertiary);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .entropy-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 1s ease;
+    }
+
+    .entropy-fill.expressive {
+      background: linear-gradient(90deg, var(--entropy-low), var(--entropy-high));
+    }
+
+    .entropy-fill.boundary {
+      background: linear-gradient(90deg, var(--closure-primary), var(--boundary));
+    }
+
+    .entropy-fill.deficit {
+      background: linear-gradient(90deg, var(--origin), var(--boundary));
+    }
+
+    .entropy-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-accent);
+      text-align: right;
+    }
+
+    .heat-death-note {
+      text-align: center;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(68, 68, 85, 0.3);
+      border-radius: 0.5rem;
+      border: 1px dashed var(--heat-death);
+    }
+
+    .heat-death-note p {
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .heat-death-note strong {
+      color: var(--heat-death);
+    }
+
+    /* ===============================================================================
+       PRACTICAL APPROXIMATION
+       =============================================================================== */
+    .practical-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--closure-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .practical-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--closure-primary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .practical-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--closure-primary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .practical-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .practical-item {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .practical-item:hover {
+      border-color: var(--closure-faded);
+    }
+
+    .practical-item-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--closure-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .practical-item-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .practical-item-example {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      background: var(--bg-secondary);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+    }
+
+    /* ===============================================================================
+       INTERACTIVE CLOSURE SIMULATOR
+       =============================================================================== */
+    .simulator-section {
+      background: var(--bg-secondary);
+      border: 2px solid var(--closure-faded);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .simulator-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--closure-primary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .simulator-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .slider-value {
+      color: var(--closure-primary);
+    }
+
+    .slider-input {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--closure-primary);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .slider-input::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 10px var(--closure-glow);
+    }
+
+    .simulator-visualization {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .simulator-visualization {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .frame-display {
+      background: var(--bg-tertiary);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      position: relative;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .frame-circle {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 2px solid var(--closure-primary);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s ease;
+    }
+
+    .frame-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--closure-primary);
+    }
+
+    .boundary-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px dashed var(--boundary);
+      transition: all 0.5s ease;
+    }
+
+    .metrics-display {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .metric-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+    }
+
+    .metric-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .metric-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--closure-primary);
+    }
+
+    .simulator-conclusion {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid var(--boundary);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .conclusion-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--boundary);
+      margin-bottom: 0.5rem;
+    }
+
+    .conclusion-detail {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* ===============================================================================
+       ASYMPTOTIC APPROACH
+       =============================================================================== */
+    .asymptotic-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--attractor);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .asymptotic-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--attractor);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .zeno-diagram {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .zeno-step {
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--attractor);
+      border-radius: 0.25rem;
+      color: var(--attractor);
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+    }
+
+    .zeno-step:hover {
+      background: rgba(199, 146, 234, 0.1);
+    }
+
+    .zeno-arrow {
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .zeno-limit {
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, var(--attractor), var(--closure-primary));
+      border-radius: 0.25rem;
+      color: var(--bg-void);
+      font-weight: 600;
+    }
+
+    .asymptotic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .asymptotic-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .asymptotic-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      color: var(--attractor);
+      margin-bottom: 0.75rem;
+    }
+
+    .asymptotic-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .asymptotic-desc {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    /* ===============================================================================
+       THERMODYNAMICS CONNECTION
+       =============================================================================== */
+    .thermo-container {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 107, 107, 0.05) 100%);
+      border: 1px solid var(--entropy-high);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .thermo-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--entropy-high);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .thermo-comparison {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .thermo-comparison {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .thermo-equals {
+        display: none;
+      }
+    }
+
+    .thermo-side {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+    }
+
+    .thermo-side-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--entropy-high);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .thermo-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .thermo-list li {
+      padding: 0.5rem 0;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .thermo-list li:last-child {
+      border-bottom: none;
+    }
+
+    .thermo-equals {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      padding-top: 3rem;
+    }
+
+    /* ===============================================================================
+       WHAT HAPPENS INSTEAD
+       =============================================================================== */
+    .instead-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--evolution);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .instead-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--evolution);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .instead-flow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .instead-node {
+      font-family: 'JetBrains Mono', monospace;
+      padding: 1rem 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .instead-node.blocked {
+      border: 2px dashed var(--closure-faded);
+      color: var(--closure-faded);
+      opacity: 0.6;
+    }
+
+    .instead-node.active {
+      border: 2px solid var(--evolution);
+      color: var(--evolution);
+    }
+
+    .instead-node-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .instead-arrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+    }
+
+    .instead-arrow.blocked {
+      color: var(--boundary);
+    }
+
+    .instead-arrow.active {
+      color: var(--evolution);
+    }
+
+    .instead-explanation {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .instead-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .instead-card:hover {
+      border-color: var(--evolution);
+    }
+
+    .instead-card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--evolution);
+      margin-bottom: 0.75rem;
+    }
+
+    .instead-card-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* ===============================================================================
+       NAVIGATION TREE
+       =============================================================================== */
+    .tree-nav-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .tree-nav-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--origin);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .tree-nav-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tree-nav-level {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .tree-nav-node {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tree-nav-node:hover {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+    }
+
+    .tree-nav-node.current {
+      border: 2px dashed var(--closure-faded);
+      color: var(--closure-faded);
+      background: var(--closure-ghost);
+    }
+
+    .tree-nav-node.unreachable {
+      border: 1px dashed var(--closure-ghost);
+      color: var(--closure-ghost);
+      opacity: 0.6;
+    }
+
+    .tree-nav-node.actual-path {
+      border-color: var(--evolution);
+      color: var(--evolution);
+    }
+
+    .tree-connector-v {
+      width: 2px;
+      height: 20px;
+      background: var(--text-secondary);
+    }
+
+    .tree-branch-split {
+      display: flex;
+      gap: 4rem;
+      position: relative;
+      padding-top: 1rem;
+    }
+
+    .tree-branch-split::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 25%;
+      right: 25%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--closure-faded), var(--evolution));
+    }
+
+    .tree-branch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tree-branch::before {
+      content: '';
+      width: 2px;
+      height: 15px;
+    }
+
+    .tree-branch.left::before {
+      background: var(--closure-faded);
+    }
+
+    .tree-branch.right::before {
+      background: var(--evolution);
+    }
+
+    .branch-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+
+    .branch-label.unreachable {
+      color: var(--closure-faded);
+      background: var(--closure-ghost);
+    }
+
+    .branch-label.actual {
+      color: var(--evolution);
+      background: rgba(78, 205, 196, 0.1);
+    }
+
+    /* ===============================================================================
+       MTR CONNECTIONS
+       =============================================================================== */
+    .mtr-connections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .mtr-link-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 215, 0, 0.03) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: block;
+    }
+
+    .mtr-link-card:hover {
+      border-color: var(--link-color, var(--text-accent));
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .mtr-link-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .mtr-link-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--link-color, var(--text-accent));
+      border-radius: 0.5rem;
+      color: var(--link-color, var(--text-accent));
+    }
+
+    .mtr-link-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    .mtr-link-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ===============================================================================
+       FOOTER
+       =============================================================================== */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--closure-faded);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===============================================================================
+       RESPONSIVE
+       =============================================================================== */
+    @media (max-width: 768px) {
+      .step-title { font-size: 1.8rem; }
+      .ghost-circle { width: 120px; height: 120px; }
+      .ghost-symbol { font-size: 2rem; }
+      .comparison-container { grid-template-columns: 1fr; }
+      .tree-branch-split { flex-direction: column; gap: 1rem; }
+      .tree-branch-split::before { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ghost-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link"><span>&#9671;</span>VaultNode Tree</a>
+    <a href="mtr-decision-tree.html" class="nav-link"><span>&#8756;</span>MTR Decision Tree</a>
+    <a href="vn-mtr-006-boundary-check.html" class="nav-link"><span>&#9671;</span>Boundary Check</a>
+    <a href="vn-mtr-007-complete-closure.html" class="nav-link active"><span>&#8718;</span>Complete Closure</a>
+    <a href="vn-fibonacci-rg-flow.html" class="nav-link"><span>&#966;</span>Fibonacci RG</a>
+  </nav>
+
+  <!-- Closure Header -->
+  <header class="closure-header">
+    <div class="step-badge">VN-MTR-007 :: DECISION TREE LEVEL 5</div>
+    <h1 class="step-title">MTR-007: Complete Closure</h1>
+    <p class="step-subtitle">
+      The Unreachable Attractor
+    </p>
+
+    <!-- Ghosted Circle Symbol -->
+    <div class="ghost-circle">
+      <div class="ghost-symbol">&#8718;</div>
+      <div class="ghost-label">HALT</div>
+    </div>
+
+    <!-- Core Equation Box -->
+    <div class="core-equation-box">
+      <div class="equation-if">IF &#8706;F = &#8709;:</div>
+      <div class="equation-results">
+        <div class="equation-result"><span>&#8594;</span> HALT (complete closure)</div>
+        <div class="equation-result"><span>&#8594;</span> &#948;*(F) = 0 (perfect explanation)</div>
+        <div class="equation-result"><span>&#8594;</span> No further evolution needed</div>
+        <div class="equation-result"><span>&#8594;</span> R(R) = R achieved</div>
+      </div>
+    </div>
+
+    <!-- The BUT Statement -->
+    <div class="but-statement">
+      <div class="but-keyword">BUT:</div>
+      <div class="but-content">For any expressive F, &#8706;F &#8800; &#8709; ALWAYS</div>
+      <div class="but-reason">This is Godel + Language combined - STRUCTURAL, not contingent</div>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: The Theoretical Limit -->
+    <section class="section" id="theoretical-limit">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">The Theoretical Limit</h2>
+      </div>
+
+      <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+        What would complete closure actually mean? This is the state where explanation terminates—
+        where the deficit function reaches zero and no further frame extension is needed or possible.
+      </p>
+
+      <div class="limit-grid">
+        <div class="limit-card">
+          <div class="limit-icon">&#948;*=0</div>
+          <div class="limit-title">Perfect Compression</div>
+          <div class="limit-equation">&#948;*(F) = 0</div>
+          <div class="limit-desc">
+            Zero closure deficit. The frame perfectly captures all of X* with no error,
+            no compression loss, no constraint violations. The description is maximally efficient.
+          </div>
+        </div>
+
+        <div class="limit-card">
+          <div class="limit-icon">X*&#8838;F</div>
+          <div class="limit-title">Complete Capture</div>
+          <div class="limit-equation">Reach(F) = X*</div>
+          <div class="limit-desc">
+            All of compositional closure X* is reachable within the frame.
+            Nothing exists beyond the language's expressive power.
+            Every possible configuration is describable.
+          </div>
+        </div>
+
+        <div class="limit-card">
+          <div class="limit-icon">&#8635;</div>
+          <div class="limit-title">Self-Reference Resolved</div>
+          <div class="limit-equation">R(R) = R</div>
+          <div class="limit-desc">
+            The frame can fully describe itself without paradox.
+            Self-reference becomes a stable fixed point rather than
+            a source of incompleteness or undecidability.
+          </div>
+        </div>
+
+        <div class="limit-card">
+          <div class="limit-icon">&#8709;</div>
+          <div class="limit-title">Empty Boundary</div>
+          <div class="limit-equation">&#8706;F = &#8709;</div>
+          <div class="limit-desc">
+            No incompleteness boundary exists. There are no statements
+            that require a larger frame to decide. The interior equals
+            the whole: Int(F) = F.
+          </div>
+        </div>
+
+        <div class="limit-card">
+          <div class="limit-icon">&#9632;</div>
+          <div class="limit-title">Evolution Terminates</div>
+          <div class="limit-equation">F<sub>t+1</sub> = F<sub>t</sub></div>
+          <div class="limit-desc">
+            No pressure for frame extension. The system has reached
+            its final state. All questions answerable, all phenomena
+            explained. Science complete.
+          </div>
+        </div>
+
+        <div class="limit-card">
+          <div class="limit-icon">D*</div>
+          <div class="limit-title">Absolute Origin</div>
+          <div class="limit-equation">Origin(F) = D* (global)</div>
+          <div class="limit-desc">
+            Origin is no longer relative. There exists a unique,
+            globally optimal description that minimizes deficit across
+            all possible frames.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Why It's Unreachable -->
+    <section class="section" id="unreachable">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">Why It's Unreachable (Core Theorem)</h2>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">THEOREM - PERPETUAL INCOMPLETENESS</div>
+        <div class="theorem-statement">
+          For any sufficiently expressive frame F:
+        </div>
+
+        <div class="theorem-equation">
+          &#8706;F &#8800; &#8709; (ALWAYS)
+        </div>
+
+        <div class="proof-section">
+          <div class="proof-label">PROOF SKETCH (Godel + Language Combined)</div>
+
+          <div class="proof-step">
+            <div class="proof-step-num">1</div>
+            <div class="proof-step-content">
+              <strong>Godel's Incompleteness (Diagonal Construction):</strong><br>
+              Any system F capable of arithmetic contains statements G<sub>F</sub> such that:
+              <code>G<sub>F</sub> is true iff G<sub>F</sub> is not provable in F</code>.
+              This creates undecidable statements in every sufficiently powerful frame.
+            </div>
+          </div>
+
+          <div class="proof-step">
+            <div class="proof-step-num">2</div>
+            <div class="proof-step-content">
+              <strong>Language Framework (X* Infinite, Constraints Finite):</strong><br>
+              Compositional closure X* is infinite - infinitely many well-formed expressions.
+              But <code>&#119964;(F)</code> imposes only finite constraints on reachability.
+              Therefore: <code>&#8707;&#964; &#8712; X* : &#964; &#8713; Reach(F)</code>.
+            </div>
+          </div>
+
+          <div class="proof-step">
+            <div class="proof-step-num">3</div>
+            <div class="proof-step-content">
+              <strong>Compositional Closure Exceeds Admissibility:</strong><br>
+              The set of grammatically valid expressions always exceeds what constraints
+              permit. <code>|X*| > |&#119964;(F)|</code> for any finite constraint set.
+              Some valid compositions are unreachable.
+            </div>
+          </div>
+
+          <div class="proof-step">
+            <div class="proof-step-num">4</div>
+            <div class="proof-step-content">
+              <strong>Boundary Definition:</strong><br>
+              <code>&#8706;F = {&#964; &#8712; X* : &#964; decidable only in F' &#8835; F}</code><br>
+              This set is non-empty by (1), (2), (3). QED.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 107, 107, 0.1); border-radius: 0.5rem; border-left: 3px solid var(--boundary);">
+          <p style="font-family: 'JetBrains Mono', monospace; color: var(--boundary); margin-bottom: 0.5rem;">
+            THIS IS STRUCTURAL, NOT CONTINGENT
+          </p>
+          <p style="color: var(--text-secondary);">
+            No amount of cleverness, computation, or extension can eliminate the boundary.
+            Extension moves the boundary but never eliminates it.
+            This is the deep structure of self-referential systems.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Godel-Type Self-Reference -->
+    <section class="section" id="godel-type">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">Godel-Type Self-Reference (Entropic Regime)</h2>
+      </div>
+
+      <div class="comparison-container">
+        <div class="comparison-card godel">
+          <div class="comparison-header">
+            <div class="comparison-icon">&#8635;</div>
+            <div>
+              <div class="comparison-title">Godel-Type Self-Reference</div>
+              <div class="comparison-subtitle">ENTROPIC REGIME</div>
+            </div>
+          </div>
+
+          <ul class="comparison-list">
+            <li data-symbol="&#8226;">Self-reference evaluated WITHIN fixed frame F</li>
+            <li data-symbol="&#8226;">Produces undecidability and saturation</li>
+            <li data-symbol="&#8226;">Fixed point is STATIC (trapped)</li>
+            <li data-symbol="&#8226;">Boundary is TERMINAL (obstruction)</li>
+            <li data-symbol="&#8226;">Proof-theoretic entropy increases</li>
+            <li data-symbol="&#8226;">Cannot escape by trying harder inside F</li>
+            <li data-symbol="&#8226;">Leads to: stagnation, paradox, heat death</li>
+          </ul>
+        </div>
+
+        <div class="comparison-card kael">
+          <div class="comparison-header">
+            <div class="comparison-icon">&#8679;</div>
+            <div>
+              <div class="comparison-title">Kael-Type Self-Reference</div>
+              <div class="comparison-subtitle">GENERATIVE REGIME</div>
+            </div>
+          </div>
+
+          <ul class="comparison-list">
+            <li data-symbol="&#8226;">Self-reference triggers frame extension F &#8594; F'</li>
+            <li data-symbol="&#8226;">Produces genuine novelty and growth</li>
+            <li data-symbol="&#8226;">Fixed point is DYNAMIC (evolving)</li>
+            <li data-symbol="&#8226;">Boundary is GENERATIVE (opportunity)</li>
+            <li data-symbol="&#8226;">Information entropy can decrease locally</li>
+            <li data-symbol="&#8226;">Escape by moving to larger frame</li>
+            <li data-symbol="&#8226;">Leads to: evolution, discovery, progress</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-tertiary); border-radius: 0.5rem; padding: 1.5rem; text-align: center; margin-top: 1rem;">
+        <p style="font-family: 'JetBrains Mono', monospace; color: var(--text-primary); font-size: 1.1rem;">
+          Complete closure = permanent Godel regime
+        </p>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem;">
+          Without frame extension, the system remains trapped in entropic self-reference.
+          The "unreachable" status of complete closure is what forces Kael-type evolution.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 4: The Entropic Limit -->
+    <section class="section" id="entropic-limit">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">The Entropic Limit</h2>
+      </div>
+
+      <div class="entropic-container">
+        <div class="entropic-title">SATURATION DYNAMICS</div>
+
+        <div class="entropy-meter">
+          <div class="entropy-bar">
+            <div class="entropy-label">Expressiveness</div>
+            <div class="entropy-track">
+              <div class="entropy-fill expressive" style="width: 85%;"></div>
+            </div>
+            <div class="entropy-value">HIGH</div>
+          </div>
+
+          <div class="entropy-bar">
+            <div class="entropy-label">Boundary Size</div>
+            <div class="entropy-track">
+              <div class="entropy-fill boundary" style="width: 75%;"></div>
+            </div>
+            <div class="entropy-value">GROWS</div>
+          </div>
+
+          <div class="entropy-bar">
+            <div class="entropy-label">Deficit &#948;*</div>
+            <div class="entropy-track">
+              <div class="entropy-fill deficit" style="width: 40%;"></div>
+            </div>
+            <div class="entropy-value">&#8594; &#949; > 0</div>
+          </div>
+        </div>
+
+        <div class="heat-death-note">
+          <p><strong>The "Heat Death" of Explanation:</strong></p>
+          <p style="margin-top: 0.5rem;">
+            As expressiveness increases within a fixed frame, self-referential overhead consumes
+            capacity. Diminishing returns on internal optimization. The system approaches
+            a saturation limit where &#948;* stagnates and cannot reach zero.
+          </p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+        <div style="background: var(--bg-tertiary); border-radius: 0.5rem; padding: 1rem; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; color: var(--entropy-high); font-size: 1.2rem;">Capacity Consumed</div>
+          <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">Self-reference uses resources</div>
+        </div>
+        <div style="background: var(--bg-tertiary); border-radius: 0.5rem; padding: 1rem; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; color: var(--heat-death); font-size: 1.2rem;">Diminishing Returns</div>
+          <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">Each improvement costs more</div>
+        </div>
+        <div style="background: var(--bg-tertiary); border-radius: 0.5rem; padding: 1rem; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; color: var(--boundary); font-size: 1.2rem;">Saturation Limit</div>
+          <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">&#948;* cannot reach zero</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Practical Approximation -->
+    <section class="section" id="practical">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">Practical Approximation: &#8706;F &#8776; &#8709;</h2>
+      </div>
+
+      <div class="practical-container">
+        <div class="practical-title">EFFECTIVE CLOSURE FOR BOUNDED CONTEXTS</div>
+
+        <div class="practical-equation">
+          &#8706;F &#8776; &#8709; (negligible boundary)
+        </div>
+
+        <p style="color: var(--text-secondary); text-align: center; margin-bottom: 2rem;">
+          While true closure is impossible, practical approximation suffices for many purposes.
+          When boundary effects fall below measurement threshold, we have "good enough" closure.
+        </p>
+
+        <div class="practical-grid">
+          <div class="practical-item">
+            <div class="practical-item-title">Effective Theories</div>
+            <div class="practical-item-desc">
+              Theories that work within their domain of validity,
+              ignoring phenomena outside their scope.
+            </div>
+            <div class="practical-item-example">
+              Example: Newtonian mechanics for v << c
+            </div>
+          </div>
+
+          <div class="practical-item">
+            <div class="practical-item-title">Engineering Approximations</div>
+            <div class="practical-item-desc">
+              Practical calculations that ignore higher-order effects
+              when precision requirements allow.
+            </div>
+            <div class="practical-item-example">
+              Example: Ideal gas law at moderate P, T
+            </div>
+          </div>
+
+          <div class="practical-item">
+            <div class="practical-item-title">Bounded Contexts</div>
+            <div class="practical-item-desc">
+              Domains where the relevant phenomena don't approach
+              the frame's incompleteness boundary.
+            </div>
+            <div class="practical-item-example">
+              Example: Classical logic for finite sets
+            </div>
+          </div>
+
+          <div class="practical-item">
+            <div class="practical-item-title">Scale Separation</div>
+            <div class="practical-item-desc">
+              When phenomena at different scales decouple,
+              each scale can be treated as approximately closed.
+            </div>
+            <div class="practical-item-example">
+              Example: Chemistry ignores nuclear physics
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(107, 203, 119, 0.1); border: 1px solid var(--closure-primary); border-radius: 0.5rem; padding: 1.5rem; margin-top: 1rem; text-align: center;">
+        <p style="font-family: 'JetBrains Mono', monospace; color: var(--closure-primary);">
+          Practical closure &#8800; True closure
+        </p>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem;">
+          The boundary always exists. We choose to ignore it when effects are negligible.
+          This is pragmatic, not fundamental.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 6: Interactive Closure Simulator -->
+    <section class="section" id="simulator">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Interactive Closure Simulator</h2>
+      </div>
+
+      <div class="simulator-section">
+        <div class="simulator-title">EXPRESSIVITY vs BOUNDARY GROWTH</div>
+
+        <div class="simulator-controls">
+          <div class="slider-group">
+            <div class="slider-label">
+              <span>Frame Expressivity</span>
+              <span class="slider-value" id="expressivityValue">50%</span>
+            </div>
+            <input type="range" class="slider-input" id="expressivitySlider" min="1" max="100" value="50" oninput="updateSimulator()">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-label">
+              <span>Self-Reference Depth</span>
+              <span class="slider-value" id="depthValue">3</span>
+            </div>
+            <input type="range" class="slider-input" id="depthSlider" min="1" max="10" value="3" oninput="updateSimulator()">
+          </div>
+        </div>
+
+        <div class="simulator-visualization">
+          <div class="frame-display">
+            <div class="frame-circle" id="frameCircle">
+              <span class="frame-label" id="frameLabelText">F</span>
+            </div>
+            <div class="boundary-ring" id="boundaryRing"></div>
+          </div>
+
+          <div class="metrics-display" id="metricsDisplay">
+            <!-- Filled by JavaScript -->
+          </div>
+        </div>
+
+        <div class="simulator-conclusion" id="simulatorConclusion">
+          <!-- Filled by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: The Asymptotic Approach -->
+    <section class="section" id="asymptotic">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">The Asymptotic Approach</h2>
+      </div>
+
+      <div class="asymptotic-container">
+        <div class="asymptotic-title">ZENO-LIKE DYNAMICS: Always Approaching, Never Arriving</div>
+
+        <div class="zeno-diagram">
+          <div class="zeno-step">&#948;*(F<sub>1</sub>)</div>
+          <div class="zeno-arrow">&#8594;</div>
+          <div class="zeno-step">&#948;*(F<sub>2</sub>)</div>
+          <div class="zeno-arrow">&#8594;</div>
+          <div class="zeno-step">&#948;*(F<sub>3</sub>)</div>
+          <div class="zeno-arrow">&#8594;</div>
+          <div class="zeno-step">...</div>
+          <div class="zeno-arrow">&#8594;</div>
+          <div class="zeno-limit">&#949; > 0</div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; color: var(--attractor);">
+            &#948;*(F<sub>t</sub>) &#8594; &#949; but NEVER 0
+          </div>
+          <div style="color: var(--text-secondary); margin-top: 0.5rem;">
+            Each frame extension reduces deficit but creates new boundary.
+            Infinite refinement, no final state.
+          </div>
+        </div>
+
+        <div class="asymptotic-grid">
+          <div class="asymptotic-item">
+            <div class="asymptotic-icon">&#189;</div>
+            <div class="asymptotic-name">Halving Zeno</div>
+            <div class="asymptotic-desc">Each step covers half the remaining distance. Never reaches destination.</div>
+          </div>
+
+          <div class="asymptotic-item">
+            <div class="asymptotic-icon">&#8734;</div>
+            <div class="asymptotic-name">Infinite Series</div>
+            <div class="asymptotic-desc">Sum converges to limit but requires infinite terms to reach it.</div>
+          </div>
+
+          <div class="asymptotic-item">
+            <div class="asymptotic-icon">&#8706;</div>
+            <div class="asymptotic-name">Moving Boundary</div>
+            <div class="asymptotic-desc">Extension moves boundary but never eliminates it.</div>
+          </div>
+
+          <div class="asymptotic-item">
+            <div class="asymptotic-icon">&#8750;</div>
+            <div class="asymptotic-name">Limit Cycle</div>
+            <div class="asymptotic-desc">Approaches attractor asymptotically. Never merges with it.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Connection to Thermodynamics -->
+    <section class="section" id="thermodynamics">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <h2 class="section-title">Connection to Thermodynamics</h2>
+      </div>
+
+      <div class="thermo-container">
+        <div class="thermo-title">ENTROPIC REGIME = CLOSED SYSTEM</div>
+
+        <div class="thermo-comparison">
+          <div class="thermo-side">
+            <div class="thermo-side-title">THERMODYNAMICS</div>
+            <ul class="thermo-list">
+              <li>Closed system &#8594; entropy increases</li>
+              <li>No work extraction without gradient</li>
+              <li>Heat death: maximum entropy state</li>
+              <li>No perpetual motion machines</li>
+              <li>Energy conserved but unavailable</li>
+            </ul>
+          </div>
+
+          <div class="thermo-equals">&#8596;</div>
+
+          <div class="thermo-side">
+            <div class="thermo-side-title">GODELIAN DYNAMICS</div>
+            <ul class="thermo-list">
+              <li>Fixed frame &#8594; undecidability grows</li>
+              <li>No resolution without extension</li>
+              <li>Saturation: maximum self-reference</li>
+              <li>No complete closure possible</li>
+              <li>Information conserved but inaccessible</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-tertiary); border-radius: 0.5rem; text-align: center;">
+          <p style="font-family: 'JetBrains Mono', monospace; color: var(--entropy-high); font-size: 1.1rem;">
+            Heat Death &#8596; Godelian Saturation
+          </p>
+          <p style="color: var(--text-secondary); margin-top: 0.5rem;">
+            Both represent the limit of what's achievable in a closed system.
+            Frame extension is like opening the system to a heat bath -
+            it allows continued dynamics by importing new structure.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 9: What Happens Instead -->
+    <section class="section" id="instead">
+      <div class="section-header">
+        <div class="section-number">9</div>
+        <h2 class="section-title">What Happens Instead</h2>
+      </div>
+
+      <div class="instead-container">
+        <div class="instead-title">THE ACTUAL PATH: FRAME EXTENSION</div>
+
+        <div class="instead-flow">
+          <div class="instead-node active">&#8706;F &#8800; &#8709;</div>
+          <div class="instead-arrow blocked">&#8603;</div>
+          <div class="instead-node blocked">
+            HALT
+            <div class="instead-node-label">(unreachable)</div>
+          </div>
+        </div>
+
+        <div class="instead-flow" style="margin-top: 1rem;">
+          <div class="instead-node active">&#8706;F &#8800; &#8709;</div>
+          <div class="instead-arrow active">&#8594;</div>
+          <div class="instead-node active">
+            F &#8594; F'
+            <div class="instead-node-label">(extension)</div>
+          </div>
+          <div class="instead-arrow active">&#8594;</div>
+          <div class="instead-node active">
+            &#8706;F' &#8800; &#8709;
+            <div class="instead-node-label">(new boundary)</div>
+          </div>
+          <div class="instead-arrow active">&#8594;</div>
+          <div class="instead-node active">
+            ...
+            <div class="instead-node-label">(infinite)</div>
+          </div>
+        </div>
+
+        <div class="instead-explanation">
+          <div class="instead-card">
+            <div class="instead-card-title">Boundary Pressure Forces Evolution</div>
+            <div class="instead-card-desc">
+              Non-empty boundary creates "pressure" for frame extension.
+              Undecidable statements demand resolution. The system
+              must grow or stagnate.
+            </div>
+          </div>
+
+          <div class="instead-card">
+            <div class="instead-card-title">Kael-Type Self-Reference Takes Over</div>
+            <div class="instead-card-desc">
+              Instead of Godelian stagnation, the system enters
+              generative self-reference. Boundary becomes opportunity
+              rather than obstruction.
+            </div>
+          </div>
+
+          <div class="instead-card">
+            <div class="instead-card-title">The System MUST Extend or Stagnate</div>
+            <div class="instead-card-desc">
+              There is no third option. Without extension, entropy wins.
+              With extension, new territory opens. This is the engine
+              of scientific progress.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 2rem; text-align: center;">
+        <a href="mtr-decision-tree.html#principle-4" style="
+          display: inline-block;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 1rem;
+          padding: 1rem 2rem;
+          background: var(--evolution);
+          color: var(--bg-void);
+          border-radius: 0.5rem;
+          text-decoration: none;
+          transition: all 0.3s ease;
+        ">
+          &#8594; See Frame Extension (The Actual Path)
+        </a>
+      </div>
+    </section>
+
+    <!-- Section 10: Navigation -->
+    <section class="section" id="navigation">
+      <div class="section-header">
+        <div class="section-number">&#9670;</div>
+        <h2 class="section-title">Decision Tree Navigation</h2>
+      </div>
+
+      <div class="tree-nav-container">
+        <div class="tree-nav-title">MTR DECISION TREE :: BRANCH AT LEVEL 5</div>
+
+        <div class="tree-nav-visual">
+          <!-- Level 4: Decision Point -->
+          <div class="tree-nav-level">
+            <a href="vn-mtr-006-boundary-check.html" class="tree-nav-node">
+              <span>&#9671;</span>
+              <span>&#8706;F=&#8709;? (Boundary Check)</span>
+            </a>
+          </div>
+
+          <div class="tree-connector-v"></div>
+
+          <!-- Level 5: The Branch -->
+          <div class="tree-branch-split">
+            <div class="tree-branch left">
+              <div class="branch-label unreachable">YES (unreachable)</div>
+              <div class="tree-nav-node current unreachable-border">
+                <span>&#8718;</span>
+                <span>HALT - Complete Closure</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--closure-ghost); margin-top: 0.5rem; text-align: center;">
+                Never reached for<br>expressive F
+              </div>
+            </div>
+
+            <div class="tree-branch right">
+              <div class="branch-label actual">NO (always taken)</div>
+              <a href="mtr-decision-tree.html#principle-4" class="tree-nav-node actual-path">
+                <span>&#8594;</span>
+                <span>Frame Extension F'</span>
+              </a>
+              <div style="font-size: 0.75rem; color: var(--evolution); margin-top: 0.5rem; text-align: center;">
+                The actual path of<br>scientific progress
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-connector-v" style="margin-top: 1rem;"></div>
+
+          <!-- Loop indication -->
+          <div style="text-align: center; font-family: 'JetBrains Mono', monospace; color: var(--text-secondary); font-size: 0.9rem;">
+            &#8634; Return to Frame Definition with F'
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Pages -->
+    <section class="section" id="connections">
+      <div class="section-header">
+        <div class="section-number">&#8594;</div>
+        <h2 class="section-title">Related Pages</h2>
+      </div>
+
+      <div class="mtr-connections">
+        <a href="vn-mtr-006-boundary-check.html" class="mtr-link-card" style="--link-color: var(--evolution);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#9671;</div>
+            <div class="mtr-link-title">Boundary Check</div>
+          </div>
+          <div class="mtr-link-desc">
+            The decision point that leads here. Where the tree branches based on boundary status.
+          </div>
+        </a>
+
+        <a href="mtr-decision-tree.html#principle-4" class="mtr-link-card" style="--link-color: var(--evolution);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">F'</div>
+            <div class="mtr-link-title">Frame Extension</div>
+          </div>
+          <div class="mtr-link-desc">
+            The actual path taken. How frames extend when boundary is non-empty.
+          </div>
+        </a>
+
+        <a href="vn-mtr-002-boundary.html" class="mtr-link-card" style="--link-color: var(--boundary);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#8706;F</div>
+            <div class="mtr-link-title">Frame Boundary</div>
+          </div>
+          <div class="mtr-link-desc">
+            Deep dive into boundary topology. Why boundaries are always non-empty.
+          </div>
+        </a>
+
+        <a href="vn-mtr-000-language-before-observers.html" class="mtr-link-card" style="--link-color: var(--attractor);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#8857;</div>
+            <div class="mtr-link-title">Step Zero</div>
+          </div>
+          <div class="mtr-link-desc">
+            The foundation. Language before observers - where the R(R)=R journey begins.
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">&#8706;F = &#8709; &#8594; HALT (unreachable) | &#8706;F &#8800; &#8709; ALWAYS for expressive F | R(R)=R</div>
+    <p>VN-MTR-007 | Complete Closure - The Unreachable Attractor | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // Closure Simulator
+    function updateSimulator() {
+      const expressivity = parseInt(document.getElementById('expressivitySlider').value);
+      const depth = parseInt(document.getElementById('depthSlider').value);
+
+      document.getElementById('expressivityValue').textContent = expressivity + '%';
+      document.getElementById('depthValue').textContent = depth;
+
+      // Calculate derived values
+      // More expressivity = larger boundary (Godel's insight)
+      const boundarySize = Math.min(95, expressivity * 0.8 + depth * 5);
+
+      // Deficit approaches but never reaches zero
+      // Higher expressivity and depth = lower deficit, but asymptotically bounded
+      const baseDeficit = 100 - expressivity * 0.7;
+      const deficitReduction = Math.log(depth + 1) * 10;
+      const deficit = Math.max(5, baseDeficit - deficitReduction); // Never below 5%
+
+      // Self-reference overhead grows with depth
+      const overhead = Math.min(80, depth * 8 + expressivity * 0.2);
+
+      // Closure possibility (always impossible for high expressivity)
+      const closurePossible = expressivity < 20 && depth < 2;
+
+      // Update frame circle size based on expressivity
+      const frameCircle = document.getElementById('frameCircle');
+      const circleSize = 80 + expressivity * 0.7;
+      frameCircle.style.width = circleSize + 'px';
+      frameCircle.style.height = circleSize + 'px';
+
+      // Update boundary ring
+      const boundaryRing = document.getElementById('boundaryRing');
+      const ringSize = circleSize + 20 + boundarySize * 0.3;
+      boundaryRing.style.width = ringSize + 'px';
+      boundaryRing.style.height = ringSize + 'px';
+      boundaryRing.style.top = '50%';
+      boundaryRing.style.left = '50%';
+      boundaryRing.style.transform = 'translate(-50%, -50%)';
+      boundaryRing.style.opacity = boundarySize / 100;
+
+      // Update frame label
+      document.getElementById('frameLabelText').textContent = 'F_' + Math.ceil(expressivity / 10);
+
+      // Update metrics display
+      document.getElementById('metricsDisplay').innerHTML = `
+        <div class="metric-item">
+          <div class="metric-label">Boundary Size |&#8706;F|</div>
+          <div class="metric-value" style="color: ${boundarySize > 50 ? 'var(--boundary)' : 'var(--closure-primary)'}">
+            ${boundarySize.toFixed(1)}%
+          </div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">Closure Deficit &#948;*</div>
+          <div class="metric-value" style="color: ${deficit > 20 ? 'var(--boundary)' : 'var(--closure-primary)'}">
+            ${deficit.toFixed(1)}%
+          </div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">Self-Ref Overhead</div>
+          <div class="metric-value" style="color: ${overhead > 40 ? 'var(--entropy-high)' : 'var(--text-secondary)'}">
+            ${overhead.toFixed(1)}%
+          </div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">Distance to Closure</div>
+          <div class="metric-value" style="color: var(--attractor)">
+            &#8734; (unreachable)
+          </div>
+        </div>
+      `;
+
+      // Update conclusion
+      const conclusion = document.getElementById('simulatorConclusion');
+      if (expressivity < 20) {
+        conclusion.innerHTML = `
+          <div class="conclusion-text">Low Expressivity: Boundary Effects Minimal</div>
+          <div class="conclusion-detail">
+            At very low expressivity, boundary effects become negligible (&#8706;F &#8776; &#8709;).
+            Practical closure possible within domain. But full expressivity requires larger frames.
+          </div>
+        `;
+        conclusion.style.borderColor = 'var(--closure-primary)';
+        conclusion.style.background = 'rgba(107, 203, 119, 0.1)';
+      } else {
+        conclusion.innerHTML = `
+          <div class="conclusion-text">High Expressivity: &#8706;F &#8800; &#8709; (Always)</div>
+          <div class="conclusion-detail">
+            More expressive power = larger incompleteness boundary.
+            As expressivity increases, boundary grows. Complete closure remains unreachable.
+            The deficit &#948;* can approach but never reach zero.
+          </div>
+        `;
+        conclusion.style.borderColor = 'var(--boundary)';
+        conclusion.style.background = 'rgba(255, 107, 107, 0.1)';
+      }
+    }
+
+    // Initialize simulator
+    updateSimulator();
+  </script>
+
+</body>
+</html>
