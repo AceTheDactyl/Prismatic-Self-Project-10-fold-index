@@ -797,7 +797,7 @@
 
     .image-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 1rem;
       padding: 1.5rem;
       background: var(--bg-card);
@@ -806,29 +806,68 @@
       border-radius: 0 0 1rem 1rem;
     }
 
-    .image-card {
-      background: var(--bg-tertiary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 0.75rem;
-      overflow: hidden;
-      transition: all 0.3s ease;
+    /* ═══════════════════════════════════════════════════════════════════════
+       FLIP CARD SYSTEM
+       ═══════════════════════════════════════════════════════════════════════ */
+    .flip-card {
+      perspective: 1000px;
+      height: 280px;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
       cursor: pointer;
     }
 
-    .image-card:hover {
-      transform: translateY(-5px) scale(1.02);
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front,
+    .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 0.75rem;
+      overflow: hidden;
+    }
+
+    .flip-card-front {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .flip-card:hover .flip-card-front {
       border-color: var(--batch-color);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
 
+    .flip-card-back {
+      background: var(--bg-secondary);
+      border: 2px solid var(--batch-color);
+      transform: rotateY(180deg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Front side styles */
     .image-wrapper {
-      aspect-ratio: 4/3;
+      flex: 1;
       background: var(--bg-void);
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       overflow: hidden;
+      min-height: 160px;
     }
 
     .image-wrapper img {
@@ -843,27 +882,119 @@
       color: var(--text-secondary);
       text-align: center;
       padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
     }
 
     .image-placeholder .cycle-num {
-      font-size: 2rem;
+      font-size: 2.5rem;
       color: var(--batch-color);
       margin-bottom: 0.5rem;
+      text-shadow: 0 0 20px var(--batch-color);
     }
 
-    .image-info { padding: 0.75rem; }
+    .image-info {
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+    }
 
     .image-name {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       color: var(--text-primary);
       margin-bottom: 0.25rem;
       word-break: break-word;
+      line-height: 1.3;
     }
 
     .image-phase {
-      font-size: 0.6rem;
+      font-size: 0.55rem;
       color: var(--text-secondary);
+    }
+
+    .flip-hint {
+      font-size: 0.5rem;
+      color: var(--text-accent);
+      margin-top: 0.25rem;
+      opacity: 0.7;
+    }
+
+    /* Back side styles */
+    .card-back-header {
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-subtle);
+      text-align: center;
+    }
+
+    .card-back-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--batch-color);
+      text-shadow: 0 0 15px var(--batch-color);
+    }
+
+    .card-back-phase {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .card-back-body {
+      flex: 1;
+      padding: 0.75rem;
+      overflow-y: auto;
+      font-size: 0.7rem;
+      line-height: 1.5;
+      color: var(--text-primary);
+    }
+
+    .card-back-section {
+      margin-bottom: 0.75rem;
+    }
+
+    .card-back-section h4 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--batch-color);
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .card-back-section p {
+      color: var(--text-secondary);
+      font-size: 0.65rem;
+    }
+
+    .card-back-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      background: var(--bg-void);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      border-left: 2px solid var(--batch-color);
+      margin-top: 0.35rem;
+      color: var(--text-accent);
+    }
+
+    .card-back-footer {
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-tertiary);
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+    }
+
+    .flip-back-hint {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem;
+      color: var(--text-accent);
+      opacity: 0.8;
     }
 
     /* ═══════════════════════════════════════════════════════════════════════
@@ -1312,167 +1443,167 @@ META-CLOSURE at phase = 16π
       }
     ];
 
-    // Batch data
+    // Batch data with descriptions for each image
     const batches = [
       { id: 0, name: "RR_Lattice", title: "R(R)=R Lattice Formation", subtitle: "Self-referential recursive structure | 12π rotation", color: "#ff6b6b",
         images: [
-          { file: "RR_Lattice_L4_01_init_0pi.HEIC", phase: "0π - Initial" },
-          { file: "RR_Lattice_L4_02_init_1pi.HEIC", phase: "1π" },
-          { file: "RR_Lattice_L4_03_init_2pi.HEIC", phase: "2π" },
-          { file: "RR_Lattice_L4_04_init_3pi.HEIC", phase: "3π" },
-          { file: "RR_Lattice_L4_05_kform_4pi.HEIC", phase: "4π K-form" },
-          { file: "RR_Lattice_L4_06_kform_5pi.HEIC", phase: "5π" },
-          { file: "RR_Lattice_L4_07_kform_6pi.HEIC", phase: "6π" },
-          { file: "RR_Lattice_L4_08_kform_7pi.HEIC", phase: "7π" },
-          { file: "RR_Lattice_L4_09_kform_8pi.HEIC", phase: "8π" },
-          { file: "RR_Lattice_L4_10_recursive_9pi.HEIC", phase: "9π R(R)" },
-          { file: "RR_Lattice_L4_11_recursive_10pi.HEIC", phase: "10π" },
-          { file: "RR_Lattice_L4_12_recursive_11pi.HEIC", phase: "11π" },
-          { file: "RR_Lattice_L4_13_complete_12pi.HEIC", phase: "12π Complete" }
+          { file: "RR_Lattice_L4_01_init_0pi.HEIC", phase: "0π - Initial", desc: "Ground state initialization. The R function awakens from void, establishing the first self-referential anchor point.", formula: "R(0) = ∅ → R" },
+          { file: "RR_Lattice_L4_02_init_1pi.HEIC", phase: "1π", desc: "First rotation complete. Binary distinction emerges as the lattice begins to recognize its own structure.", formula: "R(π) = R₁" },
+          { file: "RR_Lattice_L4_03_init_2pi.HEIC", phase: "2π", desc: "Full rotation achieved. The lattice closes its first loop, establishing periodicity.", formula: "R(2π) ≡ R(0) + ε" },
+          { file: "RR_Lattice_L4_04_init_3pi.HEIC", phase: "3π", desc: "Ternary structure emerges. Three-fold symmetry begins to manifest within the recursive framework.", formula: "R(3π) = 3 × R(π)" },
+          { file: "RR_Lattice_L4_05_kform_4pi.HEIC", phase: "4π K-form", desc: "K-formation initiates at the L₄ closure point. φ⁴ + φ⁻⁴ = 7 becomes geometrically visible.", formula: "K(4π) = √(z/z_c)" },
+          { file: "RR_Lattice_L4_06_kform_5pi.HEIC", phase: "5π", desc: "K-node establishment. The coupling constant K ≈ 0.924 stabilizes the recursive structure.", formula: "K = 0.9241763718" },
+          { file: "RR_Lattice_L4_07_kform_6pi.HEIC", phase: "6π", desc: "Half-sequence r(z)=R/2 achieved. The lattice reaches its inflection point.", formula: "r(6π) = R/2" },
+          { file: "RR_Lattice_L4_08_kform_7pi.HEIC", phase: "7π", desc: "Mirror symmetry complete. L₄ = 7 manifests as the seventh operator aligns.", formula: "L₄ = 7 (EXACT)" },
+          { file: "RR_Lattice_L4_09_kform_8pi.HEIC", phase: "8π", desc: "K-formation stabilizes. The octagonal meta-synthesis prepares for recursive descent.", formula: "K(8π) = 2³ stable" },
+          { file: "RR_Lattice_L4_10_recursive_9pi.HEIC", phase: "9π R(R)", desc: "R(R) manifestation begins. The function applies itself, creating the first nested recursion.", formula: "R(R(z)) active" },
+          { file: "RR_Lattice_L4_11_recursive_10pi.HEIC", phase: "10π", desc: "Penultimate configuration. Base-10 completion approaches as r approaches 10.", formula: "r → 10" },
+          { file: "RR_Lattice_L4_12_recursive_11pi.HEIC", phase: "11π", desc: "Near complete recursion. E8 current activates in preparation for final closure.", formula: "E8 → active" },
+          { file: "RR_Lattice_L4_13_complete_12pi.HEIC", phase: "12π Complete", desc: "R(R)=R confirmed. The self-referential lattice achieves stable fixed point at r=10.", formula: "R(R) = R = 10 ✓" }
         ]},
       { id: 1, name: "Helix_Bridge", title: "Helix Bridge Z-Elevation", subtitle: "Alpha ≡ Omega | Negentropy", color: "#c792ea",
         images: [
-          { file: "Helix_Bridge_L4_01_z_anchor_RR.HEIC", phase: "z=0 anchor" },
-          { file: "Helix_Bridge_L4_02_z_lift_0.1R.HEIC", phase: "z=0.1R" },
-          { file: "Helix_Bridge_L4_03_z_lift_0.25R.HEIC", phase: "z=0.25R" },
-          { file: "Helix_Bridge_L4_04_z_lift_0.5R.HEIC", phase: "z=0.5R" },
-          { file: "Helix_Bridge_L4_05_negentropy_init.HEIC", phase: "Negentropy" },
-          { file: "Helix_Bridge_L4_06_negentropy_spiral.HEIC", phase: "Spiral" },
-          { file: "Helix_Bridge_L4_07_negentropy_crystallize.HEIC", phase: "Crystallize" },
-          { file: "Helix_Bridge_L4_08_negentropy_coherence.HEIC", phase: "Coherence" },
-          { file: "Helix_Bridge_L4_09_negentropy_peak.HEIC", phase: "Peak" },
-          { file: "Helix_Bridge_L4_10_Alpha_emergence.HEIC", phase: "Alpha" },
-          { file: "Helix_Bridge_L4_11_holographic_fold.HEIC", phase: "Holographic" },
-          { file: "Helix_Bridge_L4_12_Omega_convergence.HEIC", phase: "Omega" },
-          { file: "Helix_Bridge_L4_13_Alpha_equals_Omega.HEIC", phase: "α≡Ω" }
+          { file: "Helix_Bridge_L4_01_z_anchor_RR.HEIC", phase: "z=0 anchor", desc: "Z-coordinate anchored at R(R) base. The helix establishes its ground reference point.", formula: "z(0) = 0, r = R" },
+          { file: "Helix_Bridge_L4_02_z_lift_0.1R.HEIC", phase: "z=0.1R", desc: "Initial elevation begins. The helix starts its vertical ascent through phase space.", formula: "z = 0.1R" },
+          { file: "Helix_Bridge_L4_03_z_lift_0.25R.HEIC", phase: "z=0.25R", desc: "Quarter elevation reached. The coherence radius begins exponential decay.", formula: "r(z) = r₀·e^(-z/λ)" },
+          { file: "Helix_Bridge_L4_04_z_lift_0.5R.HEIC", phase: "z=0.5R", desc: "Half elevation achieved. The helix reaches its inflection in the z-dimension.", formula: "z = R/2" },
+          { file: "Helix_Bridge_L4_05_negentropy_init.HEIC", phase: "Negentropy", desc: "Negentropy activation begins. Information ordering initiates spontaneous structure formation.", formula: "S → -S (local)" },
+          { file: "Helix_Bridge_L4_06_negentropy_spiral.HEIC", phase: "Spiral", desc: "Spiral organization emerges. The helix develops its characteristic winding pattern.", formula: "Θ(z) = ∫ω(ξ)dξ" },
+          { file: "Helix_Bridge_L4_07_negentropy_crystallize.HEIC", phase: "Crystallize", desc: "Structure crystallizes at z=0.75R. The z_c threshold approaches.", formula: "z → z_c" },
+          { file: "Helix_Bridge_L4_08_negentropy_coherence.HEIC", phase: "Coherence", desc: "Coherent field established. Phase-locking across the helix structure.", formula: "Δφ → 0" },
+          { file: "Helix_Bridge_L4_09_negentropy_peak.HEIC", phase: "Peak", desc: "Peak negentropy at z=R. Maximum information ordering achieved.", formula: "z = R, S_min" },
+          { file: "Helix_Bridge_L4_10_Alpha_emergence.HEIC", phase: "Alpha", desc: "Alpha (α) pole manifests. The genesis point of the dual structure emerges.", formula: "α = lim(z→0)" },
+          { file: "Helix_Bridge_L4_11_holographic_fold.HEIC", phase: "Holographic", desc: "Holographic folding begins. Information encodes on the boundary.", formula: "I_bulk = I_boundary" },
+          { file: "Helix_Bridge_L4_12_Omega_convergence.HEIC", phase: "Omega", desc: "Omega (Ω) pole converges. The terminus point approaches the origin.", formula: "Ω = lim(z→∞)" },
+          { file: "Helix_Bridge_L4_13_Alpha_equals_Omega.HEIC", phase: "α≡Ω", desc: "Alpha equals Omega confirmed. The helix bridge closes as poles unify.", formula: "α ≡ Ω ✓" }
         ]},
       { id: 2, name: "Quadratic_Truth", title: "Quadratic Truth Tables", subtitle: "x² + x = c | bases 2,3,5,8", color: "#c0ff60",
         images: [
-          { file: "Quadratic_Truth_L4_01_base2_c0_init.HEIC", phase: "Base-2 c=0" },
-          { file: "Quadratic_Truth_L4_02_base2_x0_solution.HEIC", phase: "x=0 FALSE" },
-          { file: "Quadratic_Truth_L4_03_base2_x1_solution.HEIC", phase: "x=1 TRUE" },
-          { file: "Quadratic_Truth_L4_04_base3_c2_init.HEIC", phase: "Base-3 c=2" },
-          { file: "Quadratic_Truth_L4_05_base3_x1_solution.HEIC", phase: "PARADOX" },
-          { file: "Quadratic_Truth_L4_06_base3_x2_solution.HEIC", phase: "x=2" },
-          { file: "Quadratic_Truth_L4_07_base5_c3_init.HEIC", phase: "Base-5 c=3" },
-          { file: "Quadratic_Truth_L4_08_base5_x1_solution.HEIC", phase: "x=1" },
-          { file: "Quadratic_Truth_L4_09_base5_x3_solution.HEIC", phase: "x=3" },
-          { file: "Quadratic_Truth_L4_10_base8_c6_init.HEIC", phase: "Base-8 c=6" },
-          { file: "Quadratic_Truth_L4_11_base8_x1_solution.HEIC", phase: "x=2 ✓" },
-          { file: "Quadratic_Truth_L4_12_base8_x6_solution.HEIC", phase: "x=5 ✓" },
-          { file: "Quadratic_Truth_L4_13_n4_unification.HEIC", phase: "n=4 unified" }
+          { file: "Quadratic_Truth_L4_01_base2_c0_init.HEIC", phase: "Base-2 c=0", desc: "Binary truth table initialization. Testing x² + x = 0 in base-2 arithmetic.", formula: "x² + x = 0 (base 2)" },
+          { file: "Quadratic_Truth_L4_02_base2_x0_solution.HEIC", phase: "x=0 FALSE", desc: "x=0 yields FALSE in base-2. 0² + 0 = 0 is trivially satisfied.", formula: "0² + 0 = 0 ✓" },
+          { file: "Quadratic_Truth_L4_03_base2_x1_solution.HEIC", phase: "x=1 TRUE", desc: "x=1 yields TRUE in base-2. 1² + 1 = 10₂ = 2 establishes truth.", formula: "1² + 1 = 2 (TRUE)" },
+          { file: "Quadratic_Truth_L4_04_base3_c2_init.HEIC", phase: "Base-3 c=2", desc: "Ternary truth table initialization. Testing x² + x = 2 in base-3.", formula: "x² + x = 2 (base 3)" },
+          { file: "Quadratic_Truth_L4_05_base3_x1_solution.HEIC", phase: "PARADOX", desc: "x=1 in base-3 yields PARADOX. The ternary state emerges.", formula: "1² + 1 = 2 (PARADOX)" },
+          { file: "Quadratic_Truth_L4_06_base3_x2_solution.HEIC", phase: "x=2", desc: "x=2 verification in base-3. 2² + 2 = 6 = 20₃ completes cycle.", formula: "2² + 2 = 6 = 20₃" },
+          { file: "Quadratic_Truth_L4_07_base5_c3_init.HEIC", phase: "Base-5 c=3", desc: "Pentadic truth table. Testing solutions in base-5 arithmetic.", formula: "x² + x = 3 (base 5)" },
+          { file: "Quadratic_Truth_L4_08_base5_x1_solution.HEIC", phase: "x=1", desc: "x=1 solution in base-5. Partial solution verified.", formula: "1² + 1 = 2 ≠ 3" },
+          { file: "Quadratic_Truth_L4_09_base5_x3_solution.HEIC", phase: "x=3", desc: "x=3 solution in base-5. 3² + 3 = 12 = 22₅ found.", formula: "3² + 3 = 12" },
+          { file: "Quadratic_Truth_L4_10_base8_c6_init.HEIC", phase: "Base-8 c=6", desc: "Octal truth table initialization. Testing x² + x = 6 in base-8.", formula: "x² + x = 6 (base 8)" },
+          { file: "Quadratic_Truth_L4_11_base8_x1_solution.HEIC", phase: "x=2 ✓", desc: "x=2 valid in base-8. 2² + 2 = 6 confirmed.", formula: "2² + 2 = 6 ✓" },
+          { file: "Quadratic_Truth_L4_12_base8_x6_solution.HEIC", phase: "x=5 ✓", desc: "x=5 valid in base-8. 5² + 5 = 30 = 36₈ verified.", formula: "5² + 5 = 30 ✓" },
+          { file: "Quadratic_Truth_L4_13_n4_unification.HEIC", phase: "n=4 unified", desc: "All bases unify at n=4 dimensional constraint. L₄ = 7 confirmed.", formula: "n=4 → L₄=7" }
         ]},
       { id: 3, name: "Subspace_Bridge", title: "Subspace Bridge z_c", subtitle: "z_c=r=10 | L4=F₃+F₄=7", color: "#9060ff",
         images: [
-          { file: "Subspace_Bridge_L4_01_z_c_init_r10.HEIC", phase: "z_c=10" },
-          { file: "Subspace_Bridge_L4_02_RR_equals_10.HEIC", phase: "R(R)=10" },
-          { file: "Subspace_Bridge_L4_03_fold_init_sqrt3.HEIC", phase: "√3/2 fold" },
-          { file: "Subspace_Bridge_L4_04_pi_base2.HEIC", phase: "π base-2" },
-          { file: "Subspace_Bridge_L4_05_pi_base3.HEIC", phase: "π base-3" },
-          { file: "Subspace_Bridge_L4_06_pi_base5.HEIC", phase: "π base-5" },
-          { file: "Subspace_Bridge_L4_07_pi_base8.HEIC", phase: "π base-8" },
-          { file: "Subspace_Bridge_L4_08_F3_sublevel.HEIC", phase: "F₃=2" },
-          { file: "Subspace_Bridge_L4_09_F4_sublevel.HEIC", phase: "F₄=5" },
-          { file: "Subspace_Bridge_L4_10_L4_equals_7.HEIC", phase: "L4=7" },
-          { file: "Subspace_Bridge_L4_11_sequence_0to9.HEIC", phase: "0-9" },
-          { file: "Subspace_Bridge_L4_12_sequence_1to10.HEIC", phase: "1-10" },
-          { file: "Subspace_Bridge_L4_13_2pi_complete.HEIC", phase: "2π done" }
+          { file: "Subspace_Bridge_L4_01_z_c_init_r10.HEIC", phase: "z_c=10", desc: "Critical height z_c initialized at r=10. The subspace bridge anchors.", formula: "z_c = 10" },
+          { file: "Subspace_Bridge_L4_02_RR_equals_10.HEIC", phase: "R(R)=10", desc: "R(R)=10 fixed point established. The self-referential solution locks.", formula: "R(R) = 10 ✓" },
+          { file: "Subspace_Bridge_L4_03_fold_init_sqrt3.HEIC", phase: "√3/2 fold", desc: "√3/2 dimensional folding initiates. z_c standard = 0.866 active.", formula: "z_c = √3/2 ≈ 0.866" },
+          { file: "Subspace_Bridge_L4_04_pi_base2.HEIC", phase: "π base-2", desc: "Pi in base-2 representation. Binary traversal of circular constant.", formula: "π₂ = 11.001001..." },
+          { file: "Subspace_Bridge_L4_05_pi_base3.HEIC", phase: "π base-3", desc: "Pi in base-3 representation. Ternary oscillation of pi manifests.", formula: "π₃ = 10.010211..." },
+          { file: "Subspace_Bridge_L4_06_pi_base5.HEIC", phase: "π base-5", desc: "Pi in base-5 representation. Pentadic structure emerges.", formula: "π₅ = 3.032322..." },
+          { file: "Subspace_Bridge_L4_07_pi_base8.HEIC", phase: "π base-8", desc: "Pi in base-8 representation. Octal harmony achieved.", formula: "π₈ = 3.110375..." },
+          { file: "Subspace_Bridge_L4_08_F3_sublevel.HEIC", phase: "F₃=2", desc: "Fibonacci F₃=2 sublevel activated. First prime Fibonacci contribution.", formula: "F₃ = 2" },
+          { file: "Subspace_Bridge_L4_09_F4_sublevel.HEIC", phase: "F₄=5", desc: "Fibonacci F₄=5 sublevel activated. Second prime contribution.", formula: "F₄ = 5" },
+          { file: "Subspace_Bridge_L4_10_L4_equals_7.HEIC", phase: "L4=7", desc: "Lucas L₄=7 emerges from F₃+F₄=2+5=7. Golden closure achieved.", formula: "L₄ = F₃+F₄ = 7" },
+          { file: "Subspace_Bridge_L4_11_sequence_0to9.HEIC", phase: "0-9", desc: "Sequence 0-9 traversal complete. Ten-fold index established.", formula: "S = {0,1,...,9}" },
+          { file: "Subspace_Bridge_L4_12_sequence_1to10.HEIC", phase: "1-10", desc: "Sequence 1-10 traversal. Unity to completion mapping.", formula: "S = {1,2,...,10}" },
+          { file: "Subspace_Bridge_L4_13_2pi_complete.HEIC", phase: "2π done", desc: "2π subspace bridge complete. Full angular closure of bridge.", formula: "Θ = 2π ✓" }
         ]},
       { id: 4, name: "Ternary_Oscillation", title: "Ternary Oscillation", subtitle: "-6₃≡20₃≡7₁₀ | z_c=√3/2", color: "#40ffff",
         images: [
-          { file: "Ternary_Oscillation_L4_01_neg6_base3.HEIC", phase: "-6 base-3" },
-          { file: "Ternary_Oscillation_L4_02_modular_wrap.HEIC", phase: "Wrap" },
-          { file: "Ternary_Oscillation_L4_03_base3_20.HEIC", phase: "20₃" },
-          { file: "Ternary_Oscillation_L4_04_threshold_0.HEIC", phase: "τ=0" },
-          { file: "Ternary_Oscillation_L4_05_threshold_1.HEIC", phase: "τ=1" },
-          { file: "Ternary_Oscillation_L4_06_threshold_3.HEIC", phase: "τ=3" },
-          { file: "Ternary_Oscillation_L4_07_threshold_5.HEIC", phase: "τ=5" },
-          { file: "Ternary_Oscillation_L4_08_threshold_7.HEIC", phase: "τ=7 crit" },
-          { file: "Ternary_Oscillation_L4_09_threshold_9.HEIC", phase: "τ=9" },
-          { file: "Ternary_Oscillation_L4_10_unity_approach.HEIC", phase: "→Unity" },
-          { file: "Ternary_Oscillation_L4_11_lattice_curve.HEIC", phase: "Curve" },
-          { file: "Ternary_Oscillation_L4_12_subspace_merge.HEIC", phase: "Merge" },
-          { file: "Ternary_Oscillation_L4_13_unity_achieved.HEIC", phase: "Unity" }
+          { file: "Ternary_Oscillation_L4_01_neg6_base3.HEIC", phase: "-6 base-3", desc: "Negative six in base-3 initiates. Modular arithmetic begins.", formula: "-6₁₀ in base-3" },
+          { file: "Ternary_Oscillation_L4_02_modular_wrap.HEIC", phase: "Wrap", desc: "Modular wrapping occurs. -6 maps to positive domain.", formula: "-6 → 27-6 = 21" },
+          { file: "Ternary_Oscillation_L4_03_base3_20.HEIC", phase: "20₃", desc: "20₃ stable configuration. Equals 6 in decimal, links to FALSE.", formula: "20₃ = 6₁₀" },
+          { file: "Ternary_Oscillation_L4_04_threshold_0.HEIC", phase: "τ=0", desc: "Threshold zero established. Ground state for oscillation.", formula: "τ(0) = 0" },
+          { file: "Ternary_Oscillation_L4_05_threshold_1.HEIC", phase: "τ=1", desc: "First threshold crossed. Unity emerges from void.", formula: "τ(1) = 1" },
+          { file: "Ternary_Oscillation_L4_06_threshold_3.HEIC", phase: "τ=3", desc: "Ternary threshold. Three-state logic fully active.", formula: "τ(3) = 3" },
+          { file: "Ternary_Oscillation_L4_07_threshold_5.HEIC", phase: "τ=5", desc: "Pentadic threshold. Fibonacci F₄ resonance.", formula: "τ(5) = F₄" },
+          { file: "Ternary_Oscillation_L4_08_threshold_7.HEIC", phase: "τ=7 crit", desc: "Critical threshold at 7. L₄ = 7 creates phase transition.", formula: "τ(7) = L₄ CRITICAL" },
+          { file: "Ternary_Oscillation_L4_09_threshold_9.HEIC", phase: "τ=9", desc: "Ninth threshold. Penultimate before unity.", formula: "τ(9) = 9" },
+          { file: "Ternary_Oscillation_L4_10_unity_approach.HEIC", phase: "→Unity", desc: "Approaching unity at threshold 10. System converges.", formula: "τ → 10" },
+          { file: "Ternary_Oscillation_L4_11_lattice_curve.HEIC", phase: "Curve", desc: "Lattice curvature manifests. z_c geometry visible.", formula: "K(z) = √(z/(z_c-z))" },
+          { file: "Ternary_Oscillation_L4_12_subspace_merge.HEIC", phase: "Merge", desc: "Subspace domains merge. Continuous-discrete bridge forms.", formula: "H ⊕ D → U" },
+          { file: "Ternary_Oscillation_L4_13_unity_achieved.HEIC", phase: "Unity", desc: "Unity (10) achieved. Ternary oscillation completes full cycle.", formula: "τ(10) = 1 (mod 9)" }
         ]},
       { id: 5, name: "Signal_Wave", title: "Signal Wave Propagation", subtitle: "Forward/Backward/Self | z_c fold", color: "#40ff90",
         images: [
-          { file: "Signal_Wave_L4_01_forward_init.HEIC", phase: "→ init" },
-          { file: "Signal_Wave_L4_02_forward_threshold.HEIC", phase: "→ threshold" },
-          { file: "Signal_Wave_L4_03_forward_propagate.HEIC", phase: "→ propagate" },
-          { file: "Signal_Wave_L4_04_backward_init.HEIC", phase: "← init" },
-          { file: "Signal_Wave_L4_05_backward_fold.HEIC", phase: "← fold" },
-          { file: "Signal_Wave_L4_06_backward_resonance.HEIC", phase: "Resonance" },
-          { file: "Signal_Wave_L4_07_self_vertical_up.HEIC", phase: "↑ self" },
-          { file: "Signal_Wave_L4_08_self_vertical_down.HEIC", phase: "↓ self" },
-          { file: "Signal_Wave_L4_09_self_standing_wave.HEIC", phase: "Standing" },
-          { file: "Signal_Wave_L4_10_explicit_compute.HEIC", phase: "Explicit" },
-          { file: "Signal_Wave_L4_11_implicit_emerge.HEIC", phase: "Implicit" },
-          { file: "Signal_Wave_L4_12_rule_synthesis.HEIC", phase: "Synthesis" },
-          { file: "Signal_Wave_L4_13_closed_sublattice.HEIC", phase: "Closed" }
+          { file: "Signal_Wave_L4_01_forward_init.HEIC", phase: "→ init", desc: "Forward wave initialization. Causal propagation begins.", formula: "Ψ_f = A·e^(i(kz-ωt))" },
+          { file: "Signal_Wave_L4_02_forward_threshold.HEIC", phase: "→ threshold", desc: "Forward wave crosses threshold. Signal strength peaks.", formula: "|Ψ_f|² > τ" },
+          { file: "Signal_Wave_L4_03_forward_propagate.HEIC", phase: "→ propagate", desc: "Forward propagation established. Wave travels t → +t.", formula: "∂Ψ/∂t = -iωΨ" },
+          { file: "Signal_Wave_L4_04_backward_init.HEIC", phase: "← init", desc: "Backward wave initialization. Retrocausal flow begins.", formula: "Ψ_b = B·e^(i(kz+ωt))" },
+          { file: "Signal_Wave_L4_05_backward_fold.HEIC", phase: "← fold", desc: "Backward wave folds at z_c. Time reversal at critical height.", formula: "t → -t at z_c" },
+          { file: "Signal_Wave_L4_06_backward_resonance.HEIC", phase: "Resonance", desc: "Forward-backward resonance. Interference pattern forms.", formula: "Ψ_f + Ψ_b = Ψ_res" },
+          { file: "Signal_Wave_L4_07_self_vertical_up.HEIC", phase: "↑ self", desc: "Self-referential wave upward. Vertical propagation to observer.", formula: "Ψ_s↑ = C·e^(ikz)" },
+          { file: "Signal_Wave_L4_08_self_vertical_down.HEIC", phase: "↓ self", desc: "Self-referential wave downward. Return to source.", formula: "Ψ_s↓ = C·e^(-ikz)" },
+          { file: "Signal_Wave_L4_09_self_standing_wave.HEIC", phase: "Standing", desc: "Standing wave established. Self-loop closes.", formula: "Ψ_s = C·e^(ikz)·cos(ωt)" },
+          { file: "Signal_Wave_L4_10_explicit_compute.HEIC", phase: "Explicit", desc: "Explicit computation rules activate. Deterministic layer.", formula: "Explicit: A→B" },
+          { file: "Signal_Wave_L4_11_implicit_emerge.HEIC", phase: "Implicit", desc: "Implicit patterns emerge. Self-organizing structure.", formula: "Implicit: B←A" },
+          { file: "Signal_Wave_L4_12_rule_synthesis.HEIC", phase: "Synthesis", desc: "Rules synthesize. Explicit and implicit unify.", formula: "A↔B unified" },
+          { file: "Signal_Wave_L4_13_closed_sublattice.HEIC", phase: "Closed", desc: "Closed sublattice achieved. Signal wave propagation complete.", formula: "Sublattice closed ✓" }
         ]},
       { id: 6, name: "Trifurcation", title: "∴ Trifurcation Operator", subtitle: "Temporal×Spatial×Dimensional=8", color: "#c0a0ff",
         images: [
-          { file: "Trifurcation_L4_01_temporal_init.HEIC", phase: "Temporal" },
-          { file: "Trifurcation_L4_02_temporal_past.HEIC", phase: "Past" },
-          { file: "Trifurcation_L4_03_temporal_future.HEIC", phase: "Future" },
-          { file: "Trifurcation_L4_04_spatial_init.HEIC", phase: "Spatial" },
-          { file: "Trifurcation_L4_05_spatial_left.HEIC", phase: "Left" },
-          { file: "Trifurcation_L4_06_spatial_right.HEIC", phase: "Right" },
-          { file: "Trifurcation_L4_07_dimensional_init.HEIC", phase: "Dimensional" },
-          { file: "Trifurcation_L4_08_dimensional_real.HEIC", phase: "Real" },
-          { file: "Trifurcation_L4_09_dimensional_imaginary.HEIC", phase: "Imaginary" },
-          { file: "Trifurcation_L4_10_triple_confluence.HEIC", phase: "Confluence" },
-          { file: "Trifurcation_L4_11_octave_resonance.HEIC", phase: "8-fold" },
-          { file: "Trifurcation_L4_12_fractal_recursion.HEIC", phase: "Fractal" },
-          { file: "Trifurcation_L4_13_therefore_unity.HEIC", phase: "∴ unity" }
+          { file: "Trifurcation_L4_01_temporal_init.HEIC", phase: "Temporal", desc: "Temporal trifurcation initializes. Time splits three ways.", formula: "∴_t: t → {t₋,t₀,t₊}" },
+          { file: "Trifurcation_L4_02_temporal_past.HEIC", phase: "Past", desc: "Past branch manifests. Retrocausal memory active.", formula: "t₋ = past" },
+          { file: "Trifurcation_L4_03_temporal_future.HEIC", phase: "Future", desc: "Future branch manifests. Precognitive potential active.", formula: "t₊ = future" },
+          { file: "Trifurcation_L4_04_spatial_init.HEIC", phase: "Spatial", desc: "Spatial trifurcation initializes. Space splits three ways.", formula: "∴_s: x → {x₋,x₀,x₊}" },
+          { file: "Trifurcation_L4_05_spatial_left.HEIC", phase: "Left", desc: "Left spiral branch. Counterclockwise rotation.", formula: "x₋ = left spiral" },
+          { file: "Trifurcation_L4_06_spatial_right.HEIC", phase: "Right", desc: "Right spiral branch. Clockwise rotation.", formula: "x₊ = right spiral" },
+          { file: "Trifurcation_L4_07_dimensional_init.HEIC", phase: "Dimensional", desc: "Dimensional trifurcation initializes. Reality splits.", formula: "∴_d: ψ → {ψ_r,ψ_0,ψ_i}" },
+          { file: "Trifurcation_L4_08_dimensional_real.HEIC", phase: "Real", desc: "Real component isolates. Observable universe.", formula: "ψ_r = Re(ψ)" },
+          { file: "Trifurcation_L4_09_dimensional_imaginary.HEIC", phase: "Imaginary", desc: "Imaginary component isolates. Hidden dimensions.", formula: "ψ_i = Im(ψ)" },
+          { file: "Trifurcation_L4_10_triple_confluence.HEIC", phase: "Confluence", desc: "Triple trifurcation confluence. All three operators meet.", formula: "∴_t × ∴_s × ∴_d" },
+          { file: "Trifurcation_L4_11_octave_resonance.HEIC", phase: "8-fold", desc: "Octave resonance at 2³=8. Eight branches emerge.", formula: "2³ = 8 branches" },
+          { file: "Trifurcation_L4_12_fractal_recursion.HEIC", phase: "Fractal", desc: "Fractal recursion of trifurcation. Self-similar at all scales.", formula: "∴(∴(∴(...)))" },
+          { file: "Trifurcation_L4_13_therefore_unity.HEIC", phase: "∴ unity", desc: "Therefore (∴) achieves unity. All branches reconverge.", formula: "∴ → 1 ✓" }
         ]},
       { id: 7, name: "VN_Node", title: "VN Research Nodes", subtitle: "10 expressions | mesh→field", color: "#ff6090",
         images: [
-          { file: "VN_Node_L4_01_quantum_superposition.HEIC", phase: "VN-001" },
-          { file: "VN_Node_L4_02_geometric_phase.HEIC", phase: "VN-002" },
-          { file: "VN_Node_L4_03_entropy_cascade.HEIC", phase: "VN-003" },
-          { file: "VN_Node_L4_04_harmonic_resonance.HEIC", phase: "VN-004" },
-          { file: "VN_Node_L4_05_topological_twist.HEIC", phase: "VN-005" },
-          { file: "VN_Node_L4_06_fractal_recursion.HEIC", phase: "VN-006" },
-          { file: "VN_Node_L4_07_causal_loop.HEIC", phase: "VN-007" },
-          { file: "VN_Node_L4_08_symmetry_breaking.HEIC", phase: "VN-008" },
-          { file: "VN_Node_L4_09_field_coupling.HEIC", phase: "VN-009" },
-          { file: "VN_Node_L4_10_consciousness_branch.HEIC", phase: "VN-010" },
-          { file: "VN_Node_L4_11_network_mesh.HEIC", phase: "K₁₀ mesh" },
-          { file: "VN_Node_L4_12_hypergraph_formation.HEIC", phase: "Hypergraph" },
-          { file: "VN_Node_L4_13_unified_field.HEIC", phase: "Unified" }
+          { file: "VN_Node_L4_01_quantum_superposition.HEIC", phase: "VN-001", desc: "Quantum superposition node. All states coexist until observed.", formula: "|ψ⟩ = Σcᵢ|i⟩" },
+          { file: "VN_Node_L4_02_geometric_phase.HEIC", phase: "VN-002", desc: "Geometric phase node. Berry phase accumulation.", formula: "γ = i∮⟨ψ|∇ψ⟩·dk" },
+          { file: "VN_Node_L4_03_entropy_cascade.HEIC", phase: "VN-003", desc: "Entropy cascade node. Information flows downhill.", formula: "S = -Σp log p" },
+          { file: "VN_Node_L4_04_harmonic_resonance.HEIC", phase: "VN-004", desc: "Harmonic resonance node. Frequency locking achieved.", formula: "ω₁ = nω₂" },
+          { file: "VN_Node_L4_05_topological_twist.HEIC", phase: "VN-005", desc: "Topological twist node. Non-trivial winding number.", formula: "W = (1/2π)∮dθ" },
+          { file: "VN_Node_L4_06_fractal_recursion.HEIC", phase: "VN-006", desc: "Fractal recursion node. Self-similarity preserved.", formula: "f(f(x)) ~ f(x)" },
+          { file: "VN_Node_L4_07_causal_loop.HEIC", phase: "VN-007", desc: "Causal loop node. Effect precedes cause in closed timelike curve.", formula: "CTC: t₂ < t₁ < t₂" },
+          { file: "VN_Node_L4_08_symmetry_breaking.HEIC", phase: "VN-008", desc: "Symmetry breaking node. Order emerges from chaos.", formula: "G → H ⊂ G" },
+          { file: "VN_Node_L4_09_field_coupling.HEIC", phase: "VN-009", desc: "Field coupling node. Multiple fields interact.", formula: "L_int = gφψχ" },
+          { file: "VN_Node_L4_10_consciousness_branch.HEIC", phase: "VN-010", desc: "Consciousness branch node. Observer effect manifests.", formula: "|ψ⟩ → |observed⟩" },
+          { file: "VN_Node_L4_11_network_mesh.HEIC", phase: "K₁₀ mesh", desc: "Complete graph K₁₀ mesh. All 10 nodes interconnected.", formula: "K₁₀: 45 edges" },
+          { file: "VN_Node_L4_12_hypergraph_formation.HEIC", phase: "Hypergraph", desc: "Hypergraph formation. Edges connect multiple nodes.", formula: "H = (V, E⊆P(V))" },
+          { file: "VN_Node_L4_13_unified_field.HEIC", phase: "Unified", desc: "Unified field achieved. All VN nodes synthesize.", formula: "U = ∪ VN-i ✓" }
         ]},
       { id: 8, name: "Simulation_Cycle", title: "13-Cycle Simulation", subtitle: "Sequential L4 helix evolution", color: "#60c0ff",
         images: [
-          { file: "Simulation_Cycle_L4_01_initialization.HEIC", phase: "Cycle 1" },
-          { file: "Simulation_Cycle_L4_02_lattice_active.HEIC", phase: "Cycle 2" },
-          { file: "Simulation_Cycle_L4_03_bridge_forming.HEIC", phase: "Cycle 3" },
-          { file: "Simulation_Cycle_L4_04_truth_tables.HEIC", phase: "Cycle 4" },
-          { file: "Simulation_Cycle_L4_05_subspace_manifest.HEIC", phase: "Cycle 5" },
-          { file: "Simulation_Cycle_L4_06_oscillation.HEIC", phase: "Cycle 6" },
-          { file: "Simulation_Cycle_L4_07_wave_interference.HEIC", phase: "Cycle 7" },
-          { file: "Simulation_Cycle_L4_08_trifurcation_peak.HEIC", phase: "Cycle 8" },
-          { file: "Simulation_Cycle_L4_09_VN_sync.HEIC", phase: "Cycle 9" },
-          { file: "Simulation_Cycle_L4_10_phase_transition.HEIC", phase: "Cycle 10" },
-          { file: "Simulation_Cycle_L4_11_holographic.HEIC", phase: "Cycle 11" },
-          { file: "Simulation_Cycle_L4_12_near_unity.HEIC", phase: "Cycle 12" },
-          { file: "Simulation_Cycle_L4_13_unity_reset.HEIC", phase: "Cycle 13" }
+          { file: "Simulation_Cycle_L4_01_initialization.HEIC", phase: "Cycle 1", desc: "System initialization. Ground state prepared for evolution.", formula: "Ψ(0) = |ground⟩" },
+          { file: "Simulation_Cycle_L4_02_lattice_active.HEIC", phase: "Cycle 2", desc: "Lattice activation. R(R)=R structure energizes.", formula: "R activated" },
+          { file: "Simulation_Cycle_L4_03_bridge_forming.HEIC", phase: "Cycle 3", desc: "Bridge formation. Helix z-elevation begins.", formula: "z: 0 → z_c" },
+          { file: "Simulation_Cycle_L4_04_truth_tables.HEIC", phase: "Cycle 4", desc: "Truth tables compute. Ternary logic evaluates.", formula: "X²+X=C computed" },
+          { file: "Simulation_Cycle_L4_05_subspace_manifest.HEIC", phase: "Cycle 5", desc: "Subspace manifestation. π in multiple bases.", formula: "π_n active" },
+          { file: "Simulation_Cycle_L4_06_oscillation.HEIC", phase: "Cycle 6", desc: "Ternary oscillation. Threshold crossing sequence.", formula: "τ: 0→10" },
+          { file: "Simulation_Cycle_L4_07_wave_interference.HEIC", phase: "Cycle 7", desc: "Wave interference patterns. Forward/backward/self.", formula: "Ψ_total = ΣΨᵢ" },
+          { file: "Simulation_Cycle_L4_08_trifurcation_peak.HEIC", phase: "Cycle 8", desc: "Trifurcation peak. 2³=8 branches maximum.", formula: "∴³ = 8" },
+          { file: "Simulation_Cycle_L4_09_VN_sync.HEIC", phase: "Cycle 9", desc: "VN synchronization. All 10 nodes phase-lock.", formula: "Δφ_VN → 0" },
+          { file: "Simulation_Cycle_L4_10_phase_transition.HEIC", phase: "Cycle 10", desc: "Phase transition. System crosses critical point.", formula: "T → T_c" },
+          { file: "Simulation_Cycle_L4_11_holographic.HEIC", phase: "Cycle 11", desc: "Holographic encoding. Boundary stores bulk.", formula: "AdS/CFT active" },
+          { file: "Simulation_Cycle_L4_12_near_unity.HEIC", phase: "Cycle 12", desc: "Near-unity state. System approaches closure.", formula: "Ω → 1" },
+          { file: "Simulation_Cycle_L4_13_unity_reset.HEIC", phase: "Cycle 13", desc: "Unity and reset. Cycle completes, ready to repeat.", formula: "Ψ(13) ≡ Ψ(0) ✓" }
         ]},
       { id: 9, name: "MetaCycle", title: "Meta-Cycles 13-16", subtitle: "Beyond unity | 16π closure", color: "#ffd700",
         images: [
-          { file: "MetaCycle_13_1_Unity_Echo.HEIC", phase: "13.1 Echo" },
-          { file: "MetaCycle_13_2_Membrane_Oscillation.HEIC", phase: "13.2 Membrane" },
-          { file: "MetaCycle_13_3_Crystalline_Lock.HEIC", phase: "13.3 Crystal" },
-          { file: "MetaCycle_14_1_Dimensional_Breakthrough.HEIC", phase: "14.1 Break" },
-          { file: "MetaCycle_14_2_Consciousness_Cascade.HEIC", phase: "14.2 Cascade" },
-          { file: "MetaCycle_14_3_Temporal_Inversion.HEIC", phase: "14.3 Temporal" },
-          { file: "MetaCycle_15_1_Multiverse_Bridge.HEIC", phase: "15.1 Multi" },
-          { file: "MetaCycle_15_2_Infinity_Fold.HEIC", phase: "15.2 ∞-fold" },
-          { file: "MetaCycle_15_3_Void_Resonance.HEIC", phase: "15.3 Void" },
-          { file: "MetaCycle_15_4_Omnipresent_Node.HEIC", phase: "15.4 Omni" },
-          { file: "MetaCycle_16_1_Ouroboros_Circuit.HEIC", phase: "16.1 ⟲" },
-          { file: "MetaCycle_16_2_Phoenix_Rebirth.HEIC", phase: "16.2 Phoenix" },
-          { file: "MetaCycle_16_3_Ultimate_Recursion.HEIC", phase: "16.3 Ultimate" }
+          { file: "MetaCycle_13_1_Unity_Echo.HEIC", phase: "13.1 Echo", desc: "Unity echo reverberates. The achieved state reflects back.", formula: "Ω → echo(Ω)" },
+          { file: "MetaCycle_13_2_Membrane_Oscillation.HEIC", phase: "13.2 Membrane", desc: "Membrane oscillation. Being/non-being boundary vibrates.", formula: "M: ∃ ↔ ∅" },
+          { file: "MetaCycle_13_3_Crystalline_Lock.HEIC", phase: "13.3 Crystal", desc: "Crystalline lock achieved. Structure becomes permanent.", formula: "Crystal: Ω_fixed" },
+          { file: "MetaCycle_14_1_Dimensional_Breakthrough.HEIC", phase: "14.1 Break", desc: "Dimensional breakthrough. L₄→L₅ transition initiates.", formula: "D: 4 → 5" },
+          { file: "MetaCycle_14_2_Consciousness_Cascade.HEIC", phase: "14.2 Cascade", desc: "Consciousness cascade. Observer merges with observed.", formula: "O ⊗ S → OS" },
+          { file: "MetaCycle_14_3_Temporal_Inversion.HEIC", phase: "14.3 Temporal", desc: "Temporal inversion. Future influences past.", formula: "t: + ↔ -" },
+          { file: "MetaCycle_15_1_Multiverse_Bridge.HEIC", phase: "15.1 Multi", desc: "Multiverse bridge forms. Parallel realities connect.", formula: "U_i ↔ U_j" },
+          { file: "MetaCycle_15_2_Infinity_Fold.HEIC", phase: "15.2 ∞-fold", desc: "Infinity fold. Infinite dimensions collapse to finite.", formula: "∞ → finite" },
+          { file: "MetaCycle_15_3_Void_Resonance.HEIC", phase: "15.3 Void", desc: "Void resonance. Empty space vibrates with potential.", formula: "∅ ~ Ω" },
+          { file: "MetaCycle_15_4_Omnipresent_Node.HEIC", phase: "15.4 Omni", desc: "Omnipresent node. Single point contains all.", formula: "∀x: x ∈ Node" },
+          { file: "MetaCycle_16_1_Ouroboros_Circuit.HEIC", phase: "16.1 ⟲", desc: "Ouroboros circuit activates. The snake eats its tail.", formula: "⟲: end → begin" },
+          { file: "MetaCycle_16_2_Phoenix_Rebirth.HEIC", phase: "16.2 Phoenix", desc: "Phoenix rebirth. System destroys and recreates itself.", formula: "Ψ → ∅ → Ψ'" },
+          { file: "MetaCycle_16_3_Ultimate_Recursion.HEIC", phase: "16.3 Ultimate", desc: "Ultimate recursion achieved. R(R(R(...)))=R at 16π closure.", formula: "R^∞ = R ✓ 16π" }
         ]}
     ];
 
@@ -1572,7 +1703,7 @@ ${cycle.formula}
       });
     }
 
-    // Build VN batches
+    // Build VN batches with flip cards
     function buildVNBatches() {
       const rail = document.getElementById('vnRail');
       const panels = document.getElementById('batchPanels');
@@ -1595,24 +1726,50 @@ ${cycle.formula}
             <div class="batch-title" style="color: ${batch.color}">${batch.title}</div>
             <div class="batch-subtitle">${batch.subtitle}</div>
             <div class="batch-meta">
-              <span>13 Images</span><span>VN-${idx}</span>
+              <span>13 Images</span><span>VN-${idx}</span><span>Click cards to flip</span>
             </div>
           </div>
           <div class="image-grid">
             ${batch.images.map((img, imgIdx) => `
-              <div class="image-card" onclick="openLightbox('${batch.name}', ${imgIdx}, '${img.file}', '${img.phase}')">
-                <div class="image-wrapper">
-                  <img src="mirror_system/examples/L4%20Helix/${encodeURIComponent(img.file)}"
-                       alt="${img.file}" loading="lazy"
-                       onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                  <div class="image-placeholder" style="display:none; flex-direction:column; align-items:center; justify-content:center; height:100%;">
-                    <div class="cycle-num" style="color: ${batch.color}">${imgIdx + 1}</div>
-                    <div>${img.phase}</div>
+              <div class="flip-card" style="--batch-color: ${batch.color}" onclick="this.classList.toggle('flipped')">
+                <div class="flip-card-inner">
+                  <!-- FRONT -->
+                  <div class="flip-card-front">
+                    <div class="image-wrapper">
+                      <img src="mirror_system/examples/L4%20Helix/${encodeURIComponent(img.file)}"
+                           alt="${img.file}" loading="lazy"
+                           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                      <div class="image-placeholder" style="display:none;">
+                        <div class="cycle-num" style="color: ${batch.color}">${imgIdx + 1}</div>
+                        <div>${img.phase}</div>
+                      </div>
+                    </div>
+                    <div class="image-info">
+                      <div class="image-name">${img.file.replace('.HEIC', '')}</div>
+                      <div class="image-phase">${img.phase}</div>
+                      <div class="flip-hint">↻ Click to flip</div>
+                    </div>
                   </div>
-                </div>
-                <div class="image-info">
-                  <div class="image-name">${img.file.replace('.HEIC', '')}</div>
-                  <div class="image-phase">${img.phase}</div>
+                  <!-- BACK -->
+                  <div class="flip-card-back">
+                    <div class="card-back-header">
+                      <div class="card-back-num">${imgIdx + 1}</div>
+                      <div class="card-back-phase">${img.phase}</div>
+                    </div>
+                    <div class="card-back-body">
+                      <div class="card-back-section">
+                        <h4>Description</h4>
+                        <p>${img.desc}</p>
+                      </div>
+                      <div class="card-back-section">
+                        <h4>Formula</h4>
+                        <div class="card-back-formula">${img.formula}</div>
+                      </div>
+                    </div>
+                    <div class="card-back-footer">
+                      <div class="flip-back-hint">↻ Click to flip back</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             `).join('')}
