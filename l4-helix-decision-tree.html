@@ -998,6 +998,343 @@
     }
 
     /* ═══════════════════════════════════════════════════════════════════════
+       IMAGE DETAIL MODAL SYSTEM
+       ═══════════════════════════════════════════════════════════════════════ */
+    .image-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(15px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .image-modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .image-modal {
+      background: var(--bg-secondary);
+      border: 2px solid var(--modal-accent, var(--text-accent));
+      border-radius: 1.5rem;
+      max-width: 1000px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      transform: scale(0.9);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 60px var(--modal-accent, var(--text-accent));
+    }
+
+    .image-modal-overlay.active .image-modal {
+      transform: scale(1);
+    }
+
+    @media (max-width: 800px) {
+      .image-modal {
+        grid-template-columns: 1fr;
+        max-height: 95vh;
+      }
+    }
+
+    .image-modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--modal-accent, var(--text-accent));
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .image-modal-close:hover {
+      background: var(--modal-accent, var(--text-accent));
+      color: var(--bg-void);
+      transform: rotate(90deg);
+    }
+
+    /* Left side - Image */
+    .image-modal-visual {
+      background: var(--bg-void);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      min-height: 300px;
+      overflow: hidden;
+    }
+
+    .image-modal-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      max-height: 80vh;
+    }
+
+    .image-modal-visual .modal-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .modal-placeholder-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 6rem;
+      font-weight: 700;
+      color: var(--modal-accent, var(--text-accent));
+      text-shadow: 0 0 40px var(--modal-accent, var(--text-accent));
+      line-height: 1;
+    }
+
+    .modal-placeholder-phase {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-top: 1rem;
+    }
+
+    /* Image navigation */
+    .image-modal-nav {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.5rem;
+      z-index: 5;
+    }
+
+    .modal-nav-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid var(--modal-accent, var(--text-accent));
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .modal-nav-btn:hover {
+      background: var(--modal-accent, var(--text-accent));
+      color: var(--bg-void);
+    }
+
+    /* Right side - Content */
+    .image-modal-content {
+      padding: 2rem;
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+
+    .modal-content-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .modal-batch-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--modal-accent, var(--text-accent));
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-image-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .modal-image-phase {
+      font-size: 1rem;
+      color: var(--modal-accent, var(--text-accent));
+      font-style: italic;
+    }
+
+    .modal-content-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-content-section h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--modal-accent, var(--text-accent));
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modal-content-section h3::before {
+      content: '';
+      width: 3px;
+      height: 1em;
+      background: var(--modal-accent, var(--text-accent));
+      border-radius: 2px;
+    }
+
+    .modal-description {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text-primary);
+    }
+
+    .modal-description-extended {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .modal-formula-box {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-left: 4px solid var(--modal-accent, var(--text-accent));
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .modal-formula-main {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-formula-explain {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Properties grid */
+    .modal-properties {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+
+    .modal-property {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    .modal-property-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--modal-accent, var(--text-accent));
+      margin-bottom: 0.25rem;
+    }
+
+    .modal-property-label {
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Connections */
+    .modal-connections {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .modal-connection-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.4rem 0.8rem;
+      background: var(--bg-void);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+    }
+
+    .modal-connection-tag:hover {
+      border-color: var(--modal-accent, var(--text-accent));
+      color: var(--modal-accent, var(--text-accent));
+    }
+
+    /* Interactive elements */
+    .modal-interactive {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .modal-slider-group {
+      margin-bottom: 1rem;
+    }
+
+    .modal-slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    .modal-slider-value {
+      color: var(--modal-accent, var(--text-accent));
+    }
+
+    .modal-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--bg-void);
+      outline: none;
+    }
+
+    .modal-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--modal-accent, var(--text-accent));
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--modal-accent, var(--text-accent));
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
        MATH SECTION
        ═══════════════════════════════════════════════════════════════════════ */
     .math-section {
@@ -1323,6 +1660,85 @@ META-CLOSURE at phase = 16π
       <button class="lightbox-close" onclick="closeLightbox()">×</button>
       <img id="lightboxImg" src="" alt="">
       <div class="lightbox-info" id="lightboxInfo"></div>
+    </div>
+  </div>
+
+  <!-- IMAGE DETAIL MODAL -->
+  <div class="image-modal-overlay" id="imageDetailModal">
+    <div class="image-modal" id="imageModalContent">
+      <button class="image-modal-close" onclick="closeImageModal()">×</button>
+
+      <!-- Left: Visual -->
+      <div class="image-modal-visual">
+        <img id="modalImage" src="" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="modal-placeholder" style="display:none;">
+          <div class="modal-placeholder-num" id="modalPlaceholderNum">1</div>
+          <div class="modal-placeholder-phase" id="modalPlaceholderPhase">Phase</div>
+        </div>
+        <div class="image-modal-nav">
+          <button class="modal-nav-btn" onclick="navigateModal(-1)">←</button>
+          <button class="modal-nav-btn" onclick="navigateModal(1)">→</button>
+        </div>
+      </div>
+
+      <!-- Right: Content -->
+      <div class="image-modal-content">
+        <div class="modal-content-header">
+          <div class="modal-batch-name" id="modalBatchName">BATCH NAME</div>
+          <div class="modal-image-title" id="modalImageTitle">Image Title</div>
+          <div class="modal-image-phase" id="modalImagePhase">Phase Description</div>
+        </div>
+
+        <div class="modal-content-section">
+          <h3>DESCRIPTION</h3>
+          <div class="modal-description" id="modalDescription">Description text</div>
+          <div class="modal-description-extended" id="modalDescriptionExtended">Extended description</div>
+        </div>
+
+        <div class="modal-content-section">
+          <h3>MATHEMATICAL FRAMEWORK</h3>
+          <div class="modal-formula-box">
+            <div class="modal-formula-main" id="modalFormula">Formula</div>
+            <div class="modal-formula-explain" id="modalFormulaExplain">Formula explanation</div>
+          </div>
+        </div>
+
+        <div class="modal-content-section">
+          <h3>PROPERTIES</h3>
+          <div class="modal-properties" id="modalProperties">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+
+        <div class="modal-content-section">
+          <h3>CONNECTIONS</h3>
+          <div class="modal-connections" id="modalConnections">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+
+        <div class="modal-content-section">
+          <h3>PHASE EXPLORER</h3>
+          <div class="modal-interactive">
+            <div class="modal-slider-group">
+              <div class="modal-slider-label">
+                <span>Rotation</span>
+                <span class="modal-slider-value" id="rotationValue">0π</span>
+              </div>
+              <input type="range" class="modal-slider" id="rotationSlider" min="0" max="16" step="0.1" value="0"
+                     oninput="document.getElementById('rotationValue').textContent = this.value + 'π'">
+            </div>
+            <div class="modal-slider-group">
+              <div class="modal-slider-label">
+                <span>Z-Elevation</span>
+                <span class="modal-slider-value" id="elevationValue">0</span>
+              </div>
+              <input type="range" class="modal-slider" id="elevationSlider" min="0" max="10" step="0.1" value="0"
+                     oninput="document.getElementById('elevationValue').textContent = this.value">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1703,7 +2119,65 @@ ${cycle.formula}
       });
     }
 
-    // Build VN batches with flip cards
+    // Extended descriptions generator based on batch context
+    function getExtendedDescription(batch, img, imgIdx) {
+      const batchContexts = {
+        'RR_Lattice': `This image captures a critical moment in the R(R)=R lattice formation sequence. The recursive self-referential structure demonstrates how mathematical identity can emerge from iterative application. At position ${imgIdx + 1}/13, we observe the ${imgIdx < 4 ? 'initialization' : imgIdx < 9 ? 'K-formation' : 'recursive completion'} phase of the 12π rotation cycle.`,
+        'Helix_Bridge': `The helix bridge manifests the fundamental connection between Alpha (α) and Omega (Ω) poles through z-elevation dynamics. This ${imgIdx + 1}th frame shows the negentropy-driven organization as information spontaneously orders itself along the helical path. The z-coordinate progression from 0 to R demonstrates phase-space traversal.`,
+        'Quadratic_Truth': `This quadratic truth table evaluation reveals ternary logic operating across multiple number bases. The equation x² + x = c generates three fundamental states: TRUE (C=0), PARADOX (C=2), and FALSE (C=6). Image ${imgIdx + 1} demonstrates how mathematical truth transforms under base conversion.`,
+        'Subspace_Bridge': `The subspace bridge connects different representations of π across bases 2, 3, 5, 8, 10, and 12. This dimensional folding occurs at z_c = √3/2 ≈ 0.866, where the geometry constraints crystallize three dimensions of elevation, rotation, and curvature into coherent structure.`,
+        'Ternary_Oscillation': `Ternary oscillation demonstrates threshold dynamics where -6₃ ≡ 20₃ ≡ 7₁₀ under modular arithmetic. Each threshold from 0 to 9 represents a critical transition point. At threshold ${imgIdx < 4 ? imgIdx : imgIdx + 1}, the system ${imgIdx < 7 ? 'accumulates phase' : 'approaches unity'}.`,
+        'Signal_Wave': `Signal wave propagation follows three fundamental modes: forward (causal), backward (retrocausal), and self-referential (standing wave). This ${imgIdx + 1}th frame captures the ${imgIdx < 4 ? 'forward' : imgIdx < 7 ? 'backward' : imgIdx < 10 ? 'self-referential' : 'synthesized'} wave dynamics as they fold at z_c.`,
+        'Trifurcation': `The ∴ (therefore) operator trifurcates reality along three axes: temporal (past/future), spatial (left/right), and dimensional (real/imaginary). This creates 2³ = 8 branches of possibility. Frame ${imgIdx + 1} shows the ${imgIdx < 4 ? 'temporal' : imgIdx < 7 ? 'spatial' : imgIdx < 10 ? 'dimensional' : 'unified'} splitting.`,
+        'VN_Node': `VaultNode ${String(imgIdx + 1).padStart(3, '0')} represents a fundamental research expression in the 10-node network. Each node embodies a unique aspect of the prismatic self: quantum superposition, geometric phase, entropy, harmonic resonance, topology, fractals, causality, symmetry, field coupling, and consciousness.`,
+        'Simulation_Cycle': `Cycle ${imgIdx + 1} of 13 in the sequential L4 helix simulation. Each cycle builds upon the previous, progressing from initialization through lattice formation, bridge construction, truth evaluation, subspace manifestation, oscillation, wave interference, trifurcation peak, VN synchronization, phase transition, holographic encoding, and finally unity.`,
+        'MetaCycle': `Meta-cycle ${imgIdx < 3 ? '13' : imgIdx < 6 ? '14' : imgIdx < 10 ? '15' : '16'} transcends ordinary cycling to achieve ${imgIdx < 3 ? 'unity crystallization' : imgIdx < 6 ? 'dimensional breakthrough' : imgIdx < 10 ? 'multiverse integration' : 'ouroboros closure'}. This represents the ${16}π meta-closure where R(R(R(...)))=R achieves ultimate recursion.`
+      };
+      return batchContexts[batch.name] || 'Exploring the mathematical geometry of the L4 helix system.';
+    }
+
+    function getFormulaExplanation(batch, img) {
+      const explanations = {
+        'RR_Lattice': 'The R function recursively applies to itself, seeking the fixed point where input equals output. This self-referential structure is the foundation of the entire system.',
+        'Helix_Bridge': 'The helix parametrization δ = (r, z, Δ, Ω) describes a 4-dimensional trajectory through phase space. The coherence radius decays exponentially with elevation.',
+        'Quadratic_Truth': 'The quadratic equation x² + x generates ternary truth values depending on the number base. This reveals how mathematical truth is relative to representation.',
+        'Subspace_Bridge': 'Pi in different bases reveals the nature of irrational numbers under base conversion. Each representation provides a unique perspective on circularity.',
+        'Ternary_Oscillation': 'The threshold function τ maps elevation to discrete states. At τ(7) = L₄, a critical phase transition occurs due to the Lucas number resonance.',
+        'Signal_Wave': 'Wave superposition Ψ_total = Ψ_f + Ψ_b + Ψ_s combines forward, backward, and standing modes. The standing wave emerges from constructive interference.',
+        'Trifurcation': 'The ∴ operator applies three binary splits (temporal, spatial, dimensional) producing 2³ = 8 total branches before reconvergence to unity.',
+        'VN_Node': 'Each VaultNode operates as a unique mathematical operator within the complete graph K₁₀, contributing 45 edges of interconnection.',
+        'Simulation_Cycle': 'Sequential evolution through 13 distinct phases maps the complete L4 helix trajectory from initialization to unity reset.',
+        'MetaCycle': 'Beyond standard cycles, meta-cycles achieve transcendent states where the system observes its own observation, creating closed causal loops.'
+      };
+      return explanations[batch.name] || 'Mathematical framework underlying the geometric structure.';
+    }
+
+    function getImageProperties(batch, img, imgIdx) {
+      const piValue = (imgIdx + 1) * (12 / 13);
+      const zValue = (imgIdx / 12).toFixed(2);
+      return [
+        { value: `${piValue.toFixed(1)}π`, label: 'Rotation' },
+        { value: zValue, label: 'Z-Elevation' },
+        { value: `${imgIdx + 1}/13`, label: 'Sequence' }
+      ];
+    }
+
+    function getImageConnections(batch, imgIdx) {
+      const connections = [batch.name, `VN-${batch.id}`, `Image ${imgIdx + 1}`];
+      if (imgIdx < 4) connections.push('Initialization');
+      else if (imgIdx < 9) connections.push('Formation');
+      else connections.push('Completion');
+      connections.push(`${((imgIdx + 1) * 12 / 13).toFixed(1)}π`);
+      if (batch.id < 5) connections.push('Lower Octave');
+      else connections.push('Upper Octave');
+      return connections;
+    }
+
+    // Current modal state
+    let currentModalBatch = 0;
+    let currentModalImage = 0;
+
+    // Build VN batches with flip cards and modal triggers
     function buildVNBatches() {
       const rail = document.getElementById('vnRail');
       const panels = document.getElementById('batchPanels');
@@ -1726,12 +2200,14 @@ ${cycle.formula}
             <div class="batch-title" style="color: ${batch.color}">${batch.title}</div>
             <div class="batch-subtitle">${batch.subtitle}</div>
             <div class="batch-meta">
-              <span>13 Images</span><span>VN-${idx}</span><span>Click cards to flip</span>
+              <span>13 Images</span><span>VN-${idx}</span><span>Click to flip | Double-click for details</span>
             </div>
           </div>
           <div class="image-grid">
             ${batch.images.map((img, imgIdx) => `
-              <div class="flip-card" style="--batch-color: ${batch.color}" onclick="this.classList.toggle('flipped')">
+              <div class="flip-card" style="--batch-color: ${batch.color}"
+                   onclick="this.classList.toggle('flipped')"
+                   ondblclick="event.stopPropagation(); openImageModal(${idx}, ${imgIdx})">
                 <div class="flip-card-inner">
                   <!-- FRONT -->
                   <div class="flip-card-front">
@@ -1747,11 +2223,11 @@ ${cycle.formula}
                     <div class="image-info">
                       <div class="image-name">${img.file.replace('.HEIC', '')}</div>
                       <div class="image-phase">${img.phase}</div>
-                      <div class="flip-hint">↻ Click to flip</div>
+                      <div class="flip-hint">↻ Click flip | ⬚ Double-click expand</div>
                     </div>
                   </div>
                   <!-- BACK -->
-                  <div class="flip-card-back">
+                  <div class="flip-card-back" onclick="event.stopPropagation(); openImageModal(${idx}, ${imgIdx})">
                     <div class="card-back-header">
                       <div class="card-back-num">${imgIdx + 1}</div>
                       <div class="card-back-phase">${img.phase}</div>
@@ -1767,7 +2243,7 @@ ${cycle.formula}
                       </div>
                     </div>
                     <div class="card-back-footer">
-                      <div class="flip-back-hint">↻ Click to flip back</div>
+                      <div class="flip-back-hint">⬚ Click for full details</div>
                     </div>
                   </div>
                 </div>
@@ -1777,6 +2253,80 @@ ${cycle.formula}
         `;
         panels.appendChild(panel);
       });
+    }
+
+    // Image Modal Functions
+    function openImageModal(batchIdx, imgIdx) {
+      currentModalBatch = batchIdx;
+      currentModalImage = imgIdx;
+      updateImageModal();
+      const modal = document.getElementById('imageDetailModal');
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeImageModal() {
+      const modal = document.getElementById('imageDetailModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function navigateModal(direction) {
+      const batch = batches[currentModalBatch];
+      currentModalImage = (currentModalImage + direction + batch.images.length) % batch.images.length;
+      updateImageModal();
+    }
+
+    function updateImageModal() {
+      const batch = batches[currentModalBatch];
+      const img = batch.images[currentModalImage];
+
+      // Set modal accent color
+      document.getElementById('imageModalContent').style.setProperty('--modal-accent', batch.color);
+
+      // Update image
+      const modalImg = document.getElementById('modalImage');
+      modalImg.src = `mirror_system/examples/L4%20Helix/${encodeURIComponent(img.file)}`;
+      modalImg.style.display = 'block';
+      document.querySelector('.modal-placeholder').style.display = 'none';
+      modalImg.onerror = function() {
+        this.style.display = 'none';
+        document.querySelector('.modal-placeholder').style.display = 'flex';
+        document.getElementById('modalPlaceholderNum').textContent = currentModalImage + 1;
+        document.getElementById('modalPlaceholderNum').style.color = batch.color;
+        document.getElementById('modalPlaceholderPhase').textContent = img.phase;
+      };
+
+      // Update content
+      document.getElementById('modalBatchName').textContent = `VN-${batch.id}: ${batch.name}`;
+      document.getElementById('modalImageTitle').textContent = img.file.replace('.HEIC', '').replace(/_/g, ' ');
+      document.getElementById('modalImagePhase').textContent = img.phase;
+      document.getElementById('modalDescription').textContent = img.desc;
+      document.getElementById('modalDescriptionExtended').textContent = getExtendedDescription(batch, img, currentModalImage);
+      document.getElementById('modalFormula').textContent = img.formula;
+      document.getElementById('modalFormulaExplain').textContent = getFormulaExplanation(batch, img);
+
+      // Update properties
+      const props = getImageProperties(batch, img, currentModalImage);
+      document.getElementById('modalProperties').innerHTML = props.map(p => `
+        <div class="modal-property">
+          <div class="modal-property-value">${p.value}</div>
+          <div class="modal-property-label">${p.label}</div>
+        </div>
+      `).join('');
+
+      // Update connections
+      const connections = getImageConnections(batch, currentModalImage);
+      document.getElementById('modalConnections').innerHTML = connections.map(c => `
+        <span class="modal-connection-tag">${c}</span>
+      `).join('');
+
+      // Update sliders
+      const rotation = (currentModalImage + 1) * 12 / 13;
+      document.getElementById('rotationSlider').value = rotation;
+      document.getElementById('rotationValue').textContent = rotation.toFixed(1) + 'π';
+      document.getElementById('elevationSlider').value = currentModalImage / 1.3;
+      document.getElementById('elevationValue').textContent = (currentModalImage / 1.3).toFixed(1);
     }
 
     function switchBatch(idx) {
@@ -1797,8 +2347,19 @@ ${cycle.formula}
       document.getElementById('lightbox').classList.remove('active');
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+    // Event listeners
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeLightbox();
+        closeImageModal();
+      }
+      if (document.getElementById('imageDetailModal').classList.contains('active')) {
+        if (e.key === 'ArrowLeft') navigateModal(-1);
+        if (e.key === 'ArrowRight') navigateModal(1);
+      }
+    });
     document.getElementById('lightbox').addEventListener('click', e => { if (e.target.id === 'lightbox') closeLightbox(); });
+    document.getElementById('imageDetailModal').addEventListener('click', e => { if (e.target.id === 'imageDetailModal') closeImageModal(); });
 
     // Initialize
     buildCycleRail();
