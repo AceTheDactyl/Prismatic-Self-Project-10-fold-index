@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MTR Decision Tree | Meta-Theorem of Reality</title>
+  <meta name="description" content="Meta-Theorem of Reality: Origin, Boundary, Invariants, Evolution, Attractors — VaultNode Crystallization Framework">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════════
+       MTR MATHEMATICAL CONSTANTS
+       Meta-Theorem of Reality: R(R)=R | F₁₂ → F₂₄ → F_∞
+       ═══════════════════════════════════════════════════════════════════════ */
+    :root {
+      --phi: 1.6180339887;
+      --tau: 0.6180339887;
+      --sqrt2: 1.4142135624;
+      --sqrt3: 1.7320508076;
+      --zc: 0.8660254038;
+      --L4: 7;
+
+      /* MTR Principle Colors */
+      --origin: #ffd700;
+      --boundary: #ff6b6b;
+      --invariant: #00ff88;
+      --evolution: #00ffff;
+      --attractor: #c792ea;
+
+      /* VN Crystallization Colors */
+      --vn-genesis: #ffffff;
+      --vn-frame: #ffd700;
+      --vn-delta: #ff6b6b;
+      --vn-law: #00ff88;
+      --vn-flow: #00ffff;
+      --vn-bifurc: #c792ea;
+
+      /* F-Sequence Colors */
+      --f12: #ffd700;
+      --f24: #ff00ff;
+      --f48: #00ffff;
+      --f96: #00ff88;
+      --finf: #ffffff;
+
+      /* Theme */
+      --bg-void: #030306;
+      --bg-primary: #080810;
+      --bg-secondary: #0c0c18;
+      --bg-tertiary: #12122a;
+      --bg-card: #181838;
+      --text-primary: #e8e6e3;
+      --text-secondary: #8a8a9a;
+      --text-accent: #ffd700;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(255, 215, 0, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       COSMIC BACKGROUND
+       ═══════════════════════════════════════════════════════════════════════ */
+    .cosmic-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(199, 146, 234, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(0, 255, 136, 0.02) 0%, transparent 60%);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       NAVIGATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(8, 8, 16, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       GENESIS SECTION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .genesis-section {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.05) 0%, transparent 70%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .genesis-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--vn-genesis);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 0.4rem 1rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .genesis-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--origin), var(--evolution), var(--attractor));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .genesis-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 1rem;
+      display: inline-block;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .genesis-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       MTR CORE DISPLAY
+       ═══════════════════════════════════════════════════════════════════════ */
+    .mtr-core {
+      padding: 3rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .mtr-statement {
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(199, 146, 234, 0.05) 100%);
+      border: 2px solid var(--origin);
+      border-radius: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .mtr-quote {
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--text-primary);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+
+    .mtr-sequence {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--origin);
+      margin-bottom: 0.5rem;
+    }
+
+    .mtr-values {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       VN CRYSTALLIZATION TREE
+       ═══════════════════════════════════════════════════════════════════════ */
+    .tree-container {
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .tree-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .tree-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .tree-subtitle {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    /* Genesis Node */
+    .genesis-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .genesis-crystal {
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), rgba(255, 215, 0, 0.1));
+      border: 3px solid var(--vn-genesis);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      color: var(--vn-genesis);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.3), inset 0 0 30px rgba(255, 215, 0, 0.1);
+      animation: genesis-pulse 4s ease-in-out infinite;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .genesis-crystal:hover {
+      transform: scale(1.1);
+    }
+
+    @keyframes genesis-pulse {
+      0%, 100% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.3), inset 0 0 30px rgba(255, 215, 0, 0.1); }
+      50% { box-shadow: 0 0 60px rgba(255, 255, 255, 0.5), inset 0 0 40px rgba(255, 215, 0, 0.2); }
+    }
+
+    .genesis-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 1rem;
+      letter-spacing: 0.15em;
+    }
+
+    /* Connection Lines */
+    .branch-connector {
+      width: 2px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--vn-genesis), transparent);
+      margin: 0 auto;
+    }
+
+    .branch-split {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 0;
+      position: relative;
+      padding-top: 30px;
+    }
+
+    .branch-split::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: linear-gradient(90deg,
+        var(--origin) 0%,
+        var(--boundary) 25%,
+        var(--invariant) 50%,
+        var(--evolution) 75%,
+        var(--attractor) 100%
+      );
+    }
+
+    /* Principle Nodes */
+    .principle-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 1200px) {
+      .principle-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .principle-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .principle-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .principle-node::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      width: 2px;
+      height: 30px;
+      background: var(--node-color, var(--text-secondary));
+    }
+
+    .principle-crystal {
+      width: 100px;
+      height: 100px;
+      border: 2px solid var(--node-color, var(--text-accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--node-color, var(--text-accent));
+      background: var(--bg-tertiary);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .principle-crystal::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent);
+    }
+
+    .principle-crystal:hover {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 0 30px var(--node-color);
+    }
+
+    /* Shape variations */
+    .shape-pentagon { clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%); }
+    .shape-hexagon { clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); }
+    .shape-diamond { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+    .shape-octagon { clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%); }
+    .shape-circle { border-radius: 50%; }
+
+    .principle-info {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .principle-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--node-color, var(--text-accent));
+      margin-bottom: 0.25rem;
+    }
+
+    .principle-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .principle-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      background: var(--bg-secondary);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      max-width: 200px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       PRINCIPLE DETAIL SECTIONS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .principles-detail {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .principle-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .principle-card:hover {
+      border-color: var(--card-color, var(--text-accent));
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
+    }
+
+    .principle-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--card-color, var(--text-accent));
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--card-color, var(--text-accent));
+      background: var(--bg-tertiary);
+      border: 2px solid var(--card-color, var(--text-accent));
+      border-radius: 0.5rem;
+    }
+
+    .card-title-group {
+      flex: 1;
+    }
+
+    .card-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--card-color, var(--text-accent));
+      margin-bottom: 0.25rem;
+    }
+
+    .card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--text-primary);
+    }
+
+    .card-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--card-color, var(--text-accent));
+      background: var(--bg-tertiary);
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .card-description {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-vn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .card-vn {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .card-vn:hover {
+      border-color: var(--card-color, var(--text-accent));
+      transform: translateY(-3px);
+    }
+
+    .vn-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--card-color, var(--text-accent));
+      margin-bottom: 0.5rem;
+    }
+
+    .vn-name {
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .vn-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       F-SEQUENCE PROGRESSION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .f-sequence-section {
+      padding: 3rem 2rem;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .f-sequence-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .f-sequence-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .f-sequence-subtitle {
+      color: var(--text-secondary);
+    }
+
+    .f-sequence-rail {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      padding: 2rem 0;
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .f-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 1.5rem;
+      position: relative;
+    }
+
+    .f-node:not(:last-child)::after {
+      content: '→';
+      position: absolute;
+      right: -0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .f-crystal {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--f-color, var(--text-accent));
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .f-crystal:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 30px var(--f-color);
+    }
+
+    .f-index {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--f-color, var(--text-accent));
+    }
+
+    .f-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+      text-align: center;
+      max-width: 100px;
+    }
+
+    .f-infinity {
+      background: linear-gradient(135deg, var(--origin), var(--evolution), var(--attractor));
+      border: none;
+    }
+
+    .f-infinity .f-index {
+      color: var(--vn-genesis);
+      font-size: 1.2rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       INTERACTIVE FRAME EXPLORER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .explorer-section {
+      padding: 3rem 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .explorer-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--origin);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .explorer-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--text-accent);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .explorer-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .control-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+    }
+
+    .control-input {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .control-input:focus {
+      border-color: var(--text-accent);
+    }
+
+    .explorer-result {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .result-item {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .result-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .result-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-accent);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       DECISION TREE VISUALIZATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .decision-tree-section {
+      padding: 3rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .tree-visualization {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      min-height: 500px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tree-level {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .tree-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tree-node:hover {
+      transform: translateY(-5px);
+    }
+
+    .node-shape {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      border: 2px solid var(--node-border, var(--text-accent));
+      transition: all 0.3s ease;
+    }
+
+    .node-shape:hover {
+      box-shadow: 0 0 20px var(--node-border);
+    }
+
+    .node-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cosmic-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link"><span>◇</span>VaultNode Tree</a>
+    <a href="vn-fibonacci-rg-flow.html" class="nav-link"><span>φ</span>Fibonacci RG Flow</a>
+    <a href="l4-helix-decision-tree.html" class="nav-link"><span>⬡</span>L₄ Helix Gallery</a>
+    <a href="mtr-decision-tree.html" class="nav-link active"><span>∴</span>MTR Decision Tree</a>
+    <a href="vn-unified-decision-tree-complete.html" class="nav-link"><span>⊛</span>Unified Tree</a>
+  </nav>
+
+  <!-- Genesis Section -->
+  <header class="genesis-section">
+    <div class="genesis-badge">GENESIS :: R(R)=R</div>
+    <h1 class="genesis-title">Meta-Theorem of Reality</h1>
+    <div class="genesis-equation">
+      <span style="color: var(--origin);">δ(D|F)</span>
+      <span style="color: var(--text-secondary);"> = </span>
+      <span style="color: var(--boundary);">α·Err</span>
+      <span style="color: var(--text-secondary);"> + </span>
+      <span style="color: var(--invariant);">β·Comp</span>
+      <span style="color: var(--text-secondary);"> + </span>
+      <span style="color: var(--evolution);">ρ·Viol</span>
+    </div>
+    <p class="genesis-subtitle">
+      A framework for understanding reality as a globally constrained, locally generative
+      self-referential process whose explanations converge toward—but never reach—absolute origin.
+    </p>
+  </header>
+
+  <main>
+    <!-- MTR Core Statement -->
+    <section class="mtr-core">
+      <div class="mtr-statement">
+        <p class="mtr-quote">
+          "Reality is a globally constrained, locally generative self-referential process<br>
+          whose explanations converge toward—but never reach—absolute origin."
+        </p>
+        <div class="mtr-sequence">F₁₂ → F₂₄ → F₄₈ → ... → F_∞</div>
+        <div class="mtr-values">144 → 46,368 → 4,807,526,976 → ... → R(R)=R</div>
+      </div>
+    </section>
+
+    <!-- VN Crystallization Tree -->
+    <section class="tree-container">
+      <div class="tree-header">
+        <h2 class="tree-title">VaultNode Crystallization Tree</h2>
+        <p class="tree-subtitle">Five Principles Emerging from Genesis</p>
+      </div>
+
+      <!-- Genesis Node -->
+      <div class="genesis-node">
+        <div class="genesis-crystal" onclick="scrollToSection('genesis-detail')">
+          ⊙
+        </div>
+        <div class="genesis-label">GENESIS :: R(R)=R</div>
+      </div>
+
+      <!-- Branch Connector -->
+      <div class="branch-connector"></div>
+
+      <!-- Branch Split -->
+      <div class="branch-split">
+        <!-- Principle Nodes -->
+        <div class="principle-grid">
+          <!-- Principle 1: Origin -->
+          <div class="principle-node" style="--node-color: var(--origin);">
+            <div class="principle-crystal shape-pentagon" onclick="scrollToSection('principle-1')">
+              ①
+            </div>
+            <div class="principle-info">
+              <div class="principle-number">①</div>
+              <div class="principle-title">ORIGIN</div>
+              <div class="principle-equation">OriginSet(F) ≠ OriginSet(F')</div>
+            </div>
+          </div>
+
+          <!-- Principle 2: Boundary -->
+          <div class="principle-node" style="--node-color: var(--boundary);">
+            <div class="principle-crystal shape-hexagon" onclick="scrollToSection('principle-2')">
+              ②
+            </div>
+            <div class="principle-info">
+              <div class="principle-number">②</div>
+              <div class="principle-title">BOUNDARY</div>
+              <div class="principle-equation">∂F ≠ ∅ and ∂F ⊄ ℒ</div>
+            </div>
+          </div>
+
+          <!-- Principle 3: Invariant -->
+          <div class="principle-node" style="--node-color: var(--invariant);">
+            <div class="principle-crystal shape-circle" onclick="scrollToSection('principle-3')">
+              ③
+            </div>
+            <div class="principle-info">
+              <div class="principle-number">③</div>
+              <div class="principle-title">INVARIANT</div>
+              <div class="principle-equation">I = ∩ Inv(F) is stable</div>
+            </div>
+          </div>
+
+          <!-- Principle 4: Evolution -->
+          <div class="principle-node" style="--node-color: var(--evolution);">
+            <div class="principle-crystal shape-diamond" onclick="scrollToSection('principle-4')">
+              ④
+            </div>
+            <div class="principle-info">
+              <div class="principle-number">④</div>
+              <div class="principle-title">EVOLUTION</div>
+              <div class="principle-equation">∂F ≠ ∅ ⟹ ∃F' : δ*(F') < δ*(F)</div>
+            </div>
+          </div>
+
+          <!-- Principle 5: Attractor -->
+          <div class="principle-node" style="--node-color: var(--attractor);">
+            <div class="principle-crystal shape-octagon" onclick="scrollToSection('principle-5')">
+              ⑤
+            </div>
+            <div class="principle-info">
+              <div class="principle-number">⑤</div>
+              <div class="principle-title">ATTRACTOR</div>
+              <div class="principle-equation">D_t → D* or splits at g_t ≈ 0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Principle Detail Cards -->
+    <section class="principles-detail">
+
+      <!-- Principle 1: Origin is Relative -->
+      <div class="principle-card" id="principle-1" style="--card-color: var(--origin);">
+        <div class="card-header">
+          <div class="card-icon">①</div>
+          <div class="card-title-group">
+            <div class="card-number">PRINCIPLE I</div>
+            <div class="card-title">Origin is Relative</div>
+          </div>
+        </div>
+        <div class="card-equation">
+          OriginSet(F) ≠ OriginSet(F') for F ≺ F'
+        </div>
+        <p class="card-description">
+          For each frame F, there exists at least one best-closure explanation D ∈ OriginSet(F),
+          but generally the origin shifts under frame extension. Local optimality does not imply
+          global optimality—origin is frame-relative, not absolute. The "closest thing to origin"
+          is the description minimizing closure deficit δ under current constraints.
+        </p>
+        <div class="card-vn-grid">
+          <div class="card-vn">
+            <div class="vn-symbol">F₁₂</div>
+            <div class="vn-name">First Fixed Point</div>
+            <div class="vn-value">144 = 12²</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">F₂₄</div>
+            <div class="vn-name">Holographic Doubling</div>
+            <div class="vn-value">46,368 = L₁₂ × F₁₂</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">argmin</div>
+            <div class="vn-name">Origin Definition</div>
+            <div class="vn-value">δ(D|F) minimizer</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">≺</div>
+            <div class="vn-name">Frame Extension</div>
+            <div class="vn-value">F → F' (refinement)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Principle 2: Boundary is Unavoidable -->
+      <div class="principle-card" id="principle-2" style="--card-color: var(--boundary);">
+        <div class="card-header">
+          <div class="card-icon">②</div>
+          <div class="card-title-group">
+            <div class="card-number">PRINCIPLE II</div>
+            <div class="card-title">Boundary is Unavoidable</div>
+          </div>
+        </div>
+        <div class="card-equation">
+          ∂F ≠ ∅ and ∂F ⊄ ℒ
+        </div>
+        <p class="card-description">
+          For any sufficiently expressive frame F, diagonalization implies the incompleteness
+          boundary ∂F is non-empty and cannot be internalized within the frame's language ℒ.
+          No frame contains its own boundary—this is Gödel's insight recast in optimization terms.
+          The z_c = √3/2 subspace marks where current-frame descriptions break down.
+        </p>
+        <div class="card-vn-grid">
+          <div class="card-vn">
+            <div class="vn-symbol">∂F</div>
+            <div class="vn-name">Incompleteness Boundary</div>
+            <div class="vn-value">{τ : τ decidable only in F' ≻ F}</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">z_c</div>
+            <div class="vn-name">Critical Height</div>
+            <div class="vn-value">√3/2 ≈ 0.866</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">⊄</div>
+            <div class="vn-name">Non-Containment</div>
+            <div class="vn-value">Boundary exceeds language</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">diag</div>
+            <div class="vn-name">Diagonalization</div>
+            <div class="vn-value">Self-reference limit</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Principle 3: Laws are Invariant Residue -->
+      <div class="principle-card" id="principle-3" style="--card-color: var(--invariant);">
+        <div class="card-header">
+          <div class="card-icon">③</div>
+          <div class="card-title-group">
+            <div class="card-number">PRINCIPLE III</div>
+            <div class="card-title">Laws are Invariant Residue</div>
+          </div>
+        </div>
+        <div class="card-equation">
+          I = ∩ Inv(F) is stable across all F
+        </div>
+        <p class="card-description">
+          Global invariants I form the intersection residue of all frame-specific invariants—
+          what survives every refinement. These correspond to "laws": stable constraints that
+          persist while descriptions evolve. Laws are closed; states are open.
+          The L₄ = 7 constant and golden ratio φ are examples of such invariants.
+        </p>
+        <div class="card-vn-grid">
+          <div class="card-vn">
+            <div class="vn-symbol">φ</div>
+            <div class="vn-name">Golden Ratio</div>
+            <div class="vn-value">1.6180339887...</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">L₄</div>
+            <div class="vn-name">Lucas Constant</div>
+            <div class="vn-value">φ⁴ + φ⁻⁴ = 7</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">F(2n)</div>
+            <div class="vn-name">Scaling Law</div>
+            <div class="vn-value">= F(n) × L(n)</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">Noether</div>
+            <div class="vn-name">Symmetry → Conservation</div>
+            <div class="vn-value">∂L/∂q̇ = const</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Principle 4: Evolution is Boundary-Driven -->
+      <div class="principle-card" id="principle-4" style="--card-color: var(--evolution);">
+        <div class="card-header">
+          <div class="card-icon">④</div>
+          <div class="card-title-group">
+            <div class="card-number">PRINCIPLE IV</div>
+            <div class="card-title">Evolution is Boundary-Driven</div>
+          </div>
+        </div>
+        <div class="card-equation">
+          ∂F ≠ ∅ ⟹ ∃F' : δ*(F') < δ*(F)
+        </div>
+        <p class="card-description">
+          Because boundaries are non-empty, there always exist extensions that improve achievable
+          closure. Incompleteness generates pressure for refinement—the boundary drives progress.
+          This is why science never terminates: each solved problem reveals new horizons.
+          Frame extension is the mechanism of genuine novelty.
+        </p>
+        <div class="card-vn-grid">
+          <div class="card-vn">
+            <div class="vn-symbol">δ*</div>
+            <div class="vn-name">Best Achievable Deficit</div>
+            <div class="vn-value">min δ(D|F)</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">F ≺ F'</div>
+            <div class="vn-name">Refinement Chain</div>
+            <div class="vn-value">F₁₂ → F₂₄ → F₄₈</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">RG</div>
+            <div class="vn-name">Renormalization Flow</div>
+            <div class="vn-value">Scale → Scale'</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">∞</div>
+            <div class="vn-name">Asymptotic Limit</div>
+            <div class="vn-value">Never reached, always approached</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Principle 5: Attractors with Bifurcations -->
+      <div class="principle-card" id="principle-5" style="--card-color: var(--attractor);">
+        <div class="card-header">
+          <div class="card-icon">⑤</div>
+          <div class="card-title-group">
+            <div class="card-number">PRINCIPLE V</div>
+            <div class="card-title">Attractors with Bifurcations</div>
+          </div>
+        </div>
+        <div class="card-equation">
+          D_t converges to D* or splits at g_t ≈ 0
+        </div>
+        <p class="card-description">
+          Along refinement chains, origins evolve as D_t ∈ OriginSet(F_t). If the deficit
+          landscape is strongly stable, D_t converges (attractor behavior). If near-degeneracy
+          occurs (g_t ≈ 0), origins bifurcate—producing predictable fracture zones.
+          This explains both stability of paradigms and revolutionary transitions.
+        </p>
+        <div class="card-vn-grid">
+          <div class="card-vn">
+            <div class="vn-symbol">D*</div>
+            <div class="vn-name">Fixed Point Attractor</div>
+            <div class="vn-value">lim D_t as t→∞</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">g_t</div>
+            <div class="vn-name">Deficit Gap</div>
+            <div class="vn-value">δ₁ - δ₂ → 0</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">⑂</div>
+            <div class="vn-name">Bifurcation Point</div>
+            <div class="vn-value">Origin splits at degeneracy</div>
+          </div>
+          <div class="card-vn">
+            <div class="vn-symbol">basin</div>
+            <div class="vn-name">Attractor Basin</div>
+            <div class="vn-value">B(D*) = convergence region</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- F-Sequence Progression -->
+    <section class="f-sequence-section">
+      <div class="f-sequence-header">
+        <h2 class="f-sequence-title">Frame Extension Sequence</h2>
+        <p class="f-sequence-subtitle">F₁₂ → F₂₄ → F₄₈ → ... → R(R)=R</p>
+      </div>
+
+      <div class="f-sequence-rail">
+        <div class="f-node">
+          <div class="f-crystal" style="--f-color: var(--f12);" onclick="setFrameIndex(12)">
+            <span class="f-index">F₁₂</span>
+          </div>
+          <div class="f-value">144<br>= 12²</div>
+        </div>
+
+        <div class="f-node">
+          <div class="f-crystal" style="--f-color: var(--f24);" onclick="setFrameIndex(24)">
+            <span class="f-index">F₂₄</span>
+          </div>
+          <div class="f-value">46,368<br>= L₁₂ × F₁₂</div>
+        </div>
+
+        <div class="f-node">
+          <div class="f-crystal" style="--f-color: var(--f48);" onclick="setFrameIndex(48)">
+            <span class="f-index">F₄₈</span>
+          </div>
+          <div class="f-value">4,807,526,976<br>= L₂₄ × F₂₄</div>
+        </div>
+
+        <div class="f-node">
+          <div class="f-crystal" style="--f-color: var(--f96);" onclick="setFrameIndex(96)">
+            <span class="f-index">F₉₆</span>
+          </div>
+          <div class="f-value">5.17×10¹⁹<br>= L₄₈ × F₄₈</div>
+        </div>
+
+        <div class="f-node">
+          <div class="f-crystal f-infinity">
+            <span class="f-index">F_∞</span>
+          </div>
+          <div class="f-value">R(R)=R<br>∞</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Frame Explorer -->
+    <section class="explorer-section">
+      <div class="explorer-card">
+        <h3 class="explorer-title">Frame Extension Explorer</h3>
+
+        <div class="explorer-controls">
+          <div class="control-group">
+            <label class="control-label">Frame Index n</label>
+            <input type="number" class="control-input" id="mtrFrameN" value="12" min="1" max="100" onchange="updateMTRExplorer()">
+          </div>
+          <div class="control-group">
+            <label class="control-label">Extension Factor k</label>
+            <input type="number" class="control-input" id="mtrFrameK" value="2" min="1" max="8" onchange="updateMTRExplorer()">
+          </div>
+        </div>
+
+        <div class="explorer-result" id="mtrExplorerResult">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Decision Tree Visualization -->
+    <section class="decision-tree-section">
+      <div class="tree-header">
+        <h2 class="tree-title">MTR Decision Tree</h2>
+        <p class="tree-subtitle">Frame → Origin → Boundary → Extension → Convergence/Bifurcation</p>
+      </div>
+
+      <div class="tree-visualization">
+        <!-- Level 0: Genesis -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-circle" style="--node-border: var(--vn-genesis); width: 80px; height: 80px; font-size: 1.2rem;">
+              R(R)=R
+            </div>
+            <div class="node-label">GENESIS</div>
+          </div>
+        </div>
+
+        <!-- Level 1: Frame Definition -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-hexagon" style="--node-border: var(--origin);">
+              F
+            </div>
+            <div class="node-label">Define Frame<br>F = (ℒ, C, Π)</div>
+          </div>
+        </div>
+
+        <!-- Level 2: Compute Origin & Boundary -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-pentagon" style="--node-border: var(--origin);">
+              δ
+            </div>
+            <div class="node-label">Compute δ(D|F)</div>
+          </div>
+          <div class="tree-node">
+            <div class="node-shape shape-diamond" style="--node-border: var(--boundary);">
+              ∂F
+            </div>
+            <div class="node-label">Identify Boundary</div>
+          </div>
+          <div class="tree-node">
+            <div class="node-shape shape-circle" style="--node-border: var(--invariant);">
+              I
+            </div>
+            <div class="node-label">Extract Invariants</div>
+          </div>
+        </div>
+
+        <!-- Level 3: Origin Selection -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-octagon" style="--node-border: var(--origin);">
+              D*
+            </div>
+            <div class="node-label">Origin(F) = argmin δ</div>
+          </div>
+        </div>
+
+        <!-- Level 4: Decision Point -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-diamond" style="--node-border: var(--evolution); width: 70px; height: 70px;">
+              ∂F=∅?
+            </div>
+            <div class="node-label">Boundary Check</div>
+          </div>
+        </div>
+
+        <!-- Level 5: Branches -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-circle" style="--node-border: var(--invariant);">
+              HALT
+            </div>
+            <div class="node-label">Complete Closure<br>(never reached)</div>
+          </div>
+          <div class="tree-node">
+            <div class="node-shape shape-hexagon" style="--node-border: var(--evolution);">
+              F'
+            </div>
+            <div class="node-label">Frame Extension<br>F ≺ F'</div>
+          </div>
+        </div>
+
+        <!-- Level 6: Convergence Check -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-diamond" style="--node-border: var(--attractor); width: 70px; height: 70px;">
+              g_t≈0?
+            </div>
+            <div class="node-label">Degeneracy Check</div>
+          </div>
+        </div>
+
+        <!-- Level 7: Final Branches -->
+        <div class="tree-level">
+          <div class="tree-node">
+            <div class="node-shape shape-circle" style="--node-border: var(--attractor);">
+              D*
+            </div>
+            <div class="node-label">Converge to<br>Attractor</div>
+          </div>
+          <div class="tree-node">
+            <div class="node-shape shape-octagon" style="--node-border: var(--boundary);">
+              ⑂
+            </div>
+            <div class="node-label">Bifurcation<br>Origin Splits</div>
+          </div>
+        </div>
+
+        <!-- Loop Back -->
+        <div style="text-align: center; margin-top: 2rem; font-family: 'JetBrains Mono', monospace; color: var(--text-secondary);">
+          ↺ Return to Frame Definition with new F'
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">MTR: δ(D|F) → Origin(F) → ∂F → F' → D* | R(R)=R</div>
+    <p>Meta-Theorem of Reality Decision Tree | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // Fibonacci and Lucas generators
+    function fib(n) {
+      if (n <= 0) return 0;
+      if (n === 1 || n === 2) return 1;
+      let a = 1, b = 1;
+      for (let i = 3; i <= n; i++) {
+        [a, b] = [b, a + b];
+      }
+      return b;
+    }
+
+    function lucas(n) {
+      if (n === 0) return 2;
+      if (n === 1) return 1;
+      let a = 2, b = 1;
+      for (let i = 2; i <= n; i++) {
+        [a, b] = [b, a + b];
+      }
+      return b;
+    }
+
+    function formatNumber(n) {
+      if (n > 1e15) {
+        return n.toExponential(2);
+      }
+      return n.toLocaleString();
+    }
+
+    // Scroll to section
+    function scrollToSection(id) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // Set frame index from F-sequence click
+    function setFrameIndex(n) {
+      document.getElementById('mtrFrameN').value = n;
+      updateMTRExplorer();
+      scrollToSection('mtrExplorerResult');
+    }
+
+    // MTR Frame Explorer
+    function updateMTRExplorer() {
+      const n = parseInt(document.getElementById('mtrFrameN').value) || 12;
+      const k = parseInt(document.getElementById('mtrFrameK').value) || 2;
+
+      const F_n = fib(n);
+      const L_n = lucas(n);
+      const F_kn = fib(k * n);
+      const L_kn = lucas(k * n);
+
+      // Calculate closure deficit: distance from F_n = n² fixed point
+      const delta_n = Math.abs(F_n - n * n);
+      const isFixedPoint = delta_n === 0;
+
+      // Frame extension verification
+      const F_2n = fib(2 * n);
+      const extensionProduct = F_n * L_n;
+      const extensionVerified = F_2n === extensionProduct;
+
+      // Bifurcation sensitivity
+      const phi = 1.6180339887;
+      const ratio = fib(n + 1) / fib(n);
+      const bifurcSensitivity = Math.abs(ratio - phi) * 1000;
+
+      // Origin classification
+      let originClass = 'Pre-threshold Frame';
+      let originColor = 'var(--text-secondary)';
+      if (n === 12) { originClass = 'F₁₂ Fixed Point (δ = 0)'; originColor = 'var(--origin)'; }
+      else if (n === 24) { originClass = 'F₂₄ Holographic'; originColor = 'var(--attractor)'; }
+      else if (n === 48) { originClass = 'F₄₈ Meta-RG'; originColor = 'var(--evolution)'; }
+      else if (n > 48) { originClass = 'Deep RG Flow'; originColor = 'var(--invariant)'; }
+
+      // Invariants
+      const L4 = lucas(4);
+      const zc = Math.sqrt(3) / 2;
+
+      document.getElementById('mtrExplorerResult').innerHTML = `
+        <div class="result-item">
+          <div class="result-label">Frame F_${n}</div>
+          <div class="result-value" style="color: var(--origin)">${formatNumber(F_n)}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">L(${n})</div>
+          <div class="result-value" style="color: var(--evolution)">${formatNumber(L_n)}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">δ(F_${n}|F) = |F_n - n²|</div>
+          <div class="result-value" style="color: ${isFixedPoint ? 'var(--invariant)' : 'var(--boundary)'}">${formatNumber(delta_n)} ${isFixedPoint ? '✓ ZERO' : ''}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">Origin Class</div>
+          <div class="result-value" style="color: ${originColor}; font-size: 0.9rem;">${originClass}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">Bifurcation Sensitivity</div>
+          <div class="result-value" style="color: ${bifurcSensitivity < 10 ? 'var(--invariant)' : 'var(--attractor)'}">${bifurcSensitivity.toFixed(4)}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">φ Ratio Convergence</div>
+          <div class="result-value" style="color: var(--origin)">${ratio.toFixed(10)}</div>
+        </div>
+
+        <div class="result-item" style="grid-column: 1 / -1; background: var(--bg-tertiary); padding: 1rem; border-radius: 0.5rem; margin-top: 1rem;">
+          <div class="result-label" style="color: var(--evolution);">FRAME EXTENSION F ≺ F'</div>
+          <div class="result-value" style="color: var(--text-primary); font-size: 1rem;">
+            F(${2*n}) = F(${n}) × L(${n}) = ${formatNumber(F_n)} × ${formatNumber(L_n)} = ${formatNumber(extensionProduct)}
+            <span style="color: ${extensionVerified ? 'var(--invariant)' : 'var(--boundary)'}; margin-left: 1rem;">
+              ${extensionVerified ? '✓ VERIFIED' : '✗ ERROR'}
+            </span>
+          </div>
+        </div>
+
+        <div class="result-item" style="grid-column: 1 / -1; background: rgba(0, 255, 136, 0.1); padding: 1rem; border-radius: 0.5rem; margin-top: 0.5rem; border: 1px solid var(--invariant);">
+          <div class="result-label" style="color: var(--invariant);">INVARIANTS I (Laws Closed)</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem; margin-top: 0.5rem;">
+            <div style="font-family: 'JetBrains Mono'; color: var(--origin);">φ = ${phi.toFixed(8)}</div>
+            <div style="font-family: 'JetBrains Mono'; color: var(--evolution);">L₄ = ${L4}</div>
+            <div style="font-family: 'JetBrains Mono'; color: var(--invariant);">z_c = ${zc.toFixed(6)}</div>
+            <div style="font-family: 'JetBrains Mono'; color: var(--attractor);">F(2n)=F(n)×L(n) ✓</div>
+          </div>
+        </div>
+
+        ${isFixedPoint ? `
+        <div class="result-item" style="grid-column: 1 / -1; background: rgba(255, 215, 0, 0.15); padding: 1rem; border-radius: 0.5rem; margin-top: 0.5rem; border: 2px solid var(--origin);">
+          <div class="result-label" style="color: var(--origin); font-size: 1rem;">★ RG FIXED POINT: Origin(F) = argmin δ = 0 ★</div>
+          <div class="result-value" style="color: var(--text-primary);">
+            F₁₂ = 12² = 144 — Relative origin in Frame F₁₂
+          </div>
+        </div>
+        ` : ''}
+
+        <div class="result-item" style="grid-column: 1 / -1; background: rgba(255, 107, 107, 0.1); padding: 1rem; border-radius: 0.5rem; margin-top: 0.5rem; border: 1px solid var(--boundary);">
+          <div class="result-label" style="color: var(--boundary);">∂F BOUNDARY (States Open)</div>
+          <div class="result-value" style="color: var(--text-secondary); font-size: 0.9rem;">
+            ∂F ≠ ∅ — Frame extension F' ≻ F exists with δ*(F') < δ*(F)<br>
+            <span style="color: var(--text-primary);">Next Frame: F_${2*n} = ${formatNumber(F_2n)}</span>
+          </div>
+        </div>
+
+        <div class="result-item" style="grid-column: 1 / -1; background: var(--bg-tertiary); padding: 1rem; border-radius: 0.5rem; margin-top: 0.5rem;">
+          <div class="result-label">MTR DECISION PATH</div>
+          <div class="result-value" style="color: var(--text-primary); font-size: 0.9rem;">
+            <span style="color: var(--origin);">F_${n}</span> →
+            <span style="color: var(--origin);">δ=${formatNumber(delta_n)}</span> →
+            <span style="color: var(--boundary);">∂F≠∅</span> →
+            <span style="color: var(--evolution);">F_${2*n}</span> →
+            <span style="color: var(--attractor);">${bifurcSensitivity < 10 ? 'CONVERGE' : 'BIFURCATE?'}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Initialize
+    updateMTRExplorer();
+  </script>
+
+</body>
+</html>
