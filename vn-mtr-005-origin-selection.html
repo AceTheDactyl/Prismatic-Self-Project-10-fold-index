@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-MTR-005 | Origin Selection</title>
+  <meta name="description" content="Origin Selection: Origin(F) = argmin delta - How frames select optimal descriptions through the minimization principle">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════════
+       VN-MTR-005: ORIGIN SELECTION
+       Origin(F) = argmin_{D∈𝓐(F)} δ(D|F)
+       How frames select optimal descriptions - the argmin principle
+       ═══════════════════════════════════════════════════════════════════════ */
+    :root {
+      /* MTR Principle Colors */
+      --origin: #ffd700;
+      --boundary: #ff6b6b;
+      --invariant: #00ff88;
+      --evolution: #00ffff;
+      --attractor: #c792ea;
+
+      /* Page Primary - Origin Selection uses gold */
+      --origin-primary: #ffd700;
+      --origin-secondary: #ffe44d;
+      --origin-glow: rgba(255, 215, 0, 0.3);
+
+      /* Component Colors */
+      --argmin-color: #ffd700;
+      --compress-color: #00ff88;
+      --mdl-color: #00ffff;
+
+      /* Mathematical Constants */
+      --phi: 1.6180339887;
+      --zc: 0.8660254038;
+
+      /* Theme */
+      --bg-void: #020204;
+      --bg-primary: #060610;
+      --bg-secondary: #0a0a18;
+      --bg-tertiary: #101028;
+      --bg-card: #161640;
+      --text-primary: #f0f0f5;
+      --text-secondary: #909098;
+      --text-accent: #ffd700;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(255, 215, 0, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       ORIGIN FIELD BACKGROUND
+       ═══════════════════════════════════════════════════════════════════════ */
+    .origin-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(255, 215, 0, 0.04) 0%, transparent 40%),
+        radial-gradient(ellipse at 70% 70%, rgba(0, 255, 136, 0.02) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, rgba(0, 255, 255, 0.02) 0%, transparent 50%);
+      animation: origin-pulse 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes origin-pulse {
+      0% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       NAVIGATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(6, 6, 16, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       PAGE HEADER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .page-header {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .page-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--origin-primary);
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .page-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--origin-primary), var(--compress-color), var(--mdl-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .core-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.6rem;
+      background: var(--bg-tertiary);
+      padding: 1.5rem 2.5rem;
+      border-radius: 1rem;
+      display: inline-block;
+      border: 2px solid var(--origin-primary);
+      box-shadow: 0 0 30px var(--origin-glow);
+    }
+
+    .eq-origin { color: var(--origin-primary); }
+    .eq-argmin { color: var(--compress-color); }
+    .eq-delta { color: var(--boundary); }
+    .eq-op { color: var(--text-secondary); }
+
+    /* Octagon Icon */
+    .octagon-icon {
+      width: 80px;
+      height: 80px;
+      margin: 2rem auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      color: var(--origin-primary);
+      background: var(--bg-tertiary);
+      border: 2px solid var(--origin-primary);
+      clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+      animation: octagon-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes octagon-glow {
+      0%, 100% { box-shadow: 0 0 20px var(--origin-glow); }
+      50% { box-shadow: 0 0 40px var(--origin-glow); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════════════════════════════════════ */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bg-void);
+      background: var(--origin-primary);
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       DEFINITION CARDS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .definition-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .definition-card:hover {
+      border-color: var(--card-accent, var(--origin-primary));
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
+    }
+
+    .definition-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--origin-primary));
+    }
+
+    .definition-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .definition-type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--card-accent, var(--origin-primary));
+      background: rgba(255, 215, 0, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+    }
+
+    .definition-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .definition-formal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--card-accent, var(--origin-primary));
+      background: var(--bg-tertiary);
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .definition-body {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .definition-body strong {
+      color: var(--text-primary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       COMPRESSION IDENTITY CARDS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .compression-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .compression-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--comp-color, var(--origin-primary));
+      border-radius: 1rem;
+      padding: 1.5rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .compression-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .compression-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .compression-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--comp-color, var(--origin-primary));
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--comp-color, var(--origin-primary));
+      border-radius: 0.5rem;
+    }
+
+    .compression-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--comp-color, var(--origin-primary));
+    }
+
+    .compression-field {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .compression-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .compression-description {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       WEIGHT DETERMINATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .weight-section {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 215, 0, 0.05) 100%);
+      border: 2px solid var(--origin-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .weight-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--origin-primary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .weight-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .weight-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .weight-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .weight-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      color: var(--weight-color, var(--origin-primary));
+      margin-bottom: 0.5rem;
+    }
+
+    .weight-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .weight-method {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       RELATIVITY THEOREM
+       ═══════════════════════════════════════════════════════════════════════ */
+    .theorem-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(199, 146, 234, 0.05) 100%);
+      border: 2px solid var(--attractor);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .theorem-card::before {
+      content: 'THEOREM';
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--attractor);
+      background: var(--bg-void);
+      padding: 0 0.75rem;
+      letter-spacing: 0.1em;
+    }
+
+    .theorem-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--attractor);
+      margin-bottom: 1rem;
+    }
+
+    .theorem-statement {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--text-primary);
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .theorem-body {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       WORKED EXAMPLES
+       ═══════════════════════════════════════════════════════════════════════ */
+    .example-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .example-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--example-color, var(--origin-primary));
+    }
+
+    .example-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .example-icon {
+      font-size: 1.5rem;
+    }
+
+    .example-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--example-color, var(--origin-primary));
+    }
+
+    .example-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 768px) {
+      .example-comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .comparison-box {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .comparison-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--box-color, var(--text-accent));
+      margin-bottom: 1rem;
+    }
+
+    .comparison-values {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .value-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    .value-label {
+      color: var(--text-secondary);
+    }
+
+    .value-number {
+      color: var(--text-primary);
+    }
+
+    .example-conclusion {
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid var(--origin-primary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--origin-primary);
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       INTERACTIVE ORIGIN FINDER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .origin-finder {
+      background: var(--bg-secondary);
+      border: 2px solid var(--origin-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .finder-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--origin-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .candidates-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .candidates-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .candidate-card {
+      background: var(--bg-tertiary);
+      border: 2px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .candidate-card.winner {
+      border-color: var(--origin-primary);
+      box-shadow: 0 0 30px var(--origin-glow);
+    }
+
+    .candidate-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .candidate-delta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      transition: color 0.3s ease;
+    }
+
+    .candidate-details {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .constraint-controls {
+      background: var(--bg-tertiary);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .constraint-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .constraint-slider {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 8px;
+      background: var(--bg-secondary);
+      border-radius: 4px;
+      outline: none;
+      margin-bottom: 1rem;
+    }
+
+    .constraint-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--origin-primary);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--origin-primary);
+    }
+
+    .landscape-viz {
+      height: 150px;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      position: relative;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .landscape-curve {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+    }
+
+    .minimum-marker {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: var(--origin-primary);
+      border-radius: 50%;
+      transform: translate(-50%, 50%);
+      box-shadow: 0 0 15px var(--origin-primary);
+      transition: left 0.5s ease;
+    }
+
+    .landscape-label {
+      position: absolute;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       ANTI-IDOLATRY THEOREM
+       ═══════════════════════════════════════════════════════════════════════ */
+    .warning-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 107, 107, 0.05) 100%);
+      border: 2px solid var(--boundary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .warning-card::before {
+      content: 'WARNING';
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--boundary);
+      background: var(--bg-void);
+      padding: 0 0.75rem;
+      letter-spacing: 0.1em;
+    }
+
+    .warning-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--boundary);
+      margin-bottom: 1rem;
+    }
+
+    .warning-body {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .warning-list {
+      margin: 1rem 0 0 2rem;
+    }
+
+    .warning-list li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       MTR CONNECTIONS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .connection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .connection-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--conn-color, var(--border-subtle));
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: block;
+    }
+
+    .connection-card:hover {
+      border-color: var(--conn-color, var(--origin-primary));
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .connection-arrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--conn-color, var(--text-secondary));
+      margin-bottom: 0.5rem;
+    }
+
+    .connection-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--conn-color, var(--text-primary));
+      margin-bottom: 0.5rem;
+    }
+
+    .connection-description {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       DECISION TREE MINI-VIEW
+       ═══════════════════════════════════════════════════════════════════════ */
+    .tree-mini {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .tree-mini-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--origin-primary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .tree-flow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tree-node-mini {
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 0.8rem;
+    }
+
+    .tree-node-mini:hover {
+      border-color: var(--origin-primary);
+      color: var(--origin-primary);
+    }
+
+    .tree-node-mini.current {
+      border-color: var(--origin-primary);
+      color: var(--origin-primary);
+      box-shadow: 0 0 15px var(--origin-glow);
+    }
+
+    .tree-arrow {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--origin-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="origin-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link"><span>&#9671;</span>VaultNode Tree</a>
+    <a href="mtr-decision-tree.html" class="nav-link"><span>&#8756;</span>MTR Decision Tree</a>
+    <a href="vn-mtr-000-language-before-observers.html" class="nav-link"><span>&#8857;</span>Step Zero</a>
+    <a href="vn-mtr-001-closure-deficit.html" class="nav-link"><span>&#948;</span>Closure Deficit</a>
+    <a href="vn-mtr-005-origin-selection.html" class="nav-link active"><span>&#9733;</span>Origin Selection</a>
+    <a href="vn-fibonacci-rg-flow.html" class="nav-link"><span>&#966;</span>Fibonacci RG Flow</a>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="page-badge">VN-MTR-005 :: ORIGIN SELECTION</div>
+    <h1 class="page-title">Origin Selection: argmin &#948;</h1>
+    <p class="page-subtitle">
+      How frames select optimal descriptions &mdash;
+      the "best explanation" is the one that minimizes closure deficit
+    </p>
+    <div class="core-equation">
+      <span class="eq-origin">Origin(F)</span>
+      <span class="eq-op"> = </span>
+      <span class="eq-argmin">argmin</span><sub style="color: var(--text-secondary);">D&#8712;&#119964;(F)</sub>
+      <span class="eq-delta"> &#948;(D|F)</span>
+    </div>
+    <div class="octagon-icon">D*</div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: The Minimization Principle -->
+    <section class="section" id="minimization-principle">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">The Minimization Principle</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--origin-primary);">
+        <div class="definition-header">
+          <span class="definition-type">CORE PRINCIPLE</span>
+          <span class="definition-name">Origin as Minimum Deficit</span>
+        </div>
+        <div class="definition-formal" style="font-size: 1.4rem;">
+          Origin(F) = argmin<sub>D&#8712;&#119964;(F)</sub> &#948;(D|F)
+        </div>
+        <div class="definition-body">
+          <p>
+            The <strong>origin</strong> of a frame F is the description D* that minimizes closure deficit.
+            This is the "best explanation" within the frame's admissible set &#119964;(F) &mdash;
+            the description that achieves the <em>tightest fit</em> between model and reality.
+          </p>
+          <p style="margin-top: 1rem;">
+            <strong>Why minimize &#948;?</strong>
+          </p>
+          <ul style="margin: 0.5rem 0 0 2rem;">
+            <li><strong>Tightest fit</strong> = best explanation under constraints</li>
+            <li><strong>Minimal error</strong> = predictions match observations</li>
+            <li><strong>Minimal complexity</strong> = Occam's Razor satisfied</li>
+            <li><strong>No violations</strong> = respects frame rules</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Local vs Global Minima -->
+      <div class="definition-card" style="--card-accent: var(--evolution);">
+        <div class="definition-header">
+          <span class="definition-type">TOPOLOGY</span>
+          <span class="definition-name">Local vs Global Minima</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            The &#948;-landscape may have <strong>multiple local minima</strong>.
+            Not all origins are created equal:
+          </p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <div style="background: var(--bg-tertiary); padding: 1.25rem; border-radius: 0.75rem; border-left: 3px solid var(--invariant);">
+              <div style="font-family: 'JetBrains Mono', monospace; color: var(--invariant); margin-bottom: 0.5rem;">GLOBAL MINIMUM</div>
+              <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                D* such that &#948;(D*|F) &#8804; &#948;(D|F) for <em>all</em> D &#8712; &#119964;(F).<br><br>
+                <strong>Consensus theory</strong> &mdash; the unique best explanation if reachable.
+              </div>
+            </div>
+            <div style="background: var(--bg-tertiary); padding: 1.25rem; border-radius: 0.75rem; border-left: 3px solid var(--origin);">
+              <div style="font-family: 'JetBrains Mono', monospace; color: var(--origin); margin-bottom: 0.5rem;">LOCAL MINIMA</div>
+              <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                D' such that &#948;(D'|F) &#8804; &#948;(D|F) for <em>nearby</em> D.<br><br>
+                <strong>Paradigm coexistence</strong> &mdash; multiple stable theories can coexist.
+              </div>
+            </div>
+          </div>
+          <p style="margin-top: 1.5rem; color: var(--attractor);">
+            <strong>Paradigm shifts</strong> occur when the system tunnels from one local minimum
+            to a lower one, often triggered by frame extension.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Origin-Compression Identity -->
+    <section class="section" id="compression-identity">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">Origin-Compression Identity</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--compress-color);">
+        <div class="definition-header">
+          <span class="definition-type">IDENTITY</span>
+          <span class="definition-name">Origin as Minimal Generating Set</span>
+        </div>
+        <div class="definition-formal">
+          Origin(F) = argmin<sub>G&#8834;X*</sub> {|G| : Cl(G,&#8728;) &#8839; Observations(S)}
+        </div>
+        <div class="definition-body">
+          <p>
+            The origin is the <strong>minimal generating set</strong> for observable phenomena X*<sub>F</sub>.
+            This is optimal compression of the constrained language &mdash; the shortest program
+            that generates all observations within the frame.
+          </p>
+          <p style="margin-top: 1rem; font-style: italic; color: var(--compress-color);">
+            "Origin" = "Best compression" = "Simplest adequate theory"
+          </p>
+        </div>
+      </div>
+
+      <h3 style="font-family: 'JetBrains Mono', monospace; color: var(--origin-primary); margin: 2rem 0 1rem; text-align: center;">
+        Three Faces of the Same Principle
+      </h3>
+
+      <div class="compression-grid">
+        <!-- Kolmogorov Complexity -->
+        <div class="compression-card" style="--comp-color: var(--origin);">
+          <div class="compression-header">
+            <div class="compression-symbol">K</div>
+            <div>
+              <div class="compression-title">Kolmogorov Complexity</div>
+              <div class="compression-field">Information Theory</div>
+            </div>
+          </div>
+          <div class="compression-equation">
+            K(d) = min{|p| : U(p) = d}
+          </div>
+          <div class="compression-description">
+            <strong>Shortest program</strong> that produces the data.<br><br>
+            K(d) measures the intrinsic information content. The origin is the
+            description with minimal K given the constraints.
+          </div>
+        </div>
+
+        <!-- MDL Principle -->
+        <div class="compression-card" style="--comp-color: var(--mdl-color);">
+          <div class="compression-header">
+            <div class="compression-symbol">MDL</div>
+            <div>
+              <div class="compression-title">Minimum Description Length</div>
+              <div class="compression-field">Learning Theory</div>
+            </div>
+          </div>
+          <div class="compression-equation">
+            MDL = L(H) + L(D|H)
+          </div>
+          <div class="compression-description">
+            <strong>Model + data encoding</strong> minimized together.<br><br>
+            MDL balances model complexity L(H) against data fit L(D|H).
+            The best hypothesis minimizes total description length.
+          </div>
+        </div>
+
+        <!-- Effective Theory -->
+        <div class="compression-card" style="--comp-color: var(--invariant);">
+          <div class="compression-header">
+            <div class="compression-symbol">EFT</div>
+            <div>
+              <div class="compression-title">Best Effective Theory</div>
+              <div class="compression-field">Physics</div>
+            </div>
+          </div>
+          <div class="compression-equation">
+            EFT = argmin(params + residuals)
+          </div>
+          <div class="compression-description">
+            <strong>Simplest theory</strong> that captures phenomena at a given scale.<br><br>
+            Effective field theories are the "origin" at each energy scale &mdash;
+            they minimize description length for accessible physics.
+          </div>
+        </div>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--origin-primary);">
+        <div class="definition-header">
+          <span class="definition-type">INSIGHT</span>
+          <span class="definition-name">Occam's Razor is Structural, Not Aesthetic</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            The preference for simpler explanations is not a matter of taste or beauty.
+            It emerges necessarily from the <strong>compression principle</strong>:
+          </p>
+          <ul style="margin: 1rem 0 0 2rem;">
+            <li><strong>Simpler</strong> = shorter description = lower Comp term in &#948;</li>
+            <li><strong>Adequate</strong> = matches observations = low Err term in &#948;</li>
+            <li>Simplest adequate theory = <strong>argmin &#948;</strong> = Origin</li>
+          </ul>
+          <p style="margin-top: 1rem; color: var(--origin-primary);">
+            Occam's Razor is a <em>theorem</em>, not an axiom. It follows from the structure
+            of explanation itself.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Weight Determination -->
+    <section class="section" id="weight-determination">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">Weight Determination</h2>
+      </div>
+
+      <div class="weight-section">
+        <div class="weight-title">HOW TO DETERMINE &#945;, &#946;, &#961;?</div>
+        <div class="weight-equation">
+          <span style="color: var(--boundary);">&#948;(D|F)</span>
+          <span style="color: var(--text-secondary);"> = </span>
+          <span style="color: #ff6b6b;">&#945;&#183;Err</span>
+          <span style="color: var(--text-secondary);"> + </span>
+          <span style="color: #ffd700;">&#946;&#183;Comp</span>
+          <span style="color: var(--text-secondary);"> + </span>
+          <span style="color: #c792ea;">&#961;&#183;Viol</span>
+        </div>
+
+        <div class="weight-grid">
+          <div class="weight-card" style="--weight-color: #ff6b6b;">
+            <div class="weight-symbol">&#945;</div>
+            <div class="weight-name">Error Weight</div>
+            <div class="weight-method">
+              <strong>Cross-validation:</strong><br>
+              Set via held-out prediction error.
+              Higher &#945; prioritizes accuracy.
+            </div>
+          </div>
+
+          <div class="weight-card" style="--weight-color: #ffd700;">
+            <div class="weight-symbol">&#946;</div>
+            <div class="weight-name">Complexity Weight</div>
+            <div class="weight-method">
+              <strong>MDL Instantiation:</strong><br>
+              &#946; = 1 in bit units.
+              One bit of complexity costs one bit.
+            </div>
+          </div>
+
+          <div class="weight-card" style="--weight-color: #c792ea;">
+            <div class="weight-symbol">&#961;</div>
+            <div class="weight-name">Violation Weight</div>
+            <div class="weight-method">
+              <strong>Constraint hierarchy:</strong><br>
+              &#961; &#8594; &#8734; for hard constraints.
+              Finite &#961; for soft preferences.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-tertiary); border-radius: 0.75rem;">
+          <div style="font-family: 'JetBrains Mono', monospace; color: var(--evolution); margin-bottom: 1rem; text-align: center;">
+            EMPIRICAL BAYES APPROACH
+          </div>
+          <div style="color: var(--text-secondary); text-align: center;">
+            Weights can be learned from data via <strong>empirical Bayes</strong> or
+            <strong>cross-validation</strong>. The "best" weights are those that yield
+            descriptions with optimal out-of-sample performance.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Origin Relativity Theorem -->
+    <section class="section" id="relativity-theorem">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">Origin Relativity Theorem</h2>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-title">Frame-Dependence of Origin</div>
+        <div class="theorem-statement">
+          F &#8826; F' &#10233; Origin(F) &#8800; Origin(F') <span style="color: var(--text-secondary);">(generally)</span>
+        </div>
+        <div class="theorem-body">
+          <p>
+            When frames extend (F &#8826; F'), the origin <em>shifts</em>. The same data,
+            viewed through different frames, can yield different optimal descriptions.
+          </p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0;">
+            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 0.5rem;">
+              <div style="font-family: 'JetBrains Mono', monospace; color: var(--invariant); margin-bottom: 0.5rem;">WHAT CHANGES</div>
+              <ul style="color: var(--text-secondary); font-size: 0.9rem; margin-left: 1rem;">
+                <li>Available language &#8466; &#8594; &#8466;'</li>
+                <li>Constraint set C &#8594; C'</li>
+                <li>Admissible descriptions &#119964;(F)</li>
+                <li>Deficit landscape shape</li>
+              </ul>
+            </div>
+            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 0.5rem;">
+              <div style="font-family: 'JetBrains Mono', monospace; color: var(--origin); margin-bottom: 0.5rem;">WHAT PERSISTS</div>
+              <ul style="color: var(--text-secondary); font-size: 0.9rem; margin-left: 1rem;">
+                <li>Invariants I = &#8745; Inv(F)</li>
+                <li>Conservation laws</li>
+                <li>Symmetry constraints</li>
+                <li>Mathematical structure</li>
+              </ul>
+            </div>
+          </div>
+          <p style="color: var(--attractor); margin-top: 1rem;">
+            <strong>This is NOT relativism.</strong> While origins are frame-relative,
+            the invariants I persist across all frames. Truth is not arbitrary &mdash;
+            it is <em>structured</em> by the frame sequence.
+          </p>
+        </div>
+      </div>
+
+      <div class="example-card" style="--example-color: var(--evolution);">
+        <div class="example-header">
+          <span class="example-icon">&#127759;</span>
+          <span class="example-title">Example: Newton vs Einstein on Gravity</span>
+        </div>
+
+        <div class="example-comparison">
+          <div class="comparison-box" style="--box-color: var(--origin);">
+            <div class="comparison-title">Frame F (Classical)</div>
+            <div class="comparison-values">
+              <div class="value-row">
+                <span class="value-label">Language:</span>
+                <span class="value-number">Euclidean space + time</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Origin:</span>
+                <span class="value-number" style="color: var(--origin);">F = Gm&#8321;m&#8322;/r&#178;</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">&#948;:</span>
+                <span class="value-number">Low (everyday scales)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="comparison-box" style="--box-color: var(--evolution);">
+            <div class="comparison-title">Frame F' (Relativistic)</div>
+            <div class="comparison-values">
+              <div class="value-row">
+                <span class="value-label">Language:</span>
+                <span class="value-number">Curved spacetime</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Origin:</span>
+                <span class="value-number" style="color: var(--evolution);">G_&#956;&#957; = 8&#960;T_&#956;&#957;</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">&#948;:</span>
+                <span class="value-number">Lower (all scales)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="example-conclusion">
+          Same phenomenon (gravity), different frames, different origins.<br>
+          <strong>F &#8826; F' shifts Origin(F) &#8594; Origin(F')</strong><br>
+          But conservation of energy persists in both (invariant).
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Worked Examples -->
+    <section class="section" id="examples">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">Worked Examples</h2>
+      </div>
+
+      <!-- Physics: Ptolemy vs Copernicus -->
+      <div class="example-card" style="--example-color: var(--origin);">
+        <div class="example-header">
+          <span class="example-icon">&#9788;</span>
+          <span class="example-title">Physics: Ptolemy vs Copernicus</span>
+        </div>
+
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+          Same observational data (planetary positions), different &#948; under the same frame.
+        </p>
+
+        <div class="example-comparison">
+          <div class="comparison-box" style="--box-color: var(--boundary);">
+            <div class="comparison-title">D&#8321; (Ptolemaic)</div>
+            <div class="comparison-values">
+              <div class="value-row">
+                <span class="value-label">Err:</span>
+                <span class="value-number">&#8776; 0.02 (good fit)</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Comp:</span>
+                <span class="value-number" style="color: var(--boundary);">0.80 (epicycles)</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Viol:</span>
+                <span class="value-number">0</span>
+              </div>
+              <div class="value-row" style="border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; margin-top: 0.5rem;">
+                <span class="value-label">&#948;&#8321;:</span>
+                <span class="value-number" style="color: var(--boundary);">0.42</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="comparison-box" style="--box-color: var(--invariant);">
+            <div class="comparison-title">D&#8322; (Copernican)</div>
+            <div class="comparison-values">
+              <div class="value-row">
+                <span class="value-label">Err:</span>
+                <span class="value-number">&#8776; 0.02 (same fit)</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Comp:</span>
+                <span class="value-number" style="color: var(--invariant);">0.25 (simpler)</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Viol:</span>
+                <span class="value-number">0</span>
+              </div>
+              <div class="value-row" style="border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; margin-top: 0.5rem;">
+                <span class="value-label">&#948;&#8322;:</span>
+                <span class="value-number" style="color: var(--invariant);">0.15</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="example-conclusion">
+          &#948;&#8322; &lt; &#948;&#8321; &#10233; <strong>Copernicus wins via compression</strong><br>
+          Same accuracy, lower complexity = lower deficit = new origin
+        </div>
+      </div>
+
+      <!-- ML: Model Selection -->
+      <div class="example-card" style="--example-color: var(--mdl-color);">
+        <div class="example-header">
+          <span class="example-icon">&#129302;</span>
+          <span class="example-title">ML: Model Selection as argmin &#948;</span>
+        </div>
+
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+          Choosing between models is exactly origin selection. Cross-validation finds the argmin.
+        </p>
+
+        <div class="example-comparison">
+          <div class="comparison-box" style="--box-color: var(--boundary);">
+            <div class="comparison-title">Overfit Model (1000 params)</div>
+            <div class="comparison-values">
+              <div class="value-row">
+                <span class="value-label">Train Err:</span>
+                <span class="value-number">0.001</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Test Err:</span>
+                <span class="value-number" style="color: var(--boundary);">0.35</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Comp:</span>
+                <span class="value-number">0.50</span>
+              </div>
+              <div class="value-row" style="border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; margin-top: 0.5rem;">
+                <span class="value-label">&#948;:</span>
+                <span class="value-number" style="color: var(--boundary);">0.60</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="comparison-box" style="--box-color: var(--invariant);">
+            <div class="comparison-title">Regularized Model (50 params)</div>
+            <div class="comparison-values">
+              <div class="value-row">
+                <span class="value-label">Train Err:</span>
+                <span class="value-number">0.08</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Test Err:</span>
+                <span class="value-number" style="color: var(--invariant);">0.09</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Comp:</span>
+                <span class="value-number">0.10</span>
+              </div>
+              <div class="value-row" style="border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; margin-top: 0.5rem;">
+                <span class="value-label">&#948;:</span>
+                <span class="value-number" style="color: var(--invariant);">0.14</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="example-conclusion">
+          Regularization = complexity penalty = enforcing &#946;&#183;Comp<br>
+          <strong>Model selection IS &#948;-minimization</strong>
+        </div>
+      </div>
+
+      <!-- Science: Theory Choice -->
+      <div class="example-card" style="--example-color: var(--attractor);">
+        <div class="example-header">
+          <span class="example-icon">&#128300;</span>
+          <span class="example-title">Science: Theory Choice as Compression Competition</span>
+        </div>
+
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+          Scientific revolutions are origin shifts. The new theory wins by achieving lower &#948;.
+        </p>
+
+        <div style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: 0.75rem; margin: 1rem 0;">
+          <div style="font-family: 'JetBrains Mono', monospace; color: var(--attractor); margin-bottom: 1rem; text-align: center;">
+            THE PATTERN OF SCIENTIFIC REVOLUTIONS
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <div style="text-align: center; padding: 0.5rem;">
+              <div style="color: var(--origin);">D<sub>old</sub></div>
+              <div style="font-size: 0.8rem; color: var(--text-secondary);">established</div>
+            </div>
+            <div style="color: var(--text-secondary);">&#8594;</div>
+            <div style="text-align: center; padding: 0.5rem;">
+              <div style="color: var(--boundary);">anomalies</div>
+              <div style="font-size: 0.8rem; color: var(--text-secondary);">Err increases</div>
+            </div>
+            <div style="color: var(--text-secondary);">&#8594;</div>
+            <div style="text-align: center; padding: 0.5rem;">
+              <div style="color: var(--evolution);">D<sub>new</sub></div>
+              <div style="font-size: 0.8rem; color: var(--text-secondary);">candidate</div>
+            </div>
+            <div style="color: var(--text-secondary);">&#8594;</div>
+            <div style="text-align: center; padding: 0.5rem;">
+              <div style="color: var(--invariant);">&#948;<sub>new</sub> &lt; &#948;<sub>old</sub></div>
+              <div style="font-size: 0.8rem; color: var(--text-secondary);">revolution</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="example-conclusion">
+          Kuhn's paradigm shifts = traversing the &#948;-landscape<br>
+          <strong>Revolution = finding a new, lower minimum</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Interactive Origin Finder -->
+    <section class="section" id="origin-finder">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Interactive Origin Finder</h2>
+      </div>
+
+      <div class="origin-finder">
+        <div class="finder-title">WATCH ORIGIN SHIFT AS CONSTRAINTS CHANGE</div>
+
+        <div class="constraint-controls">
+          <div class="constraint-label">Accuracy Weight (&#945;) &mdash; prioritize prediction</div>
+          <input type="range" class="constraint-slider" id="alphaSlider" min="0" max="100" value="50" oninput="updateOriginFinder()">
+
+          <div class="constraint-label">Simplicity Weight (&#946;) &mdash; prioritize compression</div>
+          <input type="range" class="constraint-slider" id="betaSlider" min="0" max="100" value="50" oninput="updateOriginFinder()">
+
+          <div class="constraint-label">Constraint Strictness (&#961;) &mdash; prioritize rule compliance</div>
+          <input type="range" class="constraint-slider" id="rhoSlider" min="0" max="100" value="50" oninput="updateOriginFinder()">
+        </div>
+
+        <div class="candidates-container">
+          <div class="candidate-card" id="candidate1">
+            <div class="candidate-name">D&#8321;: Complex Model</div>
+            <div class="candidate-delta" id="delta1" style="color: var(--boundary);">&#948; = 0.45</div>
+            <div class="candidate-details">
+              Err: 0.05 | Comp: 0.80 | Viol: 0.10
+            </div>
+          </div>
+
+          <div class="candidate-card" id="candidate2">
+            <div class="candidate-name">D&#8322;: Balanced Model</div>
+            <div class="candidate-delta" id="delta2" style="color: var(--origin);">&#948; = 0.35</div>
+            <div class="candidate-details">
+              Err: 0.15 | Comp: 0.30 | Viol: 0.05
+            </div>
+          </div>
+
+          <div class="candidate-card" id="candidate3">
+            <div class="candidate-name">D&#8323;: Simple Model</div>
+            <div class="candidate-delta" id="delta3" style="color: var(--invariant);">&#948; = 0.40</div>
+            <div class="candidate-details">
+              Err: 0.35 | Comp: 0.10 | Viol: 0.00
+            </div>
+          </div>
+        </div>
+
+        <div class="landscape-viz" id="landscapeViz">
+          <svg width="100%" height="100%" viewBox="0 0 400 150" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="curveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color: var(--boundary);" />
+                <stop offset="50%" style="stop-color: var(--origin);" />
+                <stop offset="100%" style="stop-color: var(--invariant);" />
+              </linearGradient>
+            </defs>
+            <path id="landscapePath" d="M 0 120 Q 67 80 133 100 Q 200 60 267 90 Q 333 110 400 130"
+                  fill="none" stroke="url(#curveGrad)" stroke-width="3"/>
+          </svg>
+          <div class="minimum-marker" id="minimumMarker" style="left: 50%; bottom: 60px;"></div>
+          <div class="landscape-label" style="left: 10px; top: 10px;">&#948;-landscape</div>
+          <div class="landscape-label" style="right: 10px; bottom: 10px; color: var(--origin);">&#9733; = argmin</div>
+        </div>
+
+        <div style="text-align: center; margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;">
+          <span style="color: var(--text-secondary);">Current Origin: </span>
+          <span id="currentOrigin" style="color: var(--origin);">D&#8322; (Balanced)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Anti-Idolatry Theorem -->
+    <section class="section" id="anti-idolatry">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">Anti-Idolatry Theorem</h2>
+      </div>
+
+      <div class="warning-card">
+        <div class="warning-title">No Absolute Origin Exists</div>
+        <div class="warning-body">
+          <p>
+            Any claim to <strong>absolute</strong> origin &mdash; a final, ultimate explanation &mdash;
+            triggers frame extension. The very act of claiming finality creates the conditions
+            for transcendence.
+          </p>
+
+          <div style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0; text-align: center;">
+            <div style="font-family: 'JetBrains Mono', monospace; color: var(--boundary); font-size: 1.2rem;">
+              Claim: "D* is the absolute origin"
+            </div>
+            <div style="color: var(--text-secondary); margin: 1rem 0;">&#8595;</div>
+            <div style="font-family: 'JetBrains Mono', monospace; color: var(--evolution); font-size: 1.2rem;">
+              &#8707; F' &#8835; F where D* is NOT Origin(F')
+            </div>
+          </div>
+
+          <ul class="warning-list" style="color: var(--text-secondary);">
+            <li><strong>Structural necessity:</strong> &#8706;F &#8800; &#8709; always (Principle II)</li>
+            <li><strong>Diagonalization:</strong> Any "final theory" can be extended</li>
+            <li><strong>Incompleteness:</strong> No frame contains its own boundary</li>
+          </ul>
+
+          <p style="margin-top: 1.5rem; color: var(--attractor);">
+            <strong>Wars over origin</strong> &mdash; religious, scientific, philosophical &mdash;
+            are <em>bifurcation transitions</em>. They occur when competing local minima
+            have near-equal &#948;, and the system must choose.
+          </p>
+        </div>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--invariant);">
+        <div class="definition-header">
+          <span class="definition-type">COROLLARY</span>
+          <span class="definition-name">The Infinite Regress is Productive</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            The fact that origin shifts under frame extension is not a <em>problem</em>
+            but a <em>feature</em>. It ensures:
+          </p>
+          <ul style="margin: 1rem 0 0 2rem;">
+            <li><strong>Continued progress:</strong> There is always more to discover</li>
+            <li><strong>Self-correction:</strong> Errors can always be refined away</li>
+            <li><strong>Invariant extraction:</strong> What persists across shifts is real</li>
+          </ul>
+          <p style="margin-top: 1rem; color: var(--invariant);">
+            The infinite regress converges toward &mdash; but never reaches &mdash; R(R)=R.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Connection to Other Nodes -->
+    <section class="section" id="connections">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <h2 class="section-title">Connection to Other Nodes</h2>
+      </div>
+
+      <div class="connection-grid">
+        <!-- Requires: Closure Deficit -->
+        <a href="vn-mtr-001-closure-deficit.html" class="connection-card" style="--conn-color: var(--boundary);">
+          <div class="connection-arrow">&#8592; REQUIRES</div>
+          <div class="connection-title">MTR-001: &#948;(D|F)</div>
+          <div class="connection-description">
+            Origin selection requires computing closure deficit.
+            The argmin operates on &#948; = &#945;&#183;Err + &#946;&#183;Comp + &#961;&#183;Viol.
+          </div>
+        </a>
+
+        <!-- Requires: Frame Definition -->
+        <a href="mtr-decision-tree.html#principle-1" class="connection-card" style="--conn-color: var(--origin);">
+          <div class="connection-arrow">&#8592; REQUIRES</div>
+          <div class="connection-title">Frame Definition F</div>
+          <div class="connection-description">
+            Origin is relative to frame. F = (&#8466;, C, &#928;) must be specified
+            before argmin can be computed.
+          </div>
+        </a>
+
+        <!-- Leads to: Boundary Check -->
+        <a href="mtr-decision-tree.html#principle-2" class="connection-card" style="--conn-color: var(--boundary);">
+          <div class="connection-arrow">&#8594; LEADS TO</div>
+          <div class="connection-title">Boundary Check: &#8706;F = &#8709;?</div>
+          <div class="connection-description">
+            After selecting origin, check if boundary is empty.
+            &#8706;F &#8800; &#8709; &#10233; frame extension needed.
+          </div>
+        </a>
+
+        <!-- Leads to: Invariant Extraction -->
+        <a href="mtr-decision-tree.html#principle-3" class="connection-card" style="--conn-color: var(--invariant);">
+          <div class="connection-arrow">&#8594; LEADS TO</div>
+          <div class="connection-title">Invariant Extraction</div>
+          <div class="connection-description">
+            Origin shifts reveal invariants I = &#8745; Inv(F).
+            What persists across origins is structurally real.
+          </div>
+        </a>
+
+        <!-- Context: Step Zero -->
+        <a href="vn-mtr-000-language-before-observers.html" class="connection-card" style="--conn-color: #ffffff;">
+          <div class="connection-arrow">&#8593; CONTEXT</div>
+          <div class="connection-title">Step Zero: &#8466;</div>
+          <div class="connection-description">
+            The language &#8466; in which descriptions D are expressed
+            comes from pre-observer compositional closure.
+          </div>
+        </a>
+
+        <!-- Full Tree -->
+        <a href="mtr-decision-tree.html" class="connection-card" style="--conn-color: var(--origin);">
+          <div class="connection-arrow">&#8594; FULL TREE</div>
+          <div class="connection-title">MTR Decision Tree</div>
+          <div class="connection-description">
+            See the complete decision flow:
+            F &#8594; &#948; &#8594; Origin &#8594; &#8706;F &#8594; Extension &#8594; Convergence.
+          </div>
+        </a>
+      </div>
+
+      <!-- Decision Tree Mini View -->
+      <div class="tree-mini">
+        <div class="tree-mini-title">DECISION TREE POSITION</div>
+        <div class="tree-flow">
+          <a href="vn-mtr-000-language-before-observers.html" class="tree-node-mini">R(R)=R</a>
+          <span class="tree-arrow">&#8594;</span>
+          <a href="mtr-decision-tree.html" class="tree-node-mini">F</a>
+          <span class="tree-arrow">&#8594;</span>
+          <a href="vn-mtr-001-closure-deficit.html" class="tree-node-mini">&#948;</a>
+          <span class="tree-arrow">&#8594;</span>
+          <span class="tree-node-mini current">argmin &#948;</span>
+          <span class="tree-arrow">&#8594;</span>
+          <a href="mtr-decision-tree.html#principle-2" class="tree-node-mini">&#8706;F?</a>
+          <span class="tree-arrow">&#8594;</span>
+          <a href="mtr-decision-tree.html#principle-4" class="tree-node-mini">F'</a>
+          <span class="tree-arrow">&#8594;</span>
+          <a href="mtr-decision-tree.html#principle-5" class="tree-node-mini">D*</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      Origin(F) = argmin<sub>D&#8712;&#119964;(F)</sub> &#948;(D|F) &mdash; The tightest fit wins
+    </div>
+    <p>VN-MTR-005 | Origin Selection | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // Candidate models with fixed properties
+    const candidates = [
+      { name: 'D\u2081 (Complex)', err: 0.05, comp: 0.80, viol: 0.10 },
+      { name: 'D\u2082 (Balanced)', err: 0.15, comp: 0.30, viol: 0.05 },
+      { name: 'D\u2083 (Simple)', err: 0.35, comp: 0.10, viol: 0.00 }
+    ];
+
+    function updateOriginFinder() {
+      // Get weight values (normalized to 0-2 range)
+      const alpha = parseInt(document.getElementById('alphaSlider').value) / 50;
+      const beta = parseInt(document.getElementById('betaSlider').value) / 50;
+      const rho = parseInt(document.getElementById('rhoSlider').value) / 50;
+
+      // Calculate deltas for each candidate
+      const deltas = candidates.map(c => alpha * c.err + beta * c.comp + rho * c.viol);
+
+      // Find minimum
+      const minDelta = Math.min(...deltas);
+      const winnerIndex = deltas.indexOf(minDelta);
+
+      // Update display
+      for (let i = 0; i < 3; i++) {
+        const deltaEl = document.getElementById(`delta${i + 1}`);
+        const cardEl = document.getElementById(`candidate${i + 1}`);
+
+        deltaEl.textContent = `\u03B4 = ${deltas[i].toFixed(2)}`;
+
+        // Color based on value
+        if (deltas[i] < 0.3) {
+          deltaEl.style.color = 'var(--invariant)';
+        } else if (deltas[i] < 0.5) {
+          deltaEl.style.color = 'var(--origin)';
+        } else {
+          deltaEl.style.color = 'var(--boundary)';
+        }
+
+        // Highlight winner
+        if (i === winnerIndex) {
+          cardEl.classList.add('winner');
+        } else {
+          cardEl.classList.remove('winner');
+        }
+      }
+
+      // Update current origin display
+      const originNames = ['D\u2081 (Complex)', 'D\u2082 (Balanced)', 'D\u2083 (Simple)'];
+      document.getElementById('currentOrigin').textContent = originNames[winnerIndex];
+
+      // Update minimum marker position (0=left, 1=middle, 2=right)
+      const positions = [17, 50, 83]; // percentage positions for 3 candidates
+      const marker = document.getElementById('minimumMarker');
+      marker.style.left = `${positions[winnerIndex]}%`;
+
+      // Update landscape curve based on deltas (visual approximation)
+      const baseY = 130;
+      const scale = 80;
+      const y1 = baseY - deltas[0] * scale;
+      const y2 = baseY - deltas[1] * scale;
+      const y3 = baseY - deltas[2] * scale;
+
+      const path = document.getElementById('landscapePath');
+      path.setAttribute('d', `M 0 ${baseY} Q 67 ${y1} 133 ${(y1+y2)/2} Q 200 ${y2} 267 ${(y2+y3)/2} Q 333 ${y3} 400 ${baseY}`);
+
+      // Position marker at the minimum's Y level
+      const minY = Math.min(y1, y2, y3);
+      marker.style.bottom = `${150 - minY}px`;
+    }
+
+    // Initialize
+    updateOriginFinder();
+  </script>
+
+</body>
+</html>

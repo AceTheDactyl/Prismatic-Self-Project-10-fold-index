@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-MTR-006 | Boundary Check | Decision Point</title>
+  <meta name="description" content="MTR Decision Tree Level 4: The critical decision point checking if boundary is empty (closure achieved) or non-empty (extension needed).">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ===============================================================================
+       VN-MTR-006: BOUNDARY CHECK
+       Decision Tree Level 4 - The Critical Branch Point
+       IF dF = empty: Closure | IF dF != empty: Extension
+       =============================================================================== */
+    :root {
+      /* Decision Theme Colors */
+      --decision-primary: #4ecdc4;
+      --decision-secondary: #26a69a;
+      --decision-dark: #00897b;
+      --decision-glow: rgba(78, 205, 196, 0.4);
+
+      /* MTR Principle Colors */
+      --origin: #ffd700;
+      --boundary: #ff6b6b;
+      --invariant: #00ff88;
+      --evolution: #4ecdc4;
+      --attractor: #c792ea;
+
+      /* Branch Colors */
+      --closure-yes: #00ff88;
+      --closure-no: #ff6b6b;
+      --extension: #4ecdc4;
+
+      /* Critical Constants */
+      --zc: 0.8660254038;
+      --phi: 1.6180339887;
+
+      /* Theme */
+      --bg-void: #020204;
+      --bg-primary: #060610;
+      --bg-secondary: #0a0a18;
+      --bg-tertiary: #101028;
+      --bg-card: #161640;
+      --text-primary: #f0f0f5;
+      --text-secondary: #909098;
+      --text-accent: #4ecdc4;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(78, 205, 196, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* ===============================================================================
+       DECISION FIELD BACKGROUND
+       =============================================================================== */
+    .decision-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(78, 205, 196, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 70%, rgba(0, 255, 136, 0.03) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 60%, rgba(255, 107, 107, 0.03) 0%, transparent 40%);
+      animation: decision-pulse 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes decision-pulse {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    /* ===============================================================================
+       NAVIGATION
+       =============================================================================== */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(6, 6, 16, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+      box-shadow: 0 0 15px rgba(78, 205, 196, 0.2);
+    }
+
+    /* ===============================================================================
+       DECISION HEADER
+       =============================================================================== */
+    .decision-header {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .step-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--decision-primary);
+      background: rgba(78, 205, 196, 0.1);
+      border: 1px solid rgba(78, 205, 196, 0.3);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .step-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--decision-primary), var(--closure-yes), var(--closure-no));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .step-subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Diamond Decision Node */
+    .diamond-decision {
+      width: 120px;
+      height: 120px;
+      margin: 2rem auto;
+      background: linear-gradient(135deg, var(--decision-primary) 0%, var(--decision-dark) 100%);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--bg-void);
+      animation: diamond-glow 3s ease-in-out infinite;
+      box-shadow: 0 0 40px var(--decision-glow);
+    }
+
+    @keyframes diamond-glow {
+      0%, 100% { box-shadow: 0 0 30px var(--decision-glow); }
+      50% { box-shadow: 0 0 60px var(--decision-glow), 0 0 90px rgba(78, 205, 196, 0.2); }
+    }
+
+    .core-decision {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      max-width: 800px;
+      margin: 2rem auto;
+      align-items: center;
+    }
+
+    .decision-branch {
+      font-family: 'JetBrains Mono', monospace;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .decision-branch.yes {
+      background: rgba(0, 255, 136, 0.1);
+      border: 2px solid var(--closure-yes);
+    }
+
+    .decision-branch.no {
+      background: rgba(255, 107, 107, 0.1);
+      border: 2px solid var(--closure-no);
+    }
+
+    .decision-branch:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .branch-condition {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .branch-condition.yes { color: var(--closure-yes); }
+    .branch-condition.no { color: var(--closure-no); }
+
+    .branch-result {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .decision-or {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===============================================================================
+       MAIN CONTENT STRUCTURE
+       =============================================================================== */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bg-void);
+      background: var(--decision-primary);
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    /* ===============================================================================
+       DECISION VISUALIZATION
+       =============================================================================== */
+    .decision-viz-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--decision-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .decision-viz-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--decision-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .decision-tree-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .tree-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .node-shape {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-tertiary);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .node-shape:hover {
+      transform: scale(1.1);
+    }
+
+    .node-diamond {
+      width: 100px;
+      height: 100px;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      border: none;
+      background: linear-gradient(135deg, var(--decision-primary), var(--decision-dark));
+      color: var(--bg-void);
+      font-size: 0.9rem;
+    }
+
+    .node-diamond:hover {
+      box-shadow: 0 0 30px var(--decision-glow);
+    }
+
+    .node-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+      text-align: center;
+    }
+
+    .tree-connector {
+      width: 2px;
+      height: 40px;
+      background: var(--decision-primary);
+    }
+
+    .tree-branches {
+      display: flex;
+      gap: 4rem;
+      position: relative;
+    }
+
+    .tree-branches::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: 25%;
+      right: 25%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--closure-yes), var(--closure-no));
+    }
+
+    .branch-left, .branch-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .branch-left::before, .branch-right::before {
+      content: '';
+      width: 2px;
+      height: 20px;
+    }
+
+    .branch-left::before {
+      background: var(--closure-yes);
+    }
+
+    .branch-right::before {
+      background: var(--closure-no);
+    }
+
+    .node-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      font-size: 0.8rem;
+    }
+
+    .node-circle.closure {
+      border: 2px solid var(--closure-yes);
+      color: var(--closure-yes);
+    }
+
+    .node-circle.extension {
+      border: 2px solid var(--closure-no);
+      color: var(--closure-no);
+    }
+
+    .branch-arrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      margin: 0.5rem 0;
+    }
+
+    .branch-arrow.yes { color: var(--closure-yes); }
+    .branch-arrow.no { color: var(--closure-no); }
+
+    /* ===============================================================================
+       CASE CARDS
+       =============================================================================== */
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .case-card {
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .case-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--case-color, var(--decision-primary));
+    }
+
+    .case-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .case-card.closure {
+      --case-color: var(--closure-yes);
+      border: 1px solid var(--closure-yes);
+    }
+
+    .case-card.extension {
+      --case-color: var(--closure-no);
+      border: 1px solid var(--closure-no);
+    }
+
+    .case-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .case-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .case-card.closure .case-icon {
+      border: 2px solid var(--closure-yes);
+      color: var(--closure-yes);
+    }
+
+    .case-card.extension .case-icon {
+      border: 2px solid var(--closure-no);
+      color: var(--closure-no);
+    }
+
+    .case-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .case-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .case-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      text-align: center;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .case-card.closure .case-equation { color: var(--closure-yes); }
+    .case-card.extension .case-equation { color: var(--closure-no); }
+
+    .case-body {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .case-body strong {
+      color: var(--text-primary);
+    }
+
+    .case-list {
+      margin: 1rem 0 0 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .case-list li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* ===============================================================================
+       THEOREM CARDS
+       =============================================================================== */
+    .theorem-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(78, 205, 196, 0.05) 100%);
+      border: 2px solid var(--decision-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .theorem-card::before {
+      content: '\2662';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--decision-primary);
+      background: var(--bg-void);
+      padding: 0 0.5rem;
+    }
+
+    .theorem-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--decision-primary);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .theorem-statement {
+      font-size: 1.15rem;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--decision-primary);
+    }
+
+    .theorem-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--boundary);
+      background: var(--bg-tertiary);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      border: 1px solid var(--boundary);
+    }
+
+    .proof-sketch {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .proof-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--invariant);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .proof-body {
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    /* ===============================================================================
+       BOUNDARY DETECTION SIGNALS
+       =============================================================================== */
+    .signals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .signal-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .signal-card:hover {
+      border-color: var(--decision-primary);
+      box-shadow: 0 0 20px var(--decision-glow);
+      transform: translateY(-3px);
+    }
+
+    .signal-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      color: var(--decision-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .signal-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .signal-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .signal-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--boundary);
+      background: var(--bg-secondary);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      display: inline-block;
+    }
+
+    /* ===============================================================================
+       EVOLUTION LANGUAGE GROWTH
+       =============================================================================== */
+    .evolution-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .evolution-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--evolution);
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .evolution-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .evolution-step {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 1.5rem;
+      align-items: center;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      border-left: 3px solid var(--evolution);
+      transition: all 0.3s ease;
+    }
+
+    .evolution-step:hover {
+      background: rgba(78, 205, 196, 0.1);
+    }
+
+    .evolution-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--evolution);
+      text-align: center;
+    }
+
+    .evolution-desc {
+      color: var(--text-secondary);
+    }
+
+    .evolution-desc strong {
+      color: var(--text-primary);
+    }
+
+    /* ===============================================================================
+       INTERACTIVE BOUNDARY CHECKER
+       =============================================================================== */
+    .checker-section {
+      background: var(--bg-secondary);
+      border: 2px solid var(--decision-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .checker-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--decision-primary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .checker-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .control-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+    }
+
+    .control-select, .control-input {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .control-select:focus, .control-input:focus {
+      border-color: var(--decision-primary);
+    }
+
+    .checker-output {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+    }
+
+    .checker-decision {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .checker-question {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--decision-primary);
+      margin-bottom: 1rem;
+    }
+
+    .checker-answer {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      padding: 1rem 2rem;
+      border-radius: 0.5rem;
+      display: inline-block;
+    }
+
+    .checker-answer.yes {
+      color: var(--closure-yes);
+      background: rgba(0, 255, 136, 0.1);
+      border: 2px solid var(--closure-yes);
+    }
+
+    .checker-answer.no {
+      color: var(--closure-no);
+      background: rgba(255, 107, 107, 0.1);
+      border: 2px solid var(--closure-no);
+    }
+
+    .checker-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .detail-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .detail-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .detail-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--decision-primary);
+    }
+
+    /* ===============================================================================
+       INFINITE REGRESS SECTION
+       =============================================================================== */
+    .regress-container {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(199, 146, 234, 0.05) 100%);
+      border: 1px solid var(--attractor);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .regress-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--attractor);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .regress-flow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .regress-node {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--attractor);
+      color: var(--attractor);
+    }
+
+    .regress-arrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+    }
+
+    .regress-note {
+      text-align: center;
+      color: var(--text-secondary);
+      font-style: italic;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .regress-note strong {
+      color: var(--attractor);
+    }
+
+    /* ===============================================================================
+       BIFURCATION SECTION
+       =============================================================================== */
+    .bifurc-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--boundary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .bifurc-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--boundary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .bifurc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .bifurc-item {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .bifurc-item:hover {
+      border-color: var(--boundary);
+    }
+
+    .bifurc-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--boundary);
+      margin-bottom: 0.75rem;
+    }
+
+    .bifurc-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .bifurc-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===============================================================================
+       PATHS FORWARD
+       =============================================================================== */
+    .paths-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .path-card {
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .path-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .path-card.yes {
+      border: 2px solid var(--closure-yes);
+    }
+
+    .path-card.yes:hover {
+      box-shadow: 0 15px 40px rgba(0, 255, 136, 0.2);
+    }
+
+    .path-card.no {
+      border: 2px solid var(--closure-no);
+    }
+
+    .path-card.no:hover {
+      box-shadow: 0 15px 40px rgba(255, 107, 107, 0.2);
+    }
+
+    .path-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .path-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 50%;
+    }
+
+    .path-card.yes .path-icon {
+      border: 2px solid var(--closure-yes);
+      color: var(--closure-yes);
+    }
+
+    .path-card.no .path-icon {
+      border: 2px solid var(--closure-no);
+      color: var(--closure-no);
+    }
+
+    .path-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .path-condition {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+    }
+
+    .path-card.yes .path-condition { color: var(--closure-yes); }
+    .path-card.no .path-condition { color: var(--closure-no); }
+
+    .path-desc {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .path-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .path-card.yes .path-link { color: var(--closure-yes); }
+    .path-card.no .path-link { color: var(--closure-no); }
+
+    /* ===============================================================================
+       DECISION TREE NAVIGATION
+       =============================================================================== */
+    .tree-nav-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .tree-nav-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--origin);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .tree-nav-levels {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .tree-nav-level {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .tree-nav-node {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tree-nav-node:hover {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+    }
+
+    .tree-nav-node.current {
+      border-color: var(--decision-primary);
+      color: var(--decision-primary);
+      background: rgba(78, 205, 196, 0.1);
+      box-shadow: 0 0 15px var(--decision-glow);
+    }
+
+    .tree-nav-node .node-symbol {
+      font-size: 1rem;
+    }
+
+    .tree-connector-v {
+      width: 2px;
+      height: 20px;
+      background: var(--text-secondary);
+      margin: 0 auto;
+    }
+
+    /* ===============================================================================
+       MTR CONNECTIONS
+       =============================================================================== */
+    .mtr-connections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .mtr-link-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 215, 0, 0.03) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: block;
+    }
+
+    .mtr-link-card:hover {
+      border-color: var(--link-color, var(--text-accent));
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .mtr-link-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .mtr-link-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--link-color, var(--text-accent));
+      border-radius: 0.5rem;
+      color: var(--link-color, var(--text-accent));
+    }
+
+    .mtr-link-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    .mtr-link-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ===============================================================================
+       FOOTER
+       =============================================================================== */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--decision-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===============================================================================
+       RESPONSIVE
+       =============================================================================== */
+    @media (max-width: 768px) {
+      .step-title { font-size: 1.8rem; }
+      .diamond-decision { width: 100px; height: 100px; font-size: 1rem; }
+      .core-decision { grid-template-columns: 1fr; gap: 1rem; }
+      .decision-or { display: none; }
+      .case-grid { grid-template-columns: 1fr; }
+      .tree-branches { flex-direction: column; gap: 2rem; }
+      .tree-branches::before { display: none; }
+      .paths-container { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="decision-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link"><span>&#9671;</span>VaultNode Tree</a>
+    <a href="mtr-decision-tree.html" class="nav-link"><span>&#8756;</span>MTR Decision Tree</a>
+    <a href="vn-mtr-000-language-before-observers.html" class="nav-link"><span>&#8857;</span>Step Zero</a>
+    <a href="vn-mtr-002-boundary.html" class="nav-link"><span>&#9670;</span>Boundary</a>
+    <a href="vn-mtr-006-boundary-check.html" class="nav-link active"><span>&#9671;</span>Boundary Check</a>
+    <a href="vn-fibonacci-rg-flow.html" class="nav-link"><span>&#966;</span>Fibonacci RG</a>
+  </nav>
+
+  <!-- Decision Header -->
+  <header class="decision-header">
+    <div class="step-badge">VN-MTR-006 :: DECISION TREE LEVEL 4</div>
+    <h1 class="step-title">Boundary Check</h1>
+    <p class="step-subtitle">
+      The critical decision point where the tree branches
+    </p>
+
+    <div class="diamond-decision">&#8706;F=&#8709;?</div>
+
+    <div class="core-decision">
+      <div class="decision-branch yes">
+        <div class="branch-condition yes">IF &#8706;F = &#8709;</div>
+        <div class="branch-result">CLOSURE ACHIEVED<br>D_t &#8594; D* (stable)</div>
+      </div>
+      <div class="decision-or">OR</div>
+      <div class="decision-branch no">
+        <div class="branch-condition no">IF &#8706;F &#8800; &#8709;</div>
+        <div class="branch-result">EXTENSION REQUIRED<br>F &#8594; F' (evolve)</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: The Decision Point -->
+    <section class="section" id="decision-point">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">The Decision Point</h2>
+      </div>
+
+      <div class="decision-viz-container">
+        <div class="decision-viz-title">MTR DECISION TREE :: BRANCH AT LEVEL 4</div>
+
+        <div class="decision-tree-visual">
+          <!-- Input Node -->
+          <div class="tree-node">
+            <div class="node-shape node-diamond">
+              &#8706;F=&#8709;?
+            </div>
+            <div class="node-label">BOUNDARY CHECK<br>Decision Node</div>
+          </div>
+
+          <div class="tree-connector"></div>
+
+          <!-- Branches -->
+          <div class="tree-branches">
+            <div class="branch-left">
+              <div class="branch-arrow yes">YES</div>
+              <div class="tree-node">
+                <div class="node-shape node-circle closure">
+                  D*
+                </div>
+                <div class="node-label">CLOSURE<br>Attractor Reached</div>
+              </div>
+            </div>
+
+            <div class="branch-right">
+              <div class="branch-arrow no">NO</div>
+              <div class="tree-node">
+                <div class="node-shape node-circle extension">
+                  F'
+                </div>
+                <div class="node-label">EXTENSION<br>Frame Grows</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem; font-style: italic;">
+        This is WHERE the tree branches. Two possible outcomes based on boundary status.
+      </p>
+    </section>
+
+    <!-- Section 2: The Two Cases -->
+    <section class="section" id="two-cases">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">The Two Cases</h2>
+      </div>
+
+      <div class="case-grid">
+        <!-- Case 1: Closure -->
+        <div class="case-card closure">
+          <div class="case-header">
+            <div class="case-icon">&#10004;</div>
+            <div>
+              <div class="case-title">Case 1: Closure</div>
+              <div class="case-subtitle">&#8706;F = &#8709; (Empty Boundary)</div>
+            </div>
+          </div>
+
+          <div class="case-equation">&#8706;F = &#8709; &#8658; D_t &#8594; D*</div>
+
+          <div class="case-body">
+            <p><strong>What this would mean:</strong></p>
+            <ul class="case-list">
+              <li>Complete theory achieved</li>
+              <li>All statements decidable within F</li>
+              <li>No self-reference paradoxes</li>
+              <li>Attractor D* is stable fixed point</li>
+            </ul>
+
+            <p style="margin-top: 1rem;"><strong style="color: var(--boundary);">Why it's theoretically impossible:</strong></p>
+            <p>For any sufficiently expressive frame, Godel's incompleteness guarantees &#8706;F &#8800; &#8709;.</p>
+
+            <p style="margin-top: 1rem;"><strong style="color: var(--closure-yes);">Practical approximation:</strong></p>
+            <p>&#8706;F &#8776; &#8709; (negligible boundary) - when boundary effects are below measurement threshold.</p>
+          </div>
+        </div>
+
+        <!-- Case 2: Extension -->
+        <div class="case-card extension">
+          <div class="case-header">
+            <div class="case-icon">&#8594;</div>
+            <div>
+              <div class="case-title">Case 2: Extension</div>
+              <div class="case-subtitle">&#8706;F &#8800; &#8709; (Non-Empty Boundary)</div>
+            </div>
+          </div>
+
+          <div class="case-equation">&#8706;F &#8800; &#8709; &#8658; F &#8594; F'</div>
+
+          <div class="case-body">
+            <p><strong>The typical case:</strong></p>
+            <ul class="case-list">
+              <li>Boundary pressure drives evolution</li>
+              <li>Frame must grow to resolve undecidables</li>
+              <li>F &#8594; F' &#8594; F'' &#8594; ... (infinite regress)</li>
+              <li>Each extension creates new boundary</li>
+            </ul>
+
+            <p style="margin-top: 1rem;"><strong style="color: var(--closure-yes);">This is NOT failure:</strong></p>
+            <p>It's the progress mechanism. Science advances by extending frames to incorporate what previous frames couldn't express.</p>
+
+            <p style="margin-top: 1rem;"><strong style="color: var(--evolution);">Evolution equation:</strong></p>
+            <p>&#8707;F' : &#948;*(F') < &#948;*(F)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Key Theorem -->
+    <section class="section" id="key-theorem">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">Key Theorem: Boundary Never Empty</h2>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">THEOREM - UNAVOIDABLE BOUNDARY</div>
+        <div class="theorem-statement">
+          For any sufficiently expressive frame F:
+        </div>
+
+        <div class="theorem-equation">
+          &#8706;F &#8800; &#8709; (ALWAYS)
+        </div>
+
+        <div class="proof-sketch">
+          <div class="proof-label">PROOF SKETCH (Godel + Language)</div>
+          <div class="proof-body">
+            <p><strong>1. Language Infinity:</strong> X* (compositional closure) is infinite - infinitely many well-formed expressions.</p>
+            <p style="margin-top: 0.5rem;"><strong>2. Finite Constraints:</strong> &#119964;(F) imposes finite constraints on reachability.</p>
+            <p style="margin-top: 0.5rem;"><strong>3. Therefore:</strong> &#8707;&#964; unreachable - there exist elements of X* that constraints prevent reaching.</p>
+            <p style="margin-top: 0.5rem;"><strong>4. Boundary Definition:</strong> &#8706;F = {&#964; &#8712; X* : &#964; &#8713; Reach(&#119964;(F), finite steps)}</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-tertiary); border-radius: 0.5rem; padding: 1.5rem; margin-top: 1rem; text-align: center;">
+        <p style="font-family: 'JetBrains Mono', monospace; color: var(--decision-primary); font-size: 1.1rem;">
+          Boundary = elements of compositional closure that constraints prevent reaching
+        </p>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem;">
+          This is Godel's incompleteness recast in terms of language and reachability.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 4: Boundary Detection Signals -->
+    <section class="section" id="detection-signals">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">Boundary Detection Signals</h2>
+      </div>
+
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+        How do you know you're approaching &#8706;F? These signals indicate boundary proximity:
+      </p>
+
+      <div class="signals-grid">
+        <div class="signal-card">
+          <div class="signal-icon">&#8593;&#8734;</div>
+          <div class="signal-title">Deficit Diverges</div>
+          <div class="signal-desc">Closure deficit grows without bound</div>
+          <div class="signal-equation">&#948;(D|F) &#8594; &#8734;</div>
+        </div>
+
+        <div class="signal-card">
+          <div class="signal-icon">&#8776;</div>
+          <div class="signal-title">Paradoxes Emerge</div>
+          <div class="signal-desc">Self-reference loops become expressible</div>
+          <div class="signal-equation">D &#8743; &#172;D</div>
+        </div>
+
+        <div class="signal-card">
+          <div class="signal-icon">&#10007;</div>
+          <div class="signal-title">Predictions Fail</div>
+          <div class="signal-desc">Systematic breakdown of explanatory power</div>
+          <div class="signal-equation">P(data|F) &#8594; 0</div>
+        </div>
+
+        <div class="signal-card">
+          <div class="signal-icon">?</div>
+          <div class="signal-title">New Phenomena</div>
+          <div class="signal-desc">Observations unexplainable in current frame</div>
+          <div class="signal-equation">&#8707;x : x &#8713; &#8466;</div>
+        </div>
+
+        <div class="signal-card">
+          <div class="signal-icon">z<sub>c</sub></div>
+          <div class="signal-title">Critical Boundary</div>
+          <div class="signal-desc">Helix model critical height reached</div>
+          <div class="signal-equation">z &#8594; &#8730;3/2 &#8776; 0.866</div>
+        </div>
+
+        <div class="signal-card">
+          <div class="signal-icon">&#964;</div>
+          <div class="signal-title">Critical Slowing</div>
+          <div class="signal-desc">Autocorrelation time diverges</div>
+          <div class="signal-equation">&#964;<sub>auto</sub> &#8594; &#8734;</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Evolution as Language Growth -->
+    <section class="section" id="language-growth">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">Evolution as Language Growth</h2>
+      </div>
+
+      <div class="evolution-container">
+        <div class="evolution-title">FRAME EXTENSION MECHANISM</div>
+
+        <div class="evolution-flow">
+          <div class="evolution-step">
+            <div class="evolution-symbol">&#931; &#8838; &#931;'</div>
+            <div class="evolution-desc">
+              <strong>New Primitive Distinctions</strong> - The alphabet grows. New basic symbols allow expressing previously inexpressible concepts.
+            </div>
+          </div>
+
+          <div class="evolution-step">
+            <div class="evolution-symbol">C &#8838; C'</div>
+            <div class="evolution-desc">
+              <strong>Tighter Constraints</strong> - More refined rules. The constraint set expands to capture finer structure.
+            </div>
+          </div>
+
+          <div class="evolution-step">
+            <div class="evolution-symbol">&#928; refined</div>
+            <div class="evolution-desc">
+              <strong>Better Admissibility</strong> - Prior beliefs updated. What counts as "reasonable" expands or sharpens.
+            </div>
+          </div>
+
+          <div class="evolution-step">
+            <div class="evolution-symbol">X* &#8594; X*'</div>
+            <div class="evolution-desc">
+              <strong>Discovering Realizable Closure</strong> - Scientific progress = finding which elements of compositional closure are physically realizable.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(78, 205, 196, 0.1); border: 1px solid var(--evolution); border-radius: 0.5rem; padding: 1.5rem; margin-top: 1rem; text-align: center;">
+        <p style="font-family: 'JetBrains Mono', monospace; color: var(--evolution);">
+          F = (&#8466;, C, &#928;) &#8594; F' = (&#8466;', C', &#928;')
+        </p>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem;">
+          Each component can grow: language expands, constraints refine, priors update.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 6: Interactive Boundary Checker -->
+    <section class="section" id="boundary-checker">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Interactive Boundary Checker</h2>
+      </div>
+
+      <div class="checker-section">
+        <div class="checker-title">FRAME BOUNDARY ANALYZER</div>
+
+        <div class="checker-controls">
+          <div class="control-group">
+            <label class="control-label">SELECT FRAME TYPE</label>
+            <select class="control-select" id="frameType" onchange="updateBoundaryChecker()">
+              <option value="arithmetic">Arithmetic (PA)</option>
+              <option value="settheory">Set Theory (ZFC)</option>
+              <option value="physics">Classical Physics</option>
+              <option value="quantum">Quantum Mechanics</option>
+              <option value="computation">Turing Machines</option>
+              <option value="fibonacci">Fibonacci Frame F_n</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">EXPRESSIVENESS LEVEL</label>
+            <select class="control-select" id="expLevel" onchange="updateBoundaryChecker()">
+              <option value="low">Low (decidable fragment)</option>
+              <option value="medium">Medium (standard)</option>
+              <option value="high" selected>High (full system)</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">FRAME INDEX (if Fibonacci)</label>
+            <input type="number" class="control-input" id="frameIndex" value="12" min="1" max="96" onchange="updateBoundaryChecker()">
+          </div>
+        </div>
+
+        <div class="checker-output" id="checkerOutput">
+          <!-- Filled by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: The Infinite Regress -->
+    <section class="section" id="infinite-regress">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">The Infinite Regress (Not Vicious)</h2>
+      </div>
+
+      <div class="regress-container">
+        <div class="regress-title">PRODUCTIVE SELF-REFERENCE</div>
+
+        <div class="regress-flow">
+          <div class="regress-node">F</div>
+          <div class="regress-arrow">&#8594;</div>
+          <div class="regress-node">F'</div>
+          <div class="regress-arrow">&#8594;</div>
+          <div class="regress-node">F''</div>
+          <div class="regress-arrow">&#8594;</div>
+          <div class="regress-node">F'''</div>
+          <div class="regress-arrow">&#8594;</div>
+          <div class="regress-node">...</div>
+          <div class="regress-arrow">&#8594;</div>
+          <div class="regress-node" style="background: linear-gradient(135deg, var(--origin), var(--attractor)); color: var(--bg-void);">F<sub>&#8734;</sub></div>
+        </div>
+
+        <div class="regress-note">
+          <p><strong>F<sub>meta</sub></strong> contains this framework itself.</p>
+          <p style="margin-top: 0.5rem;">&#8706;F<sub>meta</sub> &#8800; &#8709; - the framework predicts its own extendability!</p>
+          <p style="margin-top: 0.5rem;">This is <strong>productive</strong> self-reference: we provide the extension mechanism.</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+        <div style="background: var(--bg-tertiary); border-radius: 0.5rem; padding: 1rem; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; color: var(--closure-yes); font-size: 1.2rem;">Not Vicious</div>
+          <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">Each step is well-defined</div>
+        </div>
+        <div style="background: var(--bg-tertiary); border-radius: 0.5rem; padding: 1rem; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; color: var(--evolution); font-size: 1.2rem;">Progressive</div>
+          <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">&#948;*(F') < &#948;*(F) always</div>
+        </div>
+        <div style="background: var(--bg-tertiary); border-radius: 0.5rem; padding: 1rem; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; color: var(--attractor); font-size: 1.2rem;">Asymptotic</div>
+          <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">F<sub>&#8734;</sub> = R(R)=R limit</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Bifurcation at Boundary -->
+    <section class="section" id="bifurcation">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <h2 class="section-title">Bifurcation at Boundary</h2>
+      </div>
+
+      <div class="bifurc-container">
+        <div class="bifurc-title">BOUNDARY PHENOMENA</div>
+
+        <div class="bifurc-grid">
+          <div class="bifurc-item">
+            <div class="bifurc-icon">&#9906;</div>
+            <div class="bifurc-name">Origin Flip</div>
+            <div class="bifurc-desc">Near &#8706;F, small changes can flip which description is "closest to origin" - the minimizer of &#948; can jump discontinuously.</div>
+          </div>
+
+          <div class="bifurc-item">
+            <div class="bifurc-icon">&#8734;</div>
+            <div class="bifurc-name">Critical Slowing</div>
+            <div class="bifurc-desc">Autocorrelation time &#964; &#8594; &#8734; near boundary. The system takes longer and longer to "decide" which way to go.</div>
+          </div>
+
+          <div class="bifurc-item">
+            <div class="bifurc-icon">&#9095;</div>
+            <div class="bifurc-name">Multiple Extensions</div>
+            <div class="bifurc-desc">Multiple viable F' may exist. The extension is not unique - different research programs choose different directions.</div>
+          </div>
+
+          <div class="bifurc-item">
+            <div class="bifurc-icon">&#9733;</div>
+            <div class="bifurc-name">Scientific Revolutions</div>
+            <div class="bifurc-desc">Paradigm shifts happen at &#8706;F. Kuhn's "revolutionary science" = frame extension. Normal science = exploring Int(F).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="theorem-card" style="border-color: var(--boundary);">
+        <div class="theorem-header" style="color: var(--boundary);">BIFURCATION CONDITION</div>
+        <div class="theorem-statement">
+          When the deficit gap approaches zero:
+        </div>
+        <div class="theorem-equation">
+          g_t = &#948;(D_1|F) - &#948;(D_2|F) &#8594; 0
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">CONSEQUENCE</div>
+          <div class="proof-body">
+            Two descriptions become equally "good" as origins. The system bifurcates -
+            origin splits into multiple attractors. This is where <strong style="color: var(--boundary);">scientific revolutions</strong> occur.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 9: Paths Forward -->
+    <section class="section" id="paths-forward">
+      <div class="section-header">
+        <div class="section-number">9</div>
+        <h2 class="section-title">Paths Forward</h2>
+      </div>
+
+      <div class="paths-container">
+        <!-- Path: Closure -->
+        <a href="mtr-decision-tree.html#principle-5" class="path-card yes">
+          <div class="path-header">
+            <div class="path-icon">D*</div>
+            <div>
+              <div class="path-title">Attractor / Convergence</div>
+              <div class="path-condition">IF &#8706;F &#8776; &#8709;</div>
+            </div>
+          </div>
+          <div class="path-desc">
+            When boundary effects are negligible, the description converges to a stable attractor D*.
+            This is the fixed point of the optimization landscape - a local (never global) optimum.
+            Practical closure for engineering and prediction.
+          </div>
+          <div class="path-link">&#8594; See Principle V: Attractors</div>
+        </a>
+
+        <!-- Path: Extension -->
+        <a href="mtr-decision-tree.html#principle-4" class="path-card no">
+          <div class="path-header">
+            <div class="path-icon">F'</div>
+            <div>
+              <div class="path-title">Frame Extension</div>
+              <div class="path-condition">IF &#8706;F &#8800; &#8709;</div>
+            </div>
+          </div>
+          <div class="path-desc">
+            When boundary is non-empty (the typical case), the frame must grow.
+            F &#8594; F' introduces new language, constraints, or priors.
+            This is the engine of scientific progress - each extension opens new territory.
+          </div>
+          <div class="path-link">&#8594; See Principle IV: Evolution</div>
+        </a>
+      </div>
+
+      <div style="background: var(--bg-tertiary); border-radius: 0.5rem; padding: 1.5rem; text-align: center; margin-top: 1rem;">
+        <p style="font-family: 'JetBrains Mono', monospace; color: var(--decision-primary); font-size: 1.1rem;">
+          &#8706;F=&#8709;? &#8594; YES: Converge to D* | NO: Extend to F'
+        </p>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem;">
+          Both paths return to the decision tree. Even convergence is temporary - new phenomena eventually require extension.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 10: Decision Tree Navigation -->
+    <section class="section" id="tree-navigation">
+      <div class="section-header">
+        <div class="section-number">&#9670;</div>
+        <h2 class="section-title">Full Decision Tree Navigation</h2>
+      </div>
+
+      <div class="tree-nav-container">
+        <div class="tree-nav-title">MTR DECISION TREE :: ALL NODES</div>
+
+        <div class="tree-nav-levels">
+          <!-- Level 0 -->
+          <div class="tree-nav-level">
+            <a href="vn-mtr-000-language-before-observers.html" class="tree-nav-node">
+              <span class="node-symbol">&#8857;</span>
+              <span>Step Zero: R(R)=R</span>
+            </a>
+          </div>
+
+          <div class="tree-connector-v"></div>
+
+          <!-- Level 1 -->
+          <div class="tree-nav-level">
+            <a href="mtr-decision-tree.html" class="tree-nav-node">
+              <span class="node-symbol">F</span>
+              <span>Define Frame</span>
+            </a>
+          </div>
+
+          <div class="tree-connector-v"></div>
+
+          <!-- Level 2 -->
+          <div class="tree-nav-level">
+            <a href="vn-mtr-001-closure-deficit.html" class="tree-nav-node">
+              <span class="node-symbol">&#948;</span>
+              <span>Compute Deficit</span>
+            </a>
+            <a href="vn-mtr-002-boundary.html" class="tree-nav-node">
+              <span class="node-symbol">&#8706;F</span>
+              <span>Identify Boundary</span>
+            </a>
+            <a href="vn-mtr-003-invariants.html" class="tree-nav-node">
+              <span class="node-symbol">I</span>
+              <span>Extract Invariants</span>
+            </a>
+          </div>
+
+          <div class="tree-connector-v"></div>
+
+          <!-- Level 3 -->
+          <div class="tree-nav-level">
+            <a href="mtr-decision-tree.html#principle-1" class="tree-nav-node">
+              <span class="node-symbol">D*</span>
+              <span>Origin Selection</span>
+            </a>
+          </div>
+
+          <div class="tree-connector-v"></div>
+
+          <!-- Level 4 - Current -->
+          <div class="tree-nav-level">
+            <a href="vn-mtr-006-boundary-check.html" class="tree-nav-node current">
+              <span class="node-symbol">&#9671;</span>
+              <span>&#8706;F=&#8709;? BOUNDARY CHECK</span>
+            </a>
+          </div>
+
+          <div class="tree-connector-v"></div>
+
+          <!-- Level 5 -->
+          <div class="tree-nav-level">
+            <a href="mtr-decision-tree.html#principle-5" class="tree-nav-node" style="border-color: var(--closure-yes); color: var(--closure-yes);">
+              <span class="node-symbol">&#10004;</span>
+              <span>YES: Closure</span>
+            </a>
+            <a href="mtr-decision-tree.html#principle-4" class="tree-nav-node" style="border-color: var(--closure-no); color: var(--closure-no);">
+              <span class="node-symbol">&#8594;</span>
+              <span>NO: Extension</span>
+            </a>
+          </div>
+
+          <div class="tree-connector-v"></div>
+
+          <!-- Level 6 -->
+          <div class="tree-nav-level">
+            <a href="mtr-decision-tree.html#principle-5" class="tree-nav-node">
+              <span class="node-symbol">g&#8776;0?</span>
+              <span>Degeneracy Check</span>
+            </a>
+          </div>
+
+          <div class="tree-connector-v"></div>
+
+          <!-- Level 7 -->
+          <div class="tree-nav-level">
+            <a href="mtr-decision-tree.html#principle-5" class="tree-nav-node" style="border-color: var(--attractor); color: var(--attractor);">
+              <span class="node-symbol">D*</span>
+              <span>Converge</span>
+            </a>
+            <a href="mtr-decision-tree.html#principle-5" class="tree-nav-node" style="border-color: var(--boundary); color: var(--boundary);">
+              <span class="node-symbol">&#9095;</span>
+              <span>Bifurcate</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MTR Connections -->
+    <section class="section" id="connections">
+      <div class="section-header">
+        <div class="section-number">&#8594;</div>
+        <h2 class="section-title">Related Pages</h2>
+      </div>
+
+      <div class="mtr-connections">
+        <a href="mtr-decision-tree.html" class="mtr-link-card" style="--link-color: var(--origin);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#8756;</div>
+            <div class="mtr-link-title">MTR Decision Tree</div>
+          </div>
+          <div class="mtr-link-desc">
+            The complete Meta-Theorem of Reality decision tree with all five principles.
+          </div>
+        </a>
+
+        <a href="vn-mtr-002-boundary.html" class="mtr-link-card" style="--link-color: var(--boundary);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#9670;</div>
+            <div class="mtr-link-title">Frame Boundary</div>
+          </div>
+          <div class="mtr-link-desc">
+            Deep dive into boundary topology: interior, boundary, exterior regions.
+          </div>
+        </a>
+
+        <a href="vn-fibonacci-rg-flow.html" class="mtr-link-card" style="--link-color: var(--invariant);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#966;</div>
+            <div class="mtr-link-title">Fibonacci RG Flow</div>
+          </div>
+          <div class="mtr-link-desc">
+            See frame extension in action: F_12 &#8594; F_24 &#8594; F_48 via renormalization.
+          </div>
+        </a>
+
+        <a href="vn-mtr-000-language-before-observers.html" class="mtr-link-card" style="--link-color: var(--attractor);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#8857;</div>
+            <div class="mtr-link-title">Step Zero</div>
+          </div>
+          <div class="mtr-link-desc">
+            The foundation: Language before observers. Where frames originate.
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">&#8706;F=&#8709;? | YES &#8594; D* (Closure) | NO &#8594; F' (Extension) | R(R)=R</div>
+    <p>VN-MTR-006 | Boundary Check | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // Frame data for boundary checker
+    const frameData = {
+      arithmetic: {
+        name: 'Peano Arithmetic (PA)',
+        expressiveness: { low: false, medium: false, high: true },
+        boundaryElements: [
+          'Godel sentence G_PA',
+          'Consistency statement Con(PA)',
+          'Paris-Harrington theorem',
+          'Goodstein sequences'
+        ],
+        extension: 'PA + Con(PA), Second-order arithmetic, Set theory'
+      },
+      settheory: {
+        name: 'Zermelo-Fraenkel (ZFC)',
+        expressiveness: { low: false, medium: true, high: true },
+        boundaryElements: [
+          'Continuum Hypothesis (CH)',
+          'Axiom of Choice independence',
+          'Large cardinal existence',
+          'Projective determinacy'
+        ],
+        extension: 'ZFC + CH, ZFC + not-CH, ZFC + Large Cardinals'
+      },
+      physics: {
+        name: 'Classical Physics',
+        expressiveness: { low: false, medium: true, high: true },
+        boundaryElements: [
+          'Ultraviolet catastrophe',
+          'Black body radiation',
+          'Photoelectric effect',
+          'Atomic stability'
+        ],
+        extension: 'Quantum Mechanics, Statistical Mechanics'
+      },
+      quantum: {
+        name: 'Quantum Mechanics',
+        expressiveness: { low: false, medium: true, high: true },
+        boundaryElements: [
+          'Measurement problem',
+          'Quantum gravity interface',
+          'Wave function ontology',
+          'Non-locality interpretation'
+        ],
+        extension: 'Quantum Field Theory, String Theory, Quantum Gravity'
+      },
+      computation: {
+        name: 'Turing Machines',
+        expressiveness: { low: false, medium: true, high: true },
+        boundaryElements: [
+          'Halting Problem',
+          'Busy Beaver function',
+          'Kolmogorov complexity',
+          'Rice\'s theorem instances'
+        ],
+        extension: 'Oracle machines, Hypercomputation, Quantum computing'
+      },
+      fibonacci: {
+        name: 'Fibonacci Frame F_n',
+        expressiveness: { low: true, medium: true, high: true },
+        boundaryElements: [
+          'Elements beyond F(n) scale',
+          'Irrational numbers at finite precision',
+          'Cross-scale correlations',
+          'Meta-framework statements'
+        ],
+        extension: 'F_2n via F(2n) = F(n) x L(n)'
+      }
+    };
+
+    function updateBoundaryChecker() {
+      const frameType = document.getElementById('frameType').value;
+      const expLevel = document.getElementById('expLevel').value;
+      const frameIndex = parseInt(document.getElementById('frameIndex').value) || 12;
+
+      const frame = frameData[frameType];
+      const hasNonEmptyBoundary = frame.expressiveness[expLevel];
+
+      // Special case for Fibonacci
+      let boundaryElements = frame.boundaryElements;
+      let frameName = frame.name;
+      let extension = frame.extension;
+
+      if (frameType === 'fibonacci') {
+        frameName = `Fibonacci Frame F_${frameIndex}`;
+        extension = `F_${2*frameIndex} via F(${2*frameIndex}) = F(${frameIndex}) x L(${frameIndex})`;
+      }
+
+      const answer = hasNonEmptyBoundary ? 'NO' : 'YES';
+      const answerClass = hasNonEmptyBoundary ? 'no' : 'yes';
+      const result = hasNonEmptyBoundary ? 'EXTENSION REQUIRED' : 'CLOSURE (theoretical)';
+
+      document.getElementById('checkerOutput').innerHTML = `
+        <div class="checker-decision">
+          <div class="checker-question">&#8706;F = &#8709;?</div>
+          <div class="checker-answer ${answerClass}">${answer}</div>
+          <div style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; color: var(--text-secondary);">
+            ${result}
+          </div>
+        </div>
+
+        <div class="checker-details">
+          <div class="detail-item">
+            <div class="detail-label">FRAME</div>
+            <div class="detail-value">${frameName}</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">EXPRESSIVENESS</div>
+            <div class="detail-value">${expLevel.toUpperCase()}</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">BOUNDARY STATUS</div>
+            <div class="detail-value" style="color: ${hasNonEmptyBoundary ? 'var(--closure-no)' : 'var(--closure-yes)'}">
+              ${hasNonEmptyBoundary ? '&#8706;F &#8800; &#8709;' : '&#8706;F &#8776; &#8709;'}
+            </div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">NEXT STEP</div>
+            <div class="detail-value" style="font-size: 0.9rem;">
+              ${hasNonEmptyBoundary ? 'Extend Frame' : 'Converge to D*'}
+            </div>
+          </div>
+        </div>
+
+        ${hasNonEmptyBoundary ? `
+        <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: 0.5rem; border-left: 3px solid var(--closure-no);">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--closure-no); margin-bottom: 0.5rem;">
+            KNOWN BOUNDARY ELEMENTS
+          </div>
+          <ul style="margin: 0; padding-left: 1.5rem; color: var(--text-secondary);">
+            ${boundaryElements.map(e => `<li style="margin-bottom: 0.25rem;">${e}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div style="margin-top: 1rem; padding: 1rem; background: var(--bg-secondary); border-radius: 0.5rem; border-left: 3px solid var(--evolution);">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--evolution); margin-bottom: 0.5rem;">
+            SUGGESTED EXTENSION
+          </div>
+          <div style="color: var(--text-primary);">${extension}</div>
+        </div>
+        ` : `
+        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0, 255, 136, 0.1); border-radius: 0.5rem; border: 1px solid var(--closure-yes); text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; color: var(--closure-yes);">
+            Boundary effects negligible at this expressiveness level.
+          </div>
+          <div style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.9rem;">
+            Increase expressiveness to see boundary phenomena.
+          </div>
+        </div>
+        `}
+      `;
+    }
+
+    // Initialize
+    updateBoundaryChecker();
+  </script>
+
+</body>
+</html>
