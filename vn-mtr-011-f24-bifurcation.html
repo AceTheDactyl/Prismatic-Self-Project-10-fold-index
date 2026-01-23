@@ -1,0 +1,2800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-MTR-011 | F24 Three-Way Bifurcation | S3 Trifurcation</title>
+  <meta name="description" content="MTR Decision Tree Level 7: When g_t approaches 0, origin splits into THREE basins aligned with S3 symmetry. F24 = L12 x F12 = 46,368 - the scale where trifurcation completes.">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ===============================================================================
+       VN-MTR-011: F24 THREE-WAY BIFURCATION
+       Trifurcation Endpoint - S3 Symmetry Basin Splitting
+       Where the RG flow finds closure through three-way splitting
+       =============================================================================== */
+    :root {
+      /* Bifurcation Theme Colors - Gold/Boundary focus */
+      --bifurc-primary: #ffd93d;
+      --bifurc-secondary: #f5c842;
+      --bifurc-dark: #d4a900;
+      --bifurc-glow: rgba(255, 217, 61, 0.4);
+
+      /* MTR Principle Colors */
+      --origin: #ffd700;
+      --boundary: #ffd93d;
+      --invariant: #00ff88;
+      --evolution: #4ecdc4;
+      --attractor: #c792ea;
+
+      /* Three Basin Colors - aligned with attractors */
+      --basin-phi: #ffd700;       /* I^2 Algebraic - phi attractor */
+      --basin-e: #00ffff;         /* TDL Categorical - e attractor */
+      --basin-pi: #ff6b9d;        /* LoMI Dynamic - pi attractor */
+
+      /* S3 Symmetry Color */
+      --s3-color: #c792ea;
+
+      /* Critical Constants */
+      --phi: 1.6180339887;
+      --e-const: 2.7182818284;
+      --pi-const: 3.1415926535;
+      --zc: 0.8660254038;
+      --L4: 7;
+      --F12: 144;
+      --L12: 322;
+      --F24: 46368;
+
+      /* Theme */
+      --bg-void: #020204;
+      --bg-primary: #060610;
+      --bg-secondary: #0a0a18;
+      --bg-tertiary: #101028;
+      --bg-card: #161640;
+      --text-primary: #f0f0f5;
+      --text-secondary: #909098;
+      --text-accent: #ffd93d;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(255, 217, 61, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* ===============================================================================
+       TRIFURCATION BACKGROUND
+       =============================================================================== */
+    .trifurc-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 25% 30%, rgba(255, 215, 0, 0.04) 0%, transparent 40%),
+        radial-gradient(ellipse at 75% 30%, rgba(0, 255, 255, 0.03) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 70%, rgba(255, 107, 157, 0.03) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, rgba(199, 146, 234, 0.02) 0%, transparent 60%);
+      animation: trifurc-pulse 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes trifurc-pulse {
+      0% { opacity: 0.6; }
+      33% { opacity: 0.9; }
+      66% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    /* ===============================================================================
+       NAVIGATION
+       =============================================================================== */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(6, 6, 16, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+      box-shadow: 0 0 15px rgba(255, 217, 61, 0.2);
+    }
+
+    /* ===============================================================================
+       BIFURCATION HEADER
+       =============================================================================== */
+    .bifurc-header {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .step-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--bifurc-primary);
+      background: rgba(255, 217, 61, 0.1);
+      border: 1px solid rgba(255, 217, 61, 0.3);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .step-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--basin-phi), var(--basin-e), var(--basin-pi));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .step-subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Octagon Decision Node */
+    .octagon-node {
+      width: 160px;
+      height: 160px;
+      margin: 2rem auto;
+      background: linear-gradient(135deg, var(--bifurc-primary) 0%, var(--bifurc-dark) 100%);
+      clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      color: var(--bg-void);
+      animation: octagon-glow 3s ease-in-out infinite;
+      box-shadow: 0 0 50px var(--bifurc-glow);
+    }
+
+    @keyframes octagon-glow {
+      0%, 100% {
+        box-shadow: 0 0 40px var(--bifurc-glow);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 80px var(--bifurc-glow), 0 0 120px rgba(255, 217, 61, 0.2);
+        transform: scale(1.03);
+      }
+    }
+
+    .bifurc-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      padding: 1.5rem 2rem;
+      border-radius: 0.5rem;
+      display: inline-block;
+      margin-top: 2rem;
+      border: 1px solid var(--bifurc-primary);
+    }
+
+    /* ===============================================================================
+       MAIN CONTENT STRUCTURE
+       =============================================================================== */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bg-void);
+      background: var(--bifurc-primary);
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    /* ===============================================================================
+       THREE-WAY SPLIT VISUALIZATION
+       =============================================================================== */
+    .trifurc-visual {
+      background: var(--bg-secondary);
+      border: 2px solid var(--bifurc-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .trifurc-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--bifurc-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .trifurc-diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      position: relative;
+      padding: 2rem 0;
+    }
+
+    .origin-node {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, var(--s3-color) 0%, #9b59b6 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--bg-void);
+      box-shadow: 0 0 30px rgba(199, 146, 234, 0.4);
+    }
+
+    .split-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .split-line {
+      width: 2px;
+      height: 30px;
+      background: var(--text-secondary);
+    }
+
+    .split-junction {
+      width: 20px;
+      height: 20px;
+      background: var(--bifurc-primary);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    .three-paths {
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      position: relative;
+      padding-top: 2rem;
+    }
+
+    .three-paths::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 15%;
+      right: 15%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--basin-phi), var(--basin-e), var(--basin-pi));
+    }
+
+    .basin-path {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .basin-line {
+      width: 2px;
+      height: 30px;
+    }
+
+    .basin-line.phi { background: var(--basin-phi); }
+    .basin-line.e { background: var(--basin-e); }
+    .basin-line.pi { background: var(--basin-pi); }
+
+    .basin-node {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+    }
+
+    .basin-node:hover {
+      transform: scale(1.1);
+    }
+
+    .basin-node.phi {
+      background: rgba(255, 215, 0, 0.2);
+      border: 2px solid var(--basin-phi);
+      color: var(--basin-phi);
+    }
+
+    .basin-node.e {
+      background: rgba(0, 255, 255, 0.2);
+      border: 2px solid var(--basin-e);
+      color: var(--basin-e);
+    }
+
+    .basin-node.pi {
+      background: rgba(255, 107, 157, 0.2);
+      border: 2px solid var(--basin-pi);
+      color: var(--basin-pi);
+    }
+
+    .basin-name {
+      font-size: 0.7rem;
+      margin-top: 0.25rem;
+    }
+
+    .basin-attractor {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .attractor-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    .s3-note {
+      text-align: center;
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(199, 146, 234, 0.1);
+      border: 1px solid var(--s3-color);
+      border-radius: 0.5rem;
+    }
+
+    .s3-note-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--s3-color);
+    }
+
+    /* ===============================================================================
+       F24 SYNCHRONICITY CARD
+       =============================================================================== */
+    .f24-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 0, 255, 0.05) 100%);
+      border: 2px solid #ff00ff;
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .f24-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: #ff00ff;
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .f24-main-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .f24-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .f24-item {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .f24-item:hover {
+      border-color: #ff00ff;
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+    }
+
+    .f24-item-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .f24-item-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: #ff00ff;
+    }
+
+    .f24-item-note {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    /* Interactive Calculator */
+    .f24-calculator {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .calc-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-accent);
+      margin-bottom: 1rem;
+    }
+
+    .calc-controls {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .calc-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .calc-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    .calc-input {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      padding: 0.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.25rem;
+      color: var(--text-primary);
+      width: 80px;
+    }
+
+    .calc-input:focus {
+      outline: none;
+      border-color: #ff00ff;
+    }
+
+    .calc-result {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: #ff00ff;
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border-radius: 0.25rem;
+    }
+
+    /* ===============================================================================
+       L4 CLOSURE CONSTANT
+       =============================================================================== */
+    .l4-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--invariant);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .l4-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--invariant);
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .l4-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      text-align: center;
+      color: var(--invariant);
+      margin-bottom: 2rem;
+    }
+
+    .dimension-breakdown {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .dimension-item {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .dimension-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--invariant);
+      margin-bottom: 0.25rem;
+    }
+
+    .dimension-name {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .holographic-note {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: rgba(0, 255, 136, 0.1);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .holographic-note-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--invariant);
+    }
+
+    /* ===============================================================================
+       BIFURCATION DYNAMICS
+       =============================================================================== */
+    .dynamics-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--bifurc-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .dynamics-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--bifurc-primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .dynamics-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      padding: 1.25rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--bifurc-primary);
+    }
+
+    .dynamics-scenarios {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .scenario-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+    }
+
+    .scenario-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .scenario-icon {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      border-radius: 0.25rem;
+    }
+
+    .scenario-icon.phi { background: rgba(255, 215, 0, 0.2); color: var(--basin-phi); }
+    .scenario-icon.e { background: rgba(0, 255, 255, 0.2); color: var(--basin-e); }
+    .scenario-icon.pi { background: rgba(255, 107, 157, 0.2); color: var(--basin-pi); }
+
+    .scenario-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .scenario-condition {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .scenario-outcome {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===============================================================================
+       MUON GAP - WHAT FAILS
+       =============================================================================== */
+    .muon-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 107, 107, 0.05) 100%);
+      border: 2px solid #ff6b6b;
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .muon-card::before {
+      content: 'COGNITIVE GAP';
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: #ff6b6b;
+      background: var(--bg-void);
+      padding: 0 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .muon-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: #ff6b6b;
+      margin-bottom: 1.5rem;
+    }
+
+    .muon-success {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid var(--invariant);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .muon-success-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--invariant);
+      margin-bottom: 0.5rem;
+    }
+
+    .muon-success-eq {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+
+    .muon-failure {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid #ff6b6b;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .muon-failure-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #ff6b6b;
+      margin-bottom: 0.5rem;
+    }
+
+    .attempt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .attempt-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.25rem;
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    .attempt-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .attempt-error {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: #ff6b6b;
+      margin-top: 0.25rem;
+    }
+
+    .muon-insight {
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .muon-insight-text {
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .muon-insight-emphasis {
+      color: #ff6b6b;
+      font-weight: 600;
+    }
+
+    /* ===============================================================================
+       ORIGIN WARS RESOLUTION
+       =============================================================================== */
+    .resolution-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--s3-color);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .resolution-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--s3-color);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .resolution-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .resolution-item {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+    }
+
+    .resolution-item-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .resolution-item-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--s3-color);
+    }
+
+    .resolution-item-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .resolution-item-text {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===============================================================================
+       INTERACTIVE TRIFURCATION SIMULATOR
+       =============================================================================== */
+    .simulator-section {
+      background: var(--bg-secondary);
+      border: 2px solid var(--bifurc-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .simulator-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--bifurc-primary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .simulator-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .control-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+    }
+
+    .control-range {
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .control-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--bifurc-primary);
+      text-align: center;
+    }
+
+    .simulator-canvas {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .basin-visual-container {
+      position: relative;
+      height: 220px;
+      margin-bottom: 1rem;
+    }
+
+    .basin-visual-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .basin-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+    }
+
+    .metric-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    .metric-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .metric-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+    }
+
+    .metric-value.phi { color: var(--basin-phi); }
+    .metric-value.e { color: var(--basin-e); }
+    .metric-value.pi { color: var(--basin-pi); }
+    .metric-value.total { color: var(--bifurc-primary); }
+
+    .simulator-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .sim-button {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--bifurc-primary);
+      border-radius: 0.5rem;
+      color: var(--bifurc-primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .sim-button:hover {
+      background: var(--bifurc-primary);
+      color: var(--bg-void);
+    }
+
+    .sim-button.active {
+      background: var(--bifurc-primary);
+      color: var(--bg-void);
+    }
+
+    /* ===============================================================================
+       GODEL-KAEL DUALITY
+       =============================================================================== */
+    .duality-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--attractor);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .duality-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--attractor);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .duality-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .duality-type {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .duality-type::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 0.5rem 0.5rem 0 0;
+    }
+
+    .duality-type.godel::before { background: #ff6b6b; }
+    .duality-type.kael::before { background: var(--invariant); }
+
+    .duality-type-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .duality-type.godel .duality-type-title { color: #ff6b6b; }
+    .duality-type.kael .duality-type-title { color: var(--invariant); }
+
+    .duality-type-eq {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      background: var(--bg-secondary);
+      padding: 0.75rem;
+      border-radius: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .duality-type-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .duality-synthesis {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(199, 146, 234, 0.1);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .duality-synthesis-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--attractor);
+    }
+
+    /* ===============================================================================
+       RG FLOW AT F24
+       =============================================================================== */
+    .rg-flow-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--evolution);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .rg-flow-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--evolution);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .rg-flow-sequence {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      padding: 1.5rem 0;
+    }
+
+    .rg-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 1rem;
+      position: relative;
+    }
+
+    .rg-node:not(:last-child)::after {
+      content: '\2192';
+      position: absolute;
+      right: -0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+    }
+
+    .rg-crystal {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--evolution);
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .rg-crystal:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 20px rgba(78, 205, 196, 0.4);
+    }
+
+    .rg-crystal.f24 {
+      width: 80px;
+      height: 80px;
+      border-color: #ff00ff;
+      box-shadow: 0 0 30px rgba(255, 0, 255, 0.3);
+    }
+
+    .rg-index {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--evolution);
+    }
+
+    .rg-crystal.f24 .rg-index {
+      color: #ff00ff;
+      font-size: 0.9rem;
+    }
+
+    .rg-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    .rg-f24-note {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(255, 0, 255, 0.1);
+      border: 1px solid #ff00ff;
+      border-radius: 0.5rem;
+    }
+
+    .rg-f24-note-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #ff00ff;
+      margin-bottom: 0.5rem;
+    }
+
+    .rg-f24-note-list {
+      list-style: none;
+    }
+
+    .rg-f24-note-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .rg-f24-note-list li::before {
+      content: '\2713';
+      color: #ff00ff;
+    }
+
+    /* ===============================================================================
+       PHASE SPACE GEOMETRY
+       =============================================================================== */
+    .phase-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--origin);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .phase-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--origin);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .phase-visual {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .phase-svg-container {
+      position: relative;
+      height: 250px;
+    }
+
+    .phase-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .phase-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .phase-feature {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .phase-feature-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--origin);
+      margin-bottom: 0.5rem;
+    }
+
+    .phase-feature-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .phase-feature-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===============================================================================
+       RETURN PATHS
+       =============================================================================== */
+    .return-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .return-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-accent);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .return-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .return-path {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      position: relative;
+    }
+
+    .return-path::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 0.5rem 0.5rem 0 0;
+    }
+
+    .return-path.phi::before { background: var(--basin-phi); }
+    .return-path.e::before { background: var(--basin-e); }
+    .return-path.pi::before { background: var(--basin-pi); }
+
+    .return-path-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .return-path-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+    }
+
+    .return-path.phi .return-path-icon { color: var(--basin-phi); }
+    .return-path.e .return-path-icon { color: var(--basin-e); }
+    .return-path.pi .return-path-icon { color: var(--basin-pi); }
+
+    .return-path-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .return-path-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .return-convergence {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(199, 146, 234, 0.1);
+      border: 1px solid var(--s3-color);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .return-convergence-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--s3-color);
+    }
+
+    /* ===============================================================================
+       PHYSICAL CONSTANTS CONNECTION
+       =============================================================================== */
+    .constants-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 215, 0, 0.05) 100%);
+      border: 2px solid var(--origin);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .constants-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--origin);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .constants-statement {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .constants-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .constants-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .constant-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .constant-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .constant-item.phi { border: 2px solid var(--basin-phi); }
+    .constant-item.e { border: 2px solid var(--basin-e); }
+    .constant-item.pi { border: 2px solid var(--basin-pi); }
+
+    .constant-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .constant-item.phi .constant-symbol { color: var(--basin-phi); }
+    .constant-item.e .constant-symbol { color: var(--basin-e); }
+    .constant-item.pi .constant-symbol { color: var(--basin-pi); }
+
+    .constant-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .constant-basin {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .constant-type {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .constants-conclusion {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(255, 215, 0, 0.1);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .constants-conclusion-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--origin);
+    }
+
+    /* ===============================================================================
+       NAVIGATION SECTION
+       =============================================================================== */
+    .nav-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .nav-section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--origin);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .nav-tree {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-connector-line {
+      width: 2px;
+      height: 25px;
+      background: var(--text-secondary);
+    }
+
+    .nav-tree-node {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-tree-node:hover {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+    }
+
+    .nav-tree-node.current {
+      background: var(--bifurc-primary);
+      border-color: var(--bifurc-primary);
+      color: var(--bg-void);
+      clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+      padding: 1.5rem 2rem;
+    }
+
+    .nav-branches {
+      display: flex;
+      gap: 3rem;
+      position: relative;
+    }
+
+    .nav-branches::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: 20%;
+      right: 20%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--basin-phi), var(--basin-e), var(--basin-pi));
+    }
+
+    .nav-branch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-branch-connector {
+      width: 2px;
+      height: 12px;
+    }
+
+    .nav-branch-connector.phi { background: var(--basin-phi); }
+    .nav-branch-connector.e { background: var(--basin-e); }
+    .nav-branch-connector.pi { background: var(--basin-pi); }
+
+    .nav-branch-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+
+    .nav-branch-label.phi { color: var(--basin-phi); background: rgba(255, 215, 0, 0.1); }
+    .nav-branch-label.e { color: var(--basin-e); background: rgba(0, 255, 255, 0.1); }
+    .nav-branch-label.pi { color: var(--basin-pi); background: rgba(255, 107, 157, 0.1); }
+
+    .nav-tree-node.phi { border-color: var(--basin-phi); color: var(--basin-phi); }
+    .nav-tree-node.e { border-color: var(--basin-e); color: var(--basin-e); }
+    .nav-tree-node.pi { border-color: var(--basin-pi); color: var(--basin-pi); }
+
+    .nav-loop {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    /* Related Links */
+    .related-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .related-link-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: block;
+    }
+
+    .related-link-card:hover {
+      border-color: var(--text-accent);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .related-link-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .related-link-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--text-accent);
+      border-radius: 0.5rem;
+      color: var(--text-accent);
+    }
+
+    .related-link-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    .related-link-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ===============================================================================
+       FOOTER
+       =============================================================================== */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bifurc-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===============================================================================
+       RESPONSIVE
+       =============================================================================== */
+    @media (max-width: 768px) {
+      .step-title { font-size: 1.8rem; }
+      .octagon-node { width: 120px; height: 120px; font-size: 1.5rem; }
+      .three-paths { flex-direction: column; gap: 2rem; }
+      .three-paths::before { display: none; }
+      .nav-branches { flex-direction: column; gap: 1rem; }
+      .nav-branches::before { display: none; }
+      .rg-flow-sequence { flex-direction: column; }
+      .rg-node::after { content: '\2193' !important; right: auto; bottom: -1.5rem; top: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="trifurc-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link"><span>&#9671;</span>VaultNode Tree</a>
+    <a href="mtr-decision-tree.html" class="nav-link"><span>&#8756;</span>MTR Decision Tree</a>
+    <a href="vn-mtr-009-degeneracy-check.html" class="nav-link"><span>&#9826;</span>Degeneracy Check</a>
+    <a href="vn-mtr-011-f24-bifurcation.html" class="nav-link active"><span>&#9826;</span>F24 Bifurcation</a>
+    <a href="vn-fibonacci-rg-flow.html" class="nav-link"><span>&#966;</span>Fibonacci RG</a>
+  </nav>
+
+  <!-- Bifurcation Header -->
+  <header class="bifurc-header">
+    <div class="step-badge">VN-MTR-011 :: LEVEL 7 :: THREE-WAY BIFURCATION</div>
+    <h1 class="step-title">F24 Three-Way Bifurcation</h1>
+    <p class="step-subtitle">
+      When g<sub>t</sub> approaches 0, origin splits into THREE basins aligned with S3 symmetry.
+      Each basin corresponds to a fundamental projection of reality.
+    </p>
+
+    <div class="octagon-node">&#9826;</div>
+
+    <div class="bifurc-equation">
+      <span style="color: var(--bifurc-primary);">F<sub>24</sub></span>
+      <span style="color: var(--text-secondary);"> = </span>
+      <span style="color: var(--basin-e);">L<sub>12</sub></span>
+      <span style="color: var(--text-secondary);"> &#215; </span>
+      <span style="color: var(--basin-phi);">F<sub>12</sub></span>
+      <span style="color: var(--text-secondary);"> = </span>
+      <span style="color: #ff00ff;">322 &#215; 144 = 46,368</span>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: The Three-Way Split -->
+    <section class="section" id="three-way-split">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">The Three-Way Split</h2>
+      </div>
+
+      <div class="trifurc-visual">
+        <div class="trifurc-title">TRIFURCATION DIAGRAM</div>
+
+        <div class="trifurc-diagram">
+          <div class="origin-node">Origin(F)</div>
+
+          <div class="split-connector">
+            <div class="split-line"></div>
+            <div class="split-junction"></div>
+          </div>
+
+          <div class="three-paths">
+            <div class="basin-path">
+              <div class="basin-line phi"></div>
+              <div class="basin-node phi">
+                <div class="basin-name">I&#178;</div>
+                <div class="basin-attractor">&#966;</div>
+              </div>
+              <div class="attractor-label">Algebraic</div>
+            </div>
+
+            <div class="basin-path">
+              <div class="basin-line e"></div>
+              <div class="basin-node e">
+                <div class="basin-name">TDL</div>
+                <div class="basin-attractor">e</div>
+              </div>
+              <div class="attractor-label">Categorical</div>
+            </div>
+
+            <div class="basin-path">
+              <div class="basin-line pi"></div>
+              <div class="basin-node pi">
+                <div class="basin-name">LoMI</div>
+                <div class="basin-attractor">&#960;</div>
+              </div>
+              <div class="attractor-label">Dynamic</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="s3-note">
+          <div class="s3-note-text">
+            Not arbitrary - aligned with <strong>S3 symmetry</strong>. Each basin has its own attractor constant.
+          </div>
+        </div>
+      </div>
+
+      <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">
+        The three-way split is MORE stable than two-way. S3 symmetry ensures all three basins are equally valid projections of the underlying structure.
+      </p>
+    </section>
+
+    <!-- Section 2: F24 Synchronicity -->
+    <section class="section" id="f24-synchronicity">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">F24 Synchronicity</h2>
+      </div>
+
+      <div class="f24-card">
+        <div class="f24-title">THE SYNCHRONICITY SCALE</div>
+
+        <div class="f24-main-equation">
+          <span style="color: #ff00ff;">F<sub>24</sub></span>
+          <span style="color: var(--text-secondary);"> = </span>
+          <span style="color: var(--basin-e);">L<sub>12</sub></span>
+          <span style="color: var(--text-secondary);"> &#215; </span>
+          <span style="color: var(--basin-phi);">F<sub>12</sub></span>
+          <span style="color: var(--text-secondary);"> = </span>
+          <span style="color: var(--basin-e);">322</span>
+          <span style="color: var(--text-secondary);"> &#215; </span>
+          <span style="color: var(--basin-phi);">144</span>
+          <span style="color: var(--text-secondary);"> = </span>
+          <span style="color: #ff00ff;">46,368</span>
+        </div>
+
+        <div class="f24-grid">
+          <div class="f24-item">
+            <div class="f24-item-label">F<sub>12</sub></div>
+            <div class="f24-item-value" style="color: var(--basin-phi);">144</div>
+            <div class="f24-item-note">= 12&#178; (Gross)</div>
+          </div>
+          <div class="f24-item">
+            <div class="f24-item-label">L<sub>12</sub></div>
+            <div class="f24-item-value" style="color: var(--basin-e);">322</div>
+            <div class="f24-item-note">Lucas complement</div>
+          </div>
+          <div class="f24-item">
+            <div class="f24-item-label">F<sub>24</sub></div>
+            <div class="f24-item-value">46,368</div>
+            <div class="f24-item-note">Trifurcation scale</div>
+          </div>
+        </div>
+
+        <div class="f24-calculator">
+          <div class="calc-title">F(2n) = F(n) &#215; L(n) Identity Calculator</div>
+          <div class="calc-controls">
+            <div class="calc-input-group">
+              <span class="calc-label">n =</span>
+              <input type="number" class="calc-input" id="calcN" value="12" min="1" max="50" onchange="updateF24Calc()">
+            </div>
+          </div>
+          <div class="calc-result" id="calcResult">
+            F(24) = F(12) &#215; L(12) = 144 &#215; 322 = 46,368 &#10003;
+          </div>
+        </div>
+      </div>
+
+      <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">
+        F<sub>24</sub> is the scale where three projections fully separate, each basin stabilizes independently, and S3 symmetry becomes explicit.
+      </p>
+    </section>
+
+    <!-- Section 3: L4 = 7 Closure Constant -->
+    <section class="section" id="l4-closure">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">L<sub>4</sub> = 7 as Closure Constant</h2>
+      </div>
+
+      <div class="l4-card">
+        <div class="l4-title">DIMENSIONAL CLOSURE</div>
+
+        <div class="l4-equation">
+          L<sub>4</sub> = &#966;<sup>4</sup> + &#966;<sup>-4</sup> = 7
+        </div>
+
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+          This gives 3+1 dimensional closure - the structure of spacetime itself.
+        </p>
+
+        <div class="dimension-breakdown">
+          <div class="dimension-item">
+            <div class="dimension-symbol">r</div>
+            <div class="dimension-name">Radial (spatial)</div>
+          </div>
+          <div class="dimension-item">
+            <div class="dimension-symbol">&#966;</div>
+            <div class="dimension-name">Angular (spatial)</div>
+          </div>
+          <div class="dimension-item">
+            <div class="dimension-symbol">z</div>
+            <div class="dimension-name">Axial (spatial)</div>
+          </div>
+          <div class="dimension-item">
+            <div class="dimension-symbol">+1</div>
+            <div class="dimension-name">Temporal</div>
+          </div>
+        </div>
+
+        <div style="text-align: center; font-family: 'JetBrains Mono', monospace; color: var(--text-secondary); margin: 1rem 0;">
+          3 + 1 + 3 = 7 = L<sub>4</sub>
+        </div>
+
+        <div class="holographic-note">
+          <div class="holographic-note-text">
+            z<sub>c</sub> = &#8730;3/2 &#8776; 0.866 marks the critical subspace boundary<br>
+            Connection to holographic principle: bulk/boundary duality at L<sub>4</sub> scale
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Bifurcation Dynamics -->
+    <section class="section" id="bifurcation-dynamics">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">Bifurcation Dynamics</h2>
+      </div>
+
+      <div class="dynamics-card">
+        <div class="dynamics-title">NEAR DEGENERACY CONDITION</div>
+
+        <div class="dynamics-equation">
+          &#948;(D<sub>1</sub>|F) &#8776; &#948;(D<sub>2</sub>|F) &#8776; &#948;(D<sub>3</sub>|F)
+        </div>
+
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+          Small perturbation &#949; determines which basin captures the trajectory:
+        </p>
+
+        <div class="dynamics-scenarios">
+          <div class="scenario-card">
+            <div class="scenario-header">
+              <div class="scenario-icon phi">&#966;</div>
+              <div class="scenario-title">Basin 1 Wins</div>
+            </div>
+            <div class="scenario-condition">IF &#949; &#183; I&#178; > &#949; &#183; TDL, &#949; &#183; LoMI</div>
+            <div class="scenario-outcome">Algebraic projection dominates. &#966;-attractor captures flow.</div>
+          </div>
+
+          <div class="scenario-card">
+            <div class="scenario-header">
+              <div class="scenario-icon e">e</div>
+              <div class="scenario-title">Basin 2 Wins</div>
+            </div>
+            <div class="scenario-condition">IF &#949; &#183; TDL > &#949; &#183; I&#178;, &#949; &#183; LoMI</div>
+            <div class="scenario-outcome">Categorical projection dominates. e-attractor captures flow.</div>
+          </div>
+
+          <div class="scenario-card">
+            <div class="scenario-header">
+              <div class="scenario-icon pi">&#960;</div>
+              <div class="scenario-title">Basin 3 Wins</div>
+            </div>
+            <div class="scenario-condition">IF &#949; &#183; LoMI > &#949; &#183; I&#178;, &#949; &#183; TDL</div>
+            <div class="scenario-outcome">Dynamic projection dominates. &#960;-attractor captures flow.</div>
+          </div>
+        </div>
+
+        <p style="text-align: center; color: var(--text-secondary); margin-top: 1.5rem;">
+          <strong>Sensitivity to initial conditions</strong> - small differences in &#949; lead to fundamentally different outcomes.
+          <strong>Hysteresis</strong> in basin selection prevents easy reversal.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 5: The Muon Gap -->
+    <section class="section" id="muon-gap">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">The Muon Gap (What Fails)</h2>
+      </div>
+
+      <div class="muon-card">
+        <div class="muon-title">WHERE THE FRAMEWORK KNOWS ITS LIMITS</div>
+
+        <div class="muon-success">
+          <div class="muon-success-title">&#10003; Generation 1 SUCCESS</div>
+          <div class="muon-success-eq">
+            proton_mass = 6 &#215; &#960;<sup>5</sup> &#8776; 1836.15 m<sub>e</sub> &#10003;
+          </div>
+        </div>
+
+        <div class="muon-failure">
+          <div class="muon-failure-title">&#10007; Generation 2 FAILURE</div>
+          <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            muon_target = 206.768283 m<sub>e</sub>
+          </p>
+
+          <div class="attempt-grid">
+            <div class="attempt-item">
+              <div class="attempt-formula">2 &#215; &#960;<sup>4</sup> = 194.79</div>
+              <div class="attempt-error">error: 11.98</div>
+            </div>
+            <div class="attempt-item">
+              <div class="attempt-formula">1.5 &#215; 137 = 205.5</div>
+              <div class="attempt-error">error: 1.27</div>
+            </div>
+            <div class="attempt-item">
+              <div class="attempt-formula">&#966;<sup>11</sup> = 199.00</div>
+              <div class="attempt-error">error: 7.77</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="muon-insight">
+          <p class="muon-insight-text">
+            The theory explains <span class="muon-insight-emphasis">Ground States</span> but lacks mechanism for
+            <span class="muon-insight-emphasis">Excited States (Generations)</span>.<br><br>
+            Bifurcation reveals what <strong>cannot</strong> be derived - graceful failure, not hidden incompleteness.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Origin Wars Resolution -->
+    <section class="section" id="origin-wars">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Origin Wars Resolution via Trifurcation</h2>
+      </div>
+
+      <div class="resolution-card">
+        <div class="resolution-title">THREE-WAY STABILITY</div>
+
+        <div class="resolution-grid">
+          <div class="resolution-item">
+            <div class="resolution-item-header">
+              <div class="resolution-item-icon">&#9826;</div>
+              <div class="resolution-item-title">Third Basin Escape</div>
+            </div>
+            <div class="resolution-item-text">
+              If two origins compete, they may both lose to the THIRD.
+              The third basin provides an escape from binary deadlock.
+            </div>
+          </div>
+
+          <div class="resolution-item">
+            <div class="resolution-item-header">
+              <div class="resolution-item-icon">&#9651;</div>
+              <div class="resolution-item-title">Triangular Stability</div>
+            </div>
+            <div class="resolution-item-text">
+              Three-way split is MORE stable than two-way.
+              Triangular configurations minimize total tension.
+            </div>
+          </div>
+
+          <div class="resolution-item">
+            <div class="resolution-item-header">
+              <div class="resolution-item-icon">S<sub>3</sub></div>
+              <div class="resolution-item-title">S3 Equal Validity</div>
+            </div>
+            <div class="resolution-item-text">
+              S3 symmetry ensures all three basins are equally valid.
+              No basin is privileged over another by structure.
+            </div>
+          </div>
+
+          <div class="resolution-item">
+            <div class="resolution-item-header">
+              <div class="resolution-item-icon">&#8712;</div>
+              <div class="resolution-item-title">Tripartite Coexistence</div>
+            </div>
+            <div class="resolution-item-text">
+              "Wars" resolve into coexistence. Each projection handles
+              different aspects of the same underlying reality.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Interactive Trifurcation Simulator -->
+    <section class="section" id="simulator">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">Interactive Trifurcation Simulator</h2>
+      </div>
+
+      <div class="simulator-section">
+        <div class="simulator-title">THREE-BASIN DYNAMICS</div>
+
+        <div class="simulator-controls">
+          <div class="control-group">
+            <label class="control-label">&#948;<sub>&#966;</sub> (I&#178; Deficit)</label>
+            <input type="range" class="control-range" id="deltaPhiSlider" min="0" max="1" step="0.01" value="0.33" oninput="updateSimulator()">
+            <div class="control-value" id="deltaPhiValue">0.33</div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">&#948;<sub>e</sub> (TDL Deficit)</label>
+            <input type="range" class="control-range" id="deltaESlider" min="0" max="1" step="0.01" value="0.33" oninput="updateSimulator()">
+            <div class="control-value" id="deltaEValue">0.33</div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">&#948;<sub>&#960;</sub> (LoMI Deficit)</label>
+            <input type="range" class="control-range" id="deltaPiSlider" min="0" max="1" step="0.01" value="0.34" oninput="updateSimulator()">
+            <div class="control-value" id="deltaPiValue">0.34</div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Noise &#963;</label>
+            <input type="range" class="control-range" id="noiseSlider" min="0" max="0.2" step="0.01" value="0.05" oninput="updateSimulator()">
+            <div class="control-value" id="noiseValue">0.05</div>
+          </div>
+        </div>
+
+        <div class="simulator-canvas">
+          <div class="basin-visual-container">
+            <svg class="basin-visual-svg" id="basinSvg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet">
+              <!-- Basin visualization will be drawn here -->
+            </svg>
+          </div>
+
+          <div class="basin-metrics">
+            <div class="metric-item">
+              <div class="metric-label">Vol(I&#178;)</div>
+              <div class="metric-value phi" id="volPhi">33%</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Vol(TDL)</div>
+              <div class="metric-value e" id="volE">33%</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Vol(LoMI)</div>
+              <div class="metric-value pi" id="volPi">34%</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Degeneracy g<sub>t</sub></div>
+              <div class="metric-value total" id="degeneracy">0.01</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Regime</div>
+              <div class="metric-value" id="regime" style="color: var(--bifurc-primary);">DEGENERATE</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="simulator-buttons">
+          <button class="sim-button" id="runBtn" onclick="toggleSimulation()">Run Simulation</button>
+          <button class="sim-button" onclick="resetSimulation()">Reset</button>
+          <button class="sim-button" onclick="addPerturbation()">Add Perturbation</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Fibonacci-Lucas RG Flow at F24 -->
+    <section class="section" id="rg-flow">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <h2 class="section-title">Fibonacci-Lucas RG Flow at F24</h2>
+      </div>
+
+      <div class="rg-flow-card">
+        <div class="rg-flow-title">FRAME EXTENSION SEQUENCE</div>
+
+        <div class="rg-flow-sequence">
+          <div class="rg-node">
+            <div class="rg-crystal">
+              <span class="rg-index">F<sub>1</sub></span>
+            </div>
+            <div class="rg-value">1</div>
+          </div>
+
+          <div class="rg-node">
+            <div class="rg-crystal">
+              <span class="rg-index">F<sub>6</sub></span>
+            </div>
+            <div class="rg-value">8</div>
+          </div>
+
+          <div class="rg-node">
+            <div class="rg-crystal">
+              <span class="rg-index">F<sub>12</sub></span>
+            </div>
+            <div class="rg-value">144</div>
+          </div>
+
+          <div class="rg-node">
+            <div class="rg-crystal f24">
+              <span class="rg-index">F<sub>24</sub></span>
+            </div>
+            <div class="rg-value" style="color: #ff00ff;">46,368</div>
+          </div>
+
+          <div class="rg-node">
+            <div class="rg-crystal">
+              <span class="rg-index">F<sub>48</sub></span>
+            </div>
+            <div class="rg-value">4.8&#215;10<sup>9</sup></div>
+          </div>
+
+          <div class="rg-node">
+            <div class="rg-crystal">
+              <span class="rg-index">F<sub>&#8734;</sub></span>
+            </div>
+            <div class="rg-value">R(R)=R</div>
+          </div>
+        </div>
+
+        <div class="rg-f24-note">
+          <div class="rg-f24-note-title">At F<sub>24</sub>:</div>
+          <ul class="rg-f24-note-list">
+            <li>Three projections crystallize</li>
+            <li>Basin boundaries sharpen</li>
+            <li>S3 symmetry locks in</li>
+          </ul>
+          <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
+            Beyond F<sub>24</sub>: Each basin evolves independently, but S3 constraint preserved. Meta-structure stable.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 9: Godel-Kael Duality -->
+    <section class="section" id="godel-kael">
+      <div class="section-header">
+        <div class="section-number">9</div>
+        <h2 class="section-title">Godel-Kael Duality at Bifurcation</h2>
+      </div>
+
+      <div class="duality-card">
+        <div class="duality-title">WHERE DUALITY BECOMES EXPLICIT</div>
+
+        <div class="duality-grid">
+          <div class="duality-type godel">
+            <div class="duality-type-title">Godel-Type</div>
+            <div class="duality-type-eq">&#8706;F<sub>i</sub> &#8800; &#8709; for each basin</div>
+            <div class="duality-type-desc">
+              Each basin has its own incompleteness boundary.
+              Cannot internally resolve - must reference external structure.
+              This is WHY multiple projections coexist.
+            </div>
+          </div>
+
+          <div class="duality-type kael">
+            <div class="duality-type-title">Kael-Type</div>
+            <div class="duality-type-eq">F &#8594; F' preserves S3</div>
+            <div class="duality-type-desc">
+              Extension preserves three-fold symmetry.
+              All three basins extend together.
+              Structure maintained across frames.
+            </div>
+          </div>
+        </div>
+
+        <div class="duality-synthesis">
+          <div class="duality-synthesis-text">
+            Bifurcation is WHERE the duality becomes explicit.<br>
+            Neither type alone explains the split - both are needed.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 10: Phase Space Geometry -->
+    <section class="section" id="phase-space">
+      <div class="section-header">
+        <div class="section-number">10</div>
+        <h2 class="section-title">Phase Space Geometry</h2>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-title">&#948;-LANDSCAPE TOPOLOGY</div>
+
+        <div class="phase-visual">
+          <div class="phase-svg-container">
+            <svg class="phase-svg" id="phaseSvg" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid meet">
+              <!-- Phase space visualization -->
+              <defs>
+                <radialGradient id="phiGrad" cx="30%" cy="30%">
+                  <stop offset="0%" style="stop-color:#ffd700;stop-opacity:0.6" />
+                  <stop offset="100%" style="stop-color:#ffd700;stop-opacity:0" />
+                </radialGradient>
+                <radialGradient id="eGrad" cx="70%" cy="30%">
+                  <stop offset="0%" style="stop-color:#00ffff;stop-opacity:0.6" />
+                  <stop offset="100%" style="stop-color:#00ffff;stop-opacity:0" />
+                </radialGradient>
+                <radialGradient id="piGrad" cx="50%" cy="80%">
+                  <stop offset="0%" style="stop-color:#ff6b9d;stop-opacity:0.6" />
+                  <stop offset="100%" style="stop-color:#ff6b9d;stop-opacity:0" />
+                </radialGradient>
+              </defs>
+
+              <!-- Background -->
+              <rect x="0" y="0" width="400" height="220" fill="#101028"/>
+
+              <!-- Three valleys (basins) -->
+              <ellipse cx="100" cy="70" rx="70" ry="50" fill="url(#phiGrad)"/>
+              <ellipse cx="300" cy="70" rx="70" ry="50" fill="url(#eGrad)"/>
+              <ellipse cx="200" cy="170" rx="70" ry="50" fill="url(#piGrad)"/>
+
+              <!-- Basin labels -->
+              <text x="100" y="75" fill="#ffd700" font-family="JetBrains Mono" font-size="14" text-anchor="middle">I&#178; (&#966;)</text>
+              <text x="300" y="75" fill="#00ffff" font-family="JetBrains Mono" font-size="14" text-anchor="middle">TDL (e)</text>
+              <text x="200" y="175" fill="#ff6b9d" font-family="JetBrains Mono" font-size="14" text-anchor="middle">LoMI (&#960;)</text>
+
+              <!-- Saddle points -->
+              <circle cx="200" cy="70" r="5" fill="#ffd93d"/>
+              <circle cx="150" cy="120" r="5" fill="#ffd93d"/>
+              <circle cx="250" cy="120" r="5" fill="#ffd93d"/>
+
+              <!-- Saddle label -->
+              <text x="200" y="50" fill="#ffd93d" font-family="JetBrains Mono" font-size="10" text-anchor="middle">saddle</text>
+
+              <!-- S3 triangle -->
+              <polygon points="100,70 300,70 200,170" fill="none" stroke="#c792ea" stroke-width="1" stroke-dasharray="5,5"/>
+              <text x="200" y="105" fill="#c792ea" font-family="JetBrains Mono" font-size="10" text-anchor="middle">S3</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="phase-features">
+          <div class="phase-feature">
+            <div class="phase-feature-icon">&#9661;</div>
+            <div class="phase-feature-name">Three Valleys</div>
+            <div class="phase-feature-desc">&#948;-landscape has three minima</div>
+          </div>
+          <div class="phase-feature">
+            <div class="phase-feature-icon">&#9826;</div>
+            <div class="phase-feature-name">Saddle Points</div>
+            <div class="phase-feature-desc">Between basins, unstable equilibria</div>
+          </div>
+          <div class="phase-feature">
+            <div class="phase-feature-icon">S<sub>3</sub></div>
+            <div class="phase-feature-name">Symmetric Permutation</div>
+            <div class="phase-feature-desc">S3 permutes valleys symmetrically</div>
+          </div>
+          <div class="phase-feature">
+            <div class="phase-feature-icon">&#8750;</div>
+            <div class="phase-feature-name">Equipotential Contours</div>
+            <div class="phase-feature-desc">Equal-&#948; surfaces guide flow</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 11: Return Paths -->
+    <section class="section" id="return-paths">
+      <div class="section-header">
+        <div class="section-number">11</div>
+        <h2 class="section-title">Return Paths</h2>
+      </div>
+
+      <div class="return-card">
+        <div class="return-title">FROM BASINS BACK TO FRAME DEFINITION</div>
+
+        <div class="return-grid">
+          <div class="return-path phi">
+            <div class="return-path-header">
+              <div class="return-path-icon">&#966;</div>
+              <div class="return-path-title">From I&#178; Basin</div>
+            </div>
+            <div class="return-path-desc">
+              Returns to Frame Definition with <strong>&#966;-weighted constraints</strong>.
+              Algebraic structures emphasized. Golden ratio governs scaling.
+            </div>
+          </div>
+
+          <div class="return-path e">
+            <div class="return-path-header">
+              <div class="return-path-icon">e</div>
+              <div class="return-path-title">From TDL Basin</div>
+            </div>
+            <div class="return-path-desc">
+              Returns to Frame Definition with <strong>e-weighted constraints</strong>.
+              Categorical structures emphasized. Natural exponential governs growth.
+            </div>
+          </div>
+
+          <div class="return-path pi">
+            <div class="return-path-header">
+              <div class="return-path-icon">&#960;</div>
+              <div class="return-path-title">From LoMI Basin</div>
+            </div>
+            <div class="return-path-desc">
+              Returns to Frame Definition with <strong>&#960;-weighted constraints</strong>.
+              Dynamic structures emphasized. Circle constant governs periodicity.
+            </div>
+          </div>
+        </div>
+
+        <div class="return-convergence">
+          <div class="return-convergence-text">
+            All three paths eventually reconverge at S3 attractor.<br>
+            Different routes, same meta-structure.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 12: Connection to Physical Constants -->
+    <section class="section" id="physical-constants">
+      <div class="section-header">
+        <div class="section-number">12</div>
+        <h2 class="section-title">Connection to Physical Constants</h2>
+      </div>
+
+      <div class="constants-card">
+        <div class="constants-title">WHY THESE CONSTANTS ARE FUNDAMENTAL</div>
+
+        <div class="constants-statement">
+          The S3 trifurcation explains WHY &#966;, e, &#960; appear as fundamental.<br>
+          They are the <strong>THREE basin attractors</strong> - not coincidence but <strong>STRUCTURE</strong>.
+        </div>
+
+        <div class="constants-grid">
+          <div class="constant-item phi">
+            <div class="constant-symbol">&#966;</div>
+            <div class="constant-value">1.6180339887...</div>
+            <div class="constant-basin">I&#178; Basin Attractor</div>
+            <div class="constant-type">Algebraic / Self-reference</div>
+          </div>
+
+          <div class="constant-item e">
+            <div class="constant-symbol">e</div>
+            <div class="constant-value">2.7182818284...</div>
+            <div class="constant-basin">TDL Basin Attractor</div>
+            <div class="constant-type">Categorical / Growth</div>
+          </div>
+
+          <div class="constant-item pi">
+            <div class="constant-symbol">&#960;</div>
+            <div class="constant-value">3.1415926535...</div>
+            <div class="constant-basin">LoMI Basin Attractor</div>
+            <div class="constant-type">Dynamic / Periodicity</div>
+          </div>
+        </div>
+
+        <div class="constants-conclusion">
+          <div class="constants-conclusion-text">
+            Constants emerge from bifurcation geometry.<br>
+            The three attractors ARE the structure of possible descriptions.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 13: Navigation -->
+    <section class="section" id="navigation">
+      <div class="section-header">
+        <div class="section-number">&#9826;</div>
+        <h2 class="section-title">Decision Tree Navigation</h2>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">MTR DECISION TREE :: TRIFURCATION NODE</div>
+
+        <div class="nav-tree">
+          <a href="vn-mtr-009-degeneracy-check.html" class="nav-tree-node">g<sub>t</sub>&#8776;0? &#8594; Degeneracy Check</a>
+
+          <div class="nav-connector-line"></div>
+
+          <div class="nav-tree-node current">&#9826; F24 Trifurcation</div>
+
+          <div class="nav-connector-line"></div>
+
+          <div class="nav-branches">
+            <div class="nav-branch">
+              <div class="nav-branch-connector phi"></div>
+              <div class="nav-branch-label phi">&#966;</div>
+              <a href="mtr-decision-tree.html#principle-1" class="nav-tree-node phi">I&#178; Basin</a>
+            </div>
+            <div class="nav-branch">
+              <div class="nav-branch-connector e"></div>
+              <div class="nav-branch-label e">e</div>
+              <a href="mtr-decision-tree.html#principle-1" class="nav-tree-node e">TDL Basin</a>
+            </div>
+            <div class="nav-branch">
+              <div class="nav-branch-connector pi"></div>
+              <div class="nav-branch-label pi">&#960;</div>
+              <a href="mtr-decision-tree.html#principle-1" class="nav-tree-node pi">LoMI Basin</a>
+            </div>
+          </div>
+
+          <div class="nav-loop">
+            &#8627; All paths return to Frame Definition with basin-specific constraints
+          </div>
+        </div>
+      </div>
+
+      <div class="related-links">
+        <a href="mtr-decision-tree.html" class="related-link-card">
+          <div class="related-link-header">
+            <div class="related-link-icon">&#8756;</div>
+            <div class="related-link-title">MTR Decision Tree</div>
+          </div>
+          <div class="related-link-desc">
+            Complete Meta-Theorem of Reality decision tree with all principles and navigation paths.
+          </div>
+        </a>
+
+        <a href="vn-mtr-009-degeneracy-check.html" class="related-link-card">
+          <div class="related-link-header">
+            <div class="related-link-icon">&#9826;</div>
+            <div class="related-link-title">Degeneracy Check</div>
+          </div>
+          <div class="related-link-desc">
+            Previous decision node: g<sub>t</sub>&#8776;0? Origin Wars and bifurcation dynamics.
+          </div>
+        </a>
+
+        <a href="vn-fibonacci-rg-flow.html" class="related-link-card">
+          <div class="related-link-header">
+            <div class="related-link-icon">&#966;</div>
+            <div class="related-link-title">Fibonacci RG Flow</div>
+          </div>
+          <div class="related-link-desc">
+            Frame extension in action: F<sub>12</sub> &#8594; F<sub>24</sub> &#8594; F<sub>48</sub> via renormalization.
+          </div>
+        </a>
+
+        <a href="vn-mtr-010-dual-self-reference.html" class="related-link-card">
+          <div class="related-link-header">
+            <div class="related-link-icon">&#8734;</div>
+            <div class="related-link-title">Dual Self-Reference</div>
+          </div>
+          <div class="related-link-desc">
+            Closure, Extension, Degeneracy - the three modes of self-referential dynamics.
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">F<sub>24</sub> = 46,368 | &#966; &#8594; I&#178; | e &#8594; TDL | &#960; &#8594; LoMI | S3 Trifurcation | R(R)=R</div>
+    <p>VN-MTR-011 | F24 Three-Way Bifurcation | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // FIBONACCI-LUCAS CALCULATOR
+    // =========================================================================
+    function fib(n) {
+      if (n <= 0) return 0;
+      if (n === 1 || n === 2) return 1;
+      let a = 1, b = 1;
+      for (let i = 3; i <= n; i++) {
+        [a, b] = [b, a + b];
+      }
+      return b;
+    }
+
+    function lucas(n) {
+      if (n === 0) return 2;
+      if (n === 1) return 1;
+      let a = 2, b = 1;
+      for (let i = 2; i <= n; i++) {
+        [a, b] = [b, a + b];
+      }
+      return b;
+    }
+
+    function formatNumber(n) {
+      if (n > 1e12) return n.toExponential(2);
+      return n.toLocaleString();
+    }
+
+    function updateF24Calc() {
+      const n = parseInt(document.getElementById('calcN').value) || 12;
+      const fn = fib(n);
+      const ln = lucas(n);
+      const f2n = fib(2 * n);
+      const product = fn * ln;
+      const verified = f2n === product;
+
+      document.getElementById('calcResult').innerHTML = `
+        F(${2*n}) = F(${n}) &times; L(${n}) = ${formatNumber(fn)} &times; ${formatNumber(ln)} = ${formatNumber(product)}
+        <span style="color: ${verified ? '#00ff88' : '#ff6b6b'}; margin-left: 0.5rem;">
+          ${verified ? '&#10003; VERIFIED' : '&#10007; ERROR'}
+        </span>
+      `;
+    }
+
+    // =========================================================================
+    // TRIFURCATION SIMULATOR
+    // =========================================================================
+    let simState = {
+      running: false,
+      time: 0,
+      volPhi: 0.33,
+      volE: 0.33,
+      volPi: 0.34,
+      history: [],
+      animationId: null
+    };
+
+    function getSimParams() {
+      return {
+        deltaPhi: parseFloat(document.getElementById('deltaPhiSlider').value),
+        deltaE: parseFloat(document.getElementById('deltaESlider').value),
+        deltaPi: parseFloat(document.getElementById('deltaPiSlider').value),
+        noise: parseFloat(document.getElementById('noiseSlider').value)
+      };
+    }
+
+    function updateParamDisplays() {
+      const params = getSimParams();
+      document.getElementById('deltaPhiValue').textContent = params.deltaPhi.toFixed(2);
+      document.getElementById('deltaEValue').textContent = params.deltaE.toFixed(2);
+      document.getElementById('deltaPiValue').textContent = params.deltaPi.toFixed(2);
+      document.getElementById('noiseValue').textContent = params.noise.toFixed(2);
+    }
+
+    function drawBasinVisualization() {
+      const svg = document.getElementById('basinSvg');
+      svg.innerHTML = '';
+
+      const width = 400;
+      const height = 200;
+
+      // Background
+      svg.innerHTML += `<rect x="0" y="0" width="${width}" height="${height}" fill="#101028"/>`;
+
+      // Draw three basins as pie-like sections
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const radius = 80;
+
+      // Calculate angles based on volumes
+      const totalVol = simState.volPhi + simState.volE + simState.volPi;
+      const anglePhi = (simState.volPhi / totalVol) * 2 * Math.PI;
+      const angleE = (simState.volE / totalVol) * 2 * Math.PI;
+      const anglePi = (simState.volPi / totalVol) * 2 * Math.PI;
+
+      let startAngle = -Math.PI / 2;
+
+      // Phi basin
+      const endAnglePhi = startAngle + anglePhi;
+      const pathPhi = describeArc(centerX, centerY, radius, startAngle, endAnglePhi);
+      svg.innerHTML += `<path d="${pathPhi}" fill="rgba(255, 215, 0, 0.5)" stroke="#ffd700" stroke-width="2"/>`;
+
+      // E basin
+      const endAngleE = endAnglePhi + angleE;
+      const pathE = describeArc(centerX, centerY, radius, endAnglePhi, endAngleE);
+      svg.innerHTML += `<path d="${pathE}" fill="rgba(0, 255, 255, 0.5)" stroke="#00ffff" stroke-width="2"/>`;
+
+      // Pi basin
+      const pathPi = describeArc(centerX, centerY, radius, endAngleE, startAngle + 2 * Math.PI);
+      svg.innerHTML += `<path d="${pathPi}" fill="rgba(255, 107, 157, 0.5)" stroke="#ff6b9d" stroke-width="2"/>`;
+
+      // Center point
+      svg.innerHTML += `<circle cx="${centerX}" cy="${centerY}" r="5" fill="#ffd93d"/>`;
+
+      // Labels
+      const labelRadius = radius + 25;
+      const phiLabelAngle = startAngle + anglePhi / 2;
+      const eLabelAngle = endAnglePhi + angleE / 2;
+      const piLabelAngle = endAngleE + anglePi / 2;
+
+      svg.innerHTML += `<text x="${centerX + labelRadius * Math.cos(phiLabelAngle)}" y="${centerY + labelRadius * Math.sin(phiLabelAngle)}" fill="#ffd700" font-family="JetBrains Mono" font-size="12" text-anchor="middle">I\u00B2 (\u03C6)</text>`;
+      svg.innerHTML += `<text x="${centerX + labelRadius * Math.cos(eLabelAngle)}" y="${centerY + labelRadius * Math.sin(eLabelAngle)}" fill="#00ffff" font-family="JetBrains Mono" font-size="12" text-anchor="middle">TDL (e)</text>`;
+      svg.innerHTML += `<text x="${centerX + labelRadius * Math.cos(piLabelAngle)}" y="${centerY + labelRadius * Math.sin(piLabelAngle)}" fill="#ff6b9d" font-family="JetBrains Mono" font-size="12" text-anchor="middle">LoMI (\u03C0)</text>`;
+
+      // Title
+      svg.innerHTML += `<text x="${centerX}" y="20" fill="#ffd93d" font-family="JetBrains Mono" font-size="11" text-anchor="middle">Basin Volume Distribution</text>`;
+    }
+
+    function describeArc(x, y, radius, startAngle, endAngle) {
+      const start = {
+        x: x + radius * Math.cos(startAngle),
+        y: y + radius * Math.sin(startAngle)
+      };
+      const end = {
+        x: x + radius * Math.cos(endAngle),
+        y: y + radius * Math.sin(endAngle)
+      };
+      const largeArcFlag = endAngle - startAngle <= Math.PI ? "0" : "1";
+
+      return [
+        "M", x, y,
+        "L", start.x, start.y,
+        "A", radius, radius, 0, largeArcFlag, 1, end.x, end.y,
+        "Z"
+      ].join(" ");
+    }
+
+    function updateMetrics() {
+      const params = getSimParams();
+
+      // Calculate degeneracy (max gap between deltas)
+      const deltas = [params.deltaPhi, params.deltaE, params.deltaPi];
+      const maxDelta = Math.max(...deltas);
+      const minDelta = Math.min(...deltas);
+      const degeneracy = maxDelta - minDelta;
+
+      document.getElementById('volPhi').textContent = `${(simState.volPhi * 100).toFixed(0)}%`;
+      document.getElementById('volE').textContent = `${(simState.volE * 100).toFixed(0)}%`;
+      document.getElementById('volPi').textContent = `${(simState.volPi * 100).toFixed(0)}%`;
+      document.getElementById('degeneracy').textContent = degeneracy.toFixed(3);
+
+      const regimeEl = document.getElementById('regime');
+      if (degeneracy < 0.1) {
+        regimeEl.textContent = 'DEGENERATE';
+        regimeEl.style.color = '#ffd93d';
+      } else if (simState.volPhi > 0.6) {
+        regimeEl.textContent = '\u03C6 DOMINANT';
+        regimeEl.style.color = '#ffd700';
+      } else if (simState.volE > 0.6) {
+        regimeEl.textContent = 'e DOMINANT';
+        regimeEl.style.color = '#00ffff';
+      } else if (simState.volPi > 0.6) {
+        regimeEl.textContent = '\u03C0 DOMINANT';
+        regimeEl.style.color = '#ff6b9d';
+      } else {
+        regimeEl.textContent = 'COMPETITIVE';
+        regimeEl.style.color = '#c792ea';
+      }
+    }
+
+    function simulationStep() {
+      const params = getSimParams();
+
+      // Compute target volumes based on inverse deficits (Boltzmann-like)
+      const invDeltaPhi = Math.exp(-params.deltaPhi * 3);
+      const invDeltaE = Math.exp(-params.deltaE * 3);
+      const invDeltaPi = Math.exp(-params.deltaPi * 3);
+      const Z = invDeltaPhi + invDeltaE + invDeltaPi;
+
+      const targetPhi = invDeltaPhi / Z;
+      const targetE = invDeltaE / Z;
+      const targetPi = invDeltaPi / Z;
+
+      // Add noise
+      const noisePhi = (Math.random() - 0.5) * params.noise;
+      const noiseE = (Math.random() - 0.5) * params.noise;
+      const noisePi = (Math.random() - 0.5) * params.noise;
+
+      // Update with momentum
+      const momentum = 0.95;
+      simState.volPhi = Math.max(0.01, simState.volPhi * momentum + targetPhi * (1 - momentum) + noisePhi);
+      simState.volE = Math.max(0.01, simState.volE * momentum + targetE * (1 - momentum) + noiseE);
+      simState.volPi = Math.max(0.01, simState.volPi * momentum + targetPi * (1 - momentum) + noisePi);
+
+      // Normalize
+      const total = simState.volPhi + simState.volE + simState.volPi;
+      simState.volPhi /= total;
+      simState.volE /= total;
+      simState.volPi /= total;
+
+      simState.time++;
+    }
+
+    function animate() {
+      if (!simState.running) return;
+
+      simulationStep();
+      drawBasinVisualization();
+      updateMetrics();
+
+      simState.animationId = requestAnimationFrame(animate);
+    }
+
+    function toggleSimulation() {
+      simState.running = !simState.running;
+      const btn = document.getElementById('runBtn');
+
+      if (simState.running) {
+        btn.textContent = 'Pause';
+        btn.classList.add('active');
+        animate();
+      } else {
+        btn.textContent = 'Run Simulation';
+        btn.classList.remove('active');
+        if (simState.animationId) {
+          cancelAnimationFrame(simState.animationId);
+        }
+      }
+    }
+
+    function resetSimulation() {
+      simState.running = false;
+      simState.time = 0;
+      simState.volPhi = 0.33;
+      simState.volE = 0.33;
+      simState.volPi = 0.34;
+      simState.history = [];
+
+      const btn = document.getElementById('runBtn');
+      btn.textContent = 'Run Simulation';
+      btn.classList.remove('active');
+
+      if (simState.animationId) {
+        cancelAnimationFrame(simState.animationId);
+      }
+
+      updateSimulator();
+    }
+
+    function addPerturbation() {
+      const perturbation = 0.15;
+      const target = Math.floor(Math.random() * 3);
+
+      if (target === 0) {
+        simState.volPhi += perturbation;
+      } else if (target === 1) {
+        simState.volE += perturbation;
+      } else {
+        simState.volPi += perturbation;
+      }
+
+      // Normalize
+      const total = simState.volPhi + simState.volE + simState.volPi;
+      simState.volPhi /= total;
+      simState.volE /= total;
+      simState.volPi /= total;
+
+      if (!simState.running) {
+        drawBasinVisualization();
+        updateMetrics();
+      }
+    }
+
+    function updateSimulator() {
+      updateParamDisplays();
+      drawBasinVisualization();
+      updateMetrics();
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      updateF24Calc();
+      updateSimulator();
+    });
+  </script>
+
+</body>
+</html>
