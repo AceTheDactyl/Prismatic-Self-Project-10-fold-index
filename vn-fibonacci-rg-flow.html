@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-RG | Fibonacci Renormalization Group Flow</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-void: #0a0a0f;
+      --bg-primary: #12121a;
+      --bg-secondary: #1a1a25;
+      --bg-tertiary: #22222f;
+      --text-primary: #e8e8f0;
+      --text-secondary: #a0a0b0;
+      --text-accent: #ffd700;
+      --fibonacci-gold: #ffd700;
+      --lucas-cyan: #00ffff;
+      --cascade-magenta: #ff00ff;
+      --threshold-green: #00ff88;
+      --border-subtle: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 1rem 2rem;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--text-accent);
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 4rem 2rem;
+      text-align: center;
+      background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.05) 0%, transparent 70%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--lucas-cyan);
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--fibonacci-gold) 0%, var(--lucas-cyan) 50%, var(--cascade-magenta) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    .hero-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-formula .fibonacci { color: var(--fibonacci-gold); }
+    .hero-formula .lucas { color: var(--lucas-cyan); }
+    .hero-formula .operator { color: var(--text-secondary); }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Section Styling */
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--bg-void);
+      background: var(--fibonacci-gold);
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+
+    /* Identity Card */
+    .identity-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--fibonacci-gold);
+      border-radius: 1rem;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .identity-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--fibonacci-gold), var(--lucas-cyan), var(--cascade-magenta));
+    }
+
+    .identity-main {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .identity-example {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .example-box {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .example-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .example-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .example-value.fib { color: var(--fibonacci-gold); }
+    .example-value.lucas { color: var(--lucas-cyan); }
+    .example-value.result { color: var(--cascade-magenta); }
+
+    .example-computation {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    /* Threshold Section */
+    .threshold-display {
+      background: var(--bg-secondary);
+      border: 2px solid var(--threshold-green);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .threshold-glow {
+      position: absolute;
+      inset: -2px;
+      border-radius: 1rem;
+      background: radial-gradient(ellipse at center, rgba(0, 255, 136, 0.2) 0%, transparent 70%);
+      pointer-events: none;
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .threshold-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--threshold-green);
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .threshold-subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--text-accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .threshold-explanation {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Scaling Table */
+    .scaling-table-container {
+      overflow-x: auto;
+    }
+
+    .scaling-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+    }
+
+    .scaling-table th {
+      background: var(--bg-tertiary);
+      color: var(--text-accent);
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 2px solid var(--fibonacci-gold);
+      font-weight: 600;
+    }
+
+    .scaling-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      vertical-align: middle;
+    }
+
+    .scaling-table tr:hover {
+      background: rgba(255, 215, 0, 0.05);
+    }
+
+    .scale-factor {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--fibonacci-gold);
+    }
+
+    .identity-formula {
+      color: var(--text-primary);
+    }
+
+    .example-calc {
+      color: var(--lucas-cyan);
+      font-size: 0.85rem;
+    }
+
+    /* Coherence Cascade Visualization */
+    .cascade-visual {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .cascade-svg {
+      width: 100%;
+      height: 400px;
+    }
+
+    .cascade-level {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      border-left: 4px solid var(--cascade-magenta);
+    }
+
+    .level-n {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-accent);
+      min-width: 80px;
+    }
+
+    .level-fib {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--fibonacci-gold);
+    }
+
+    .level-relation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--lucas-cyan);
+    }
+
+    .level-property {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      flex: 1;
+    }
+
+    /* Interactive Explorer */
+    .explorer {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .explorer-controls {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .control-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .control-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .control-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+    }
+
+    .control-input:focus {
+      outline: none;
+      border-color: var(--fibonacci-gold);
+    }
+
+    .explorer-result {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .result-item {
+      text-align: center;
+    }
+
+    .result-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    /* Framework Connection */
+    .framework-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .framework-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .framework-card:hover {
+      border-color: var(--text-accent);
+      transform: translateY(-3px);
+    }
+
+    .framework-card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .framework-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+    }
+
+    .framework-card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    .framework-card-body {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 4rem;
+    }
+
+    .footer-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--text-accent);
+      margin-bottom: 1rem;
+    }
+
+    .footer p {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    /* Metapattern Law */
+    .law-box {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(0, 255, 255, 0.1) 50%, rgba(255, 0, 255, 0.1) 100%);
+      border: 2px solid var(--text-accent);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .law-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 1rem;
+    }
+
+    .law-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .law-description {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Polynomial Table */
+    .polynomial-table {
+      width: 100%;
+      margin-top: 1.5rem;
+    }
+
+    .polynomial-table th,
+    .polynomial-table td {
+      padding: 0.75rem 1rem;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .polynomial-table th {
+      background: var(--bg-tertiary);
+      color: var(--lucas-cyan);
+    }
+
+    .polynomial-table td {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link">VaultNode Tree</a>
+    <a href="l4-helix-decision-tree.html" class="nav-link">L₄ Helix 16π Gallery</a>
+    <a href="vn-fibonacci-rg-flow.html" class="nav-link active">Fibonacci RG Flow</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <span class="hero-badge">VN-RG | RENORMALIZATION GROUP</span>
+    <h1>Fibonacci RG Flow</h1>
+    <div class="hero-formula">
+      <span class="fibonacci">F(2n)</span>
+      <span class="operator"> = </span>
+      <span class="fibonacci">F(n)</span>
+      <span class="operator"> × </span>
+      <span class="lucas">L(n)</span>
+    </div>
+    <p class="hero-subtitle">
+      The Fibonacci sequence is <strong>self-similar under index doubling</strong>.
+      Scaling n → 2n multiplies F(n) by the Lucas number L(n).
+      This is a <strong>renormalization group transformation</strong>—discrete scaling symmetry
+      that reveals the deep structure connecting microscopic recurrence to macroscopic scaling.
+    </p>
+  </section>
+
+  <main class="main-content">
+
+    <!-- Section 1: The Core Identity -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">The Core Identity: F(2n) = F(n) × L(n)</h2>
+      </div>
+
+      <div class="identity-card">
+        <div class="identity-main">
+          <span style="color: var(--fibonacci-gold)">F₂₄</span>
+          <span style="color: var(--text-secondary)"> = </span>
+          <span style="color: var(--fibonacci-gold)">F₁₂</span>
+          <span style="color: var(--text-secondary)"> × </span>
+          <span style="color: var(--lucas-cyan)">L₁₂</span>
+          <span style="color: var(--text-secondary)"> = </span>
+          <span style="color: var(--fibonacci-gold)">144</span>
+          <span style="color: var(--text-secondary)"> × </span>
+          <span style="color: var(--lucas-cyan)">322</span>
+          <span style="color: var(--text-secondary)"> = </span>
+          <span style="color: var(--cascade-magenta)">46368</span>
+        </div>
+
+        <div class="identity-example">
+          <div class="example-box">
+            <div class="example-label">Lucas L₁₂</div>
+            <div class="example-value lucas">322</div>
+            <div class="example-computation">2,1,3,4,7,11,18,29,47,76,123,199,<strong>322</strong></div>
+          </div>
+          <div class="example-box">
+            <div class="example-label">Fibonacci F₁₂</div>
+            <div class="example-value fib">144</div>
+            <div class="example-computation">1,1,2,3,5,8,13,21,34,55,89,<strong>144</strong></div>
+          </div>
+          <div class="example-box">
+            <div class="example-label">Result F₂₄</div>
+            <div class="example-value result">46368</div>
+            <div class="example-computation">144 × 322 = 46368 ✓</div>
+          </div>
+          <div class="example-box">
+            <div class="example-label">Factor Structure</div>
+            <div class="example-value" style="color: var(--text-primary); font-size: 1.2rem;">12 × 3864</div>
+            <div class="example-computation">= 12² × L₁₂</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: The n=12 Threshold -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">The n=12 Threshold: Where the Universe Winks</h2>
+      </div>
+
+      <div class="threshold-display">
+        <div class="threshold-glow"></div>
+        <div class="threshold-equation">F₁₂ = 144 = 12²</div>
+        <div class="threshold-subtitle">The First Fixed Point of the Scaling Operator</div>
+        <p class="threshold-explanation">
+          At n=12, the Fibonacci sequence achieves a <strong>perfect square alignment</strong>:
+          F(n) = n². This is the <strong>μ_P (phi-sector threshold)</strong> where the
+          microscopic recurrence relation Fₙ = Fₙ₋₁ + Fₙ₋₂ aligns with macroscopic n² scaling.
+          This is the <strong>first eigenvalue crossing</strong> in the Fibonacci RG flow.
+        </p>
+      </div>
+
+      <div class="law-box">
+        <div class="law-title">The 12-ness Invariant</div>
+        <div class="law-formula">F₂₄ = 12² × L₁₂ = 144 × 322</div>
+        <p class="law-description">
+          The 12-ness is <strong>squared</strong> at each scaling level. At n=24 (2×12),
+          the structure repeats with F₂₄/12² = L₁₂. This is <strong>logarithmic scaling</strong>:
+          F(kn) ∝ nᵏ × (Lucas polynomial).
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 3: Scaling Table -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">The Full Metapattern: RG Flow Scaling Identities</h2>
+      </div>
+
+      <div class="scaling-table-container">
+        <table class="scaling-table">
+          <thead>
+            <tr>
+              <th>Scale k</th>
+              <th>Identity</th>
+              <th>Example (n=12)</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="scale-factor">k=2</span></td>
+              <td class="identity-formula">F(2n) = F(n) × L(n)</td>
+              <td class="example-calc">F₂₄ = F₁₂ × L₁₂ = 144 × 322</td>
+              <td style="color: var(--cascade-magenta)">46,368</td>
+            </tr>
+            <tr>
+              <td><span class="scale-factor">k=3</span></td>
+              <td class="identity-formula">F(3n) = F(n) × [L(2n) + (-1)ⁿ]</td>
+              <td class="example-calc">F₃₆ = F₁₂ × [L₂₄ + 1] = 144 × 103,683</td>
+              <td style="color: var(--cascade-magenta)">14,930,352</td>
+            </tr>
+            <tr>
+              <td><span class="scale-factor">k=4</span></td>
+              <td class="identity-formula">F(4n) = F(2n) × L(2n)</td>
+              <td class="example-calc">F₄₈ = F₂₄ × L₂₄ = 46,368 × 103,682</td>
+              <td style="color: var(--cascade-magenta)">4,807,526,976</td>
+            </tr>
+            <tr>
+              <td><span class="scale-factor">k=5</span></td>
+              <td class="identity-formula">F(5n) = F(n) × Pₖ(L, (-1)ⁿ)</td>
+              <td class="example-calc">F₆₀ = F₁₂ × P₅(L₁₂, 1)</td>
+              <td style="color: var(--cascade-magenta)">1,548,008,755,920</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="law-box">
+        <div class="law-title">The General Law: Fibonacci RG Flow</div>
+        <div class="law-formula">F(kn) = F(n) × Pₖ(L(n), (-1)ⁿ)</div>
+        <p class="law-description">
+          Where Pₖ is a <strong>polynomial of degree k-1</strong> in Lucas numbers.
+          This is <strong>discrete scaling symmetry</strong>—the I² projection (idempotent sector):
+          scaling the index maps to multiplicative structure in the sequence.
+        </p>
+
+        <table class="polynomial-table">
+          <thead>
+            <tr>
+              <th>k</th>
+              <th>Polynomial Pₖ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>2</td><td>L(n)</td></tr>
+            <tr><td>3</td><td>L(2n) + (-1)ⁿ</td></tr>
+            <tr><td>4</td><td>L(2n) × L(n) - 2(-1)ⁿ</td></tr>
+            <tr><td>5</td><td>L(4n) + (-1)ⁿ × L(2n) - 1</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 4: Coherence Cascade -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">The Coherence Cascade: Stability Transitions</h2>
+      </div>
+
+      <div class="cascade-visual">
+        <div class="cascade-level" style="border-left-color: var(--threshold-green)">
+          <div class="level-n">n = 12</div>
+          <div class="level-fib">F₁₂ = 144 = 12²</div>
+          <div class="level-relation">First Cascade Point</div>
+          <div class="level-property">Microscopic recurrence aligns with macroscopic n² scaling</div>
+        </div>
+
+        <div class="cascade-level" style="border-left-color: var(--fibonacci-gold)">
+          <div class="level-n">n = 24</div>
+          <div class="level-fib">F₂₄ = 46,368 = 12² × 322</div>
+          <div class="level-relation">Second Cascade Point</div>
+          <div class="level-property">12-ness repeats squared: F₂₄ = 12² × L₁₂</div>
+        </div>
+
+        <div class="cascade-level" style="border-left-color: var(--lucas-cyan)">
+          <div class="level-n">n = 36</div>
+          <div class="level-fib">F₃₆ = 14,930,352 = 12³ × ...</div>
+          <div class="level-relation">Third Cascade Point</div>
+          <div class="level-property">Logarithmic scaling: F(3×12) ∝ 12³ × (Lucas poly)</div>
+        </div>
+
+        <div class="cascade-level" style="border-left-color: var(--cascade-magenta)">
+          <div class="level-n">n = 48</div>
+          <div class="level-fib">F₄₈ = 4,807,526,976</div>
+          <div class="level-relation">Fourth Cascade Point</div>
+          <div class="level-property">F₄₈ = F₂₄ × L₂₄ (recursive RG application)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Interactive Explorer -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">RG Flow Explorer</h2>
+      </div>
+
+      <div class="explorer">
+        <div class="explorer-controls">
+          <div class="control-group">
+            <label class="control-label">Base Index (n)</label>
+            <input type="number" class="control-input" id="nInput" value="12" min="1" max="50" onchange="updateExplorer()">
+          </div>
+          <div class="control-group">
+            <label class="control-label">Scale Factor (k)</label>
+            <input type="number" class="control-input" id="kInput" value="2" min="1" max="10" onchange="updateExplorer()">
+          </div>
+        </div>
+
+        <div class="explorer-result" id="explorerResult">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Framework Connection -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Framework Connection: Why This Matters</h2>
+      </div>
+
+      <div class="framework-grid">
+        <div class="framework-card">
+          <div class="framework-card-header">
+            <div class="framework-icon" style="color: var(--threshold-green)">12</div>
+            <div class="framework-card-title">12 is Frame-Independent</div>
+          </div>
+          <div class="framework-card-body">
+            The fact that F₁₂ = 12² is invariant—it doesn't matter what base or units you use.
+            It's a property of the recurrence itself. In the framework, <strong>12 is a fixed point
+            of the scaling operator</strong> where microscopic dynamics see macroscopic structure.
+          </div>
+        </div>
+
+        <div class="framework-card">
+          <div class="framework-card-header">
+            <div class="framework-icon" style="color: var(--lucas-cyan)">L</div>
+            <div class="framework-card-title">Lucas = Observer Coordinates</div>
+          </div>
+          <div class="framework-card-body">
+            The Lucas numbers L(n) are the <strong>observer coordinates</strong> in the Inversion Framework—
+            the i-sector (oscillatory/imaginary component). When scaling from F₁₂ to F₂₄, you
+            multiply by the observer's perspective at that scale. The observer renormalizes.
+          </div>
+        </div>
+
+        <div class="framework-card">
+          <div class="framework-card-header">
+            <div class="framework-icon" style="color: var(--cascade-magenta)">#21</div>
+            <div class="framework-card-title">Tier 3: Coherence Cascade</div>
+          </div>
+          <div class="framework-card-body">
+            Paper #021 describes exactly this: <em>"Stability transitions at thresholds where
+            microscopic recurrence aligns with macroscopic scaling."</em> The n=12 threshold is
+            the <strong>first cascade point</strong> where this alignment occurs.
+          </div>
+        </div>
+
+        <div class="framework-card">
+          <div class="framework-card-header">
+            <div class="framework-icon" style="color: var(--fibonacci-gold)">52</div>
+            <div class="framework-card-title">VaultNode Prismatic Rail</div>
+          </div>
+          <div class="framework-card-body">
+            Paper #052: The observer traverses <strong>10 stations</strong>, and station 12
+            is where perspective locks in. The Lucas connection (L₁₂ = 322) represents the
+            observer's renormalized viewpoint at the 12-threshold.
+          </div>
+        </div>
+
+        <div class="framework-card">
+          <div class="framework-card-header">
+            <div class="framework-icon" style="color: var(--text-accent)">I²</div>
+            <div class="framework-card-title">I² Projection (Idempotent Sector)</div>
+          </div>
+          <div class="framework-card-body">
+            The discrete scaling symmetry F(kn) = F(n) × Pₖ(...) is the <strong>I² projection</strong>:
+            scaling the index maps to multiplicative structure. This is idempotent behavior—
+            the structure preserves itself under transformation.
+          </div>
+        </div>
+
+        <div class="framework-card">
+          <div class="framework-card-header">
+            <div class="framework-icon" style="color: var(--threshold-green)">R</div>
+            <div class="framework-card-title">R-Calculus Polynomial Recursion</div>
+          </div>
+          <div class="framework-card-body">
+            The polynomial Pₖ(L(n), (-1)ⁿ) follows exactly the <strong>R-calculus recursion</strong>.
+            Each scaling level k generates a polynomial of degree k-1 in Lucas numbers—
+            this is the same structure as the R(R)=R self-reference pattern.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Fibonacci → e Continuous Limit -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">The Discrete → Continuous Bridge: Fibonacci → e</h2>
+      </div>
+
+      <div class="identity-card" style="border-color: var(--lucas-cyan);">
+        <div class="law-title" style="margin-bottom: 1.5rem;">Step 1: Fibonacci as Discrete Self-Reference</div>
+
+        <div class="identity-main" style="font-size: 1.5rem;">
+          <span style="color: var(--fibonacci-gold)">Fₙ = Fₙ₋₁ + Fₙ₋₂</span>
+          <span style="color: var(--text-secondary); display: block; margin-top: 0.5rem; font-size: 1.2rem;">↓ Matrix Form ↓</span>
+          <span style="color: var(--lucas-cyan); display: block; margin-top: 0.5rem;">
+            [Fₙ₊₁, Fₙ] = [1,1; 1,0]ⁿ × [F₁, F₀]
+          </span>
+        </div>
+
+        <p style="color: var(--text-secondary); text-align: center; line-height: 1.8; margin-bottom: 2rem;">
+          The recurrence Fₙ = Fₙ₋₁ + Fₙ₋₂ is a <strong>discrete dynamical system</strong>.
+          The matrix M = [1,1; 1,0] has eigenvalues <strong>φ</strong> and <strong>-1/φ</strong>.
+          This means Fₙ ≈ φⁿ/√5 for large n (Binet's formula).
+        </p>
+
+        <div class="law-title" style="margin-bottom: 1.5rem;">Step 2: The Discrete → Continuous Jump</div>
+
+        <div class="identity-main" style="font-size: 1.3rem; background: var(--bg-primary);">
+          <span style="color: var(--text-secondary);">Discrete: </span>
+          <span style="color: var(--fibonacci-gold)">Fₙ₊₁ = φ · Fₙ</span>
+          <span style="color: var(--text-secondary); display: block; margin: 1rem 0;">↓ Continuous Limit (Δn → 0) ↓</span>
+          <span style="color: var(--threshold-green);">dF/dn = F · log(φ)</span>
+        </div>
+
+        <p style="color: var(--text-secondary); text-align: center; line-height: 1.8; margin-bottom: 2rem;">
+          In the continuous limit, the discrete recurrence becomes a <strong>differential equation</strong>.
+          The ratio Fₙ₊₁/Fₙ → φ becomes the exponential growth rate log(φ) ≈ 0.4812...
+        </p>
+
+        <div class="law-title" style="margin-bottom: 1.5rem;">Step 3: The Emergence of e</div>
+
+        <div class="identity-main" style="font-size: 1.4rem; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(0, 255, 136, 0.1) 100%);">
+          <span style="color: var(--threshold-green);">F(n) = F(0) · e^(n·log(φ))</span>
+          <span style="color: var(--text-secondary); display: block; margin-top: 0.5rem; font-size: 1rem;">
+            Solution to dF/dn = F · log(φ)
+          </span>
+        </div>
+
+        <div class="identity-example" style="margin-top: 2rem;">
+          <div class="example-box" style="border-color: var(--fibonacci-gold);">
+            <div class="example-label">Discrete World</div>
+            <div class="example-value fib" style="font-size: 1.5rem;">Fₙ ∝ φⁿ</div>
+            <div class="example-computation">Golden ratio scaling</div>
+          </div>
+          <div class="example-box" style="border-color: var(--threshold-green);">
+            <div class="example-label">Continuous World</div>
+            <div class="example-value" style="color: var(--threshold-green); font-size: 1.5rem;">F ∝ e^(t·log φ)</div>
+            <div class="example-computation">Exponential growth</div>
+          </div>
+          <div class="example-box" style="border-color: var(--cascade-magenta);">
+            <div class="example-label">The Bridge</div>
+            <div class="example-value" style="color: var(--cascade-magenta); font-size: 1.5rem;">e = lim φ^(1/Δt)</div>
+            <div class="example-computation">as Δt → 0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="law-box" style="border-color: var(--threshold-green); margin-top: 2rem;">
+        <div class="law-title">The Deep Connection</div>
+        <div class="law-formula" style="font-size: 1.5rem;">
+          e = lim<sub>n→∞</sub> (φ^(n/log n)) · correction
+        </div>
+        <p class="law-description">
+          The number <strong>e</strong> emerges as the <strong>continuous limit</strong> of φ-scaling.
+          When you let the discrete steps become infinitesimal, golden ratio growth (φⁿ)
+          becomes exponential growth (e^t). This is how <strong>discrete self-reference
+          (Fibonacci) connects to continuous self-reference (e^x = its own derivative)</strong>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 8: TDL Mechanism -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <h2 class="section-title">The TDL Mechanism: Where e, φ, and π Unite</h2>
+      </div>
+
+      <div class="threshold-display" style="border-color: var(--cascade-magenta);">
+        <div class="threshold-glow" style="background: radial-gradient(ellipse at center, rgba(255, 0, 255, 0.2) 0%, transparent 70%);"></div>
+        <div class="threshold-equation" style="color: var(--cascade-magenta); font-size: 2rem;">
+          dΛ/dt = Λ · log(φ) / Δt
+        </div>
+        <div class="threshold-subtitle">The Theory of Directed Learning (TDL) Equation</div>
+        <p class="threshold-explanation">
+          The <strong>learning rate Λ(t)</strong> evolves according to a differential equation
+          that connects <strong>φ (golden ratio)</strong> to <strong>e (exponential growth)</strong>.
+          The solution is: <strong>Λ(t) = Λ(0) · e^(t·log(φ)/Δt)</strong>
+        </p>
+      </div>
+
+      <div class="framework-grid" style="margin-top: 2rem;">
+        <div class="framework-card" style="border-color: var(--threshold-green);">
+          <div class="framework-card-header">
+            <div class="framework-icon" style="color: var(--threshold-green);">Δt</div>
+            <div class="framework-card-title">The Clock Speed: Δt = 1/12</div>
+          </div>
+          <div class="framework-card-body">
+            When <strong>Δt = 1/12</strong>, the equation becomes:
+            <div style="font-family: 'JetBrains Mono', monospace; color: var(--lucas-cyan); margin: 1rem 0; font-size: 1.1rem;">
+              Λ(t) = Λ(0) · e^(12t·log(φ))
+            </div>
+            The factor of <strong>12</strong> sets the "clock speed" of learning—
+            and this is precisely where F₁₂ = 12² creates the first fixed point!
+          </div>
+        </div>
+
+        <div class="framework-card" style="border-color: var(--fibonacci-gold);">
+          <div class="framework-card-header">
+            <div class="framework-icon" style="color: var(--fibonacci-gold);">φ</div>
+            <div class="framework-card-title">φ as the Discrete Unit</div>
+          </div>
+          <div class="framework-card-body">
+            In the discrete world, each step multiplies by φ:
+            <div style="font-family: 'JetBrains Mono', monospace; color: var(--fibonacci-gold); margin: 1rem 0;">
+              Λₙ₊₁ = φ · Λₙ
+            </div>
+            The golden ratio is the <strong>discrete unit of growth</strong>—
+            the smallest scaling factor that maintains self-similarity.
+          </div>
+        </div>
+
+        <div class="framework-card" style="border-color: var(--lucas-cyan);">
+          <div class="framework-card-header">
+            <div class="framework-icon" style="color: var(--lucas-cyan);">e</div>
+            <div class="framework-card-title">e as the Continuous Limit</div>
+          </div>
+          <div class="framework-card-body">
+            In the continuous limit, φ-scaling becomes e-scaling:
+            <div style="font-family: 'JetBrains Mono', monospace; color: var(--threshold-green); margin: 1rem 0;">
+              Λ(t) = Λ(0) · e^(t/τ)
+            </div>
+            where τ = Δt/log(φ). The number <strong>e</strong> is the continuous
+            manifestation of the golden ratio's growth principle.
+          </div>
+        </div>
+
+        <div class="framework-card" style="border-color: var(--cascade-magenta);">
+          <div class="framework-card-header">
+            <div class="framework-icon" style="color: var(--cascade-magenta);">π</div>
+            <div class="framework-card-title">π Through Euler's Identity</div>
+          </div>
+          <div class="framework-card-body">
+            The oscillatory component brings in π:
+            <div style="font-family: 'JetBrains Mono', monospace; color: var(--cascade-magenta); margin: 1rem 0;">
+              e^(iπ) + 1 = 0
+            </div>
+            The Lucas numbers carry the <strong>i-sector (imaginary/oscillatory)</strong>,
+            connecting φ to π through the same exponential structure.
+          </div>
+        </div>
+      </div>
+
+      <div class="law-box" style="border-color: var(--cascade-magenta); margin-top: 2rem;">
+        <div class="law-title">The n=12 Eigenvalue Crossing</div>
+        <div class="law-formula" style="font-size: 1.3rem;">
+          At n=12: F₁₂ = n² = 144 ⟺ "Discrete eigenvalue meets macroscopic scale"
+        </div>
+        <p class="law-description" style="max-width: 800px;">
+          The n=12 threshold is where the <strong>discrete eigenvalue (φ¹²)</strong>
+          first aligns with <strong>macroscopic n² scaling</strong>. This is the
+          <strong>first fixed point</strong> of the Fibonacci RG flow—the moment where
+          microscopic recurrence "sees" its own macroscopic structure. Setting Δt = 1/12
+          in the TDL equation calibrates the continuous limit to pass through this
+          exact eigenvalue crossing. This is why <strong>12</strong> appears everywhere:
+          12 hours, 12 months, 12 semitones—it's the natural "clock cycle" where
+          discrete φ-dynamics align with continuous e-dynamics.
+        </p>
+      </div>
+
+      <div class="cascade-visual" style="margin-top: 2rem;">
+        <div class="cascade-level" style="border-left-color: var(--fibonacci-gold);">
+          <div class="level-n" style="font-size: 1.2rem;">φ</div>
+          <div class="level-fib">Discrete Growth Unit</div>
+          <div class="level-relation">Fₙ₊₁/Fₙ → φ</div>
+          <div class="level-property">Golden ratio: the smallest self-similar scaling factor</div>
+        </div>
+
+        <div class="cascade-level" style="border-left-color: var(--threshold-green);">
+          <div class="level-n" style="font-size: 1.2rem;">e</div>
+          <div class="level-fib">Continuous Growth Rate</div>
+          <div class="level-relation">d/dx(eˣ) = eˣ</div>
+          <div class="level-property">The function that is its own derivative—continuous self-reference</div>
+        </div>
+
+        <div class="cascade-level" style="border-left-color: var(--cascade-magenta);">
+          <div class="level-n" style="font-size: 1.2rem;">π</div>
+          <div class="level-fib">Oscillatory Component</div>
+          <div class="level-relation">e^(iπ) = -1</div>
+          <div class="level-property">The cycle that completes—rotation in the complex plane</div>
+        </div>
+
+        <div class="cascade-level" style="border-left-color: var(--text-accent);">
+          <div class="level-n" style="font-size: 1.2rem;">12</div>
+          <div class="level-fib">The Fixed Point</div>
+          <div class="level-relation">F₁₂ = 12² = 144</div>
+          <div class="level-property">Where discrete and continuous worlds first agree—the eigenvalue crossing</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-formula">F(2n) = F(n) × L(n) | F₁₂ = 12² | Δt = 1/12 | e = lim φ^(1/Δt)</div>
+    <p>VN-RG Fibonacci Renormalization Group Flow | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // Fibonacci and Lucas generators
+    function fib(n) {
+      if (n <= 0) return 0;
+      if (n === 1 || n === 2) return 1;
+      let a = 1, b = 1;
+      for (let i = 3; i <= n; i++) {
+        [a, b] = [b, a + b];
+      }
+      return b;
+    }
+
+    function lucas(n) {
+      if (n === 0) return 2;
+      if (n === 1) return 1;
+      let a = 2, b = 1;
+      for (let i = 2; i <= n; i++) {
+        [a, b] = [b, a + b];
+      }
+      return b;
+    }
+
+    // Format large numbers
+    function formatNumber(n) {
+      return n.toLocaleString();
+    }
+
+    // Update explorer
+    function updateExplorer() {
+      const n = parseInt(document.getElementById('nInput').value) || 12;
+      const k = parseInt(document.getElementById('kInput').value) || 2;
+
+      const Fn = fib(n);
+      const Ln = lucas(n);
+      const Fkn = fib(k * n);
+      const Lkn = lucas(k * n);
+
+      // Calculate the polynomial result
+      let polyResult = Fkn / Fn;
+
+      // Check if n is a perfect square root of F(n)
+      const sqrtCheck = Math.sqrt(Fn);
+      const isPerfectSquare = Math.abs(sqrtCheck - n) < 0.0001;
+
+      document.getElementById('explorerResult').innerHTML = `
+        <div class="result-item">
+          <div class="result-label">F(${n})</div>
+          <div class="result-value" style="color: var(--fibonacci-gold)">${formatNumber(Fn)}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">L(${n})</div>
+          <div class="result-value" style="color: var(--lucas-cyan)">${formatNumber(Ln)}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">F(${k}×${n}) = F(${k*n})</div>
+          <div class="result-value" style="color: var(--cascade-magenta)">${formatNumber(Fkn)}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">F(${k*n}) / F(${n})</div>
+          <div class="result-value" style="color: var(--text-primary)">${formatNumber(Math.round(polyResult))}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">L(${k*n})</div>
+          <div class="result-value" style="color: var(--lucas-cyan)">${formatNumber(Lkn)}</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">n² = ${n}²</div>
+          <div class="result-value" style="color: ${isPerfectSquare ? 'var(--threshold-green)' : 'var(--text-secondary)'}">${n*n}${isPerfectSquare ? ' ✓' : ''}</div>
+        </div>
+        ${k === 2 ? `
+        <div class="result-item" style="grid-column: 1 / -1; background: var(--bg-secondary); padding: 1rem; border-radius: 0.5rem; margin-top: 1rem;">
+          <div class="result-label">VERIFICATION: F(2n) = F(n) × L(n)</div>
+          <div class="result-value" style="color: var(--threshold-green); font-size: 1.2rem;">
+            ${formatNumber(Fn)} × ${formatNumber(Ln)} = ${formatNumber(Fn * Ln)}
+            ${Fn * Ln === Fkn ? '✓ CONFIRMED' : '(checking...)'}
+          </div>
+        </div>
+        ` : ''}
+      `;
+    }
+
+    // Initialize
+    updateExplorer();
+  </script>
+
+</body>
+</html>
