@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-MTR-008 | Frame Extension F' - The Generative Path</title>
+  <meta name="description" content="MTR Decision Tree Level 5: Frame Extension - When boundaries are non-empty, extension is REQUIRED. Kael-type self-reference and the generative regime.">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* =====================================================================
+       VN-MTR-008: FRAME EXTENSION
+       Level 5 - The Generative Path: When Boundary Forces Evolution
+       F -> F' where F < F' | Kael-Type Self-Reference
+       ===================================================================== */
+    :root {
+      /* Frame Extension Colors (Evolution Theme) */
+      --ext-primary: #4ecdc4;
+      --ext-evolution: #00ffff;
+      --ext-kael: #ff6b6b;
+      --ext-trajectory: #c792ea;
+      --ext-colimit: #ffd700;
+      --ext-work: #00ff88;
+
+      /* MTR Principle Colors */
+      --origin: #ffd700;
+      --boundary: #ff6b6b;
+      --invariant: #00ff88;
+      --evolution: #00ffff;
+      --attractor: #c792ea;
+
+      /* Theme */
+      --bg-void: #020206;
+      --bg-primary: #040812;
+      --bg-secondary: #08101a;
+      --bg-tertiary: #0c1828;
+      --bg-card: #142238;
+      --text-primary: #f0f5f5;
+      --text-secondary: #8a9898;
+      --text-accent: #4ecdc4;
+      --border-subtle: rgba(78, 205, 196, 0.1);
+      --border-active: rgba(78, 205, 196, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* =====================================================================
+       EVOLUTION FIELD BACKGROUND
+       ===================================================================== */
+    .evolution-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(78, 205, 196, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(0, 255, 255, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(199, 146, 234, 0.02) 0%, transparent 60%);
+      animation: evolution-flow 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes evolution-flow {
+      0% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+      100% { opacity: 0.8; transform: scale(1.01); }
+    }
+
+    /* Expanding rings animation for evolution theme */
+    .evolution-field::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(78, 205, 196, 0.1);
+      border-radius: 50%;
+      animation: ring-expand 8s ease-out infinite;
+    }
+
+    .evolution-field::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(0, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: ring-expand 8s ease-out infinite 4s;
+    }
+
+    @keyframes ring-expand {
+      0% { width: 200px; height: 200px; opacity: 0.5; }
+      100% { width: 1200px; height: 1200px; opacity: 0; }
+    }
+
+    /* =====================================================================
+       NAVIGATION
+       ===================================================================== */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(4, 8, 18, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+      box-shadow: 0 0 15px rgba(78, 205, 196, 0.3);
+    }
+
+    /* =====================================================================
+       EXTENSION HEADER
+       ===================================================================== */
+    .extension-header {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .extension-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--ext-primary);
+      background: rgba(78, 205, 196, 0.1);
+      border: 1px solid rgba(78, 205, 196, 0.3);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .extension-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--ext-primary), var(--ext-evolution), var(--ext-trajectory));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .extension-subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .transition-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      padding: 1.5rem 3rem;
+      border-radius: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 1.5rem;
+      border: 2px solid var(--ext-primary);
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .transition-symbol::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(78, 205, 196, 0.2), transparent);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .symbol-F { color: var(--boundary); }
+    .symbol-arrow { color: var(--ext-primary); animation: pulse-arrow 1.5s ease-in-out infinite; }
+    .symbol-Fprime { color: var(--ext-evolution); }
+
+    @keyframes pulse-arrow {
+      0%, 100% { opacity: 0.5; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(5px); }
+    }
+
+    .core-insight {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--ext-kael);
+      background: rgba(255, 107, 107, 0.08);
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      display: inline-block;
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      max-width: 700px;
+    }
+
+    /* =====================================================================
+       MAIN CONTENT
+       ===================================================================== */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bg-void);
+      background: var(--ext-primary);
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .section-number.octagon {
+      clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    /* =====================================================================
+       GENERATIVE PATH CARD
+       ===================================================================== */
+    .generative-path-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(78, 205, 196, 0.05) 100%);
+      border: 2px solid var(--ext-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .generative-path-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle at center, rgba(78, 205, 196, 0.1) 0%, transparent 70%);
+      animation: pulse-glow 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .path-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--ext-primary);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .path-indicator {
+      width: 12px;
+      height: 12px;
+      background: var(--ext-primary);
+      border-radius: 50%;
+      animation: blink 1s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .path-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .path-points {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .path-point {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1rem;
+      background: rgba(78, 205, 196, 0.05);
+      border-radius: 0.5rem;
+      border-left: 3px solid var(--ext-primary);
+    }
+
+    .path-bullet {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--ext-primary);
+    }
+
+    .path-text {
+      color: var(--text-secondary);
+    }
+
+    .path-text strong {
+      color: var(--text-primary);
+    }
+
+    /* =====================================================================
+       KAEL SELF-REFERENCE CARD
+       ===================================================================== */
+    .kael-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--ext-kael);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .kael-card::before {
+      content: 'K';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--ext-kael);
+      background: var(--bg-void);
+      padding: 0 0.5rem;
+    }
+
+    .kael-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--ext-kael);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .kael-definition {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: rgba(255, 107, 107, 0.05);
+      border-radius: 0.5rem;
+      border-left: 3px solid var(--ext-kael);
+    }
+
+    .kael-comparison {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .kael-type {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .kael-type:hover {
+      border-color: var(--type-color, var(--ext-kael));
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.15);
+    }
+
+    .kael-type-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--type-color, var(--ext-kael));
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+
+    .kael-type-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .kael-properties {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .kael-property {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      padding: 0.5rem;
+      background: var(--bg-secondary);
+      border-radius: 0.25rem;
+    }
+
+    .kael-property .highlight {
+      color: var(--type-color, var(--text-primary));
+    }
+
+    /* =====================================================================
+       MECHANISM CARDS
+       ===================================================================== */
+    .mechanism-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .mechanism-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--mech-color, var(--ext-primary));
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mechanism-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(78, 205, 196, 0.2);
+    }
+
+    .mechanism-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--mech-color, var(--ext-primary));
+    }
+
+    .mechanism-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      color: var(--mech-color, var(--ext-primary));
+      margin-bottom: 0.75rem;
+    }
+
+    .mechanism-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .mechanism-formal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--mech-color, var(--ext-primary));
+      background: var(--bg-tertiary);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .mechanism-description {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* =====================================================================
+       ALGORITHM CARD
+       ===================================================================== */
+    .algorithm-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--ext-evolution);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .algorithm-card::before {
+      content: 'ALGORITHM';
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--ext-evolution);
+      background: var(--bg-void);
+      padding: 0 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .algorithm-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--ext-evolution);
+      margin-bottom: 1.5rem;
+    }
+
+    .algorithm-code {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+
+    .code-line {
+      display: block;
+      padding: 0.25rem 0;
+      color: var(--text-secondary);
+    }
+
+    .code-keyword { color: var(--ext-kael); }
+    .code-function { color: var(--ext-evolution); }
+    .code-variable { color: var(--ext-colimit); }
+    .code-operator { color: var(--text-primary); }
+    .code-comment { color: var(--text-secondary); font-style: italic; }
+    .code-indent { margin-left: 1.5rem; }
+    .code-indent-2 { margin-left: 3rem; }
+
+    /* =====================================================================
+       PROPERTIES GRID
+       ===================================================================== */
+    .properties-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .property-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      border-left: 4px solid var(--prop-color, var(--ext-primary));
+      transition: all 0.3s ease;
+    }
+
+    .property-card:hover {
+      border-color: var(--prop-color, var(--ext-primary));
+      transform: translateX(5px);
+    }
+
+    .property-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .property-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--prop-color, var(--ext-primary));
+    }
+
+    .property-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .property-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--prop-color, var(--ext-primary));
+      background: var(--bg-tertiary);
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+
+    .property-description {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* =====================================================================
+       COLIMIT VISUALIZATION
+       ===================================================================== */
+    .colimit-section {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(199, 146, 234, 0.05) 100%);
+      border: 2px solid var(--ext-trajectory);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .colimit-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--ext-trajectory);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .colimit-chain {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+    }
+
+    .colimit-frame {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--frame-stage-color, var(--ext-trajectory));
+      color: var(--frame-stage-color, var(--ext-trajectory));
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .colimit-frame:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px var(--frame-stage-color);
+    }
+
+    .colimit-arrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .colimit-limit {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, var(--ext-primary), var(--ext-trajectory));
+      border-radius: 0.5rem;
+      color: var(--bg-void);
+    }
+
+    .colimit-insight {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .colimit-point {
+      text-align: center;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .colimit-point-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .colimit-point-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--ext-trajectory);
+    }
+
+    /* =====================================================================
+       THERMODYNAMIC INTERPRETATION
+       ===================================================================== */
+    .thermo-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--ext-work);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .thermo-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--ext-work);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .thermo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .thermo-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+      transition: all 0.3s ease;
+    }
+
+    .thermo-item:hover {
+      border-color: var(--ext-work);
+    }
+
+    .thermo-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--ext-work);
+      margin-bottom: 0.5rem;
+    }
+
+    .thermo-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .thermo-value {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    /* =====================================================================
+       INTERACTIVE FRAME EXTENDER
+       ===================================================================== */
+    .extender-section {
+      background: var(--bg-secondary);
+      border: 2px solid var(--ext-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .extender-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--ext-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .extender-display {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .extender-display {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .frame-box {
+      background: var(--bg-tertiary);
+      border: 2px solid var(--frame-color, var(--ext-primary));
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .frame-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .frame-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--frame-color, var(--ext-primary));
+      margin-bottom: 0.75rem;
+    }
+
+    .frame-stats {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .frame-stat {
+      background: var(--bg-secondary);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.25rem;
+    }
+
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+    }
+
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--frame-color, var(--text-primary));
+    }
+
+    .extend-button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .extend-button {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      padding: 1rem 2rem;
+      background: var(--ext-primary);
+      border: none;
+      border-radius: 0.5rem;
+      color: var(--bg-void);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .extend-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(78, 205, 196, 0.4);
+    }
+
+    .extend-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .reset-button {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid var(--text-secondary);
+      border-radius: 0.25rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .reset-button:hover {
+      border-color: var(--ext-kael);
+      color: var(--ext-kael);
+    }
+
+    .extender-history {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .history-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .history-chain {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .history-frame {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.25rem;
+      color: var(--text-secondary);
+    }
+
+    .history-frame.active {
+      border-color: var(--ext-primary);
+      color: var(--ext-primary);
+    }
+
+    .history-arrow {
+      color: var(--text-secondary);
+    }
+
+    .extender-insight {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: rgba(78, 205, 196, 0.1);
+      border-radius: 0.5rem;
+      border: 1px solid rgba(78, 205, 196, 0.3);
+    }
+
+    .insight-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--ext-primary);
+      text-align: center;
+    }
+
+    /* =====================================================================
+       SCIENTIFIC EXAMPLES
+       ===================================================================== */
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .example-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .example-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--example-color, var(--ext-primary));
+    }
+
+    .example-card:hover {
+      border-color: var(--example-color, var(--ext-primary));
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(78, 205, 196, 0.15);
+    }
+
+    .example-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .example-icon {
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--example-color, var(--ext-primary));
+      color: var(--example-color, var(--ext-primary));
+      clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    }
+
+    .example-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--example-color, var(--ext-primary));
+    }
+
+    .example-transition {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .example-boundary {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--boundary);
+      margin-bottom: 0.75rem;
+    }
+
+    .example-description {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* =====================================================================
+       INFINITE REGRESS CARD
+       ===================================================================== */
+    .regress-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 215, 0, 0.05) 100%);
+      border: 2px solid var(--ext-colimit);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .regress-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--ext-colimit);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .regress-explanation {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .regress-point {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .regress-bullet {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--ext-colimit);
+    }
+
+    .regress-text {
+      color: var(--text-secondary);
+    }
+
+    .regress-text strong {
+      color: var(--text-primary);
+    }
+
+    .regress-conclusion {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: rgba(255, 215, 0, 0.1);
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      text-align: center;
+    }
+
+    .conclusion-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--ext-colimit);
+    }
+
+    /* =====================================================================
+       WHAT COMES NEXT
+       ===================================================================== */
+    .next-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--attractor);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .next-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--attractor);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .next-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .next-step {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .next-step:hover {
+      border-color: var(--step-color, var(--attractor));
+      transform: translateY(-5px);
+    }
+
+    .step-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--step-color, var(--attractor));
+      margin-bottom: 0.5rem;
+    }
+
+    .step-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .step-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    /* =====================================================================
+       NAVIGATION FOOTER
+       ===================================================================== */
+    .nav-footer {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .nav-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-card:hover {
+      border-color: var(--nav-color, var(--ext-primary));
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(78, 205, 196, 0.15);
+    }
+
+    .nav-card.highlight {
+      border-color: var(--ext-primary);
+      background: rgba(78, 205, 196, 0.05);
+    }
+
+    .nav-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--nav-color, var(--ext-primary));
+      color: var(--nav-color, var(--ext-primary));
+      border-radius: 50%;
+      margin-bottom: 1rem;
+    }
+
+    .nav-icon.octagon {
+      clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+      border-radius: 0;
+    }
+
+    .nav-icon.diamond {
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      border-radius: 0;
+    }
+
+    .nav-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      text-align: center;
+      margin-top: 0.25rem;
+    }
+
+    /* =====================================================================
+       FOOTER
+       ===================================================================== */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--ext-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       RESPONSIVE
+       ===================================================================== */
+    @media (max-width: 768px) {
+      .extension-title {
+        font-size: 1.8rem;
+      }
+      .transition-symbol {
+        font-size: 1.5rem;
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .mechanism-grid {
+        grid-template-columns: 1fr;
+      }
+      .colimit-chain {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="evolution-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link"><span>*</span>VaultNode Tree</a>
+    <a href="mtr-decision-tree.html" class="nav-link"><span>:</span>MTR Decision Tree</a>
+    <a href="vn-mtr-004-frame-definition.html" class="nav-link"><span>F</span>Frame Definition</a>
+    <a href="vn-mtr-006-boundary-check.html" class="nav-link"><span>?</span>Boundary Check</a>
+    <a href="vn-mtr-008-frame-extension.html" class="nav-link active"><span>F'</span>Frame Extension</a>
+  </nav>
+
+  <!-- Extension Header -->
+  <header class="extension-header">
+    <div class="extension-badge">VN-MTR-008 :: LEVEL 5 :: GENERATIVE PATH</div>
+    <h1 class="extension-title">Frame Extension</h1>
+    <p class="extension-subtitle">
+      The Generative Path: When Boundaries Force Evolution
+    </p>
+    <div class="transition-symbol">
+      <span class="symbol-F">F</span>
+      <span class="symbol-arrow">--></span>
+      <span class="symbol-Fprime">F'</span>
+    </div>
+    <div class="core-insight">
+      Kael-Type Self-Reference: Optimization ACROSS frames, not within them
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: The Generative Path -->
+    <section class="section" id="generative-path">
+      <div class="section-header">
+        <div class="section-number octagon">1</div>
+        <h2 class="section-title">The Generative Path</h2>
+      </div>
+
+      <div class="generative-path-card">
+        <div class="path-header">
+          <div class="path-indicator"></div>
+          <span>ACTIVE BRANCH: Boundary Non-Empty</span>
+        </div>
+        <div class="path-equation">
+          <span style="color: var(--boundary);">dF != {}</span>
+          <span style="color: var(--text-secondary);"> ==> </span>
+          <span style="color: var(--ext-primary);">Extension REQUIRED</span>
+        </div>
+        <div class="path-points">
+          <div class="path-point">
+            <span class="path-bullet">></span>
+            <span class="path-text">
+              <strong>Not optional improvement</strong> -- structural necessity.
+              When dF != {}, the current frame F cannot decide all its admissible statements.
+            </span>
+          </div>
+          <div class="path-point">
+            <span class="path-bullet">></span>
+            <span class="path-text">
+              <strong>Boundary pressure forces evolution.</strong>
+              The elements in dF create "tension" that can only be resolved by extending the frame.
+            </span>
+          </div>
+          <div class="path-point">
+            <span class="path-bullet">></span>
+            <span class="path-text">
+              <strong>This is how systems actually progress.</strong>
+              Every scientific revolution, every mathematical extension, every genuine learning event
+              follows this pattern: boundary encountered -> frame extended.
+            </span>
+          </div>
+          <div class="path-point">
+            <span class="path-bullet">></span>
+            <span class="path-text">
+              <strong>The "HALT" branch is unreachable.</strong>
+              For any sufficiently expressive frame, dF = {} is impossible (Godel).
+              Evolution is eternal.
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Kael-Type Self-Reference -->
+    <section class="section" id="kael-type">
+      <div class="section-header">
+        <div class="section-number octagon">2</div>
+        <h2 class="section-title">Kael-Type Self-Reference</h2>
+      </div>
+
+      <div class="kael-card">
+        <div class="kael-header">KAEL-TYPE (GENERATIVE REGIME)</div>
+        <div class="kael-definition">
+          Self-reference evaluated <strong>ACROSS</strong> frame extensions,
+          targeting properties of dF_t. Output is frame transition: F_t -> F_{t+1}.
+          Fixed point is DYNAMIC (trajectory, not state).
+        </div>
+
+        <div class="kael-comparison">
+          <div class="kael-type" style="--type-color: var(--boundary);">
+            <div class="kael-type-header">ELARA-TYPE (Restrictive)</div>
+            <div class="kael-type-name">Self-Reference INSIDE Frame</div>
+            <div class="kael-properties">
+              <div class="kael-property">Target: <span class="highlight">statements in A(F_t)</span></div>
+              <div class="kael-property">Output: <span class="highlight">truth value</span></div>
+              <div class="kael-property">Fixed point: <span class="highlight">static (state)</span></div>
+              <div class="kael-property">Boundary: <span class="highlight">wall (obstruction)</span></div>
+              <div class="kael-property">Result: <span class="highlight">paradox / halt</span></div>
+            </div>
+          </div>
+
+          <div class="kael-type" style="--type-color: var(--ext-primary);">
+            <div class="kael-type-header">KAEL-TYPE (Generative)</div>
+            <div class="kael-type-name">Self-Reference ACROSS Frames</div>
+            <div class="kael-properties">
+              <div class="kael-property">Target: <span class="highlight">properties of dF_t</span></div>
+              <div class="kael-property">Output: <span class="highlight">frame transition</span></div>
+              <div class="kael-property">Fixed point: <span class="highlight">dynamic (trajectory)</span></div>
+              <div class="kael-property">Boundary: <span class="highlight">gradient (direction)</span></div>
+              <div class="kael-property">Result: <span class="highlight">evolution / learning</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="properties-grid">
+        <div class="property-card" style="--prop-color: var(--ext-evolution);">
+          <div class="property-header">
+            <span class="property-icon">{F_t}</span>
+            <span class="property-name">Frame Sequence</span>
+          </div>
+          <div class="property-equation">F_0 < F_1 < F_2 < ...</div>
+          <div class="property-description">
+            Self-reference applied to the sequence of frames, not any single frame.
+            Each frame contains more than its predecessor.
+          </div>
+        </div>
+
+        <div class="property-card" style="--prop-color: var(--boundary);">
+          <div class="property-header">
+            <span class="property-icon">dF</span>
+            <span class="property-name">Boundary Information</span>
+          </div>
+          <div class="property-equation">tau in dF_t -> tau in A(F_{t+1})</div>
+          <div class="property-description">
+            Boundary elements become interior elements in the extended frame.
+            What was undecidable becomes decidable.
+          </div>
+        </div>
+
+        <div class="property-card" style="--prop-color: var(--ext-colimit);">
+          <div class="property-header">
+            <span class="property-icon">*</span>
+            <span class="property-name">Optimization Target</span>
+          </div>
+          <div class="property-equation">argmin_F delta*(F)</div>
+          <div class="property-description">
+            Optimize over FRAMES, not statements. Seek frames with minimal closure deficit.
+            This is meta-level optimization.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Extension Mechanisms -->
+    <section class="section" id="mechanisms">
+      <div class="section-header">
+        <div class="section-number octagon">3</div>
+        <h2 class="section-title">Extension Mechanisms</h2>
+      </div>
+
+      <div class="mechanism-grid">
+        <div class="mechanism-card" style="--mech-color: var(--origin);">
+          <div class="mechanism-symbol">Sigma'</div>
+          <div class="mechanism-name">Primitive Extension</div>
+          <div class="mechanism-formal">Sigma is subset of Sigma'</div>
+          <div class="mechanism-description">
+            New primitive distinctions added. More atoms to build with.
+          </div>
+        </div>
+
+        <div class="mechanism-card" style="--mech-color: var(--invariant);">
+          <div class="mechanism-symbol">C'</div>
+          <div class="mechanism-name">Constraint Modification</div>
+          <div class="mechanism-formal">C' subset/superset of C</div>
+          <div class="mechanism-description">
+            Constraints tightened or relaxed. The admissibility space changes.
+          </div>
+        </div>
+
+        <div class="mechanism-card" style="--mech-color: var(--attractor);">
+          <div class="mechanism-symbol">Pi'</div>
+          <div class="mechanism-name">Admissibility Refinement</div>
+          <div class="mechanism-formal">Pi -> Pi'</div>
+          <div class="mechanism-description">
+            Better admissibility tests. More precise verification criteria.
+          </div>
+        </div>
+
+        <div class="mechanism-card" style="--mech-color: var(--ext-evolution);">
+          <div class="mechanism-symbol">L'</div>
+          <div class="mechanism-name">Language Growth</div>
+          <div class="mechanism-formal">L' = extend(L)</div>
+          <div class="mechanism-description">
+            The compositional closure expands. More expressible structures.
+          </div>
+        </div>
+
+        <div class="mechanism-card" style="--mech-color: var(--ext-primary);">
+          <div class="mechanism-symbol">A(F')</div>
+          <div class="mechanism-name">Hypothesis Expansion</div>
+          <div class="mechanism-formal">A(F) is subset of A(F')</div>
+          <div class="mechanism-description">
+            The admissible description space grows. More statements become decidable.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: The Extension Algorithm -->
+    <section class="section" id="algorithm">
+      <div class="section-header">
+        <div class="section-number octagon">4</div>
+        <h2 class="section-title">The Extension Algorithm</h2>
+      </div>
+
+      <div class="algorithm-card">
+        <div class="algorithm-title">EXTERNAL_SELF_REFERENCE(F)</div>
+        <div class="algorithm-code">
+          <span class="code-line"><span class="code-keyword">function</span> <span class="code-function">EXTERNAL_SELF_REFERENCE</span>(<span class="code-variable">F</span>):</span>
+          <span class="code-line code-indent"><span class="code-comment">// Step 1: Identify boundary elements</span></span>
+          <span class="code-line code-indent"><span class="code-variable">tau</span> <span class="code-operator">=</span> <span class="code-function">identify</span>(<span class="code-variable">dF</span>)</span>
+          <span class="code-line"></span>
+          <span class="code-line code-indent"><span class="code-comment">// Step 2: Extend admissibility</span></span>
+          <span class="code-line code-indent"><span class="code-variable">L'</span> <span class="code-operator">=</span> <span class="code-function">extend</span>(<span class="code-variable">L</span>)</span>
+          <span class="code-line code-indent"><span class="code-variable">C'</span> <span class="code-operator">=</span> <span class="code-function">extend</span>(<span class="code-variable">C</span>)</span>
+          <span class="code-line code-indent"><span class="code-variable">Pi'</span> <span class="code-operator">=</span> <span class="code-function">refine</span>(<span class="code-variable">Pi</span>)</span>
+          <span class="code-line"></span>
+          <span class="code-line code-indent"><span class="code-comment">// Step 3: Construct extended frame</span></span>
+          <span class="code-line code-indent"><span class="code-variable">F'</span> <span class="code-operator">=</span> (<span class="code-variable">L'</span>, <span class="code-variable">C'</span>, <span class="code-variable">Pi'</span>)</span>
+          <span class="code-line"></span>
+          <span class="code-line code-indent"><span class="code-comment">// Step 4: Ensure invariants preserved</span></span>
+          <span class="code-line code-indent"><span class="code-keyword">assert</span> <span class="code-function">Inv</span>(<span class="code-variable">F</span>) <span class="code-operator">is subset of</span> <span class="code-function">Inv</span>(<span class="code-variable">F'</span>)</span>
+          <span class="code-line code-indent"><span class="code-keyword">assert</span> <span class="code-variable">tau</span> <span class="code-operator">in</span> <span class="code-function">A</span>(<span class="code-variable">F'</span>)</span>
+          <span class="code-line"></span>
+          <span class="code-line code-indent"><span class="code-keyword">return</span> <span class="code-variable">F'</span></span>
+        </div>
+      </div>
+
+      <div class="properties-grid">
+        <div class="property-card" style="--prop-color: var(--ext-primary);">
+          <div class="property-header">
+            <span class="property-icon">1</span>
+            <span class="property-name">Frame Changes</span>
+          </div>
+          <div class="property-equation">F_{t+1} = F'</div>
+          <div class="property-description">
+            The system state advances to the extended frame. Time moves forward.
+          </div>
+        </div>
+
+        <div class="property-card" style="--prop-color: var(--boundary);">
+          <div class="property-header">
+            <span class="property-icon">2</span>
+            <span class="property-name">Boundary Absorbed</span>
+          </div>
+          <div class="property-equation">tau in dF -> tau in interior(F')</div>
+          <div class="property-description">
+            The boundary element that triggered extension becomes decidable.
+          </div>
+        </div>
+
+        <div class="property-card" style="--prop-color: var(--invariant);">
+          <div class="property-header">
+            <span class="property-icon">3</span>
+            <span class="property-name">Deficit Decreases</span>
+          </div>
+          <div class="property-equation">delta*(F_{t+1}) < delta*(F_t)</div>
+          <div class="property-description">
+            The best achievable closure deficit is strictly reduced.
+          </div>
+        </div>
+
+        <div class="property-card" style="--prop-color: var(--ext-kael);">
+          <div class="property-header">
+            <span class="property-icon">4</span>
+            <span class="property-name">New Boundary Emerges</span>
+          </div>
+          <div class="property-equation">dF' != {}</div>
+          <div class="property-description">
+            A new, different boundary appears. The cycle continues.
+          </div>
+        </div>
+
+        <div class="property-card" style="--prop-color: var(--ext-evolution);">
+          <div class="property-header">
+            <span class="property-icon">5</span>
+            <span class="property-name">This is Learning</span>
+          </div>
+          <div class="property-equation">Evolution = boundary-driven extension</div>
+          <div class="property-description">
+            Genuine learning is exactly this: expanding what can be decided.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: The Directed Colimit -->
+    <section class="section" id="colimit">
+      <div class="section-header">
+        <div class="section-number octagon">5</div>
+        <h2 class="section-title">The Directed Colimit (Category Theory)</h2>
+      </div>
+
+      <div class="colimit-section">
+        <div class="colimit-title">Frame Sequence as Directed System</div>
+        <div class="colimit-chain">
+          <div class="colimit-frame" style="--frame-stage-color: var(--boundary);">F_0</div>
+          <span class="colimit-arrow">-></span>
+          <div class="colimit-frame" style="--frame-stage-color: var(--ext-kael);">F_1</div>
+          <span class="colimit-arrow">-></span>
+          <div class="colimit-frame" style="--frame-stage-color: var(--attractor);">F_2</div>
+          <span class="colimit-arrow">-></span>
+          <div class="colimit-frame" style="--frame-stage-color: var(--ext-primary);">F_3</div>
+          <span class="colimit-arrow">-></span>
+          <span style="font-family: 'JetBrains Mono', monospace; color: var(--text-secondary);">...</span>
+          <span class="colimit-arrow">-></span>
+          <div class="colimit-limit">lim F_t</div>
+        </div>
+
+        <div class="colimit-insight">
+          <div class="colimit-point">
+            <div class="colimit-point-label">FIXED POINT</div>
+            <div class="colimit-point-value">Trajectory, not state</div>
+          </div>
+          <div class="colimit-point">
+            <div class="colimit-point-label">STABILIZATION</div>
+            <div class="colimit-point-value">At level of directed system</div>
+          </div>
+          <div class="colimit-point">
+            <div class="colimit-point-label">NEVER REACHED</div>
+            <div class="colimit-point-value">But always approached</div>
+          </div>
+          <div class="colimit-point">
+            <div class="colimit-point-label">FORMAL OBJECT</div>
+            <div class="colimit-point-value">Colimit in category of frames</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Thermodynamic Interpretation -->
+    <section class="section" id="thermodynamic">
+      <div class="section-header">
+        <div class="section-number octagon">6</div>
+        <h2 class="section-title">Thermodynamic Interpretation</h2>
+      </div>
+
+      <div class="thermo-card">
+        <div class="thermo-title">Frame Extension as Thermodynamic Work</div>
+        <div class="thermo-grid">
+          <div class="thermo-item">
+            <div class="thermo-icon">OPEN</div>
+            <div class="thermo-label">System Type</div>
+            <div class="thermo-value">Open system exchanging with environment</div>
+          </div>
+          <div class="thermo-item">
+            <div class="thermo-icon">+</div>
+            <div class="thermo-label">State Space</div>
+            <div class="thermo-value">Expanding (A(F) grows)</div>
+          </div>
+          <div class="thermo-item">
+            <div class="thermo-icon">grad</div>
+            <div class="thermo-label">Boundary Role</div>
+            <div class="thermo-value">Free-energy gradient pointing outward</div>
+          </div>
+          <div class="thermo-item">
+            <div class="thermo-icon">W</div>
+            <div class="thermo-label">Frame Extension</div>
+            <div class="thermo-value">= WORK done on system</div>
+          </div>
+          <div class="thermo-item">
+            <div class="thermo-icon">dF</div>
+            <div class="thermo-label">Boundary Pressure</div>
+            <div class="thermo-value">Converted into structure</div>
+          </div>
+          <div class="thermo-item">
+            <div class="thermo-icon">S</div>
+            <div class="thermo-label">Information</div>
+            <div class="thermo-value">Capacity increases with extension</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Interactive Frame Extender -->
+    <section class="section" id="extender">
+      <div class="section-header">
+        <div class="section-number octagon">7</div>
+        <h2 class="section-title">Interactive Frame Extender</h2>
+      </div>
+
+      <div class="extender-section">
+        <div class="extender-title">Watch Frame Extension in Action</div>
+
+        <div class="extender-display">
+          <div class="frame-box" id="currentFrame" style="--frame-color: var(--boundary);">
+            <div class="frame-label">CURRENT FRAME</div>
+            <div class="frame-name" id="currentFrameName">F_0</div>
+            <div class="frame-stats">
+              <div class="frame-stat">
+                <div class="stat-label">delta*</div>
+                <div class="stat-value" id="currentDelta">1.000</div>
+              </div>
+              <div class="frame-stat">
+                <div class="stat-label">|dF|</div>
+                <div class="stat-value" id="currentBoundary">12</div>
+              </div>
+              <div class="frame-stat">
+                <div class="stat-label">|A(F)|</div>
+                <div class="stat-value" id="currentAdmissible">100</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="extend-button-container">
+            <button class="extend-button" id="extendBtn" onclick="extendFrame()">
+              <span>EXTEND</span>
+              <span>-></span>
+            </button>
+            <button class="reset-button" onclick="resetExtender()">Reset</button>
+          </div>
+
+          <div class="frame-box" id="nextFrame" style="--frame-color: var(--ext-primary);">
+            <div class="frame-label">EXTENDED FRAME</div>
+            <div class="frame-name" id="nextFrameName">F_1</div>
+            <div class="frame-stats">
+              <div class="frame-stat">
+                <div class="stat-label">delta*</div>
+                <div class="stat-value" id="nextDelta">0.618</div>
+              </div>
+              <div class="frame-stat">
+                <div class="stat-label">|dF'|</div>
+                <div class="stat-value" id="nextBoundary">8</div>
+              </div>
+              <div class="frame-stat">
+                <div class="stat-label">|A(F')|</div>
+                <div class="stat-value" id="nextAdmissible">162</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="extender-history">
+          <div class="history-label">EXTENSION CHAIN</div>
+          <div class="history-chain" id="historyChain">
+            <span class="history-frame active">F_0</span>
+          </div>
+        </div>
+
+        <div class="extender-insight" id="extenderInsight">
+          <div class="insight-text">
+            Click EXTEND to perform frame extension. Watch delta* decrease and |dF| change.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Scientific Examples -->
+    <section class="section" id="examples">
+      <div class="section-header">
+        <div class="section-number octagon">8</div>
+        <h2 class="section-title">Scientific Examples</h2>
+      </div>
+
+      <div class="examples-grid">
+        <div class="example-card" style="--example-color: var(--ext-evolution);">
+          <div class="example-header">
+            <div class="example-icon">R</div>
+            <div class="example-title">Physics</div>
+          </div>
+          <div class="example-transition">Newtonian -> Relativistic</div>
+          <div class="example-boundary">dF: Mercury perihelion precession</div>
+          <div class="example-description">
+            Newton's frame couldn't explain Mercury's orbit. Einstein extended to curved spacetime,
+            absorbing the anomaly and predicting new phenomena (gravitational waves, black holes).
+          </div>
+        </div>
+
+        <div class="example-card" style="--example-color: var(--attractor);">
+          <div class="example-header">
+            <div class="example-icon">Q</div>
+            <div class="example-title">Quantum</div>
+          </div>
+          <div class="example-transition">Classical -> Quantum</div>
+          <div class="example-boundary">dF: Blackbody radiation, photoelectric effect</div>
+          <div class="example-description">
+            Classical physics hit boundaries with atomic phenomena. Quantum mechanics extended
+            the frame by adding superposition, entanglement, uncertainty.
+          </div>
+        </div>
+
+        <div class="example-card" style="--example-color: var(--origin);">
+          <div class="example-header">
+            <div class="example-icon">G</div>
+            <div class="example-title">Mathematics</div>
+          </div>
+          <div class="example-transition">Arithmetic -> Set Theory</div>
+          <div class="example-boundary">dF: Godel sentences, unprovable truths</div>
+          <div class="example-description">
+            Peano arithmetic cannot prove its own consistency. ZFC set theory extends the frame,
+            making previously undecidable statements decidable.
+          </div>
+        </div>
+
+        <div class="example-card" style="--example-color: var(--ext-primary);">
+          <div class="example-header">
+            <div class="example-icon">T</div>
+            <div class="example-title">Computation</div>
+          </div>
+          <div class="example-transition">Turing -> Oracle Machines</div>
+          <div class="example-boundary">dF: Halting problem</div>
+          <div class="example-description">
+            Standard Turing machines cannot solve the halting problem. Oracle machines extend
+            by adding access to higher computational power. New boundaries emerge.
+          </div>
+        </div>
+      </div>
+
+      <div class="generative-path-card" style="border-color: var(--ext-colimit); margin-top: 2rem;">
+        <div class="path-header" style="color: var(--ext-colimit);">
+          <div class="path-indicator" style="background: var(--ext-colimit);"></div>
+          <span>PATTERN</span>
+        </div>
+        <div class="path-equation" style="color: var(--ext-colimit);">
+          Each extension absorbed boundary, created new one
+        </div>
+        <div class="path-points">
+          <div class="path-point" style="border-color: var(--ext-colimit);">
+            <span class="path-bullet" style="color: var(--ext-colimit);">*</span>
+            <span class="path-text">
+              <strong>This is universal.</strong> Every genuine scientific advance follows this pattern.
+              The new frame resolves old anomalies and reveals new horizons.
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 9: The Infinite Regress -->
+    <section class="section" id="regress">
+      <div class="section-header">
+        <div class="section-number octagon">9</div>
+        <h2 class="section-title">The Infinite Regress (Why It's OK)</h2>
+      </div>
+
+      <div class="regress-card">
+        <div class="regress-title">Productive Self-Reference, Not Paradox</div>
+        <div class="regress-explanation">
+          <div class="regress-point">
+            <span class="regress-bullet">1</span>
+            <span class="regress-text">
+              <strong>F_meta contains this framework.</strong>
+              The MTR itself is a frame. It has its own boundary dF_meta.
+            </span>
+          </div>
+          <div class="regress-point">
+            <span class="regress-bullet">2</span>
+            <span class="regress-text">
+              <strong>dF_meta != {} (predicts own extendability).</strong>
+              The MTR framework predicts that IT can be extended. This is self-consistent.
+            </span>
+          </div>
+          <div class="regress-point">
+            <span class="regress-bullet">3</span>
+            <span class="regress-text">
+              <strong>NOT circular: provides extension mechanism.</strong>
+              Unlike vicious circularity, this framework tells you HOW to extend.
+              It's a recipe, not a trap.
+            </span>
+          </div>
+          <div class="regress-point">
+            <span class="regress-bullet">4</span>
+            <span class="regress-text">
+              <strong>The regress is the point.</strong>
+              Infinite refinement toward (but never reaching) absolute origin IS the structure
+              of reality. The process is the product.
+            </span>
+          </div>
+        </div>
+        <div class="regress-conclusion">
+          <div class="conclusion-text">
+            Productive self-reference: the framework applies to itself and predicts its own evolution
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 10: What Comes Next -->
+    <section class="section" id="next">
+      <div class="section-header">
+        <div class="section-number octagon">10</div>
+        <h2 class="section-title">What Comes Next</h2>
+      </div>
+
+      <div class="next-card">
+        <div class="next-title">After Extension: The Cycle Continues</div>
+        <div class="next-steps">
+          <a href="#" class="next-step" style="--step-color: var(--attractor);">
+            <div class="step-icon">g_t</div>
+            <div class="step-label">LEVEL 6</div>
+            <div class="step-name">Degeneracy Check</div>
+          </a>
+          <a href="#" class="next-step" style="--step-color: var(--boundary);">
+            <div class="step-icon">?</div>
+            <div class="step-label">DECISION</div>
+            <div class="step-name">g_t ~ 0 ?</div>
+          </a>
+          <a href="#" class="next-step" style="--step-color: var(--invariant);">
+            <div class="step-icon">D*</div>
+            <div class="step-label">IF STABLE</div>
+            <div class="step-name">Converge to Attractor</div>
+          </a>
+          <a href="#" class="next-step" style="--step-color: var(--ext-kael);">
+            <div class="step-icon">|<</div>
+            <div class="step-label">IF DEGENERATE</div>
+            <div class="step-name">Bifurcation Point</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="properties-grid">
+        <div class="property-card" style="--prop-color: var(--attractor);">
+          <div class="property-header">
+            <span class="property-icon">g_t</span>
+            <span class="property-name">Deficit Gap</span>
+          </div>
+          <div class="property-equation">g_t = delta_1 - delta_2</div>
+          <div class="property-description">
+            Measure of uniqueness. When g_t ~ 0, multiple origins are near-equivalent.
+          </div>
+        </div>
+
+        <div class="property-card" style="--prop-color: var(--ext-kael);">
+          <div class="property-header">
+            <span class="property-icon">|<</span>
+            <span class="property-name">Origin Wars</span>
+          </div>
+          <div class="property-equation">Multiple extensions possible</div>
+          <div class="property-description">
+            When degeneracy occurs, different extensions compete. History may branch.
+          </div>
+        </div>
+
+        <div class="property-card" style="--prop-color: var(--ext-primary);">
+          <div class="property-header">
+            <span class="property-icon">loop</span>
+            <span class="property-name">The Cycle</span>
+          </div>
+          <div class="property-equation">F' -> dF' != {} -> F'' -> ...</div>
+          <div class="property-description">
+            Return to boundary check with new frame. The evolution never terminates.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation to Related Pages -->
+    <section class="section" id="navigation">
+      <div class="section-header">
+        <div class="section-number octagon">*</div>
+        <h2 class="section-title">Navigation</h2>
+      </div>
+
+      <div class="nav-footer">
+        <a href="vn-mtr-006-boundary-check.html" class="nav-card" style="--nav-color: var(--boundary);">
+          <div class="nav-icon diamond">?</div>
+          <div class="nav-label">LEVEL 4</div>
+          <div class="nav-name">Boundary Check</div>
+        </a>
+
+        <a href="mtr-decision-tree.html" class="nav-card" style="--nav-color: var(--origin);">
+          <div class="nav-icon">T</div>
+          <div class="nav-label">MTR TREE</div>
+          <div class="nav-name">Full Decision Tree</div>
+        </a>
+
+        <a href="vn-mtr-008-frame-extension.html" class="nav-card highlight" style="--nav-color: var(--ext-primary);">
+          <div class="nav-icon octagon">F'</div>
+          <div class="nav-label">LEVEL 5</div>
+          <div class="nav-name">Frame Extension (You Are Here)</div>
+        </a>
+
+        <a href="vn-mtr-004-frame-definition.html" class="nav-card" style="--nav-color: var(--boundary);">
+          <div class="nav-icon">F</div>
+          <div class="nav-label">LEVEL 1</div>
+          <div class="nav-name">Frame Definition</div>
+        </a>
+
+        <a href="vn-mtr-000-language-before-observers.html" class="nav-card" style="--nav-color: var(--text-secondary);">
+          <div class="nav-icon">0</div>
+          <div class="nav-label">STEP ZERO</div>
+          <div class="nav-name">Language Before Observers</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">dF != {} ==> F -> F' | Kael-Type: Self-reference ACROSS frames | lim F_t = R(R)=R</div>
+    <p>VN-MTR-008 | Frame Extension | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // Interactive Frame Extender
+    const PHI = 1.6180339887;
+    const TAU = 0.6180339887;
+
+    let currentFrameIndex = 0;
+    let extensionHistory = [0];
+
+    function calculateFrameStats(n) {
+      // Closure deficit decreases with tau^n
+      const delta = Math.pow(TAU, n);
+
+      // Boundary size follows a pattern (starts high, varies)
+      const boundary = Math.max(1, Math.floor(12 * Math.pow(TAU, n * 0.5) + Math.sin(n) * 2));
+
+      // Admissible set grows with phi^n
+      const admissible = Math.floor(100 * Math.pow(PHI, n * 0.8));
+
+      return { delta, boundary, admissible };
+    }
+
+    function updateDisplay() {
+      const current = calculateFrameStats(currentFrameIndex);
+      const next = calculateFrameStats(currentFrameIndex + 1);
+
+      // Update current frame
+      document.getElementById('currentFrameName').textContent = `F_${currentFrameIndex}`;
+      document.getElementById('currentDelta').textContent = current.delta.toFixed(3);
+      document.getElementById('currentBoundary').textContent = current.boundary;
+      document.getElementById('currentAdmissible').textContent = current.admissible;
+
+      // Update next frame
+      document.getElementById('nextFrameName').textContent = `F_${currentFrameIndex + 1}`;
+      document.getElementById('nextDelta').textContent = next.delta.toFixed(3);
+      document.getElementById('nextBoundary').textContent = next.boundary;
+      document.getElementById('nextAdmissible').textContent = next.admissible;
+
+      // Update history chain
+      const historyChain = document.getElementById('historyChain');
+      historyChain.innerHTML = extensionHistory.map((f, i) =>
+        `<span class="history-frame ${i === extensionHistory.length - 1 ? 'active' : ''}">F_${f}</span>` +
+        (i < extensionHistory.length - 1 ? '<span class="history-arrow">-></span>' : '')
+      ).join('');
+
+      // Update insight
+      const insight = document.getElementById('extenderInsight');
+      const deltaReduction = ((current.delta - next.delta) / current.delta * 100).toFixed(1);
+      const admissibleGrowth = ((next.admissible - current.admissible) / current.admissible * 100).toFixed(1);
+
+      insight.innerHTML = `<div class="insight-text">
+        Extension F_${currentFrameIndex} -> F_${currentFrameIndex + 1}:
+        delta* reduces by ${deltaReduction}% |
+        |A(F)| grows by ${admissibleGrowth}% |
+        New boundary dF' emerges (|dF'| = ${next.boundary})
+      </div>`;
+    }
+
+    function extendFrame() {
+      currentFrameIndex++;
+      extensionHistory.push(currentFrameIndex);
+
+      // Limit history display
+      if (extensionHistory.length > 8) {
+        extensionHistory = extensionHistory.slice(-8);
+      }
+
+      updateDisplay();
+
+      // Visual feedback
+      const btn = document.getElementById('extendBtn');
+      btn.style.background = 'var(--invariant)';
+      setTimeout(() => {
+        btn.style.background = 'var(--ext-primary)';
+      }, 200);
+    }
+
+    function resetExtender() {
+      currentFrameIndex = 0;
+      extensionHistory = [0];
+      updateDisplay();
+
+      document.getElementById('extenderInsight').innerHTML = `<div class="insight-text">
+        Click EXTEND to perform frame extension. Watch delta* decrease and |dF| change.
+      </div>`;
+    }
+
+    // Initialize
+    updateDisplay();
+  </script>
+
+</body>
+</html>

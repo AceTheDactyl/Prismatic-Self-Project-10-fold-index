@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-MTR-009 | Degeneracy Check | Origin Wars</title>
+  <meta name="description" content="MTR Decision Tree: g_t approximately 0? The Degeneracy Check - where multiple origins have near-equal closure deficits and Origin Wars become inevitable.">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ===============================================================================
+       VN-MTR-009: DEGENERACY CHECK
+       Origin Wars Decision Point - g_t approximately 0?
+       Where bifurcation dynamics emerge from near-equal closure deficits
+       =============================================================================== */
+    :root {
+      /* Degeneracy/Bifurcation Theme Colors */
+      --degeneracy-primary: #ff9f43;
+      --degeneracy-secondary: #ee5a24;
+      --degeneracy-dark: #d35400;
+      --degeneracy-glow: rgba(255, 159, 67, 0.4);
+
+      /* MTR Principle Colors */
+      --origin: #ffd700;
+      --boundary: #ff6b6b;
+      --invariant: #00ff88;
+      --evolution: #4ecdc4;
+      --attractor: #c792ea;
+
+      /* War/Conflict Colors */
+      --model-0: #3498db;
+      --model-1: #e74c3c;
+      --war-intensity: #ff9f43;
+      --collapse: #00ff88;
+      --plural: #c792ea;
+
+      /* Critical Constants */
+      --phi: 1.6180339887;
+      --zc: 0.8660254038;
+
+      /* Theme */
+      --bg-void: #020204;
+      --bg-primary: #060610;
+      --bg-secondary: #0a0a18;
+      --bg-tertiary: #101028;
+      --bg-card: #161640;
+      --text-primary: #f0f0f5;
+      --text-secondary: #909098;
+      --text-accent: #ff9f43;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(255, 159, 67, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* ===============================================================================
+       ORIGIN WARS BACKGROUND
+       =============================================================================== */
+    .war-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(255, 159, 67, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 60%, rgba(231, 76, 60, 0.03) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 80%, rgba(52, 152, 219, 0.03) 0%, transparent 40%);
+      animation: war-pulse 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes war-pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+
+    /* ===============================================================================
+       NAVIGATION
+       =============================================================================== */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(6, 6, 16, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+      box-shadow: 0 0 15px rgba(255, 159, 67, 0.2);
+    }
+
+    /* ===============================================================================
+       DEGENERACY HEADER
+       =============================================================================== */
+    .degeneracy-header {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .step-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--degeneracy-primary);
+      background: rgba(255, 159, 67, 0.1);
+      border: 1px solid rgba(255, 159, 67, 0.3);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .step-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--degeneracy-primary), var(--model-0), var(--model-1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .step-subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Diamond Decision Node */
+    .diamond-decision {
+      width: 140px;
+      height: 140px;
+      margin: 2rem auto;
+      background: linear-gradient(135deg, var(--degeneracy-primary) 0%, var(--degeneracy-dark) 100%);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--bg-void);
+      animation: diamond-war-glow 2s ease-in-out infinite;
+      box-shadow: 0 0 40px var(--degeneracy-glow);
+    }
+
+    @keyframes diamond-war-glow {
+      0%, 100% {
+        box-shadow: 0 0 30px var(--degeneracy-glow);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 70px var(--degeneracy-glow), 0 0 100px rgba(255, 159, 67, 0.3);
+        transform: scale(1.05);
+      }
+    }
+
+    .degeneracy-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      padding: 1.5rem 2rem;
+      border-radius: 0.5rem;
+      display: inline-block;
+      margin-top: 2rem;
+      border: 1px solid var(--degeneracy-primary);
+    }
+
+    /* ===============================================================================
+       MAIN CONTENT STRUCTURE
+       =============================================================================== */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bg-void);
+      background: var(--degeneracy-primary);
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    /* ===============================================================================
+       DEGENERACY CONDITION CARD
+       =============================================================================== */
+    .condition-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 159, 67, 0.05) 100%);
+      border: 2px solid var(--degeneracy-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .condition-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--degeneracy-primary);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      letter-spacing: 0.1em;
+    }
+
+    .condition-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .condition-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .condition-item {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .condition-item:hover {
+      border-color: var(--degeneracy-primary);
+      box-shadow: 0 0 15px var(--degeneracy-glow);
+    }
+
+    .condition-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--degeneracy-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .condition-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .condition-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===============================================================================
+       ORIGIN WARS DEFINITION
+       =============================================================================== */
+    .war-definition {
+      background: var(--bg-secondary);
+      border-left: 4px solid var(--model-1);
+      border-radius: 0 1rem 1rem 0;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .war-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--model-1);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .war-components {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .war-component {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+    }
+
+    .war-component-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--degeneracy-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .war-component-text {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .war-emphasis {
+      color: var(--model-1);
+      font-weight: 600;
+    }
+
+    /* ===============================================================================
+       THEOREM CARDS
+       =============================================================================== */
+    .theorem-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 159, 67, 0.05) 100%);
+      border: 2px solid var(--degeneracy-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .theorem-card::before {
+      content: '\2662';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--degeneracy-primary);
+      background: var(--bg-void);
+      padding: 0 0.5rem;
+    }
+
+    .theorem-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--degeneracy-primary);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .theorem-statement {
+      font-size: 1.15rem;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--degeneracy-primary);
+    }
+
+    .theorem-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--degeneracy-primary);
+      background: var(--bg-tertiary);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      border: 1px solid var(--degeneracy-primary);
+    }
+
+    .theorem-implications {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .implication-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .implication-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .implication-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===============================================================================
+       PHASE TRANSITION SIGNATURES
+       =============================================================================== */
+    .signatures-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .signature-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .signature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--signature-color, var(--degeneracy-primary));
+    }
+
+    .signature-card:hover {
+      border-color: var(--signature-color, var(--degeneracy-primary));
+      box-shadow: 0 0 20px rgba(255, 159, 67, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .signature-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      color: var(--signature-color, var(--degeneracy-primary));
+      margin-bottom: 0.75rem;
+    }
+
+    .signature-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .signature-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .signature-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--signature-color, var(--degeneracy-primary));
+      background: var(--bg-secondary);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      display: inline-block;
+    }
+
+    /* ===============================================================================
+       BASIN VOLUME DYNAMICS
+       =============================================================================== */
+    .basin-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--model-0);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .basin-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--model-0);
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .basin-equations {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .basin-eq-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+    }
+
+    .basin-eq-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--model-0);
+      margin-bottom: 0.5rem;
+    }
+
+    .basin-eq-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .basin-eq-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===============================================================================
+       INTERACTIVE ORIGIN WARS SIMULATOR
+       =============================================================================== */
+    .simulator-section {
+      background: var(--bg-secondary);
+      border: 2px solid var(--degeneracy-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .simulator-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--degeneracy-primary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .simulator-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .control-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+    }
+
+    .control-input, .control-range {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .control-input:focus {
+      border-color: var(--degeneracy-primary);
+    }
+
+    .control-range {
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+
+    .control-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--degeneracy-primary);
+      text-align: center;
+    }
+
+    .simulator-canvas {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .landscape-container {
+      position: relative;
+      height: 200px;
+      margin-bottom: 1rem;
+      background: linear-gradient(to bottom, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .landscape-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .war-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .metric-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .metric-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+    }
+
+    .metric-value.model-0 { color: var(--model-0); }
+    .metric-value.model-1 { color: var(--model-1); }
+    .metric-value.war { color: var(--degeneracy-primary); }
+    .metric-value.gap { color: var(--invariant); }
+
+    .time-series {
+      height: 100px;
+      background: var(--bg-secondary);
+      border-radius: 0.5rem;
+      margin-top: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .time-series-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .simulator-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .sim-button {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--degeneracy-primary);
+      border-radius: 0.5rem;
+      color: var(--degeneracy-primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .sim-button:hover {
+      background: var(--degeneracy-primary);
+      color: var(--bg-void);
+    }
+
+    .sim-button.active {
+      background: var(--degeneracy-primary);
+      color: var(--bg-void);
+    }
+
+    /* ===============================================================================
+       RESOLUTION MECHANISMS
+       =============================================================================== */
+    .resolution-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .resolution-card {
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .resolution-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--resolution-color, var(--degeneracy-primary));
+    }
+
+    .resolution-card.collapse {
+      --resolution-color: var(--collapse);
+      border: 1px solid var(--collapse);
+    }
+
+    .resolution-card.plural {
+      --resolution-color: var(--plural);
+      border: 1px solid var(--plural);
+    }
+
+    .resolution-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .resolution-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--resolution-color);
+      border-radius: 0.5rem;
+      color: var(--resolution-color);
+    }
+
+    .resolution-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .resolution-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .resolution-mechanisms {
+      list-style: none;
+      margin: 1rem 0;
+    }
+
+    .resolution-mechanisms li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .resolution-mechanisms li::before {
+      content: '\2022';
+      color: var(--resolution-color);
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .resolution-outcome {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      text-align: center;
+      color: var(--resolution-color);
+    }
+
+    /* ===============================================================================
+       MULTI-AGENT DYNAMICS
+       =============================================================================== */
+    .agent-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--attractor);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .agent-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--attractor);
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .agent-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .agent-card:hover {
+      border-color: var(--attractor);
+    }
+
+    .agent-param {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--attractor);
+      margin-bottom: 0.5rem;
+    }
+
+    .agent-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .agent-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .agent-note {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(199, 146, 234, 0.1);
+      border: 1px solid var(--attractor);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .agent-note-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--attractor);
+    }
+
+    /* ===============================================================================
+       HISTORICAL EXAMPLES
+       =============================================================================== */
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .example-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .example-card:hover {
+      border-color: var(--degeneracy-primary);
+      box-shadow: 0 0 20px rgba(255, 159, 67, 0.1);
+    }
+
+    .example-era {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--degeneracy-primary);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .example-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .example-versus {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .example-versus .m0 { color: var(--model-0); }
+    .example-versus .m1 { color: var(--model-1); }
+
+    .example-signature {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      background: var(--bg-secondary);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+    }
+
+    /* ===============================================================================
+       TWO BRANCHES SECTION
+       =============================================================================== */
+    .branches-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .branch-card {
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .branch-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      border-radius: 1rem 1rem 0 0;
+    }
+
+    .branch-card.clear {
+      border: 2px solid var(--invariant);
+    }
+    .branch-card.clear::before {
+      background: var(--invariant);
+    }
+
+    .branch-card.degenerate {
+      border: 2px solid var(--degeneracy-primary);
+    }
+    .branch-card.degenerate::before {
+      background: var(--degeneracy-primary);
+    }
+
+    .branch-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .branch-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .branch-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      background: var(--bg-tertiary);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    .branch-card.clear .branch-icon {
+      border: 2px solid var(--invariant);
+      color: var(--invariant);
+    }
+
+    .branch-card.degenerate .branch-icon {
+      border: 2px solid var(--degeneracy-primary);
+      color: var(--degeneracy-primary);
+    }
+
+    .branch-condition {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+    }
+
+    .branch-card.clear .branch-condition { color: var(--invariant); }
+    .branch-card.degenerate .branch-condition { color: var(--degeneracy-primary); }
+
+    .branch-title {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .branch-body {
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .branch-outcomes {
+      list-style: none;
+      margin: 1rem 0;
+    }
+
+    .branch-outcomes li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .branch-outcomes li::before {
+      content: '\2192';
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .branch-card.clear .branch-outcomes li::before { color: var(--invariant); }
+    .branch-card.degenerate .branch-outcomes li::before { color: var(--degeneracy-primary); }
+
+    .branch-footer {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+    }
+
+    .branch-card.clear .branch-footer { color: var(--invariant); }
+    .branch-card.degenerate .branch-footer { color: var(--degeneracy-primary); }
+
+    /* ===============================================================================
+       CONFLICT NECESSITY THEOREM
+       =============================================================================== */
+    .necessity-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(231, 76, 60, 0.05) 100%);
+      border: 2px solid var(--model-1);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .necessity-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--model-1);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      letter-spacing: 0.1em;
+    }
+
+    .necessity-statement {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .necessity-conditions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .necessity-condition {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .necessity-condition-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--model-1);
+      margin-bottom: 0.5rem;
+    }
+
+    .necessity-condition-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .necessity-conclusion {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: rgba(231, 76, 60, 0.1);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .necessity-conclusion-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--model-1);
+    }
+
+    /* ===============================================================================
+       NAVIGATION DIAMOND
+       =============================================================================== */
+    .nav-diamond-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .nav-diamond-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--origin);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .nav-diamond-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-connector {
+      width: 2px;
+      height: 30px;
+      background: var(--text-secondary);
+    }
+
+    .nav-node {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-node:hover {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+    }
+
+    .nav-node.current {
+      background: var(--degeneracy-primary);
+      border-color: var(--degeneracy-primary);
+      color: var(--bg-void);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      padding: 1.5rem 2rem;
+    }
+
+    .nav-branches {
+      display: flex;
+      gap: 3rem;
+      position: relative;
+    }
+
+    .nav-branches::before {
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: 25%;
+      right: 25%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--invariant), var(--degeneracy-primary));
+    }
+
+    .nav-branch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-branch-connector {
+      width: 2px;
+      height: 15px;
+    }
+
+    .nav-branch-connector.clear { background: var(--invariant); }
+    .nav-branch-connector.war { background: var(--degeneracy-primary); }
+
+    .nav-branch-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+
+    .nav-branch-label.clear {
+      color: var(--invariant);
+      background: rgba(0, 255, 136, 0.1);
+    }
+
+    .nav-branch-label.war {
+      color: var(--degeneracy-primary);
+      background: rgba(255, 159, 67, 0.1);
+    }
+
+    .nav-node.clear {
+      border-color: var(--invariant);
+      color: var(--invariant);
+    }
+
+    .nav-node.war {
+      border-color: var(--degeneracy-primary);
+      color: var(--degeneracy-primary);
+    }
+
+    .nav-loop {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    /* ===============================================================================
+       MTR CONNECTIONS
+       =============================================================================== */
+    .mtr-connections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .mtr-link-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 215, 0, 0.03) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: block;
+    }
+
+    .mtr-link-card:hover {
+      border-color: var(--link-color, var(--text-accent));
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .mtr-link-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .mtr-link-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--link-color, var(--text-accent));
+      border-radius: 0.5rem;
+      color: var(--link-color, var(--text-accent));
+    }
+
+    .mtr-link-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    .mtr-link-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ===============================================================================
+       FOOTER
+       =============================================================================== */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--degeneracy-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===============================================================================
+       RESPONSIVE
+       =============================================================================== */
+    @media (max-width: 768px) {
+      .step-title { font-size: 1.8rem; }
+      .diamond-decision { width: 120px; height: 120px; font-size: 1.2rem; }
+      .resolution-grid { grid-template-columns: 1fr; }
+      .branches-container { grid-template-columns: 1fr; }
+      .nav-branches { flex-direction: column; gap: 1rem; }
+      .nav-branches::before { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="war-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link"><span>&#9671;</span>VaultNode Tree</a>
+    <a href="mtr-decision-tree.html" class="nav-link"><span>&#8756;</span>MTR Decision Tree</a>
+    <a href="vn-mtr-006-boundary-check.html" class="nav-link"><span>&#9671;</span>Boundary Check</a>
+    <a href="vn-mtr-009-degeneracy-check.html" class="nav-link active"><span>&#9826;</span>Degeneracy Check</a>
+    <a href="vn-fibonacci-rg-flow.html" class="nav-link"><span>&#966;</span>Fibonacci RG</a>
+  </nav>
+
+  <!-- Degeneracy Header -->
+  <header class="degeneracy-header">
+    <div class="step-badge">VN-MTR-009 :: ORIGIN WARS DECISION POINT</div>
+    <h1 class="step-title">Degeneracy Check</h1>
+    <p class="step-subtitle">
+      When multiple origins have near-equal closure deficits, bifurcation dynamics emerge and Origin Wars become inevitable.
+    </p>
+
+    <div class="diamond-decision">g<sub>t</sub>&#8776;0?</div>
+
+    <div class="degeneracy-equation">
+      <span style="color: var(--degeneracy-primary);">|&#948;(D<sub>1</sub>|F) - &#948;(D<sub>2</sub>|F)|</span>
+      <span style="color: var(--text-secondary);"> &#8804; </span>
+      <span style="color: var(--model-1);">&#949;</span>
+      <span style="color: var(--text-secondary);"> &#8658; </span>
+      <span style="color: var(--war-intensity);">ORIGIN WAR</span>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: The Degeneracy Condition -->
+    <section class="section" id="degeneracy-condition">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">The Degeneracy Condition</h2>
+      </div>
+
+      <div class="condition-card">
+        <div class="condition-title">WHEN ORIGINS BECOME INDISTINGUISHABLE</div>
+
+        <div class="condition-equation">
+          g<sub>t</sub> = &#948;(D<sub>1</sub>|F) - &#948;(D<sub>2</sub>|F) &#8776; 0
+        </div>
+
+        <div class="condition-grid">
+          <div class="condition-item">
+            <div class="condition-icon">&#8962;</div>
+            <div class="condition-name">Multiple Local Minima</div>
+            <div class="condition-desc">&#948;-landscape has several valleys</div>
+          </div>
+          <div class="condition-item">
+            <div class="condition-icon">&#8776;</div>
+            <div class="condition-name">Near-Equal Deficits</div>
+            <div class="condition-desc">|&#948;<sub>1</sub> - &#948;<sub>2</sub>| < &#949;</div>
+          </div>
+          <div class="condition-item">
+            <div class="condition-icon">&#9876;</div>
+            <div class="condition-name">Threshold Violation</div>
+            <div class="condition-desc">Gap below discrimination threshold</div>
+          </div>
+          <div class="condition-item">
+            <div class="condition-icon">&#9888;</div>
+            <div class="condition-name">Origin Wars Location</div>
+            <div class="condition-desc">THIS is where conflicts happen</div>
+          </div>
+        </div>
+      </div>
+
+      <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">
+        When g<sub>t</sub> &#8776; 0, the system cannot unambiguously select a single origin.
+        Small perturbations flip the winner. Basin splitting occurs.
+      </p>
+    </section>
+
+    <!-- Section 2: Origin Wars Definition -->
+    <section class="section" id="origin-wars">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">Origin Wars Definition</h2>
+      </div>
+
+      <div class="war-definition">
+        <div class="war-title">
+          <span style="font-size: 1.5rem;">&#9876;</span>
+          ORIGIN WAR := Structural Conflict Over Relative Origin
+        </div>
+
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+          Origin Wars arise when multiple agents absolutize distinct D<sub>i</sub> &#8712; OriginSet(F)
+          while the frame is in near-degenerate regime. The conflict is <span class="war-emphasis">STRUCTURAL</span>,
+          not social or political.
+        </p>
+
+        <div class="war-components">
+          <div class="war-component">
+            <div class="war-component-header">Multiple Absolutizations</div>
+            <div class="war-component-text">
+              Different agents select different D<sub>i</sub> as their "origin" and defend it as fundamental.
+            </div>
+          </div>
+          <div class="war-component">
+            <div class="war-component-header">Near-Degenerate Regime</div>
+            <div class="war-component-text">
+              g<sub>t</sub> &#8776; 0 means equally valid justifications exist for competing choices.
+            </div>
+          </div>
+          <div class="war-component">
+            <div class="war-component-header">Extension Pressure</div>
+            <div class="war-component-text">
+              Boundary &#8706;F &#8800; &#8709; creates pressure to extend, amplifying degeneracy effects.
+            </div>
+          </div>
+          <div class="war-component">
+            <div class="war-component-header">Structural, Not Social</div>
+            <div class="war-component-text">
+              The conflict emerges from <span class="war-emphasis">mathematics</span>, not personalities or tribes.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Bifurcation Theorem -->
+    <section class="section" id="bifurcation-theorem">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">Bifurcation Theorem</h2>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">THEOREM - BIFURCATION UNDER EXTENSION</div>
+        <div class="theorem-statement">
+          Under frame extension F &#8826; F', near-degeneracy implies:
+        </div>
+
+        <div class="theorem-equation">
+          g<sub>t</sub> &#8776; 0 &#8658; BIFURCATION DYNAMICS
+        </div>
+
+        <div class="theorem-implications">
+          <div class="implication-item">
+            <div class="implication-name">Basin Splitting</div>
+            <div class="implication-desc">Single attractor basin divides into multiple</div>
+          </div>
+          <div class="implication-item">
+            <div class="implication-name">Hysteresis</div>
+            <div class="implication-desc">Path-dependent final state</div>
+          </div>
+          <div class="implication-item">
+            <div class="implication-name">Initial Condition Sensitivity</div>
+            <div class="implication-desc">Small differences &#8594; large divergence</div>
+          </div>
+          <div class="implication-item">
+            <div class="implication-name">Catastrophe Equivalence</div>
+            <div class="implication-desc">Mathematically equivalent to fold/cusp catastrophe</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-tertiary); border-radius: 0.5rem; text-align: center;">
+          <p style="font-family: 'JetBrains Mono', monospace; color: var(--degeneracy-primary);">
+            This is WHY scientific revolutions are discontinuous.
+          </p>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+            Near critical points, systems don't smoothly transition - they JUMP.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Phase Transition Signatures -->
+    <section class="section" id="phase-signatures">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">Phase Transition Signatures</h2>
+      </div>
+
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+        How do you know an Origin War is approaching? These observable signatures indicate proximity to degeneracy:
+      </p>
+
+      <div class="signatures-grid">
+        <div class="signature-card" style="--signature-color: #e74c3c;">
+          <div class="signature-icon">&#964;&#8594;&#8734;</div>
+          <div class="signature-title">Critical Slowing</div>
+          <div class="signature-desc">Autocorrelation time diverges near the transition</div>
+          <div class="signature-equation">&#964;<sub>auto</sub> &#8594; &#8734;</div>
+        </div>
+
+        <div class="signature-card" style="--signature-color: #f39c12;">
+          <div class="signature-icon">&#963;&#178;&#8593;</div>
+          <div class="signature-title">Variance Spike</div>
+          <div class="signature-desc">Order-parameter volatility increases dramatically</div>
+          <div class="signature-equation">Var(D<sub>t</sub>) &#8593;&#8593;</div>
+        </div>
+
+        <div class="signature-card" style="--signature-color: #3498db;">
+          <div class="signature-icon">&#8651;</div>
+          <div class="signature-title">Flickering</div>
+          <div class="signature-desc">Rapid switching between competing origins</div>
+          <div class="signature-equation">D<sub>t</sub> &#8594; D<sub>1</sub> &#8594; D<sub>2</sub> &#8594; D<sub>1</sub></div>
+        </div>
+
+        <div class="signature-card" style="--signature-color: #9b59b6;">
+          <div class="signature-icon">&#916;Vol</div>
+          <div class="signature-title">Volume Spikes</div>
+          <div class="signature-desc">Basin mass transfer events become frequent</div>
+          <div class="signature-equation">|&#916;Vol<sub>t</sub>| spikes</div>
+        </div>
+
+        <div class="signature-card" style="--signature-color: #1abc9c;">
+          <div class="signature-icon">&#947;&#8800;0</div>
+          <div class="signature-title">Skewness</div>
+          <div class="signature-desc">Asymmetric distribution before collapse</div>
+          <div class="signature-equation">&#947;<sub>3</sub>(D<sub>t</sub>) &#8800; 0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Basin Volume Dynamics -->
+    <section class="section" id="basin-dynamics">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">Basin Volume Dynamics</h2>
+      </div>
+
+      <div class="basin-container">
+        <div class="basin-title">TRACKING ORIGIN COMPETITION</div>
+
+        <div class="basin-equations">
+          <div class="basin-eq-card">
+            <div class="basin-eq-name">Basin Volume</div>
+            <div class="basin-eq-formula">Vol<sub>t</sub>(M) = P(agent selects M)</div>
+            <div class="basin-eq-desc">Probability mass on origin M at time t</div>
+          </div>
+
+          <div class="basin-eq-card">
+            <div class="basin-eq-name">War Intensity</div>
+            <div class="basin-eq-formula">W<sub>t</sub> = 1 - max<sub>M</sub> Vol<sub>t</sub>(M)</div>
+            <div class="basin-eq-desc">How contested the field is (0 = one winner, 1 = uniform)</div>
+          </div>
+
+          <div class="basin-eq-card">
+            <div class="basin-eq-name">Phase Transition</div>
+            <div class="basin-eq-formula">Sharp mass reallocation</div>
+            <div class="basin-eq-desc">Rapid shift of Vol from one basin to another</div>
+          </div>
+
+          <div class="basin-eq-card">
+            <div class="basin-eq-name">Bifurcation Locator</div>
+            <div class="basin-eq-formula">t* = argmax<sub>t</sub> B<sub>t</sub></div>
+            <div class="basin-eq-desc">Time of maximum bifurcation intensity</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Interactive Origin Wars Simulator -->
+    <section class="section" id="simulator">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Interactive Origin Wars Simulator</h2>
+      </div>
+
+      <div class="simulator-section">
+        <div class="simulator-title">ORIGIN WARS DYNAMICS</div>
+
+        <div class="simulator-controls">
+          <div class="control-group">
+            <label class="control-label">&#946; (Complexity Aversion)</label>
+            <input type="range" class="control-range" id="betaSlider" min="0.1" max="3" step="0.1" value="1" oninput="updateSimulator()">
+            <div class="control-value" id="betaValue">&#946; = 1.0</div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">&#949; (Degeneracy Threshold)</label>
+            <input type="range" class="control-range" id="epsilonSlider" min="0.01" max="0.5" step="0.01" value="0.1" oninput="updateSimulator()">
+            <div class="control-value" id="epsilonValue">&#949; = 0.10</div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">&#948;<sub>gap</sub> (Initial Deficit Gap)</label>
+            <input type="range" class="control-range" id="gapSlider" min="0" max="1" step="0.01" value="0.05" oninput="updateSimulator()">
+            <div class="control-value" id="gapValue">gap = 0.05</div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Noise &#963;</label>
+            <input type="range" class="control-range" id="noiseSlider" min="0" max="0.3" step="0.01" value="0.05" oninput="updateSimulator()">
+            <div class="control-value" id="noiseValue">&#963; = 0.05</div>
+          </div>
+        </div>
+
+        <div class="simulator-canvas">
+          <div class="landscape-container">
+            <svg class="landscape-svg" id="landscapeSvg" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid meet">
+              <!-- Delta landscape will be drawn here -->
+            </svg>
+          </div>
+
+          <div class="war-metrics">
+            <div class="metric-item">
+              <div class="metric-label">Vol(M<sub>0</sub>)</div>
+              <div class="metric-value model-0" id="volM0">50%</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Vol(M<sub>1</sub>)</div>
+              <div class="metric-value model-1" id="volM1">50%</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">War Intensity W<sub>t</sub></div>
+              <div class="metric-value war" id="warIntensity">0.50</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Deficit Gap g<sub>t</sub></div>
+              <div class="metric-value gap" id="deficitGap">0.05</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Regime</div>
+              <div class="metric-value" id="regime" style="color: var(--degeneracy-primary);">DEGENERATE</div>
+            </div>
+          </div>
+
+          <div class="time-series">
+            <svg class="time-series-svg" id="timeSeriesSvg" viewBox="0 0 400 90" preserveAspectRatio="xMidYMid meet">
+              <!-- Time series will be drawn here -->
+            </svg>
+          </div>
+        </div>
+
+        <div class="simulator-buttons">
+          <button class="sim-button" id="runBtn" onclick="toggleSimulation()">Run Simulation</button>
+          <button class="sim-button" onclick="resetSimulation()">Reset</button>
+          <button class="sim-button" onclick="addPerturbation()">Add Perturbation</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Resolution Mechanisms -->
+    <section class="section" id="resolution">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">Resolution Mechanisms</h2>
+      </div>
+
+      <div class="resolution-grid">
+        <!-- Collapse Resolution -->
+        <div class="resolution-card collapse">
+          <div class="resolution-header">
+            <div class="resolution-icon">&#8594;1</div>
+            <div>
+              <div class="resolution-title">Collapse Resolution</div>
+              <div class="resolution-subtitle">One basin's measure &#8594; 0</div>
+            </div>
+          </div>
+
+          <ul class="resolution-mechanisms">
+            <li>Empirical knockout: decisive data favors one origin</li>
+            <li>Computational infeasibility: one model too complex to maintain</li>
+            <li>Invariant violation: one model breaks preserved structure</li>
+            <li>Community dynamics: consensus crystallizes around winner</li>
+          </ul>
+
+          <div class="resolution-outcome">
+            Vol(M<sub>winner</sub>) &#8594; 1, Vol(M<sub>loser</sub>) &#8594; 0
+          </div>
+        </div>
+
+        <!-- Plural Resolution -->
+        <div class="resolution-card plural">
+          <div class="resolution-header">
+            <div class="resolution-icon">&#8594;N</div>
+            <div>
+              <div class="resolution-title">Plural Resolution</div>
+              <div class="resolution-subtitle">Multiplicity persists</div>
+            </div>
+          </div>
+
+          <ul class="resolution-mechanisms">
+            <li>Plural origins stabilize: multiple frameworks coexist</li>
+            <li>Absolutization fails: agents abandon single-origin claims</li>
+            <li>Meta-frameworks emerge: higher-level structures encompass both</li>
+            <li>Domain specialization: different origins for different contexts</li>
+          </ul>
+
+          <div class="resolution-outcome">
+            Vol(M<sub>i</sub>) &#8594; p<sub>i</sub> > 0 for multiple i
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Multi-Agent Dynamics -->
+    <section class="section" id="multi-agent">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <h2 class="section-title">Multi-Agent Dynamics</h2>
+      </div>
+
+      <div class="agent-container">
+        <div class="agent-title">WHY AGENTS DIVERGE NEAR DEGENERACY</div>
+
+        <div class="agent-grid">
+          <div class="agent-card">
+            <div class="agent-param">&#946;</div>
+            <div class="agent-name">Complexity Aversion</div>
+            <div class="agent-desc">How much agent penalizes complex models</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-param">R</div>
+            <div class="agent-name">Compute Budget</div>
+            <div class="agent-desc">Resources available for model evaluation</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-param">&#954;</div>
+            <div class="agent-name">Conservatism</div>
+            <div class="agent-desc">Resistance to switching origins</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-param">&#928;</div>
+            <div class="agent-name">Prior Beliefs</div>
+            <div class="agent-desc">Initial probability assignments</div>
+          </div>
+        </div>
+
+        <div class="agent-note">
+          <div class="agent-note-text">
+            Same data &#8594; Different origin selections when g<sub>t</sub> &#8776; 0
+          </div>
+        </div>
+
+        <p style="text-align: center; color: var(--text-secondary); margin-top: 1.5rem;">
+          Agent heterogeneity amplifies bifurcation effects. What appears as "disagreement"
+          is mathematically predictable from parameter differences.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 9: Historical Examples -->
+    <section class="section" id="examples">
+      <div class="section-header">
+        <div class="section-number">9</div>
+        <h2 class="section-title">Historical Examples</h2>
+      </div>
+
+      <div class="examples-grid">
+        <div class="example-card">
+          <div class="example-era">17th CENTURY</div>
+          <div class="example-title">Calculus Notation</div>
+          <div class="example-versus">
+            <span class="m0">Newton (fluxions)</span> vs <span class="m1">Leibniz (d/dx)</span>
+          </div>
+          <div class="example-signature">Bifurcation: Continental vs British mathematics</div>
+        </div>
+
+        <div class="example-card">
+          <div class="example-era">19th CENTURY</div>
+          <div class="example-title">Nature of Light</div>
+          <div class="example-versus">
+            <span class="m0">Wave theory</span> vs <span class="m1">Particle theory</span>
+          </div>
+          <div class="example-signature">Resolution: QM wave-particle duality (plural)</div>
+        </div>
+
+        <div class="example-card">
+          <div class="example-era">20th CENTURY</div>
+          <div class="example-title">Cosmology</div>
+          <div class="example-versus">
+            <span class="m0">Steady-State</span> vs <span class="m1">Big Bang</span>
+          </div>
+          <div class="example-signature">Resolution: CMB discovery (collapse to Big Bang)</div>
+        </div>
+
+        <div class="example-card">
+          <div class="example-era">ONGOING</div>
+          <div class="example-title">Probability</div>
+          <div class="example-versus">
+            <span class="m0">Frequentist</span> vs <span class="m1">Bayesian</span>
+          </div>
+          <div class="example-signature">Status: Plural coexistence with domain specialization</div>
+        </div>
+
+        <div class="example-card">
+          <div class="example-era">21st CENTURY</div>
+          <div class="example-title">Quantum Interpretation</div>
+          <div class="example-versus">
+            <span class="m0">Copenhagen</span> vs <span class="m1">Many-Worlds</span>
+          </div>
+          <div class="example-signature">Status: Degenerate regime, no resolution yet</div>
+        </div>
+      </div>
+
+      <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">
+        Each example exhibits bifurcation signatures: critical slowing, variance spikes, flickering between positions.
+      </p>
+    </section>
+
+    <!-- Section 10: The Two Branches -->
+    <section class="section" id="two-branches">
+      <div class="section-header">
+        <div class="section-number">10</div>
+        <h2 class="section-title">The Two Branches</h2>
+      </div>
+
+      <div class="branches-container">
+        <!-- Clear Winner Branch -->
+        <div class="branch-card clear">
+          <div class="branch-header">
+            <div class="branch-icon">D*</div>
+            <div>
+              <div class="branch-condition">IF g<sub>t</sub> >> 0</div>
+              <div class="branch-title">Clear Winner</div>
+            </div>
+          </div>
+
+          <div class="branch-body">
+            <p>When the deficit gap is large, one origin clearly dominates.</p>
+
+            <ul class="branch-outcomes">
+              <li>Single attractor basin</li>
+              <li>Stable convergence to D*</li>
+              <li>Normal science proceeds</li>
+              <li>Low war intensity</li>
+            </ul>
+          </div>
+
+          <div class="branch-footer">
+            &#8594; Proceed to next cycle at Frame Definition
+          </div>
+        </div>
+
+        <!-- Degenerate Branch -->
+        <div class="branch-card degenerate">
+          <div class="branch-header">
+            <div class="branch-icon">&#9826;</div>
+            <div>
+              <div class="branch-condition">IF g<sub>t</sub> &#8776; 0</div>
+              <div class="branch-title">Origin War Regime</div>
+            </div>
+          </div>
+
+          <div class="branch-body">
+            <p>When the deficit gap is near threshold, bifurcation dynamics dominate.</p>
+
+            <ul class="branch-outcomes">
+              <li>Either collapse (one wins)</li>
+              <li>Or stabilize (plural coexistence)</li>
+              <li>Revolutionary science potential</li>
+              <li>High war intensity</li>
+            </ul>
+          </div>
+
+          <div class="branch-footer">
+            &#8594; Eventually returns to Frame Definition
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 11: Conflict Necessity Theorem -->
+    <section class="section" id="necessity">
+      <div class="section-header">
+        <div class="section-number">11</div>
+        <h2 class="section-title">Conflict Necessity Theorem</h2>
+      </div>
+
+      <div class="necessity-card">
+        <div class="necessity-header">ORIGIN WARS ARE NOT OPTIONAL</div>
+
+        <div class="necessity-statement">
+          Origin wars are <strong>FORCED</strong> whenever the following conditions hold:
+        </div>
+
+        <div class="necessity-conditions">
+          <div class="necessity-condition">
+            <div class="necessity-condition-icon">&#8707;</div>
+            <div class="necessity-condition-text">Multiple local minima exist in &#948;-landscape</div>
+          </div>
+          <div class="necessity-condition">
+            <div class="necessity-condition-icon">&#8594;1</div>
+            <div class="necessity-condition-text">Absolutization is attempted (agents claim single origin)</div>
+          </div>
+          <div class="necessity-condition">
+            <div class="necessity-condition-icon">&#8706;F</div>
+            <div class="necessity-condition-text">Extension pressure persists (boundary non-empty)</div>
+          </div>
+        </div>
+
+        <div class="necessity-conclusion">
+          <div class="necessity-conclusion-text">
+            This is DYNAMICS, not pathology. Conflict emerges from structure.
+          </div>
+        </div>
+      </div>
+
+      <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">
+        The MTR framework doesn't prevent origin wars - it explains WHY they are mathematically inevitable
+        and provides tools for navigating them.
+      </p>
+    </section>
+
+    <!-- Section 12: Decision Navigation -->
+    <section class="section" id="navigation">
+      <div class="section-header">
+        <div class="section-number">&#9671;</div>
+        <h2 class="section-title">Decision Tree Navigation</h2>
+      </div>
+
+      <div class="nav-diamond-section">
+        <div class="nav-diamond-title">MTR DECISION TREE :: DEGENERACY CHECK NODE</div>
+
+        <div class="nav-diamond-visual">
+          <a href="vn-mtr-006-boundary-check.html" class="nav-node">&#8706;F=&#8709;? &#8594; Extension Path</a>
+
+          <div class="nav-connector"></div>
+
+          <div class="nav-node current">g<sub>t</sub>&#8776;0?</div>
+
+          <div class="nav-connector"></div>
+
+          <div class="nav-branches">
+            <div class="nav-branch">
+              <div class="nav-branch-connector clear"></div>
+              <div class="nav-branch-label clear">g >> 0</div>
+              <a href="mtr-decision-tree.html#principle-5" class="nav-node clear">D* Converge</a>
+            </div>
+            <div class="nav-branch">
+              <div class="nav-branch-connector war"></div>
+              <div class="nav-branch-label war">g &#8776; 0</div>
+              <a href="mtr-decision-tree.html#principle-5" class="nav-node war">&#9826; Bifurcate</a>
+            </div>
+          </div>
+
+          <div class="nav-loop">
+            &#8627; Both paths return to Frame Definition with evolved state
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Pages -->
+    <section class="section" id="connections">
+      <div class="section-header">
+        <div class="section-number">&#8594;</div>
+        <h2 class="section-title">Related Pages</h2>
+      </div>
+
+      <div class="mtr-connections">
+        <a href="mtr-decision-tree.html" class="mtr-link-card" style="--link-color: var(--origin);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#8756;</div>
+            <div class="mtr-link-title">MTR Decision Tree</div>
+          </div>
+          <div class="mtr-link-desc">
+            The complete Meta-Theorem of Reality decision tree with all five principles and navigation.
+          </div>
+        </a>
+
+        <a href="vn-mtr-006-boundary-check.html" class="mtr-link-card" style="--link-color: var(--evolution);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#9671;</div>
+            <div class="mtr-link-title">Boundary Check</div>
+          </div>
+          <div class="mtr-link-desc">
+            The previous decision node: &#8706;F=&#8709;? Determines if extension is needed.
+          </div>
+        </a>
+
+        <a href="vn-mtr-005-origin-selection.html" class="mtr-link-card" style="--link-color: var(--origin);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">D*</div>
+            <div class="mtr-link-title">Origin Selection</div>
+          </div>
+          <div class="mtr-link-desc">
+            How origins are selected via argmin &#948;(D|F). The process that creates OriginSet(F).
+          </div>
+        </a>
+
+        <a href="vn-fibonacci-rg-flow.html" class="mtr-link-card" style="--link-color: var(--invariant);">
+          <div class="mtr-link-header">
+            <div class="mtr-link-icon">&#966;</div>
+            <div class="mtr-link-title">Fibonacci RG Flow</div>
+          </div>
+          <div class="mtr-link-desc">
+            Frame extension in action: F<sub>12</sub> &#8594; F<sub>24</sub> &#8594; F<sub>48</sub> via renormalization.
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">g<sub>t</sub>&#8776;0? | YES &#8594; Origin War | NO &#8594; Converge to D* | R(R)=R</div>
+    <p>VN-MTR-009 | Degeneracy Check | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // ORIGIN WARS SIMULATOR
+    // =========================================================================
+
+    let simState = {
+      running: false,
+      time: 0,
+      volM0: 0.5,
+      volM1: 0.5,
+      history: [],
+      animationId: null
+    };
+
+    function getParams() {
+      return {
+        beta: parseFloat(document.getElementById('betaSlider').value),
+        epsilon: parseFloat(document.getElementById('epsilonSlider').value),
+        gap: parseFloat(document.getElementById('gapSlider').value),
+        noise: parseFloat(document.getElementById('noiseSlider').value)
+      };
+    }
+
+    function updateParamDisplays() {
+      const params = getParams();
+      document.getElementById('betaValue').textContent = `\u03B2 = ${params.beta.toFixed(1)}`;
+      document.getElementById('epsilonValue').textContent = `\u03B5 = ${params.epsilon.toFixed(2)}`;
+      document.getElementById('gapValue').textContent = `gap = ${params.gap.toFixed(2)}`;
+      document.getElementById('noiseValue').textContent = `\u03C3 = ${params.noise.toFixed(2)}`;
+    }
+
+    function computeDelta(x, gap, beta) {
+      // Two-well potential: delta landscape with minima at x=0.2 and x=0.8
+      const well1 = Math.pow(x - 0.25, 2);
+      const well2 = Math.pow(x - 0.75, 2) + gap; // gap shifts second well
+      return Math.min(well1, well2) * beta;
+    }
+
+    function drawLandscape() {
+      const params = getParams();
+      const svg = document.getElementById('landscapeSvg');
+      const width = 400;
+      const height = 180;
+
+      // Clear SVG
+      svg.innerHTML = '';
+
+      // Draw axes
+      const axisColor = '#909098';
+      svg.innerHTML += `<line x1="30" y1="150" x2="380" y2="150" stroke="${axisColor}" stroke-width="1"/>`;
+      svg.innerHTML += `<line x1="30" y1="20" x2="30" y2="150" stroke="${axisColor}" stroke-width="1"/>`;
+
+      // Labels
+      svg.innerHTML += `<text x="200" y="170" fill="${axisColor}" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Description Space</text>`;
+      svg.innerHTML += `<text x="15" y="85" fill="${axisColor}" font-family="JetBrains Mono" font-size="10" text-anchor="middle" transform="rotate(-90, 15, 85)">\u03B4</text>`;
+
+      // Draw delta landscape
+      let path = 'M ';
+      for (let i = 0; i <= 100; i++) {
+        const x = i / 100;
+        const delta = computeDelta(x, params.gap, params.beta);
+        const px = 30 + x * 350;
+        const py = 140 - delta * 200;
+        path += `${px},${Math.max(20, Math.min(140, py))} `;
+      }
+      svg.innerHTML += `<path d="${path}" fill="none" stroke="#ff9f43" stroke-width="2"/>`;
+
+      // Draw minima markers
+      const delta1 = computeDelta(0.25, params.gap, params.beta);
+      const delta2 = computeDelta(0.75, params.gap, params.beta);
+      const py1 = 140 - delta1 * 200;
+      const py2 = 140 - delta2 * 200;
+
+      // M0 marker (blue)
+      svg.innerHTML += `<circle cx="117.5" cy="${Math.max(20, py1)}" r="8" fill="#3498db"/>`;
+      svg.innerHTML += `<text x="117.5" y="${Math.max(20, py1) - 15}" fill="#3498db" font-family="JetBrains Mono" font-size="10" text-anchor="middle">M\u2080</text>`;
+
+      // M1 marker (red)
+      svg.innerHTML += `<circle cx="292.5" cy="${Math.max(20, py2)}" r="8" fill="#e74c3c"/>`;
+      svg.innerHTML += `<text x="292.5" y="${Math.max(20, py2) - 15}" fill="#e74c3c" font-family="JetBrains Mono" font-size="10" text-anchor="middle">M\u2081</text>`;
+
+      // Draw current population distribution
+      const volM0Width = simState.volM0 * 100;
+      const volM1Width = simState.volM1 * 100;
+
+      // Volume bars at bottom
+      svg.innerHTML += `<rect x="30" y="155" width="${volM0Width * 1.75}" height="8" fill="#3498db" opacity="0.6"/>`;
+      svg.innerHTML += `<rect x="${30 + volM0Width * 1.75}" y="155" width="${volM1Width * 1.75}" height="8" fill="#e74c3c" opacity="0.6"/>`;
+    }
+
+    function drawTimeSeries() {
+      const svg = document.getElementById('timeSeriesSvg');
+      svg.innerHTML = '';
+
+      const width = 400;
+      const height = 90;
+
+      // Background
+      svg.innerHTML += `<rect x="0" y="0" width="${width}" height="${height}" fill="#0a0a18"/>`;
+
+      // Axis
+      svg.innerHTML += `<line x1="30" y1="80" x2="380" y2="80" stroke="#909098" stroke-width="1"/>`;
+      svg.innerHTML += `<text x="200" y="88" fill="#909098" font-family="JetBrains Mono" font-size="8" text-anchor="middle">Time</text>`;
+
+      if (simState.history.length < 2) return;
+
+      // Draw Vol(M0) line
+      let pathM0 = 'M ';
+      let pathM1 = 'M ';
+      let pathWar = 'M ';
+
+      const maxPoints = 200;
+      const startIdx = Math.max(0, simState.history.length - maxPoints);
+      const displayHistory = simState.history.slice(startIdx);
+
+      displayHistory.forEach((h, i) => {
+        const px = 30 + (i / maxPoints) * 350;
+        const pyM0 = 75 - h.volM0 * 60;
+        const pyM1 = 75 - h.volM1 * 60;
+        const pyWar = 75 - h.war * 60;
+
+        pathM0 += `${px},${pyM0} `;
+        pathM1 += `${px},${pyM1} `;
+        pathWar += `${px},${pyWar} `;
+      });
+
+      svg.innerHTML += `<path d="${pathM0}" fill="none" stroke="#3498db" stroke-width="1.5"/>`;
+      svg.innerHTML += `<path d="${pathM1}" fill="none" stroke="#e74c3c" stroke-width="1.5"/>`;
+      svg.innerHTML += `<path d="${pathWar}" fill="none" stroke="#ff9f43" stroke-width="1" stroke-dasharray="3,3"/>`;
+
+      // Legend
+      svg.innerHTML += `<text x="35" y="15" fill="#3498db" font-family="JetBrains Mono" font-size="8">Vol(M\u2080)</text>`;
+      svg.innerHTML += `<text x="100" y="15" fill="#e74c3c" font-family="JetBrains Mono" font-size="8">Vol(M\u2081)</text>`;
+      svg.innerHTML += `<text x="165" y="15" fill="#ff9f43" font-family="JetBrains Mono" font-size="8">W\u209C</text>`;
+    }
+
+    function updateMetrics() {
+      const params = getParams();
+      const delta1 = computeDelta(0.25, params.gap, params.beta);
+      const delta2 = computeDelta(0.75, params.gap, params.beta);
+      const deficitGap = Math.abs(delta1 - delta2);
+      const warIntensity = 1 - Math.max(simState.volM0, simState.volM1);
+      const isDegenerate = deficitGap <= params.epsilon;
+
+      document.getElementById('volM0').textContent = `${(simState.volM0 * 100).toFixed(0)}%`;
+      document.getElementById('volM1').textContent = `${(simState.volM1 * 100).toFixed(0)}%`;
+      document.getElementById('warIntensity').textContent = warIntensity.toFixed(2);
+      document.getElementById('deficitGap').textContent = deficitGap.toFixed(3);
+
+      const regimeEl = document.getElementById('regime');
+      if (isDegenerate) {
+        regimeEl.textContent = 'DEGENERATE';
+        regimeEl.style.color = '#ff9f43';
+      } else if (simState.volM0 > 0.9) {
+        regimeEl.textContent = 'M\u2080 DOMINANT';
+        regimeEl.style.color = '#3498db';
+      } else if (simState.volM1 > 0.9) {
+        regimeEl.textContent = 'M\u2081 DOMINANT';
+        regimeEl.style.color = '#e74c3c';
+      } else {
+        regimeEl.textContent = 'COMPETITIVE';
+        regimeEl.style.color = '#c792ea';
+      }
+    }
+
+    function simulationStep() {
+      const params = getParams();
+
+      // Compute deltas
+      const delta1 = computeDelta(0.25, params.gap, params.beta);
+      const delta2 = computeDelta(0.75, params.gap, params.beta);
+
+      // Boltzmann-like selection probabilities
+      const Z = Math.exp(-delta1) + Math.exp(-delta2);
+      const targetM0 = Math.exp(-delta1) / Z;
+      const targetM1 = Math.exp(-delta2) / Z;
+
+      // Add noise
+      const noise0 = (Math.random() - 0.5) * params.noise;
+      const noise1 = (Math.random() - 0.5) * params.noise;
+
+      // Update with momentum
+      const momentum = 0.95;
+      simState.volM0 = Math.max(0, Math.min(1, momentum * simState.volM0 + (1 - momentum) * targetM0 + noise0));
+      simState.volM1 = 1 - simState.volM0;
+
+      // Record history
+      const warIntensity = 1 - Math.max(simState.volM0, simState.volM1);
+      simState.history.push({
+        t: simState.time,
+        volM0: simState.volM0,
+        volM1: simState.volM1,
+        war: warIntensity
+      });
+
+      // Limit history size
+      if (simState.history.length > 500) {
+        simState.history.shift();
+      }
+
+      simState.time++;
+    }
+
+    function animate() {
+      if (!simState.running) return;
+
+      simulationStep();
+      drawLandscape();
+      drawTimeSeries();
+      updateMetrics();
+
+      simState.animationId = requestAnimationFrame(animate);
+    }
+
+    function toggleSimulation() {
+      simState.running = !simState.running;
+      const btn = document.getElementById('runBtn');
+
+      if (simState.running) {
+        btn.textContent = 'Pause';
+        btn.classList.add('active');
+        animate();
+      } else {
+        btn.textContent = 'Run Simulation';
+        btn.classList.remove('active');
+        if (simState.animationId) {
+          cancelAnimationFrame(simState.animationId);
+        }
+      }
+    }
+
+    function resetSimulation() {
+      simState.running = false;
+      simState.time = 0;
+      simState.volM0 = 0.5;
+      simState.volM1 = 0.5;
+      simState.history = [];
+
+      const btn = document.getElementById('runBtn');
+      btn.textContent = 'Run Simulation';
+      btn.classList.remove('active');
+
+      if (simState.animationId) {
+        cancelAnimationFrame(simState.animationId);
+      }
+
+      updateSimulator();
+    }
+
+    function addPerturbation() {
+      const perturbation = (Math.random() - 0.5) * 0.3;
+      simState.volM0 = Math.max(0, Math.min(1, simState.volM0 + perturbation));
+      simState.volM1 = 1 - simState.volM0;
+
+      if (!simState.running) {
+        drawLandscape();
+        drawTimeSeries();
+        updateMetrics();
+      }
+    }
+
+    function updateSimulator() {
+      updateParamDisplays();
+      drawLandscape();
+      drawTimeSeries();
+      updateMetrics();
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      updateSimulator();
+    });
+  </script>
+
+</body>
+</html>
