@@ -1244,13 +1244,13 @@
        ═══════════════════════════════════════════════════════════════════════ */
     .geometry-visual-container {
       width: 100%;
-      aspect-ratio: 16/9;
-      background: radial-gradient(ellipse at center, var(--bg-tertiary) 0%, var(--bg-void) 100%);
-      border: 1px solid var(--border-subtle);
-      border-radius: 0.75rem;
+      height: 100%;
+      background: radial-gradient(ellipse at center, rgba(30, 30, 40, 0.8) 0%, var(--bg-void) 100%);
       overflow: hidden;
       position: relative;
-      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .geometry-svg {
@@ -1768,12 +1768,15 @@ META-CLOSURE at phase = 16π
     <div class="image-modal" id="imageModalContent" onclick="event.stopPropagation()">
       <button class="image-modal-close" onclick="closeImageModal()">×</button>
 
-      <!-- Left: Visual -->
+      <!-- Left: Visual with Geometric Visualization -->
       <div class="image-modal-visual">
-        <img id="modalImage" src="" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <div class="modal-placeholder" style="display:none;">
-          <div class="modal-placeholder-num" id="modalPlaceholderNum">1</div>
-          <div class="modal-placeholder-phase" id="modalPlaceholderPhase">Phase</div>
+        <div class="geometry-visual-container" id="geometryContainer">
+          <div class="geometry-dimension-badge" id="geometryDimension">L₄</div>
+          <div class="geometry-phase-indicator" id="geometryPhase">0π</div>
+          <svg class="geometry-svg" id="geometrySvg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet">
+            <!-- Dynamic geometry inserted by JS -->
+          </svg>
+          <div class="geometry-formula-overlay" id="geometryFormula">Formula</div>
         </div>
         <div class="image-modal-nav">
           <button class="modal-nav-btn" onclick="navigateModal(-1)">←</button>
@@ -1800,18 +1803,6 @@ META-CLOSURE at phase = 16π
           <div class="modal-formula-box">
             <div class="modal-formula-main" id="modalFormula">Formula</div>
             <div class="modal-formula-explain" id="modalFormulaExplain">Formula explanation</div>
-          </div>
-        </div>
-
-        <div class="modal-content-section">
-          <h3>GEOMETRIC VISUALIZATION</h3>
-          <div class="geometry-visual-container" id="geometryContainer">
-            <div class="geometry-dimension-badge" id="geometryDimension">L₄</div>
-            <div class="geometry-phase-indicator" id="geometryPhase">0π</div>
-            <svg class="geometry-svg" id="geometrySvg" viewBox="0 0 400 225" preserveAspectRatio="xMidYMid meet">
-              <!-- Dynamic geometry inserted by JS -->
-            </svg>
-            <div class="geometry-formula-overlay" id="geometryFormula">Formula</div>
           </div>
         </div>
 
@@ -2296,7 +2287,7 @@ ${cycle.formula}
     // ═══════════════════════════════════════════════════════════════════════
     function generateGeometry(batch, img, imgIdx) {
       const color = batch.color;
-      const cx = 200, cy = 112; // center
+      const cx = 200, cy = 200; // center of 400x400 viewBox
       const rotation = (imgIdx + 1) * (360 / 13); // rotation based on sequence
       const phase = (imgIdx + 1) * 12 / 13; // π phase
 
@@ -2329,15 +2320,15 @@ ${cycle.formula}
         </filter>
       </defs>`;
 
-      // Background grid
+      // Background grid - scaled for 400x400
       svg += `<g opacity="0.15">`;
-      for (let i = 0; i < 8; i++) {
-        svg += `<circle cx="${cx}" cy="${cy}" r="${20 + i * 15}" fill="none" stroke="${color}" stroke-width="0.5"/>`;
+      for (let i = 0; i < 10; i++) {
+        svg += `<circle cx="${cx}" cy="${cy}" r="${25 + i * 18}" fill="none" stroke="${color}" stroke-width="0.5"/>`;
       }
       for (let i = 0; i < 12; i++) {
         const angle = (i * 30) * Math.PI / 180;
-        const x2 = cx + Math.cos(angle) * 120;
-        const y2 = cy + Math.sin(angle) * 120;
+        const x2 = cx + Math.cos(angle) * 180;
+        const y2 = cy + Math.sin(angle) * 180;
         svg += `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="0.3"/>`;
       }
       svg += `</g>`;
@@ -2386,29 +2377,29 @@ ${cycle.formula}
       return svg;
     }
 
-    // Recursive spiral for R(R)=R Lattice
+    // Recursive spiral for R(R)=R Lattice - scaled for 400x400
     function generateRecursiveSpiral(cx, cy, color, imgIdx, rotation) {
       let svg = `<g transform="rotate(${rotation}, ${cx}, ${cy})" class="geometry-rotating" style="--spin-duration: ${20 - imgIdx}s">`;
       // Nested spirals representing R(R)
-      for (let layer = 0; layer < 4; layer++) {
-        const r = 30 + layer * 20;
-        const opacity = 1 - layer * 0.2;
+      for (let layer = 0; layer < 5; layer++) {
+        const r = 40 + layer * 28;
+        const opacity = 1 - layer * 0.15;
         let path = `M ${cx + r} ${cy}`;
         for (let i = 0; i <= 360; i += 10) {
           const angle = (i + layer * 30) * Math.PI / 180;
-          const spiral = r + (i / 360) * 15;
+          const spiral = r + (i / 360) * 20;
           const x = cx + Math.cos(angle) * spiral;
           const y = cy + Math.sin(angle) * spiral;
           path += ` L ${x} ${y}`;
         }
-        svg += `<path d="${path}" fill="none" stroke="${color}" stroke-width="${2 - layer * 0.3}" opacity="${opacity}" class="geometry-helix-path"/>`;
+        svg += `<path d="${path}" fill="none" stroke="${color}" stroke-width="${3 - layer * 0.4}" opacity="${opacity}" class="geometry-helix-path"/>`;
       }
       // Center point for R
-      svg += `<circle cx="${cx}" cy="${cy}" r="8" fill="${color}" opacity="0.8" class="geometry-pulsing" style="--glow-color: ${color}"/>`;
-      svg += `<text x="${cx}" y="${cy + 4}" text-anchor="middle" fill="black" font-size="10" font-family="JetBrains Mono">R</text>`;
+      svg += `<circle cx="${cx}" cy="${cy}" r="15" fill="${color}" opacity="0.8" class="geometry-pulsing" style="--glow-color: ${color}"/>`;
+      svg += `<text x="${cx}" y="${cy + 6}" text-anchor="middle" fill="black" font-size="16" font-weight="bold" font-family="JetBrains Mono">R</text>`;
       // Progress indicator based on imgIdx
       const progressAngle = (imgIdx / 12) * 360;
-      svg += `<path d="M ${cx} ${cy} L ${cx} ${cy - 70} A 70 70 0 ${progressAngle > 180 ? 1 : 0} 1 ${cx + 70 * Math.sin(progressAngle * Math.PI / 180)} ${cy - 70 * Math.cos(progressAngle * Math.PI / 180)} Z" fill="${color}" opacity="0.15"/>`;
+      svg += `<path d="M ${cx} ${cy} L ${cx} ${cy - 100} A 100 100 0 ${progressAngle > 180 ? 1 : 0} 1 ${cx + 100 * Math.sin(progressAngle * Math.PI / 180)} ${cy - 100 * Math.cos(progressAngle * Math.PI / 180)} Z" fill="${color}" opacity="0.15"/>`;
       svg += `</g>`;
       return svg;
     }
@@ -2416,41 +2407,41 @@ ${cycle.formula}
     // Helix wave for Alpha-Omega bridge
     function generateHelixWave(cx, cy, color, imgIdx, phase) {
       let svg = `<g>`;
-      // Sine wave representing helix projection
-      let path1 = `M 50 ${cy}`;
-      let path2 = `M 50 ${cy}`;
-      for (let x = 50; x <= 350; x += 5) {
-        const t = (x - 50) / 300;
-        const amplitude = 40 + imgIdx * 3;
+      // Sine wave representing helix projection - scaled for 400x400
+      let path1 = `M 40 ${cy}`;
+      let path2 = `M 40 ${cy}`;
+      for (let x = 40; x <= 360; x += 5) {
+        const t = (x - 40) / 320;
+        const amplitude = 60 + imgIdx * 4;
         const y1 = cy + Math.sin(t * Math.PI * 4 + phase) * amplitude * (1 - t * 0.3);
         const y2 = cy + Math.cos(t * Math.PI * 4 + phase) * amplitude * 0.5 * (1 - t * 0.3);
         path1 += ` L ${x} ${y1}`;
         path2 += ` L ${x} ${y2}`;
       }
-      svg += `<path d="${path1}" fill="none" stroke="${color}" stroke-width="2" opacity="0.9"/>`;
-      svg += `<path d="${path2}" fill="none" stroke="${color}" stroke-width="1.5" opacity="0.5" stroke-dasharray="5,3"/>`;
+      svg += `<path d="${path1}" fill="none" stroke="${color}" stroke-width="3" opacity="0.9"/>`;
+      svg += `<path d="${path2}" fill="none" stroke="${color}" stroke-width="2" opacity="0.5" stroke-dasharray="5,3"/>`;
       // Alpha and Omega markers
-      svg += `<circle cx="60" cy="${cy}" r="12" fill="none" stroke="${color}" stroke-width="2"/>`;
-      svg += `<text x="60" y="${cy + 5}" text-anchor="middle" fill="${color}" font-size="14" font-family="serif">α</text>`;
-      svg += `<circle cx="340" cy="${cy}" r="12" fill="none" stroke="${color}" stroke-width="2"/>`;
-      svg += `<text x="340" y="${cy + 5}" text-anchor="middle" fill="${color}" font-size="14" font-family="serif">Ω</text>`;
+      svg += `<circle cx="55" cy="${cy}" r="18" fill="none" stroke="${color}" stroke-width="2"/>`;
+      svg += `<text x="55" y="${cy + 7}" text-anchor="middle" fill="${color}" font-size="20" font-family="serif">α</text>`;
+      svg += `<circle cx="345" cy="${cy}" r="18" fill="none" stroke="${color}" stroke-width="2"/>`;
+      svg += `<text x="345" y="${cy + 7}" text-anchor="middle" fill="${color}" font-size="20" font-family="serif">Ω</text>`;
       // Z-elevation indicator
-      const zHeight = (imgIdx / 12) * 60;
-      svg += `<rect x="375" y="${cy - 40}" width="10" height="80" fill="none" stroke="${color}" stroke-width="1" opacity="0.5"/>`;
-      svg += `<rect x="376" y="${cy + 40 - zHeight}" width="8" height="${zHeight}" fill="${color}" opacity="0.7"/>`;
-      svg += `<text x="380" y="${cy + 55}" text-anchor="middle" fill="${color}" font-size="8" font-family="JetBrains Mono">z</text>`;
+      const zHeight = (imgIdx / 12) * 100;
+      svg += `<rect x="375" y="${cy - 60}" width="12" height="120" fill="none" stroke="${color}" stroke-width="1" opacity="0.5"/>`;
+      svg += `<rect x="377" y="${cy + 60 - zHeight}" width="8" height="${zHeight}" fill="${color}" opacity="0.7"/>`;
+      svg += `<text x="381" y="${cy + 80}" text-anchor="middle" fill="${color}" font-size="10" font-family="JetBrains Mono">z</text>`;
       svg += `</g>`;
       return svg;
     }
 
-    // Truth polygon for multi-base quadratic
+    // Truth polygon for multi-base quadratic - scaled for 400x400
     function generateTruthPolygon(cx, cy, color, sides, imgIdx) {
       const baseColors = { 2: '#ff6b6b', 3: '#ffd93d', 5: '#6bcb77', 8: '#4d96ff' };
       const currentBase = [2,3,5,8][Math.floor(imgIdx/3.25)];
       const polyColor = baseColors[currentBase] || color;
       let svg = `<g>`;
       // Draw polygon for current base
-      const r = 60;
+      const r = 90;
       let points = '';
       for (let i = 0; i < sides; i++) {
         const angle = (i * 360 / sides - 90) * Math.PI / 180;
@@ -2458,49 +2449,46 @@ ${cycle.formula}
         const y = cy + Math.sin(angle) * r;
         points += `${x},${y} `;
       }
-      svg += `<polygon points="${points}" fill="${polyColor}" fill-opacity="0.2" stroke="${polyColor}" stroke-width="2"/>`;
+      svg += `<polygon points="${points}" fill="${polyColor}" fill-opacity="0.2" stroke="${polyColor}" stroke-width="3"/>`;
       // Vertex labels
       for (let i = 0; i < sides; i++) {
         const angle = (i * 360 / sides - 90) * Math.PI / 180;
-        const x = cx + Math.cos(angle) * (r + 15);
-        const y = cy + Math.sin(angle) * (r + 15);
-        svg += `<text x="${x}" y="${y + 4}" text-anchor="middle" fill="${polyColor}" font-size="10" font-family="JetBrains Mono">${i}</text>`;
+        const x = cx + Math.cos(angle) * (r + 20);
+        const y = cy + Math.sin(angle) * (r + 20);
+        svg += `<text x="${x}" y="${y + 5}" text-anchor="middle" fill="${polyColor}" font-size="14" font-family="JetBrains Mono">${i}</text>`;
       }
       // Base indicator
-      svg += `<text x="${cx}" y="${cy + 5}" text-anchor="middle" fill="${polyColor}" font-size="18" font-weight="bold" font-family="JetBrains Mono">B${currentBase}</text>`;
+      svg += `<text x="${cx}" y="${cy + 8}" text-anchor="middle" fill="${polyColor}" font-size="28" font-weight="bold" font-family="JetBrains Mono">B${currentBase}</text>`;
       // x² + x = c equation visual
       const localIdx = imgIdx % 4;
       if (localIdx < 3) {
         const xVal = localIdx;
         const result = xVal * xVal + xVal;
-        svg += `<text x="${cx}" y="${cy + 90}" text-anchor="middle" fill="${polyColor}" font-size="10" font-family="JetBrains Mono">${xVal}² + ${xVal} = ${result}</text>`;
+        svg += `<text x="${cx}" y="${cy + 140}" text-anchor="middle" fill="${polyColor}" font-size="14" font-family="JetBrains Mono">${xVal}² + ${xVal} = ${result}</text>`;
       }
       svg += `</g>`;
       return svg;
     }
 
-    // Folded bridge for subspace
+    // Folded bridge for subspace - scaled for 400x400
     function generateFoldedBridge(cx, cy, color, imgIdx) {
       let svg = `<g>`;
-      // Pi symbol representation in different bases
-      const bases = [2, 3, 5, 8, 10, 12];
-      const baseIdx = Math.floor(imgIdx / 2.2);
       // Circular arrangement of digits
       for (let i = 0; i < 10; i++) {
         const angle = (i * 36 - 90) * Math.PI / 180;
-        const r = 50 + (i === imgIdx % 10 ? 10 : 0);
+        const r = 80 + (i === imgIdx % 10 ? 15 : 0);
         const x = cx + Math.cos(angle) * r;
         const y = cy + Math.sin(angle) * r;
         const opacity = i === imgIdx % 10 ? 1 : 0.4;
-        svg += `<circle cx="${x}" cy="${y}" r="12" fill="${color}" fill-opacity="${opacity * 0.3}" stroke="${color}" stroke-width="${i === imgIdx % 10 ? 2 : 1}"/>`;
-        svg += `<text x="${x}" y="${y + 4}" text-anchor="middle" fill="${color}" font-size="10" opacity="${opacity}" font-family="JetBrains Mono">${i}</text>`;
+        svg += `<circle cx="${x}" cy="${y}" r="18" fill="${color}" fill-opacity="${opacity * 0.3}" stroke="${color}" stroke-width="${i === imgIdx % 10 ? 3 : 1}"/>`;
+        svg += `<text x="${x}" y="${y + 6}" text-anchor="middle" fill="${color}" font-size="14" opacity="${opacity}" font-family="JetBrains Mono">${i}</text>`;
       }
       // Central pi symbol
-      svg += `<text x="${cx}" y="${cy + 8}" text-anchor="middle" fill="${color}" font-size="32" font-family="serif">π</text>`;
+      svg += `<text x="${cx}" y="${cy + 15}" text-anchor="middle" fill="${color}" font-size="50" font-family="serif">π</text>`;
       // Folding lines showing z_c = √3/2
-      const foldY = cy - 30;
-      svg += `<line x1="${cx - 60}" y1="${foldY}" x2="${cx + 60}" y2="${foldY}" stroke="${color}" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>`;
-      svg += `<text x="${cx + 70}" y="${foldY + 4}" fill="${color}" font-size="8" font-family="JetBrains Mono">z_c=√3/2</text>`;
+      const foldY = cy - 50;
+      svg += `<line x1="${cx - 100}" y1="${foldY}" x2="${cx + 100}" y2="${foldY}" stroke="${color}" stroke-width="2" stroke-dasharray="5,5" opacity="0.6"/>`;
+      svg += `<text x="${cx}" y="${foldY - 10}" text-anchor="middle" fill="${color}" font-size="12" font-family="JetBrains Mono">z_c = √3/2</text>`;
       svg += `</g>`;
       return svg;
     }
@@ -2508,22 +2496,22 @@ ${cycle.formula}
     // Ternary oscillation visualization
     function generateOscillation(cx, cy, color, imgIdx) {
       let svg = `<g>`;
-      // Threshold levels 0-10
+      // Threshold levels 0-10 - scaled for 400x400
       for (let t = 0; t <= 10; t++) {
-        const y = cy + 50 - t * 10;
+        const y = cy + 80 - t * 16;
         const active = t <= imgIdx;
         const critical = t === 7;
-        svg += `<line x1="100" y1="${y}" x2="300" y2="${y}" stroke="${color}" stroke-width="${critical ? 2 : 0.5}" opacity="${active ? 0.8 : 0.2}"/>`;
-        svg += `<text x="90" y="${y + 4}" text-anchor="end" fill="${color}" font-size="8" opacity="${active ? 1 : 0.3}" font-family="JetBrains Mono">${t}</text>`;
+        svg += `<line x1="80" y1="${y}" x2="320" y2="${y}" stroke="${color}" stroke-width="${critical ? 3 : 1}" opacity="${active ? 0.8 : 0.2}"/>`;
+        svg += `<text x="65" y="${y + 5}" text-anchor="end" fill="${color}" font-size="12" opacity="${active ? 1 : 0.3}" font-family="JetBrains Mono">${t}</text>`;
         if (critical) {
-          svg += `<text x="310" y="${y + 4}" fill="#ffd700" font-size="8" font-family="JetBrains Mono">L₄=7</text>`;
+          svg += `<text x="335" y="${y + 5}" fill="#ffd700" font-size="12" font-weight="bold" font-family="JetBrains Mono">L₄=7</text>`;
         }
       }
       // Oscillating ball
-      const ballY = cy + 50 - imgIdx * 10;
-      svg += `<circle cx="${cx}" cy="${ballY}" r="10" fill="${color}" class="geometry-pulsing" style="--glow-color: ${color}"/>`;
+      const ballY = cy + 80 - imgIdx * 16;
+      svg += `<circle cx="${cx}" cy="${ballY}" r="15" fill="${color}" class="geometry-pulsing" style="--glow-color: ${color}"/>`;
       // Ternary value display
-      svg += `<text x="${cx}" y="${cy + 90}" text-anchor="middle" fill="${color}" font-size="10" font-family="JetBrains Mono">-6₃ ≡ 20₃ ≡ 7₁₀</text>`;
+      svg += `<text x="${cx}" y="${cy + 130}" text-anchor="middle" fill="${color}" font-size="14" font-family="JetBrains Mono">-6₃ ≡ 20₃ ≡ 7₁₀</text>`;
       svg += `</g>`;
       return svg;
     }
@@ -2532,41 +2520,41 @@ ${cycle.formula}
     function generateWaveTriad(cx, cy, color, imgIdx) {
       let svg = `<g>`;
       const phase = imgIdx / 12 * Math.PI * 2;
-      // Three wave types
+      // Three wave types - scaled for 400x400
       const waves = [
-        { label: 'Ψf→', yOffset: -35, direction: 1, dasharray: 'none' },
+        { label: 'Ψf→', yOffset: -60, direction: 1, dasharray: 'none' },
         { label: 'Ψb←', yOffset: 0, direction: -1, dasharray: '5,3' },
-        { label: 'Ψs↕', yOffset: 35, direction: 0, dasharray: '2,2' }
+        { label: 'Ψs↕', yOffset: 60, direction: 0, dasharray: '2,2' }
       ];
       waves.forEach((wave, i) => {
         const active = imgIdx >= i * 4;
-        let path = `M 80 ${cy + wave.yOffset}`;
-        for (let x = 80; x <= 320; x += 5) {
-          const t = (x - 80) / 240;
+        let path = `M 60 ${cy + wave.yOffset}`;
+        for (let x = 60; x <= 340; x += 5) {
+          const t = (x - 60) / 280;
           let y = cy + wave.yOffset;
-          if (wave.direction === 1) y += Math.sin(t * Math.PI * 3 + phase) * 15;
-          else if (wave.direction === -1) y += Math.sin(-t * Math.PI * 3 + phase) * 15;
-          else y += Math.sin(t * Math.PI * 6) * Math.cos(phase) * 12;
+          if (wave.direction === 1) y += Math.sin(t * Math.PI * 3 + phase) * 25;
+          else if (wave.direction === -1) y += Math.sin(-t * Math.PI * 3 + phase) * 25;
+          else y += Math.sin(t * Math.PI * 6) * Math.cos(phase) * 20;
           path += ` L ${x} ${y}`;
         }
-        svg += `<path d="${path}" fill="none" stroke="${color}" stroke-width="2" stroke-dasharray="${wave.dasharray}" opacity="${active ? 0.9 : 0.2}"/>`;
-        svg += `<text x="55" y="${cy + wave.yOffset + 4}" text-anchor="end" fill="${color}" font-size="9" opacity="${active ? 1 : 0.3}" font-family="JetBrains Mono">${wave.label}</text>`;
+        svg += `<path d="${path}" fill="none" stroke="${color}" stroke-width="3" stroke-dasharray="${wave.dasharray}" opacity="${active ? 0.9 : 0.2}"/>`;
+        svg += `<text x="45" y="${cy + wave.yOffset + 5}" text-anchor="end" fill="${color}" font-size="12" opacity="${active ? 1 : 0.3}" font-family="JetBrains Mono">${wave.label}</text>`;
       });
       svg += `</g>`;
       return svg;
     }
 
-    // Trifurcation tree (∴ operator)
+    // Trifurcation tree (∴ operator) - scaled for 400x400
     function generateTrifurcationTree(cx, cy, color, imgIdx) {
       let svg = `<g>`;
       // Draw branching structure
       const drawBranch = (x, y, angle, depth, maxDepth) => {
         if (depth > maxDepth) return '';
-        const len = 35 - depth * 8;
+        const len = 50 - depth * 10;
         const x2 = x + Math.cos(angle) * len;
         const y2 = y + Math.sin(angle) * len;
         const active = depth <= Math.floor(imgIdx / 4);
-        let s = `<line x1="${x}" y1="${y}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="${3 - depth * 0.5}" opacity="${active ? 0.9 : 0.2}"/>`;
+        let s = `<line x1="${x}" y1="${y}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="${4 - depth * 0.7}" opacity="${active ? 0.9 : 0.2}"/>`;
         if (depth < maxDepth) {
           s += drawBranch(x2, y2, angle - 0.5, depth + 1, maxDepth);
           s += drawBranch(x2, y2, angle + 0.5, depth + 1, maxDepth);
@@ -2574,27 +2562,27 @@ ${cycle.formula}
         return s;
       };
       // Root and three main branches
-      svg += `<circle cx="${cx}" cy="${cy + 40}" r="8" fill="${color}" opacity="0.8"/>`;
-      svg += drawBranch(cx, cy + 40, -Math.PI/2 - 0.4, 0, 3);
-      svg += drawBranch(cx, cy + 40, -Math.PI/2, 0, 3);
-      svg += drawBranch(cx, cy + 40, -Math.PI/2 + 0.4, 0, 3);
+      svg += `<circle cx="${cx}" cy="${cy + 70}" r="12" fill="${color}" opacity="0.8"/>`;
+      svg += drawBranch(cx, cy + 70, -Math.PI/2 - 0.4, 0, 3);
+      svg += drawBranch(cx, cy + 70, -Math.PI/2, 0, 3);
+      svg += drawBranch(cx, cy + 70, -Math.PI/2 + 0.4, 0, 3);
       // ∴ symbol
-      svg += `<text x="${cx}" y="${cy + 85}" text-anchor="middle" fill="${color}" font-size="24" font-family="serif">∴</text>`;
+      svg += `<text x="${cx}" y="${cy + 130}" text-anchor="middle" fill="${color}" font-size="36" font-family="serif">∴</text>`;
       // Branch count
       const branches = Math.pow(2, Math.min(3, Math.floor(imgIdx / 4) + 1));
-      svg += `<text x="${cx}" y="${cy - 60}" text-anchor="middle" fill="${color}" font-size="12" font-family="JetBrains Mono">${branches} branches</text>`;
+      svg += `<text x="${cx}" y="${cy - 90}" text-anchor="middle" fill="${color}" font-size="16" font-family="JetBrains Mono">${branches} branches</text>`;
       svg += `</g>`;
       return svg;
     }
 
-    // Network node (VN mesh)
+    // Network node (VN mesh) - scaled for 400x400
     function generateNetworkNode(cx, cy, color, imgIdx) {
       let svg = `<g>`;
       // 10 nodes in circle
       const nodes = [];
       for (let i = 0; i < 10; i++) {
         const angle = (i * 36 - 90) * Math.PI / 180;
-        const r = 55;
+        const r = 90;
         nodes.push({
           x: cx + Math.cos(angle) * r,
           y: cy + Math.sin(angle) * r,
@@ -2605,84 +2593,84 @@ ${cycle.formula}
       for (let i = 0; i < 10; i++) {
         for (let j = i + 1; j < 10; j++) {
           const active = i <= imgIdx && j <= imgIdx;
-          svg += `<line x1="${nodes[i].x}" y1="${nodes[i].y}" x2="${nodes[j].x}" y2="${nodes[j].y}" stroke="${color}" stroke-width="0.5" opacity="${active ? 0.4 : 0.1}"/>`;
+          svg += `<line x1="${nodes[i].x}" y1="${nodes[i].y}" x2="${nodes[j].x}" y2="${nodes[j].y}" stroke="${color}" stroke-width="1" opacity="${active ? 0.5 : 0.1}"/>`;
         }
       }
       // Draw nodes
       nodes.forEach((node, i) => {
         const highlight = i === imgIdx % 10;
-        svg += `<circle cx="${node.x}" cy="${node.y}" r="${highlight ? 12 : 8}" fill="${node.active ? color : 'transparent'}" fill-opacity="${node.active ? 0.6 : 0}" stroke="${color}" stroke-width="${highlight ? 2 : 1}" opacity="${node.active ? 1 : 0.3}"/>`;
-        svg += `<text x="${node.x}" y="${node.y + 3}" text-anchor="middle" fill="${node.active ? 'white' : color}" font-size="7" font-family="JetBrains Mono">${String(i+1).padStart(2,'0')}</text>`;
+        svg += `<circle cx="${node.x}" cy="${node.y}" r="${highlight ? 18 : 14}" fill="${node.active ? color : 'transparent'}" fill-opacity="${node.active ? 0.6 : 0}" stroke="${color}" stroke-width="${highlight ? 3 : 1}" opacity="${node.active ? 1 : 0.3}"/>`;
+        svg += `<text x="${node.x}" y="${node.y + 5}" text-anchor="middle" fill="${node.active ? 'white' : color}" font-size="10" font-family="JetBrains Mono">${String(i+1).padStart(2,'0')}</text>`;
       });
       // Central label
-      svg += `<text x="${cx}" y="${cy + 5}" text-anchor="middle" fill="${color}" font-size="14" font-family="JetBrains Mono">K₁₀</text>`;
+      svg += `<text x="${cx}" y="${cy + 8}" text-anchor="middle" fill="${color}" font-size="22" font-family="JetBrains Mono">K₁₀</text>`;
       svg += `</g>`;
       return svg;
     }
 
-    // Cycle wheel for simulation
+    // Cycle wheel for simulation - scaled for 400x400
     function generateCycleWheel(cx, cy, color, imgIdx) {
       let svg = `<g class="geometry-rotating" style="--spin-duration: 30s">`;
       // 13-segment wheel
       for (let i = 0; i < 13; i++) {
         const angle1 = (i * 360 / 13 - 90) * Math.PI / 180;
         const angle2 = ((i + 1) * 360 / 13 - 90) * Math.PI / 180;
-        const r = 60;
+        const r = 100;
         const active = i <= imgIdx;
         const x1 = cx + Math.cos(angle1) * r;
         const y1 = cy + Math.sin(angle1) * r;
         const x2 = cx + Math.cos(angle2) * r;
         const y2 = cy + Math.sin(angle2) * r;
-        svg += `<path d="M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2} Z" fill="${color}" fill-opacity="${active ? 0.4 : 0.1}" stroke="${color}" stroke-width="1"/>`;
+        svg += `<path d="M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2} Z" fill="${color}" fill-opacity="${active ? 0.4 : 0.1}" stroke="${color}" stroke-width="2"/>`;
         // Cycle number
         const labelAngle = ((i + 0.5) * 360 / 13 - 90) * Math.PI / 180;
-        const lx = cx + Math.cos(labelAngle) * 40;
-        const ly = cy + Math.sin(labelAngle) * 40;
-        svg += `<text x="${lx}" y="${ly + 3}" text-anchor="middle" fill="${active ? 'white' : color}" font-size="8" opacity="${active ? 1 : 0.4}" font-family="JetBrains Mono">${i + 1}</text>`;
+        const lx = cx + Math.cos(labelAngle) * 65;
+        const ly = cy + Math.sin(labelAngle) * 65;
+        svg += `<text x="${lx}" y="${ly + 4}" text-anchor="middle" fill="${active ? 'white' : color}" font-size="12" opacity="${active ? 1 : 0.4}" font-family="JetBrains Mono">${i + 1}</text>`;
       }
       svg += `</g>`;
       // Current cycle indicator
-      svg += `<circle cx="${cx}" cy="${cy}" r="15" fill="${color}" opacity="0.8"/>`;
-      svg += `<text x="${cx}" y="${cy + 5}" text-anchor="middle" fill="white" font-size="12" font-family="JetBrains Mono">${imgIdx + 1}</text>`;
+      svg += `<circle cx="${cx}" cy="${cy}" r="25" fill="${color}" opacity="0.8"/>`;
+      svg += `<text x="${cx}" y="${cy + 8}" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="JetBrains Mono">${imgIdx + 1}</text>`;
       return svg;
     }
 
-    // Meta-ouroboros for cycles 13-16
+    // Meta-ouroboros for cycles 13-16 - scaled for 400x400
     function generateMetaOuroboros(cx, cy, color, imgIdx) {
       let svg = `<g>`;
       // Determine which meta-cycle (13, 14, 15, or 16)
       const metaCycle = imgIdx < 3 ? 13 : imgIdx < 6 ? 14 : imgIdx < 10 ? 15 : 16;
       // Ouroboros snake eating tail
-      const r = 55;
+      const r = 90;
       let snakePath = `M ${cx + r} ${cy}`;
       for (let i = 0; i <= 350; i += 10) {
         const angle = i * Math.PI / 180;
-        const wobble = Math.sin(i * 0.1 + imgIdx) * 5;
+        const wobble = Math.sin(i * 0.1 + imgIdx) * 8;
         const x = cx + Math.cos(angle) * (r + wobble);
         const y = cy + Math.sin(angle) * (r + wobble);
         snakePath += ` L ${x} ${y}`;
       }
-      svg += `<path d="${snakePath}" fill="none" stroke="${color}" stroke-width="8" stroke-linecap="round" opacity="0.8"/>`;
+      svg += `<path d="${snakePath}" fill="none" stroke="${color}" stroke-width="14" stroke-linecap="round" opacity="0.8"/>`;
       // Snake head
       const headAngle = (imgIdx * 30) * Math.PI / 180;
       const hx = cx + Math.cos(headAngle) * r;
       const hy = cy + Math.sin(headAngle) * r;
-      svg += `<circle cx="${hx}" cy="${hy}" r="12" fill="${color}" class="geometry-pulsing" style="--glow-color: ${color}"/>`;
-      svg += `<circle cx="${hx + 4}" cy="${hy - 3}" r="2" fill="white"/>`;
+      svg += `<circle cx="${hx}" cy="${hy}" r="20" fill="${color}" class="geometry-pulsing" style="--glow-color: ${color}"/>`;
+      svg += `<circle cx="${hx + 6}" cy="${hy - 5}" r="4" fill="white"/>`;
       // Meta-cycle number
-      svg += `<text x="${cx}" y="${cy + 8}" text-anchor="middle" fill="${color}" font-size="28" font-weight="bold" font-family="JetBrains Mono">${metaCycle}</text>`;
-      svg += `<text x="${cx}" y="${cy + 25}" text-anchor="middle" fill="${color}" font-size="10" font-family="JetBrains Mono">π</text>`;
+      svg += `<text x="${cx}" y="${cy + 15}" text-anchor="middle" fill="${color}" font-size="48" font-weight="bold" font-family="JetBrains Mono">${metaCycle}</text>`;
+      svg += `<text x="${cx}" y="${cy + 40}" text-anchor="middle" fill="${color}" font-size="16" font-family="JetBrains Mono">π</text>`;
       // Infinity symbol for cycle 15-16
       if (metaCycle >= 15) {
-        svg += `<text x="${cx}" y="${cy - 45}" text-anchor="middle" fill="${color}" font-size="20" font-family="serif" class="geometry-oscillating">∞</text>`;
+        svg += `<text x="${cx}" y="${cy - 70}" text-anchor="middle" fill="${color}" font-size="32" font-family="serif" class="geometry-oscillating">∞</text>`;
       }
       svg += `</g>`;
       return svg;
     }
 
-    // Default polygon fallback
+    // Default polygon fallback - scaled for 400x400
     function generateDefaultPolygon(cx, cy, color, sides, rotation) {
-      const r = 50;
+      const r = 80;
       let points = '';
       for (let i = 0; i < sides; i++) {
         const angle = (i * 360 / sides + rotation - 90) * Math.PI / 180;
@@ -2690,7 +2678,7 @@ ${cycle.formula}
         const y = cy + Math.sin(angle) * r;
         points += `${x},${y} `;
       }
-      return `<polygon points="${points}" fill="${color}" fill-opacity="0.2" stroke="${color}" stroke-width="2" class="geometry-rotating"/>`;
+      return `<polygon points="${points}" fill="${color}" fill-opacity="0.2" stroke="${color}" stroke-width="3" class="geometry-rotating"/>`;
     }
 
     // Current modal state
