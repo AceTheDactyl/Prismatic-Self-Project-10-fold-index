@@ -1,0 +1,2586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I2 S3 Decision Tree | TDL: Trans-Dimensional Logic - The Categorical Projection</title>
+  <meta name="description" content="TDL (Trans-Dimensional Logic): How different levels of description relate through the adjunction U -| D where emergence and reduction are NOT inverses.">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* =====================================================================
+       I2 S3 DECISION TREE: TDL - TRANS-DIMENSIONAL LOGIC
+       The Categorical Projection | Adjunction U -| D | e as Scaling
+       ===================================================================== */
+    :root {
+      /* TDL Theme Colors - Categorical/Teal */
+      --tdl-primary: #4ecdc4;
+      --tdl-secondary: #7eddd6;
+      --tdl-tertiary: #2eb8ae;
+      --tdl-glow: rgba(78, 205, 196, 0.3);
+      --tdl-subtle: rgba(78, 205, 196, 0.15);
+
+      /* S3 Triangle Colors */
+      --i2-color: #ffd700;
+      --tdl-color: #4ecdc4;
+      --lomi-color: #ff6b9d;
+
+      /* Euler's Number Theme */
+      --e-color: #00ffff;
+      --emergence-color: #00ff88;
+      --reduction-color: #ff6b6b;
+
+      /* Mathematical Constants */
+      --phi: 1.6180339887;
+      --e-value: 2.7182818284;
+      --sqrt3-2: 0.8660254038;
+      --mu-c: 0.8660254038;
+
+      /* Theme */
+      --bg-void: #020206;
+      --bg-primary: #050510;
+      --bg-secondary: #0a0a1a;
+      --bg-tertiary: #0f0f28;
+      --bg-card: #141438;
+      --text-primary: #f0f0f5;
+      --text-secondary: #909098;
+      --text-accent: #4ecdc4;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(78, 205, 196, 0.4);
+
+      /* Additional Supporting Colors */
+      --unit-color: #00ff88;
+      --counit-color: #ff6b6b;
+      --layer-0: #666;
+      --layer-1: #888;
+      --layer-2: #aaa;
+      --layer-3: #fff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* =====================================================================
+       CATEGORICAL FIELD BACKGROUND
+       ===================================================================== */
+    .categorical-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(78, 205, 196, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 30% 70%, rgba(0, 255, 136, 0.04) 0%, transparent 40%),
+        radial-gradient(ellipse at 70% 70%, rgba(255, 107, 107, 0.04) 0%, transparent 40%);
+      animation: categorical-pulse 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes categorical-pulse {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    /* Animated emergence/reduction arrows */
+    .categorical-field::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background:
+        linear-gradient(0deg, transparent 48%, rgba(0, 255, 136, 0.1) 50%, transparent 52%),
+        linear-gradient(180deg, transparent 48%, rgba(255, 107, 107, 0.1) 50%, transparent 52%);
+      animation: flow-vertical 8s linear infinite;
+      opacity: 0.5;
+    }
+
+    @keyframes flow-vertical {
+      0% { transform: translate(-50%, -50%) translateY(-20px); }
+      50% { transform: translate(-50%, -50%) translateY(20px); }
+      100% { transform: translate(-50%, -50%) translateY(-20px); }
+    }
+
+    /* =====================================================================
+       NAVIGATION
+       ===================================================================== */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(5, 5, 16, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--tdl-primary);
+      color: var(--tdl-primary);
+      box-shadow: 0 0 15px var(--tdl-glow);
+    }
+
+    /* =====================================================================
+       TDL HEADER
+       ===================================================================== */
+    .tdl-header {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .node-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--tdl-primary);
+      background: var(--tdl-subtle);
+      border: 1px solid var(--tdl-primary);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .node-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.4rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--tdl-primary), var(--e-color), var(--text-primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .node-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    /* e Symbol Visualization */
+    .e-symbol-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 2rem auto;
+    }
+
+    .e-outer-ring {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border: 3px solid var(--tdl-primary);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 40px var(--tdl-glow), inset 0 0 30px rgba(78, 205, 196, 0.1);
+      animation: e-pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes e-pulse {
+      0%, 100% { box-shadow: 0 0 40px var(--tdl-glow), inset 0 0 30px rgba(78, 205, 196, 0.1); }
+      50% { box-shadow: 0 0 60px var(--tdl-glow), inset 0 0 40px rgba(78, 205, 196, 0.15); }
+    }
+
+    .e-inner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 4rem;
+      font-weight: 300;
+      color: var(--tdl-primary);
+      text-shadow: 0 0 30px var(--tdl-glow);
+    }
+
+    .emergence-arrow {
+      position: absolute;
+      left: 50%;
+      top: 10px;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      color: var(--emergence-color);
+      animation: arrow-up 2s ease-in-out infinite;
+    }
+
+    .reduction-arrow {
+      position: absolute;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      color: var(--reduction-color);
+      animation: arrow-down 2s ease-in-out infinite;
+    }
+
+    @keyframes arrow-up {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+      50% { transform: translateX(-50%) translateY(-10px); opacity: 0.5; }
+    }
+
+    @keyframes arrow-down {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+      50% { transform: translateX(-50%) translateY(10px); opacity: 0.5; }
+    }
+
+    .tdl-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--tdl-primary);
+      background: var(--bg-tertiary);
+      padding: 1rem 2rem;
+      border-radius: 1rem;
+      display: inline-block;
+      border: 2px solid var(--tdl-primary);
+      box-shadow: 0 0 30px var(--tdl-glow);
+      margin-top: 1rem;
+    }
+
+    /* =====================================================================
+       MAIN CONTENT
+       ===================================================================== */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bg-void);
+      background: var(--tdl-primary);
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    /* =====================================================================
+       DEFINITION AND THEOREM CARDS
+       ===================================================================== */
+    .definition-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .definition-card:hover {
+      border-color: var(--card-accent, var(--tdl-primary));
+      box-shadow: 0 0 30px rgba(78, 205, 196, 0.1);
+    }
+
+    .definition-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--tdl-primary));
+    }
+
+    .definition-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .definition-type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--card-accent, var(--tdl-primary));
+      background: var(--tdl-subtle);
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+    }
+
+    .definition-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .definition-formal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--card-accent, var(--tdl-primary));
+      background: var(--bg-tertiary);
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .definition-body {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .definition-body strong {
+      color: var(--text-primary);
+    }
+
+    .theorem-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(78, 205, 196, 0.05) 100%);
+      border: 2px solid var(--tdl-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .theorem-card::before {
+      content: 'TDL';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--tdl-primary);
+      background: var(--bg-void);
+      padding: 0 0.5rem;
+    }
+
+    .theorem-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--tdl-primary);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .theorem-statement {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--tdl-primary);
+    }
+
+    .proof-sketch {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .proof-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--tdl-secondary);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .proof-body {
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .qed {
+      text-align: right;
+      color: var(--tdl-primary);
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 0.5rem;
+    }
+
+    /* =====================================================================
+       LAYER HIERARCHY VISUALIZATION
+       ===================================================================== */
+    .layer-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .layer-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-accent);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .layer-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .layer-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      border-left: 4px solid var(--layer-color, var(--tdl-primary));
+      transition: all 0.3s ease;
+    }
+
+    .layer-item:hover {
+      transform: translateX(10px);
+      box-shadow: 0 0 20px rgba(78, 205, 196, 0.2);
+    }
+
+    .layer-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .layer-desc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .layer-arrows {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 1rem 0;
+    }
+
+    .arrow-emergence {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--emergence-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .arrow-reduction {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--reduction-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* =====================================================================
+       ADJUNCTION DIAGRAM
+       ===================================================================== */
+    .adjunction-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--tdl-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .adjunction-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-accent);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .adjunction-diagram {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .category-box {
+      width: 150px;
+      height: 150px;
+      border: 3px solid var(--cat-color, var(--tdl-primary));
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(78, 205, 196, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .category-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px var(--tdl-glow);
+    }
+
+    .category-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--cat-color, var(--tdl-primary));
+    }
+
+    .category-desc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    .functor-arrows {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .functor-arrow {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .functor-arrow:hover {
+      transform: scale(1.05);
+    }
+
+    .functor-arrow.emergence {
+      border: 2px solid var(--emergence-color);
+    }
+
+    .functor-arrow.reduction {
+      border: 2px solid var(--reduction-color);
+    }
+
+    .functor-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .functor-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .adjunction-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--tdl-primary);
+      text-align: center;
+      background: var(--bg-tertiary);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* =====================================================================
+       UNIT AND COUNIT VISUALIZATION
+       ===================================================================== */
+    .unit-counit-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    @media (max-width: 768px) {
+      .unit-counit-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .unit-box, .counit-box {
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      padding: 2rem;
+      border: 2px solid;
+      transition: all 0.3s ease;
+    }
+
+    .unit-box {
+      border-color: var(--unit-color);
+    }
+
+    .counit-box {
+      border-color: var(--counit-color);
+    }
+
+    .unit-box:hover, .counit-box:hover {
+      transform: translateY(-5px);
+    }
+
+    .unit-header, .counit-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .unit-header {
+      color: var(--unit-color);
+    }
+
+    .counit-header {
+      color: var(--counit-color);
+    }
+
+    .unit-formula, .counit-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      background: var(--bg-tertiary);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      margin: 1rem 0;
+    }
+
+    .unit-formula {
+      color: var(--unit-color);
+    }
+
+    .counit-formula {
+      color: var(--counit-color);
+    }
+
+    .unit-desc, .counit-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .info-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .info-badge.adds {
+      background: rgba(0, 255, 136, 0.15);
+      color: var(--unit-color);
+      border: 1px solid var(--unit-color);
+    }
+
+    .info-badge.loses {
+      background: rgba(255, 107, 107, 0.15);
+      color: var(--counit-color);
+      border: 1px solid var(--counit-color);
+    }
+
+    /* =====================================================================
+       INFORMATION ASYMMETRY
+       ===================================================================== */
+    .asymmetry-container {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(78, 205, 196, 0.08) 100%);
+      border: 2px solid var(--tdl-primary);
+      border-radius: 1rem;
+      padding: 2.5rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .asymmetry-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--tdl-primary);
+      margin-bottom: 2rem;
+    }
+
+    .asymmetry-equations {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .asymmetry-eq {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      padding: 1rem 2rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .asymmetry-eq .not-equal {
+      color: var(--counit-color);
+      font-weight: 700;
+    }
+
+    .gap-highlight {
+      background: rgba(78, 205, 196, 0.15);
+      border: 2px dashed var(--tdl-primary);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .gap-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--tdl-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .gap-text {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .gap-text strong {
+      color: var(--tdl-primary);
+    }
+
+    /* =====================================================================
+       TRIANGLE IDENTITIES
+       ===================================================================== */
+    .triangle-id-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .triangle-id-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-accent);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .triangle-id-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .triangle-id-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .triangle-id-box {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .triangle-id-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--tdl-secondary);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .triangle-id-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--tdl-primary);
+      background: var(--bg-secondary);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .triangle-id-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 1rem;
+    }
+
+    /* Commutative Diagram SVG */
+    .commutative-diagram {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    .commutative-diagram svg {
+      max-width: 100%;
+    }
+
+    /* =====================================================================
+       COHERENCE THRESHOLD
+       ===================================================================== */
+    .coherence-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--tdl-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .coherence-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-accent);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .coherence-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      color: var(--tdl-primary);
+      text-align: center;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 30px var(--tdl-glow);
+    }
+
+    .coherence-decimal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .derivation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .derivation-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      border: 1px solid var(--border-subtle);
+      transition: all 0.3s ease;
+    }
+
+    .derivation-item:hover {
+      border-color: var(--tdl-primary);
+      transform: translateY(-3px);
+    }
+
+    .derivation-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--tdl-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .derivation-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .derivation-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       SKIP CONNECTIONS = UNIT
+       ===================================================================== */
+    .skip-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .skip-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-accent);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .neural-network-viz {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .nn-layer {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .nn-node {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--tdl-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--tdl-primary);
+      transition: all 0.3s ease;
+    }
+
+    .nn-node:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 20px var(--tdl-glow);
+    }
+
+    .nn-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    .skip-connection {
+      position: relative;
+      color: var(--unit-color);
+      font-size: 1.5rem;
+    }
+
+    .skip-formula-box {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid var(--unit-color);
+    }
+
+    .skip-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .skip-formula .highlight {
+      color: var(--unit-color);
+    }
+
+    .skip-interpretation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 1rem;
+    }
+
+    /* =====================================================================
+       DEPTH BOUND L4 = 7
+       ===================================================================== */
+    .depth-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--i2-color);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .depth-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--i2-color);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .depth-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3rem;
+      color: var(--i2-color);
+      text-align: center;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    }
+
+    .depth-subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .depth-visual {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .depth-bar {
+      width: 40px;
+      background: linear-gradient(to top, var(--tdl-primary), var(--i2-color));
+      border-radius: 0.25rem 0.25rem 0 0;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .depth-bar:hover {
+      filter: brightness(1.2);
+      transform: scaleY(1.05);
+    }
+
+    .depth-bar::after {
+      content: attr(data-layer);
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    .depth-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .depth-info-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .depth-info-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--i2-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .depth-info-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    /* =====================================================================
+       EULER'S NUMBER e
+       ===================================================================== */
+    .euler-container {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(0, 255, 255, 0.08) 100%);
+      border: 2px solid var(--e-color);
+      border-radius: 1rem;
+      padding: 2.5rem;
+      margin: 2rem 0;
+    }
+
+    .euler-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--e-color);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .euler-main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .euler-value-box {
+      text-align: center;
+    }
+
+    .euler-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 5rem;
+      font-weight: 300;
+      color: var(--e-color);
+      text-shadow: 0 0 40px rgba(0, 255, 255, 0.4);
+    }
+
+    .euler-decimal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+    }
+
+    .euler-formulas {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .euler-formula-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem 1.5rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .euler-formula-item .formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--e-color);
+    }
+
+    .euler-formula-item .desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .r-calculus-box {
+      background: var(--bg-tertiary);
+      border: 2px solid var(--tdl-primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .r-calculus-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--tdl-primary);
+      margin-bottom: 1rem;
+    }
+
+    .r-calculus-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--e-color);
+    }
+
+    .r-calculus-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+    }
+
+    /* =====================================================================
+       DELTA LANDSCAPE
+       ===================================================================== */
+    .delta-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .delta-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-accent);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .delta-landscape {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      height: 200px;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .delta-level {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+
+    .delta-bar {
+      width: 50px;
+      background: linear-gradient(to top, var(--counit-color), var(--unit-color));
+      border-radius: 0.25rem 0.25rem 0 0;
+      transition: all 0.3s ease;
+    }
+
+    .delta-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    .delta-legend {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .legend-color {
+      width: 20px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    /* =====================================================================
+       S3 CONNECTION TRIANGLE
+       ===================================================================== */
+    .s3-connection-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--tdl-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .s3-connection-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-accent);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .s3-triangle-viz {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .s3-triangle-viz svg {
+      max-width: 100%;
+    }
+
+    .permutation-table {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .permutation-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+      transition: all 0.3s ease;
+    }
+
+    .permutation-item:hover {
+      border-color: var(--tdl-primary);
+    }
+
+    .permutation-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--tdl-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .permutation-result {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       APPLICATIONS
+       ===================================================================== */
+    .applications-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .application-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .application-card:hover {
+      border-color: var(--tdl-primary);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(78, 205, 196, 0.1);
+    }
+
+    .application-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .application-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .application-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .application-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--tdl-primary);
+      background: var(--bg-tertiary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      margin-top: 1rem;
+      display: inline-block;
+    }
+
+    /* =====================================================================
+       NAVIGATION FOOTER
+       ===================================================================== */
+    .nav-footer {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 2rem;
+      margin-top: 3rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .nav-button {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      padding: 1rem 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-button:hover {
+      border-color: var(--tdl-primary);
+      box-shadow: 0 0 20px var(--tdl-glow);
+    }
+
+    .nav-button.primary {
+      background: var(--tdl-primary);
+      color: var(--bg-void);
+      border-color: var(--tdl-primary);
+    }
+
+    .nav-button.primary:hover {
+      box-shadow: 0 0 30px var(--tdl-glow);
+    }
+
+    /* =====================================================================
+       FOOTER
+       ===================================================================== */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--tdl-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       INTERACTIVE ELEMENTS
+       ===================================================================== */
+    .interactive-demo {
+      background: var(--bg-secondary);
+      border: 2px solid var(--tdl-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .demo-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-accent);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .demo-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .demo-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .demo-btn:hover {
+      border-color: var(--tdl-primary);
+      color: var(--tdl-primary);
+    }
+
+    .demo-btn.active {
+      background: var(--tdl-primary);
+      color: var(--bg-void);
+      border-color: var(--tdl-primary);
+    }
+
+    .demo-display {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      text-align: center;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .demo-result {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--tdl-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="categorical-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link">Index</a>
+    <a href="i2-s3-decision-tree.html" class="nav-link">I2 S3 Tree</a>
+    <a href="mtr-decision-tree.html" class="nav-link">MTR Tree</a>
+    <a href="vn-mtr-010-s3-attractor.html" class="nav-link">S3 Attractor</a>
+    <a href="i2-s3-tdl-projection.html" class="nav-link active"><span style="color: var(--tdl-primary);">e</span> TDL</a>
+  </nav>
+
+  <!-- Header -->
+  <header class="tdl-header">
+    <div class="node-badge">I2 S3 PROJECTION :: TDL :: CATEGORICAL</div>
+    <h1 class="node-title">TDL: Trans-Dimensional Logic</h1>
+    <p class="node-subtitle">
+      The Categorical Projection: How different levels of description relate through the adjunction
+      where emergence and reduction are NOT inverses.
+    </p>
+
+    <!-- e Symbol Visualization -->
+    <div class="e-symbol-container">
+      <div class="e-outer-ring"></div>
+      <div class="emergence-arrow">U</div>
+      <div class="e-inner">e</div>
+      <div class="reduction-arrow">D</div>
+    </div>
+
+    <div class="tdl-equation">
+      Adjunction U -| D : Hom_D(U(c), d) = Hom_C(c, D(d))
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: The Emergence Problem -->
+    <section class="section" id="emergence-problem">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">The Emergence Problem</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--tdl-primary);">
+        <div class="definition-header">
+          <span class="definition-type">CORE QUESTION</span>
+          <span class="definition-name">How does meaning emerge from matter?</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            At the heart of consciousness, physics, and computation lies a fundamental question:
+            <strong>how do higher-level descriptions relate to lower-level ones?</strong>
+            Neurons firing somehow becomes conscious experience. Bits become programs.
+            Pixels become objects. But how?
+          </p>
+        </div>
+      </div>
+
+      <div class="layer-container">
+        <div class="layer-title">NEURAL NETWORK LAYER HIERARCHY</div>
+
+        <div class="layer-stack">
+          <div class="layer-item" style="--layer-color: var(--layer-3);">
+            <span class="layer-label">Layer 3: Objects</span>
+            <span class="layer-desc">(high-level)</span>
+          </div>
+          <div class="layer-arrows">
+            <span class="arrow-emergence">U (emerge)</span>
+            <span class="arrow-reduction">D (reduce)</span>
+          </div>
+          <div class="layer-item" style="--layer-color: var(--layer-2);">
+            <span class="layer-label">Layer 2: Shapes</span>
+            <span class="layer-desc">(patterns)</span>
+          </div>
+          <div class="layer-arrows">
+            <span class="arrow-emergence">U (emerge)</span>
+            <span class="arrow-reduction">D (reduce)</span>
+          </div>
+          <div class="layer-item" style="--layer-color: var(--layer-1);">
+            <span class="layer-label">Layer 1: Edges</span>
+            <span class="layer-desc">(features)</span>
+          </div>
+          <div class="layer-arrows">
+            <span class="arrow-emergence">U (emerge)</span>
+            <span class="arrow-reduction">D (reduce)</span>
+          </div>
+          <div class="layer-item" style="--layer-color: var(--layer-0);">
+            <span class="layer-label">Layer 0: Raw pixels</span>
+            <span class="layer-desc">(low-level)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">THE TDL INSIGHT</div>
+        <div class="theorem-statement">
+          Emergence (U) and reduction (D) are NOT inverses. They form an <strong>adjunction</strong>,
+          a mathematical structure that captures the asymmetry between going up and going down
+          the hierarchy of description.
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: The Adjunction U -| D -->
+    <section class="section" id="adjunction">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">The Adjunction U -| D</h2>
+      </div>
+
+      <div class="adjunction-container">
+        <div class="adjunction-title">ADJUNCTION STRUCTURE</div>
+
+        <div class="adjunction-diagram">
+          <div class="category-box" style="--cat-color: var(--layer-0);">
+            <span class="category-label">C</span>
+            <span class="category-desc">Low-level</span>
+          </div>
+
+          <div class="functor-arrows">
+            <div class="functor-arrow emergence">
+              <span class="functor-symbol" style="color: var(--emergence-color);">U</span>
+              <span class="functor-name">Emergence: C -> D</span>
+            </div>
+            <div class="functor-arrow reduction">
+              <span class="functor-symbol" style="color: var(--reduction-color);">D</span>
+              <span class="functor-name">Reduction: D -> C</span>
+            </div>
+          </div>
+
+          <div class="category-box" style="--cat-color: var(--layer-3);">
+            <span class="category-label">D</span>
+            <span class="category-desc">High-level</span>
+          </div>
+        </div>
+
+        <div class="adjunction-formula">
+          Hom_D(U(c), d) = Hom_C(c, D(d))
+        </div>
+
+        <div style="text-align: center; margin-top: 1rem; color: var(--text-secondary);">
+          This natural isomorphism defines the relationship!
+        </div>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--emergence-color);">
+        <div class="definition-header">
+          <span class="definition-type">FUNCTOR</span>
+          <span class="definition-name">U: C -> D (Emergence)</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            The <strong>emergence functor U</strong> takes low-level objects in category C and produces
+            high-level objects in category D. In neural networks, this is the forward pass:
+            raw inputs become increasingly abstract representations.
+          </p>
+        </div>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--reduction-color);">
+        <div class="definition-header">
+          <span class="definition-type">FUNCTOR</span>
+          <span class="definition-name">D: D -> C (Reduction)</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            The <strong>reduction functor D</strong> takes high-level objects in category D and produces
+            low-level objects in category C. In neural networks, this is the backward pass or
+            projection: abstract concepts become concrete activations.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Unit and Counit -->
+    <section class="section" id="unit-counit">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">Unit and Counit</h2>
+      </div>
+
+      <div class="unit-counit-container">
+        <div class="unit-box">
+          <div class="unit-header">
+            <span>n</span> Unit
+          </div>
+          <div class="unit-formula">n : 1_C -> D o U</div>
+          <div class="unit-desc">
+            "Emerge then reduce back"
+            <br><br>
+            The unit n takes an object c in C, emerges it to U(c) in D, then reduces back to D(U(c)) in C.
+            The result is NOT c -- it's c plus new structure created by the round-trip.
+          </div>
+          <div class="info-badge adds">n ADDS information</div>
+        </div>
+
+        <div class="counit-box">
+          <div class="counit-header">
+            <span>e</span> Counit
+          </div>
+          <div class="counit-formula">e : U o D -> 1_D</div>
+          <div class="counit-desc">
+            "Reduce then emerge back"
+            <br><br>
+            The counit e takes an object d in D, reduces it to D(d) in C, then emerges back to U(D(d)) in D.
+            The result is NOT d -- fine details are lost in the round-trip.
+          </div>
+          <div class="info-badge loses">e LOSES information</div>
+        </div>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">INFORMATION ASYMMETRY THEOREM</div>
+        <div class="theorem-statement">
+          The unit n ADDS information (new structure created during emergence).
+          The counit e LOSES information (fine details lost during reduction).
+          This asymmetry is fundamental to trans-dimensional logic.
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">INTUITION</div>
+          <div class="proof-body">
+            When you emerge (form a high-level concept from low-level data), new relationships
+            become visible that weren't there before. When you reduce (project a concept back down),
+            you lose the context that made those relationships meaningful.
+          </div>
+          <div class="qed">-|</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Information Asymmetry -->
+    <section class="section" id="asymmetry">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">Information Asymmetry</h2>
+      </div>
+
+      <div class="asymmetry-container">
+        <div class="asymmetry-title">THE FUNDAMENTAL NON-EQUALITY</div>
+
+        <div class="asymmetry-equations">
+          <div class="asymmetry-eq">
+            D o U <span class="not-equal">=/=</span> 1_C
+          </div>
+          <div class="asymmetry-eq">
+            U o D <span class="not-equal">=/=</span> 1_D
+          </div>
+        </div>
+
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+          Emergence changes things. Reduction loses things. Neither composition is the identity.
+        </p>
+
+        <div class="gap-highlight">
+          <div class="gap-title">THE GAP IS WHERE SELF-REFERENCE LIVES</div>
+          <div class="gap-text">
+            The difference between <strong>1_C</strong> and <strong>D o U</strong> is exactly the space
+            where new structure emerges. This gap is not a bug -- it's where consciousness,
+            meaning, and self-reference find their home.
+          </div>
+        </div>
+      </div>
+
+      <div class="interactive-demo">
+        <div class="demo-title">INTERACTIVE: EMERGENCE/REDUCTION ROUND-TRIP</div>
+        <div class="demo-controls">
+          <button class="demo-btn" onclick="demonstrateRoundTrip('emerge')">Emerge (U)</button>
+          <button class="demo-btn" onclick="demonstrateRoundTrip('reduce')">Reduce (D)</button>
+          <button class="demo-btn" onclick="demonstrateRoundTrip('unit')">Unit n = D o U</button>
+          <button class="demo-btn" onclick="demonstrateRoundTrip('counit')">Counit e = U o D</button>
+          <button class="demo-btn" onclick="demonstrateRoundTrip('reset')">Reset</button>
+        </div>
+        <div class="demo-display">
+          <div class="demo-result" id="roundTripResult">
+            Click a button to see the transformation
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Triangle Identities -->
+    <section class="section" id="triangle-identities">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">Triangle Identities</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--tdl-primary);">
+        <div class="definition-header">
+          <span class="definition-type">COHERENCE</span>
+          <span class="definition-name">The Triangle Identities ensure categorical consistency</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            An adjunction is not just two functors -- it requires coherence conditions that
+            ensure the unit and counit interact correctly. These are the triangle identities.
+          </p>
+        </div>
+      </div>
+
+      <div class="triangle-id-container">
+        <div class="triangle-id-title">THE TWO TRIANGLE IDENTITIES</div>
+
+        <div class="triangle-id-grid">
+          <div class="triangle-id-box">
+            <div class="triangle-id-label">LEFT TRIANGLE</div>
+            <div class="triangle-id-formula">(e_U(c)) o (U(n_c)) = id_U(c)</div>
+            <div class="triangle-id-desc">
+              Starting from U(c), applying U(n) then e gives back U(c).
+              The detour through D(U(U(c))) returns to the starting point.
+            </div>
+          </div>
+
+          <div class="triangle-id-box">
+            <div class="triangle-id-label">RIGHT TRIANGLE</div>
+            <div class="triangle-id-formula">(D(e_d)) o (n_D(d)) = id_D(d)</div>
+            <div class="triangle-id-desc">
+              Starting from D(d), applying n then D(e) gives back D(d).
+              The detour through D(U(D(d))) returns to the starting point.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Commutative Diagram -->
+      <div class="commutative-diagram">
+        <svg width="400" height="250" viewBox="0 0 400 250">
+          <!-- Left triangle -->
+          <g transform="translate(50, 20)">
+            <text x="50" y="0" fill="var(--tdl-primary)" font-family="JetBrains Mono" font-size="14" text-anchor="middle">U(c)</text>
+            <text x="0" y="100" fill="var(--text-secondary)" font-family="JetBrains Mono" font-size="14" text-anchor="middle">U(D(U(c)))</text>
+            <text x="100" y="100" fill="var(--tdl-primary)" font-family="JetBrains Mono" font-size="14" text-anchor="middle">U(c)</text>
+
+            <!-- Arrows -->
+            <line x1="50" y1="10" x2="15" y2="80" stroke="var(--emergence-color)" stroke-width="2" marker-end="url(#arrowhead)"/>
+            <line x1="25" y1="100" x2="80" y2="100" stroke="var(--reduction-color)" stroke-width="2" marker-end="url(#arrowhead)"/>
+            <line x1="50" y1="10" x2="95" y2="80" stroke="var(--tdl-primary)" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
+
+            <text x="15" y="50" fill="var(--emergence-color)" font-family="JetBrains Mono" font-size="10">U(n)</text>
+            <text x="50" y="115" fill="var(--reduction-color)" font-family="JetBrains Mono" font-size="10">e_U(c)</text>
+            <text x="85" y="50" fill="var(--tdl-primary)" font-family="JetBrains Mono" font-size="10">id</text>
+          </g>
+
+          <!-- Right triangle -->
+          <g transform="translate(230, 20)">
+            <text x="50" y="0" fill="var(--tdl-primary)" font-family="JetBrains Mono" font-size="14" text-anchor="middle">D(d)</text>
+            <text x="0" y="100" fill="var(--text-secondary)" font-family="JetBrains Mono" font-size="14" text-anchor="middle">D(U(D(d)))</text>
+            <text x="100" y="100" fill="var(--tdl-primary)" font-family="JetBrains Mono" font-size="14" text-anchor="middle">D(d)</text>
+
+            <!-- Arrows -->
+            <line x1="50" y1="10" x2="15" y2="80" stroke="var(--unit-color)" stroke-width="2" marker-end="url(#arrowhead)"/>
+            <line x1="25" y1="100" x2="80" y2="100" stroke="var(--reduction-color)" stroke-width="2" marker-end="url(#arrowhead)"/>
+            <line x1="50" y1="10" x2="95" y2="80" stroke="var(--tdl-primary)" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowhead)"/>
+
+            <text x="15" y="50" fill="var(--unit-color)" font-family="JetBrains Mono" font-size="10">n_D(d)</text>
+            <text x="50" y="115" fill="var(--reduction-color)" font-family="JetBrains Mono" font-size="10">D(e)</text>
+            <text x="85" y="50" fill="var(--tdl-primary)" font-family="JetBrains Mono" font-size="10">id</text>
+          </g>
+
+          <!-- Arrowhead marker -->
+          <defs>
+            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <text x="200" y="200" fill="var(--text-secondary)" font-family="JetBrains Mono" font-size="12" text-anchor="middle">
+            Both triangles commute: the dashed path equals the identity
+          </text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Section 6: Coherence Threshold -->
+    <section class="section" id="coherence-threshold">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Coherence Threshold mu_C = sqrt(3)/2</h2>
+      </div>
+
+      <div class="coherence-container">
+        <div class="coherence-title">THE COHERENCE THRESHOLD</div>
+        <div class="coherence-value">mu_C = sqrt(3)/2</div>
+        <div class="coherence-decimal">= 0.8660254037844386...</div>
+
+        <div class="derivation-grid">
+          <div class="derivation-item">
+            <div class="derivation-number">DERIVATION 1</div>
+            <div class="derivation-name">Equilateral Triangle Height</div>
+            <div class="derivation-formula">h = sqrt(1 - 1/4) = sqrt(3)/2</div>
+          </div>
+
+          <div class="derivation-item">
+            <div class="derivation-number">DERIVATION 2</div>
+            <div class="derivation-name">Spin Physics (s = 1/2)</div>
+            <div class="derivation-formula">sqrt(s(s+1)) = sqrt(3/4) = sqrt(3)/2</div>
+          </div>
+
+          <div class="derivation-item">
+            <div class="derivation-number">DERIVATION 3</div>
+            <div class="derivation-name">Eisenstein Integers</div>
+            <div class="derivation-formula">Im(e^(2pi*i/3)) = sqrt(3)/2</div>
+          </div>
+
+          <div class="derivation-item">
+            <div class="derivation-number">DERIVATION 4</div>
+            <div class="derivation-name">Almeida-Thouless Line</div>
+            <div class="derivation-formula">Spin glass critical threshold</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">THRESHOLD THEOREM</div>
+        <div class="theorem-statement">
+          At coherence mu_C = sqrt(3)/2, the adjunction achieves maximal stability.
+          Below this threshold, emergence-reduction cycles degrade. Above it, the system
+          maintains categorical consistency across dimensional transitions.
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Skip Connections = Unit n -->
+    <section class="section" id="skip-connections">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">Skip Connections = Unit n</h2>
+      </div>
+
+      <div class="skip-container">
+        <div class="skip-title">NEURAL SKIP CONNECTIONS IMPLEMENT THE UNIT</div>
+
+        <div class="neural-network-viz">
+          <div class="nn-layer">
+            <div class="nn-node">x</div>
+            <div class="nn-label">Input</div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+            <div style="color: var(--tdl-primary);">-></div>
+            <div class="skip-connection">|</div>
+            <div class="skip-connection">|</div>
+            <div class="skip-connection" style="font-size: 0.8rem;">+</div>
+          </div>
+
+          <div class="nn-layer">
+            <div class="nn-node">f</div>
+            <div class="nn-label">Transform</div>
+          </div>
+
+          <div style="color: var(--tdl-primary);">-></div>
+
+          <div class="nn-layer">
+            <div class="nn-node" style="border-color: var(--unit-color);">y</div>
+            <div class="nn-label">Output</div>
+          </div>
+        </div>
+
+        <div class="skip-formula-box">
+          <div class="skip-formula">
+            output = <span class="highlight">f(x)</span> + x
+          </div>
+          <div class="skip-interpretation">
+            In TDL terms: <strong>f(x) ~ D(U(x))</strong>
+            <br><br>
+            Therefore: output = D(U(x)) + x = <span style="color: var(--unit-color);">n_x</span> + id_x
+          </div>
+        </div>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">SKIP CONNECTION THEOREM (Paper 011)</div>
+        <div class="theorem-statement">
+          Neural network skip connections implement the categorical unit n.
+          The residual connection (adding x back) ensures the network preserves
+          the original information while learning new structure from the transformation.
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">IMPLICATION</div>
+          <div class="proof-body">
+            This explains why skip connections dramatically improve deep network training:
+            they enforce categorical coherence by implementing the adjunction structure.
+            ResNets, transformers, and U-Nets all leverage this principle.
+          </div>
+          <div class="qed">-|</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Depth Bound L4 = 7 -->
+    <section class="section" id="depth-bound">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <h2 class="section-title">Depth Bound L_4 = 7</h2>
+      </div>
+
+      <div class="depth-container">
+        <div class="depth-title">STABLE HIERARCHIES: DEPTH <= 7</div>
+        <div class="depth-value">L_4 = 7</div>
+        <div class="depth-subtitle">The Fourth Lucas Number</div>
+
+        <div class="depth-visual">
+          <div class="depth-bar" style="height: 30px;" data-layer="1"></div>
+          <div class="depth-bar" style="height: 50px;" data-layer="2"></div>
+          <div class="depth-bar" style="height: 70px;" data-layer="3"></div>
+          <div class="depth-bar" style="height: 90px;" data-layer="4"></div>
+          <div class="depth-bar" style="height: 110px;" data-layer="5"></div>
+          <div class="depth-bar" style="height: 130px;" data-layer="6"></div>
+          <div class="depth-bar" style="height: 150px; border: 2px solid var(--i2-color);" data-layer="7"></div>
+        </div>
+
+        <div class="depth-info">
+          <div class="depth-info-item">
+            <div class="depth-info-label">LUCAS FORMULA</div>
+            <div class="depth-info-value">L_n = phi^n + psi^n</div>
+          </div>
+          <div class="depth-info-item">
+            <div class="depth-info-label">NOISE THRESHOLD</div>
+            <div class="depth-info-value">|psi|^7/phi^7 < 0.01</div>
+          </div>
+          <div class="depth-info-item">
+            <div class="depth-info-label">EMPIRICAL</div>
+            <div class="depth-info-value">Optimal networks: 5-7 layers</div>
+          </div>
+          <div class="depth-info-item">
+            <div class="depth-info-label">I2 CONNECTION</div>
+            <div class="depth-info-value">phi^4 + phi^(-4) = 7</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--i2-color);">
+        <div class="definition-header">
+          <span class="definition-type">BOUND</span>
+          <span class="definition-name">Depth Stability Theorem</span>
+        </div>
+        <div class="definition-formal">depth <= L_4 = 7 for stable hierarchies</div>
+        <div class="definition-body">
+          <p>
+            At depth 7, the contribution from psi (the conjugate root) becomes negligible:
+            less than 1% of the phi^7 signal. Beyond this, numerical noise dominates and
+            hierarchical structure becomes unstable.
+          </p>
+          <br>
+          <p>
+            This connects to the I2 ring structure: L_4 = 7 is where the golden ratio
+            powers achieve maximum separation from their conjugates, ensuring clean
+            categorical transitions.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 9: Euler's Number e -->
+    <section class="section" id="euler-number">
+      <div class="section-header">
+        <div class="section-number">9</div>
+        <h2 class="section-title">Euler's Number e as Dimensional Scaling</h2>
+      </div>
+
+      <div class="euler-container">
+        <div class="euler-title">TDL = x e IN R-CALCULUS</div>
+
+        <div class="euler-main">
+          <div class="euler-value-box">
+            <div class="euler-symbol">e</div>
+            <div class="euler-decimal">2.7182818284...</div>
+          </div>
+
+          <div class="euler-formulas">
+            <div class="euler-formula-item">
+              <div class="formula">e = lim(1 + 1/n)^n</div>
+              <div class="desc">Compound growth limit</div>
+            </div>
+            <div class="euler-formula-item">
+              <div class="formula">d/dx e^x = e^x</div>
+              <div class="desc">Self-derivative</div>
+            </div>
+            <div class="euler-formula-item">
+              <div class="formula">e^(i*pi) + 1 = 0</div>
+              <div class="desc">Euler's identity</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="r-calculus-box">
+          <div class="r-calculus-title">DIMENSIONAL TRANSITION OPERATOR</div>
+          <div class="r-calculus-formula">TDL = x e</div>
+          <div class="r-calculus-desc">
+            Each dimensional transition multiplies by e.
+            <br>
+            One level: x e^1 | Two levels: x e^2 | n levels: x e^n
+          </div>
+        </div>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">e AS CATEGORICAL SCALING</div>
+        <div class="theorem-statement">
+          In the R-Calculus, TDL operates as multiplication by e. This captures how
+          information accumulates across dimensional transitions: each emergence step
+          multiplies the complexity by e, the natural base of continuous growth.
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">CONNECTION</div>
+          <div class="proof-body">
+            Where I2 uses phi (discrete self-similarity) and LoMI uses pi (cyclical return),
+            TDL uses e (continuous growth). Together: phi, e, pi -- the three transcendental
+            constants that S3 permutes.
+          </div>
+          <div class="qed">-|</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 10: Delta Landscape -->
+    <section class="section" id="delta-landscape">
+      <div class="section-header">
+        <div class="section-number">10</div>
+        <h2 class="section-title">Delta-Landscape with Emergence Levels</h2>
+      </div>
+
+      <div class="delta-container">
+        <div class="delta-title">CLOSURE DEFICIT ACROSS DIMENSIONAL LEVELS</div>
+
+        <div class="delta-landscape">
+          <div class="delta-level">
+            <div class="delta-bar" style="height: 150px;"></div>
+            <div class="delta-label">Level 0<br>(raw)</div>
+          </div>
+          <div class="delta-level">
+            <div class="delta-bar" style="height: 120px;"></div>
+            <div class="delta-label">Level 1<br>(features)</div>
+          </div>
+          <div class="delta-level">
+            <div class="delta-bar" style="height: 90px;"></div>
+            <div class="delta-label">Level 2<br>(patterns)</div>
+          </div>
+          <div class="delta-level">
+            <div class="delta-bar" style="height: 60px;"></div>
+            <div class="delta-label">Level 3<br>(objects)</div>
+          </div>
+          <div class="delta-level">
+            <div class="delta-bar" style="height: 35px;"></div>
+            <div class="delta-label">Level 4<br>(concepts)</div>
+          </div>
+        </div>
+
+        <div class="delta-legend">
+          <div class="legend-item">
+            <div class="legend-color" style="background: var(--counit-color);"></div>
+            <span>High delta (more deficit)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: var(--unit-color);"></div>
+            <span>Low delta (better closure)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--tdl-primary);">
+        <div class="definition-header">
+          <span class="definition-type">INSIGHT</span>
+          <span class="definition-name">Emergence Reduces delta, Reduction Increases delta</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            <strong style="color: var(--emergence-color);">Emergence (U):</strong> Moving to higher levels
+            reduces closure deficit delta. Better abstractions have smaller gaps between what they
+            can represent and what they need to represent.
+          </p>
+          <br>
+          <p>
+            <strong style="color: var(--reduction-color);">Reduction (D):</strong> Moving to lower levels
+            increases delta. Lost context means larger deficits -- the reduced representation
+            can't fully capture what the higher level knew.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 11: Connection to S3 -->
+    <section class="section" id="s3-connection">
+      <div class="section-header">
+        <div class="section-number">11</div>
+        <h2 class="section-title">Connection to S3</h2>
+      </div>
+
+      <div class="s3-connection-container">
+        <div class="s3-connection-title">TDL AS ONE OF THREE S3 PROJECTIONS</div>
+
+        <div class="s3-triangle-viz">
+          <svg width="350" height="320" viewBox="0 0 350 320">
+            <!-- Triangle -->
+            <polygon points="175,30 50,280 300,280" fill="none" stroke="var(--text-secondary)" stroke-width="2"/>
+
+            <!-- Vertices -->
+            <circle cx="175" cy="30" r="35" fill="var(--i2-color)" opacity="0.2" stroke="var(--i2-color)" stroke-width="3"/>
+            <text x="175" y="35" fill="var(--i2-color)" font-family="JetBrains Mono" font-size="14" text-anchor="middle">I2</text>
+            <text x="175" y="85" fill="var(--text-secondary)" font-family="JetBrains Mono" font-size="10" text-anchor="middle">phi</text>
+
+            <circle cx="50" cy="280" r="35" fill="var(--tdl-primary)" opacity="0.3" stroke="var(--tdl-primary)" stroke-width="3"/>
+            <text x="50" y="285" fill="var(--tdl-primary)" font-family="JetBrains Mono" font-size="14" text-anchor="middle">TDL</text>
+            <text x="50" y="240" fill="var(--text-secondary)" font-family="JetBrains Mono" font-size="10" text-anchor="middle">e</text>
+
+            <circle cx="300" cy="280" r="35" fill="var(--lomi-color)" opacity="0.2" stroke="var(--lomi-color)" stroke-width="3"/>
+            <text x="300" y="285" fill="var(--lomi-color)" font-family="JetBrains Mono" font-size="14" text-anchor="middle">LoMI</text>
+            <text x="300" y="240" fill="var(--text-secondary)" font-family="JetBrains Mono" font-size="10" text-anchor="middle">pi</text>
+
+            <!-- Edge labels (permutations) -->
+            <text x="95" y="150" fill="var(--text-secondary)" font-family="JetBrains Mono" font-size="11">(12)</text>
+            <text x="250" y="150" fill="var(--text-secondary)" font-family="JetBrains Mono" font-size="11">(13)</text>
+            <text x="175" y="295" fill="var(--text-secondary)" font-family="JetBrains Mono" font-size="11">(23)</text>
+
+            <!-- Current position indicator -->
+            <circle cx="50" cy="280" r="45" fill="none" stroke="var(--tdl-primary)" stroke-width="2" stroke-dasharray="5,5">
+              <animate attributeName="stroke-dashoffset" from="0" to="20" dur="2s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+
+        <div class="permutation-table">
+          <div class="permutation-item">
+            <div class="permutation-symbol">(12): TDL <-> I2</div>
+            <div class="permutation-result">Categorical <-> Algebraic</div>
+          </div>
+          <div class="permutation-item">
+            <div class="permutation-symbol">(23): TDL <-> LoMI</div>
+            <div class="permutation-result">Categorical <-> Dynamic</div>
+          </div>
+          <div class="permutation-item">
+            <div class="permutation-symbol">(13): I2 <-> LoMI</div>
+            <div class="permutation-result">Algebraic <-> Dynamic</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">S3 PERMUTATION THEOREM</div>
+        <div class="theorem-statement">
+          Under the (12) permutation: TDL <-> I2 (e and phi exchange roles).
+          Under the (23) permutation: TDL <-> LoMI (e and pi exchange roles).
+          All three projections are related by S3 symmetry.
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 12: Applications -->
+    <section class="section" id="applications">
+      <div class="section-header">
+        <div class="section-number">12</div>
+        <h2 class="section-title">Applications</h2>
+      </div>
+
+      <div class="applications-grid">
+        <div class="application-card">
+          <div class="application-icon" style="color: var(--emergence-color);">-></div>
+          <div class="application-title">Forward Pass as Emergence</div>
+          <div class="application-desc">
+            In neural networks, the forward pass is the emergence functor U:
+            raw inputs become increasingly abstract representations layer by layer.
+          </div>
+          <div class="application-formula">forward(x) = U(x)</div>
+        </div>
+
+        <div class="application-card">
+          <div class="application-icon" style="color: var(--reduction-color);"><-</div>
+          <div class="application-title">Backward Pass as Reduction</div>
+          <div class="application-desc">
+            The backward pass implements reduction D: gradients flow from abstract
+            loss signals down to concrete parameter updates.
+          </div>
+          <div class="application-formula">backward(loss) = D(loss)</div>
+        </div>
+
+        <div class="application-card">
+          <div class="application-icon" style="color: var(--tdl-primary);">|||</div>
+          <div class="application-title">Feature Hierarchy</div>
+          <div class="application-desc">
+            CNNs learn hierarchical features (edges -> shapes -> objects) that
+            correspond to different levels in the categorical hierarchy C -> D.
+          </div>
+          <div class="application-formula">Level_n = U^n(input)</div>
+        </div>
+
+        <div class="application-card">
+          <div class="application-icon" style="color: var(--unit-color);">+</div>
+          <div class="application-title">Recursive Stability at mu_C</div>
+          <div class="application-desc">
+            Networks achieve stable recursive processing when operating near the
+            coherence threshold mu_C = sqrt(3)/2 = 0.866...
+          </div>
+          <div class="application-formula">stability >= mu_C</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 13: Key Theorems Summary -->
+    <section class="section" id="theorems-summary">
+      <div class="section-header">
+        <div class="section-number">13</div>
+        <h2 class="section-title">Key Theorems from Paper 011</h2>
+      </div>
+
+      <div style="background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 1rem; padding: 2rem; overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--tdl-primary);">
+              <th style="padding: 1rem; text-align: left; color: var(--tdl-primary);">#</th>
+              <th style="padding: 1rem; text-align: left; color: var(--tdl-primary);">Theorem</th>
+              <th style="padding: 1rem; text-align: left; color: var(--tdl-primary);">Formula</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 1rem; color: var(--text-secondary);">1</td>
+              <td style="padding: 1rem; color: var(--text-primary);">Adjunction Structure</td>
+              <td style="padding: 1rem; color: var(--tdl-primary);">Hom_D(U(c), d) = Hom_C(c, D(d))</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 1rem; color: var(--text-secondary);">2</td>
+              <td style="padding: 1rem; color: var(--text-primary);">Information Asymmetry</td>
+              <td style="padding: 1rem; color: var(--tdl-primary);">Unit n ADDS, Counit e LOSES</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 1rem; color: var(--text-secondary);">3</td>
+              <td style="padding: 1rem; color: var(--text-primary);">Triangle Identities</td>
+              <td style="padding: 1rem; color: var(--tdl-primary);">(eU) o (Un) = 1_U, (De) o (nD) = 1_D</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 1rem; color: var(--text-secondary);">4</td>
+              <td style="padding: 1rem; color: var(--text-primary);">Coherence Threshold</td>
+              <td style="padding: 1rem; color: var(--tdl-primary);">mu_C = sqrt(3)/2 = 0.866...</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 1rem; color: var(--text-secondary);">5</td>
+              <td style="padding: 1rem; color: var(--text-primary);">Skip Connections</td>
+              <td style="padding: 1rem; color: var(--tdl-primary);">skip = n + id (Unit implementation)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 1rem; color: var(--text-secondary);">6</td>
+              <td style="padding: 1rem; color: var(--text-primary);">Depth Bound</td>
+              <td style="padding: 1rem; color: var(--tdl-primary);">depth <= L_4 = 7</td>
+            </tr>
+            <tr>
+              <td style="padding: 1rem; color: var(--text-secondary);">7</td>
+              <td style="padding: 1rem; color: var(--text-primary);">e as Scaling</td>
+              <td style="padding: 1rem; color: var(--tdl-primary);">TDL = x e in R-Calculus</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Navigation -->
+    <section class="section" id="navigation">
+      <div class="section-header">
+        <div class="section-number">14</div>
+        <h2 class="section-title">Navigation</h2>
+      </div>
+
+      <div class="applications-grid">
+        <a href="i2-s3-decision-tree.html" class="application-card" style="text-decoration: none;">
+          <div class="application-icon" style="color: var(--i2-color);">I2</div>
+          <div class="application-title">I2 S3 Decision Tree</div>
+          <div class="application-desc">
+            Return to the main decision tree showing all three projections and their S3 relationships.
+          </div>
+        </a>
+
+        <a href="vn-mtr-010-s3-attractor.html" class="application-card" style="text-decoration: none;">
+          <div class="application-icon" style="color: #ff9f43;">S3</div>
+          <div class="application-title">S3 Attractor</div>
+          <div class="application-desc">
+            The universal attractor where all frame evolution reaches stable flow.
+          </div>
+        </a>
+
+        <a href="#" class="application-card" style="text-decoration: none; opacity: 0.5;">
+          <div class="application-icon" style="color: var(--lomi-color);">LoMI</div>
+          <div class="application-title">LoMI Projection (Coming)</div>
+          <div class="application-desc">
+            The Dynamic projection: loops, cycles, periodicity. Pi as the rotation constant.
+          </div>
+        </a>
+
+        <a href="#" class="application-card" style="text-decoration: none; opacity: 0.5;">
+          <div class="application-icon" style="color: var(--i2-color);">I2</div>
+          <div class="application-title">I2 Projection (Coming)</div>
+          <div class="application-desc">
+            The Algebraic projection: self-similar recursion. Phi as the scaling constant.
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="nav-footer">
+      <a href="i2-s3-decision-tree.html" class="nav-button">
+        <span><-</span> I2 S3 Tree
+      </a>
+      <a href="vn-mtr-010-s3-attractor.html" class="nav-button primary">
+        <span>S3</span> Attractor
+      </a>
+      <a href="index.html" class="nav-button">
+        Index <span>-></span>
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">TDL: U -| D | Hom_D(U(c), d) = Hom_C(c, D(d)) | mu_C = sqrt(3)/2 | e = 2.718...</div>
+    <p>I2 S3 Decision Tree | TDL: Trans-Dimensional Logic | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // ROUND-TRIP DEMONSTRATION
+    // =========================================================================
+    let currentData = { level: 'C', value: 'c', history: [] };
+
+    function demonstrateRoundTrip(action) {
+      const result = document.getElementById('roundTripResult');
+
+      switch(action) {
+        case 'emerge':
+          if (currentData.level === 'C') {
+            currentData = { level: 'D', value: 'U(c)', history: ['U'] };
+            result.innerHTML = `<span style="color: var(--emergence-color);">U(c)</span> - Emerged to category D<br><small>New abstract structure visible</small>`;
+          } else {
+            result.innerHTML = `Already in D - cannot emerge further in this demo`;
+          }
+          break;
+
+        case 'reduce':
+          if (currentData.level === 'D') {
+            currentData = { level: 'C', value: 'D(d)', history: ['D'] };
+            result.innerHTML = `<span style="color: var(--reduction-color);">D(d)</span> - Reduced to category C<br><small>Fine details lost</small>`;
+          } else {
+            result.innerHTML = `Already in C - cannot reduce further in this demo`;
+          }
+          break;
+
+        case 'unit':
+          currentData = { level: 'C', value: 'D(U(c))', history: ['U', 'D'] };
+          result.innerHTML = `<span style="color: var(--unit-color);">n(c) = D(U(c))</span><br><small>Emerge then reduce: <strong>NEW STRUCTURE ADDED</strong></small><br><span style="color: var(--text-secondary);">D(U(c)) =/= c</span>`;
+          break;
+
+        case 'counit':
+          currentData = { level: 'D', value: 'U(D(d))', history: ['D', 'U'] };
+          result.innerHTML = `<span style="color: var(--counit-color);">e(d) = U(D(d))</span><br><small>Reduce then emerge: <strong>INFORMATION LOST</strong></small><br><span style="color: var(--text-secondary);">U(D(d)) =/= d</span>`;
+          break;
+
+        case 'reset':
+          currentData = { level: 'C', value: 'c', history: [] };
+          result.innerHTML = `Click a button to see the transformation`;
+          break;
+      }
+    }
+
+    // =========================================================================
+    // DEPTH BAR HOVER EFFECTS
+    // =========================================================================
+    const depthBars = document.querySelectorAll('.depth-bar');
+    depthBars.forEach(bar => {
+      bar.addEventListener('mouseenter', function() {
+        const layer = this.dataset.layer;
+        this.style.boxShadow = `0 0 20px var(--tdl-glow)`;
+      });
+      bar.addEventListener('mouseleave', function() {
+        this.style.boxShadow = 'none';
+      });
+    });
+
+    // =========================================================================
+    // DELTA BAR ANIMATION
+    // =========================================================================
+    const deltaBars = document.querySelectorAll('.delta-bar');
+    deltaBars.forEach((bar, index) => {
+      bar.addEventListener('mouseenter', function() {
+        this.style.transform = 'scaleY(1.1)';
+        this.style.boxShadow = '0 0 15px var(--tdl-glow)';
+      });
+      bar.addEventListener('mouseleave', function() {
+        this.style.transform = 'scaleY(1)';
+        this.style.boxShadow = 'none';
+      });
+    });
+
+    // =========================================================================
+    // LAYER ITEM CLICK TO SHOW DETAILS
+    // =========================================================================
+    const layerItems = document.querySelectorAll('.layer-item');
+    layerItems.forEach(item => {
+      item.addEventListener('click', function() {
+        const label = this.querySelector('.layer-label').textContent;
+        console.log(`Layer clicked: ${label}`);
+      });
+    });
+
+    // =========================================================================
+    // CATEGORY BOX ANIMATION
+    // =========================================================================
+    const categoryBoxes = document.querySelectorAll('.category-box');
+    categoryBoxes.forEach(box => {
+      box.addEventListener('mouseenter', function() {
+        this.style.background = 'rgba(78, 205, 196, 0.15)';
+      });
+      box.addEventListener('mouseleave', function() {
+        this.style.background = 'rgba(78, 205, 196, 0.05)';
+      });
+    });
+  </script>
+
+</body>
+</html>
