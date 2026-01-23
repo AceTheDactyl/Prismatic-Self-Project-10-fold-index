@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-MTR-001 | Closure Deficit</title>
+  <meta name="description" content="Closure Deficit Computation: delta(D|F) = alpha*Err + beta*Comp + rho*Viol - Measuring Description Fit Within a Frame">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════════
+       VN-MTR-001: CLOSURE DEFICIT
+       delta(D|F) = alpha*Err + beta*Comp + rho*Viol
+       The measure of how well a description fits within a frame
+       ═══════════════════════════════════════════════════════════════════════ */
+    :root {
+      /* MTR Principle Colors */
+      --origin: #ffd700;
+      --boundary: #ff6b6b;
+      --invariant: #00ff88;
+      --evolution: #00ffff;
+      --attractor: #c792ea;
+
+      /* Page Primary - Closure Deficit uses coral/red */
+      --delta-primary: #ff6b6b;
+      --delta-secondary: #ff8a8a;
+      --delta-glow: rgba(255, 107, 107, 0.3);
+
+      /* Component Colors */
+      --err-color: #ff6b6b;
+      --comp-color: #ffd700;
+      --viol-color: #c792ea;
+
+      /* Mathematical Constants */
+      --phi: 1.6180339887;
+      --zc: 0.8660254038;
+
+      /* Theme */
+      --bg-void: #020204;
+      --bg-primary: #060610;
+      --bg-secondary: #0a0a18;
+      --bg-tertiary: #101028;
+      --bg-card: #161640;
+      --text-primary: #f0f0f5;
+      --text-secondary: #909098;
+      --text-accent: #ff6b6b;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(255, 107, 107, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       DEFICIT FIELD BACKGROUND
+       ═══════════════════════════════════════════════════════════════════════ */
+    .deficit-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(255, 107, 107, 0.03) 0%, transparent 40%),
+        radial-gradient(ellipse at 70% 70%, rgba(255, 215, 0, 0.02) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, rgba(199, 146, 234, 0.02) 0%, transparent 50%);
+      animation: deficit-pulse 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes deficit-pulse {
+      0% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       NAVIGATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(6, 6, 16, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+      box-shadow: 0 0 15px rgba(255, 107, 107, 0.2);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       PAGE HEADER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .page-header {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .page-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--delta-primary);
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .page-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--delta-primary), var(--origin), var(--attractor));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .core-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      background: var(--bg-tertiary);
+      padding: 1.5rem 2.5rem;
+      border-radius: 1rem;
+      display: inline-block;
+      border: 2px solid var(--delta-primary);
+      box-shadow: 0 0 30px var(--delta-glow);
+    }
+
+    .eq-delta { color: var(--delta-primary); }
+    .eq-err { color: var(--err-color); }
+    .eq-comp { color: var(--comp-color); }
+    .eq-viol { color: var(--viol-color); }
+    .eq-op { color: var(--text-secondary); }
+
+    /* Pentagon Icon */
+    .pentagon-icon {
+      width: 80px;
+      height: 80px;
+      margin: 2rem auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      color: var(--delta-primary);
+      background: var(--bg-tertiary);
+      border: 2px solid var(--delta-primary);
+      clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+      animation: pentagon-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes pentagon-glow {
+      0%, 100% { box-shadow: 0 0 20px var(--delta-glow); }
+      50% { box-shadow: 0 0 40px var(--delta-glow); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════════════════════════════════════ */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bg-void);
+      background: var(--delta-primary);
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       DEFINITION CARDS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .definition-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .definition-card:hover {
+      border-color: var(--card-accent, var(--delta-primary));
+      box-shadow: 0 0 30px rgba(255, 107, 107, 0.1);
+    }
+
+    .definition-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--delta-primary));
+    }
+
+    .definition-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .definition-type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--card-accent, var(--delta-primary));
+      background: rgba(255, 107, 107, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+    }
+
+    .definition-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .definition-formal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--card-accent, var(--delta-primary));
+      background: var(--bg-tertiary);
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .definition-body {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .definition-body strong {
+      color: var(--text-primary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       COMPONENT GRID
+       ═══════════════════════════════════════════════════════════════════════ */
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .component-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--comp-color, var(--delta-primary));
+      border-radius: 1rem;
+      padding: 1.5rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .component-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .component-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .component-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--comp-color, var(--delta-primary));
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--comp-color, var(--delta-primary));
+      border-radius: 0.5rem;
+    }
+
+    .component-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--comp-color, var(--delta-primary));
+    }
+
+    .component-weight {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .component-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .component-description {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       GEOMETRIC VISUALIZATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .geometry-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .geometry-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--delta-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .contour-visualization {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      height: 400px;
+      margin: 0 auto;
+      background: var(--bg-tertiary);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+
+    .contour-ring {
+      position: absolute;
+      border: 2px solid;
+      border-radius: 50%;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .contour-ring.origin {
+      width: 40px;
+      height: 40px;
+      border-color: var(--invariant);
+      background: rgba(0, 255, 136, 0.2);
+      z-index: 5;
+    }
+
+    .contour-ring.low {
+      width: 120px;
+      height: 120px;
+      border-color: rgba(0, 255, 136, 0.5);
+      z-index: 4;
+    }
+
+    .contour-ring.medium {
+      width: 200px;
+      height: 200px;
+      border-color: rgba(255, 215, 0, 0.5);
+      z-index: 3;
+    }
+
+    .contour-ring.high {
+      width: 280px;
+      height: 280px;
+      border-color: rgba(255, 107, 107, 0.5);
+      z-index: 2;
+    }
+
+    .contour-ring.boundary {
+      width: 360px;
+      height: 360px;
+      border-color: var(--attractor);
+      border-style: dashed;
+      z-index: 1;
+    }
+
+    .contour-label {
+      position: absolute;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .contour-label.origin-label {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--invariant);
+      font-size: 0.9rem;
+    }
+
+    .contour-label.zc-label {
+      top: 10%;
+      right: 10%;
+      color: var(--attractor);
+    }
+
+    .geometry-legend {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       MINIMIZATION PRINCIPLE
+       ═══════════════════════════════════════════════════════════════════════ */
+    .minimization-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 107, 107, 0.05) 100%);
+      border: 2px solid var(--delta-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .minimization-card::before {
+      content: 'argmin';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--delta-primary);
+      background: var(--bg-void);
+      padding: 0 0.5rem;
+    }
+
+    .minimization-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--delta-primary);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .minimization-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .minimization-body {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       INTERACTIVE CALCULATOR
+       ═══════════════════════════════════════════════════════════════════════ */
+    .calculator-section {
+      background: var(--bg-secondary);
+      border: 2px solid var(--delta-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .calculator-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--delta-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .input-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--input-color, var(--text-secondary));
+      letter-spacing: 0.05em;
+    }
+
+    .input-slider-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .input-slider {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 8px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .input-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--input-color, var(--delta-primary));
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--input-color, var(--delta-primary));
+    }
+
+    .input-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--input-color, var(--text-primary));
+      min-width: 50px;
+      text-align: right;
+    }
+
+    .calculator-result {
+      background: var(--bg-tertiary);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .result-delta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3rem;
+      color: var(--delta-primary);
+      margin-bottom: 1rem;
+    }
+
+    .result-breakdown {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .proximity-indicator {
+      height: 20px;
+      background: linear-gradient(90deg, var(--invariant) 0%, var(--origin) 50%, var(--delta-primary) 100%);
+      border-radius: 10px;
+      position: relative;
+      margin-top: 1rem;
+    }
+
+    .proximity-marker {
+      position: absolute;
+      width: 4px;
+      height: 30px;
+      background: var(--text-primary);
+      top: -5px;
+      transform: translateX(-50%);
+      border-radius: 2px;
+      transition: left 0.3s ease;
+    }
+
+    .proximity-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       WORKED EXAMPLES
+       ═══════════════════════════════════════════════════════════════════════ */
+    .example-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .example-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--example-color, var(--delta-primary));
+    }
+
+    .example-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .example-icon {
+      font-size: 1.5rem;
+    }
+
+    .example-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--example-color, var(--delta-primary));
+    }
+
+    .example-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 768px) {
+      .example-comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .comparison-box {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .comparison-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--box-color, var(--text-accent));
+      margin-bottom: 1rem;
+    }
+
+    .comparison-values {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .value-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    .value-label {
+      color: var(--text-secondary);
+    }
+
+    .value-number {
+      color: var(--text-primary);
+    }
+
+    .example-conclusion {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid var(--delta-primary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--delta-primary);
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       MTR CONNECTIONS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .connection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .connection-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--conn-color, var(--border-subtle));
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: block;
+    }
+
+    .connection-card:hover {
+      border-color: var(--conn-color, var(--delta-primary));
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .connection-arrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--conn-color, var(--text-secondary));
+      margin-bottom: 0.5rem;
+    }
+
+    .connection-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--conn-color, var(--text-primary));
+      margin-bottom: 0.5rem;
+    }
+
+    .connection-description {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       ATTRACTOR BEHAVIOR
+       ═══════════════════════════════════════════════════════════════════════ */
+    .attractor-section {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(199, 146, 234, 0.05) 100%);
+      border: 1px solid var(--attractor);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .attractor-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--attractor);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .attractor-flow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+
+    .flow-node {
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    .flow-node.active {
+      border-color: var(--attractor);
+      color: var(--attractor);
+    }
+
+    .flow-arrow {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--delta-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deficit-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link"><span>&#9671;</span>VaultNode Tree</a>
+    <a href="mtr-decision-tree.html" class="nav-link"><span>&#8756;</span>MTR Decision Tree</a>
+    <a href="vn-mtr-000-language-before-observers.html" class="nav-link"><span>&#8857;</span>Step Zero</a>
+    <a href="vn-mtr-001-closure-deficit.html" class="nav-link active"><span>&#948;</span>Closure Deficit</a>
+    <a href="vn-fibonacci-rg-flow.html" class="nav-link"><span>&#966;</span>Fibonacci RG Flow</a>
+    <a href="vn-unified-decision-tree-complete.html" class="nav-link"><span>&#8859;</span>Unified Tree</a>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="page-badge">VN-MTR-001 :: CLOSURE DEFICIT</div>
+    <h1 class="page-title">Closure Deficit: &#948;(D|F)</h1>
+    <p class="page-subtitle">
+      Measuring how well a description D fits within a frame F &mdash;
+      the distance from perfect closure
+    </p>
+    <div class="core-equation">
+      <span class="eq-delta">&#948;(D|F)</span>
+      <span class="eq-op"> = </span>
+      <span class="eq-err">&#945;&#183;Err</span>
+      <span class="eq-op"> + </span>
+      <span class="eq-comp">&#946;&#183;Comp</span>
+      <span class="eq-op"> + </span>
+      <span class="eq-viol">&#961;&#183;Viol</span>
+    </div>
+    <div class="pentagon-icon">&#948;</div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: Formal Definitions -->
+    <section class="section" id="formal-definitions">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">Formal Definitions</h2>
+      </div>
+
+      <!-- Frame Definition -->
+      <div class="definition-card" style="--card-accent: var(--origin);">
+        <div class="definition-header">
+          <span class="definition-type">DEFINITION</span>
+          <span class="definition-name">Frame F</span>
+        </div>
+        <div class="definition-formal">F = (&#8466;, C, &#928;)</div>
+        <div class="definition-body">
+          A <strong>frame</strong> is a triple consisting of:
+          <ul style="margin: 1rem 0 0 2rem; color: var(--text-secondary);">
+            <li><strong>&#8466;</strong> &mdash; Language: the set of well-formed expressions (from Step Zero)</li>
+            <li><strong>C</strong> &mdash; Constraints: the set of admissibility conditions</li>
+            <li><strong>&#928;</strong> &mdash; Admissibility predicate: &#928;(D) = true iff D satisfies all constraints in C</li>
+          </ul>
+          <p style="margin-top: 1rem;">
+            The frame defines the "space" within which descriptions can be evaluated.
+            Different frames yield different notions of optimality.
+          </p>
+        </div>
+      </div>
+
+      <!-- Description Definition -->
+      <div class="definition-card" style="--card-accent: var(--delta-primary);">
+        <div class="definition-header">
+          <span class="definition-type">DEFINITION</span>
+          <span class="definition-name">Description D</span>
+        </div>
+        <div class="definition-formal">D &#8712; &#8466;</div>
+        <div class="definition-body">
+          A <strong>description</strong> is any well-formed expression in the frame's language.
+          Descriptions are candidates for explaining phenomena within the frame.
+          <strong>Not all descriptions are admissible</strong> &mdash; they must pass the constraints.
+        </div>
+      </div>
+
+      <!-- The Three Components -->
+      <h3 style="font-family: 'JetBrains Mono', monospace; color: var(--delta-primary); margin: 2rem 0 1rem; text-align: center;">
+        The Three Components of Closure Deficit
+      </h3>
+
+      <div class="component-grid">
+        <!-- Error Term -->
+        <div class="component-card" style="--comp-color: var(--err-color);">
+          <div class="component-header">
+            <div class="component-symbol">Err</div>
+            <div>
+              <div class="component-title">Prediction Error</div>
+              <div class="component-weight">Weight: &#945;</div>
+            </div>
+          </div>
+          <div class="component-equation">
+            Err(D|F) = &#8721;<sub>i</sub> |O<sub>i</sub> - P<sub>i</sub>(D)|&#178;
+          </div>
+          <div class="component-description">
+            <strong>How wrong is D?</strong><br><br>
+            Measures the mismatch between the description's predictions P<sub>i</sub>(D) and
+            observed data O<sub>i</sub>. High error means the description fails to account
+            for reality within the frame.
+          </div>
+        </div>
+
+        <!-- Complexity Term -->
+        <div class="component-card" style="--comp-color: var(--comp-color);">
+          <div class="component-header">
+            <div class="component-symbol">Comp</div>
+            <div>
+              <div class="component-title">Complexity Penalty</div>
+              <div class="component-weight">Weight: &#946;</div>
+            </div>
+          </div>
+          <div class="component-equation">
+            Comp(D) = K(D) or |D|<sub>&#8466;</sub>
+          </div>
+          <div class="component-description">
+            <strong>Occam's Razor formalized.</strong><br><br>
+            Measures the complexity of the description, either as Kolmogorov complexity K(D)
+            or syntactic length |D|. Simpler descriptions are preferred over complex ones
+            that make the same predictions.
+          </div>
+        </div>
+
+        <!-- Violation Term -->
+        <div class="component-card" style="--comp-color: var(--viol-color);">
+          <div class="component-header">
+            <div class="component-symbol">Viol</div>
+            <div>
+              <div class="component-title">Constraint Violations</div>
+              <div class="component-weight">Weight: &#961;</div>
+            </div>
+          </div>
+          <div class="component-equation">
+            Viol(D|C) = |{c &#8712; C : D violates c}|
+          </div>
+          <div class="component-description">
+            <strong>Breaks frame rules?</strong><br><br>
+            Counts how many constraints in C the description D violates. A description
+            that violates conservation laws, causality, or other frame constraints
+            incurs a penalty proportional to the number of violations.
+          </div>
+        </div>
+      </div>
+
+      <!-- Full Deficit Definition -->
+      <div class="definition-card" style="--card-accent: var(--delta-primary);">
+        <div class="definition-header">
+          <span class="definition-type">CORE DEFINITION</span>
+          <span class="definition-name">Closure Deficit</span>
+        </div>
+        <div class="definition-formal" style="font-size: 1.5rem;">
+          &#948;(D|F) = &#945;&#183;Err(D|F) + &#946;&#183;Comp(D) + &#961;&#183;Viol(D|C)
+        </div>
+        <div class="definition-body">
+          The <strong>closure deficit</strong> is a weighted sum of error, complexity, and constraint violations.
+          It measures <em>how far</em> a description is from perfect closure within the frame:
+          <ul style="margin: 1rem 0 0 2rem;">
+            <li>&#948; = 0 implies <strong>perfect closure</strong> (rarely achievable)</li>
+            <li>Low &#948; means D is a good fit for F</li>
+            <li>High &#948; means D fails to explain, is overly complex, or breaks rules</li>
+          </ul>
+          <p style="margin-top: 1rem; color: var(--delta-primary);">
+            <strong>The weights &#945;, &#946;, &#961; encode epistemic preferences.</strong>
+            Different weight choices yield different optimal descriptions.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Geometric Interpretation -->
+    <section class="section" id="geometric-interpretation">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">Geometric Interpretation</h2>
+      </div>
+
+      <div class="geometry-container">
+        <div class="geometry-title">DEFICIT AS DISTANCE FROM CLOSURE</div>
+
+        <div class="contour-visualization">
+          <!-- Contour rings -->
+          <div class="contour-ring boundary"></div>
+          <div class="contour-ring high"></div>
+          <div class="contour-ring medium"></div>
+          <div class="contour-ring low"></div>
+          <div class="contour-ring origin">O</div>
+
+          <!-- Labels -->
+          <div class="contour-label origin-label">&#948; = 0</div>
+          <div class="contour-label zc-label">z<sub>c</sub> = &#8730;3/2<br>&#8776; 0.866</div>
+        </div>
+
+        <div class="geometry-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--invariant);"></div>
+            <span>Origin (&#948; &#8776; 0)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--origin);"></div>
+            <span>Low deficit</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--delta-primary);"></div>
+            <span>High deficit</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--attractor);"></div>
+            <span>Frame boundary &#8706;F</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--attractor);">
+        <div class="definition-header">
+          <span class="definition-type">CONNECTION</span>
+          <span class="definition-name">The z<sub>c</sub> = &#8730;3/2 Critical Boundary</span>
+        </div>
+        <div class="definition-formal">
+          z<sub>c</sub> = &#8730;3/2 &#8776; 0.8660254038
+        </div>
+        <div class="definition-body">
+          The critical height z<sub>c</sub> marks the <strong>frame boundary</strong> &#8706;F.
+          At this boundary:
+          <ul style="margin: 1rem 0 0 2rem;">
+            <li>Descriptions begin to break down</li>
+            <li>Incompleteness phenomena emerge (G&ouml;del-type limits)</li>
+            <li>Frame extension becomes necessary</li>
+          </ul>
+          <p style="margin-top: 1rem;">
+            When &#948;(D|F) approaches the boundary, the description is no longer sustainable
+            within the current frame. This triggers the need for F &#8594; F'.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: The Minimization Principle -->
+    <section class="section" id="minimization-principle">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">The Minimization Principle</h2>
+      </div>
+
+      <div class="minimization-card">
+        <div class="minimization-header">ORIGIN SELECTION</div>
+        <div class="minimization-equation">
+          Origin(F) = argmin<sub>D &#8712; &#8466;</sub> &#948;(D|F)
+        </div>
+        <div class="minimization-body">
+          <p>
+            The <strong>origin</strong> of a frame is the description that minimizes closure deficit.
+            This is the "best" explanation within the frame's constraints &mdash; the description
+            closest to perfect closure.
+          </p>
+          <p style="margin-top: 1rem;">
+            <strong>Why minimizing &#948; selects the "best" description:</strong>
+          </p>
+          <ul style="margin: 0.5rem 0 0 2rem; color: var(--text-secondary);">
+            <li>Low Err &rarr; accurate predictions</li>
+            <li>Low Comp &rarr; parsimonious explanation</li>
+            <li>Low Viol &rarr; respects frame constraints</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--evolution);">
+        <div class="definition-header">
+          <span class="definition-type">CONSIDERATION</span>
+          <span class="definition-name">Local vs Global Minima</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            The deficit landscape may have <strong>multiple local minima</strong>. Different
+            starting points (initial descriptions) may converge to different origins.
+          </p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 0.5rem; border-left: 3px solid var(--invariant);">
+              <div style="font-family: 'JetBrains Mono', monospace; color: var(--invariant); margin-bottom: 0.5rem;">GLOBAL MINIMUM</div>
+              <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                D* such that &#948;(D*|F) &#8804; &#948;(D|F) for all D.
+                The true origin. May be computationally intractable to find.
+              </div>
+            </div>
+            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 0.5rem; border-left: 3px solid var(--origin);">
+              <div style="font-family: 'JetBrains Mono', monospace; color: var(--origin); margin-bottom: 0.5rem;">LOCAL MINIMUM</div>
+              <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                D' such that &#948;(D'|F) &#8804; &#948;(D|F) for nearby D.
+                Stable but potentially suboptimal paradigms.
+              </div>
+            </div>
+          </div>
+          <p style="margin-top: 1.5rem; color: var(--attractor);">
+            <strong>Paradigm shifts</strong> occur when the system escapes a local minimum
+            and discovers a lower global minimum through frame extension.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Interactive Calculator -->
+    <section class="section" id="calculator">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">Interactive &#948; Calculator</h2>
+      </div>
+
+      <div class="calculator-section">
+        <div class="calculator-title">CLOSURE DEFICIT COMPUTATION</div>
+
+        <div class="calculator-grid">
+          <!-- Error input -->
+          <div class="input-group" style="--input-color: var(--err-color);">
+            <div class="input-label">Err (Prediction Error)</div>
+            <div class="input-slider-container">
+              <input type="range" class="input-slider" id="errSlider" min="0" max="100" value="25" oninput="updateCalculator()">
+              <span class="input-value" id="errValue">0.25</span>
+            </div>
+          </div>
+
+          <!-- Complexity input -->
+          <div class="input-group" style="--input-color: var(--comp-color);">
+            <div class="input-label">Comp (Complexity)</div>
+            <div class="input-slider-container">
+              <input type="range" class="input-slider" id="compSlider" min="0" max="100" value="15" oninput="updateCalculator()">
+              <span class="input-value" id="compValue">0.15</span>
+            </div>
+          </div>
+
+          <!-- Violation input -->
+          <div class="input-group" style="--input-color: var(--viol-color);">
+            <div class="input-label">Viol (Violations)</div>
+            <div class="input-slider-container">
+              <input type="range" class="input-slider" id="violSlider" min="0" max="100" value="5" oninput="updateCalculator()">
+              <span class="input-value" id="violValue">0.05</span>
+            </div>
+          </div>
+        </div>
+
+        <h4 style="font-family: 'JetBrains Mono', monospace; color: var(--text-secondary); text-align: center; margin: 1rem 0;">
+          Weight Adjustment
+        </h4>
+
+        <div class="calculator-grid">
+          <!-- Alpha weight -->
+          <div class="input-group" style="--input-color: var(--err-color);">
+            <div class="input-label">&#945; (Error Weight)</div>
+            <div class="input-slider-container">
+              <input type="range" class="input-slider" id="alphaSlider" min="0" max="200" value="100" oninput="updateCalculator()">
+              <span class="input-value" id="alphaValue">1.00</span>
+            </div>
+          </div>
+
+          <!-- Beta weight -->
+          <div class="input-group" style="--input-color: var(--comp-color);">
+            <div class="input-label">&#946; (Complexity Weight)</div>
+            <div class="input-slider-container">
+              <input type="range" class="input-slider" id="betaSlider" min="0" max="200" value="50" oninput="updateCalculator()">
+              <span class="input-value" id="betaValue">0.50</span>
+            </div>
+          </div>
+
+          <!-- Rho weight -->
+          <div class="input-group" style="--input-color: var(--viol-color);">
+            <div class="input-label">&#961; (Violation Weight)</div>
+            <div class="input-slider-container">
+              <input type="range" class="input-slider" id="rhoSlider" min="0" max="300" value="200" oninput="updateCalculator()">
+              <span class="input-value" id="rhoValue">2.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="calculator-result">
+          <div class="result-delta" id="resultDelta">&#948; = 0.425</div>
+          <div class="result-breakdown" id="resultBreakdown">
+            = 1.00 &#215; 0.25 + 0.50 &#215; 0.15 + 2.00 &#215; 0.05
+          </div>
+          <div style="font-family: 'JetBrains Mono', monospace; color: var(--text-secondary); margin-bottom: 0.5rem;">
+            Proximity to Closure
+          </div>
+          <div class="proximity-indicator">
+            <div class="proximity-marker" id="proximityMarker" style="left: 42.5%;"></div>
+          </div>
+          <div class="proximity-labels">
+            <span style="color: var(--invariant);">Origin (&#948;=0)</span>
+            <span style="color: var(--attractor);">Boundary (&#948;=1)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Worked Examples -->
+    <section class="section" id="examples">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">Worked Examples</h2>
+      </div>
+
+      <!-- Physics Example -->
+      <div class="example-card" style="--example-color: var(--evolution);">
+        <div class="example-header">
+          <span class="example-icon">&#128640;</span>
+          <span class="example-title">Physics: Newtonian vs Relativistic Mechanics</span>
+        </div>
+
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+          Consider the frame F = (Classical Mechanics, Conservation Laws, Admissibility).
+          We compare two descriptions: Newtonian (D<sub>N</sub>) and Relativistic (D<sub>R</sub>).
+        </p>
+
+        <div class="example-comparison">
+          <div class="comparison-box" style="--box-color: var(--origin);">
+            <div class="comparison-title">D<sub>N</sub> (Newtonian)</div>
+            <div class="comparison-values">
+              <div class="value-row">
+                <span class="value-label">Err:</span>
+                <span class="value-number" style="color: var(--err-color);">0.001 (low-v)</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Comp:</span>
+                <span class="value-number" style="color: var(--comp-color);">0.10 (simple)</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Viol:</span>
+                <span class="value-number" style="color: var(--viol-color);">0 (valid)</span>
+              </div>
+              <div class="value-row" style="border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; margin-top: 0.5rem;">
+                <span class="value-label">&#948;<sub>N</sub>:</span>
+                <span class="value-number" style="color: var(--delta-primary);">0.151</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="comparison-box" style="--box-color: var(--evolution);">
+            <div class="comparison-title">D<sub>R</sub> (Relativistic)</div>
+            <div class="comparison-values">
+              <div class="value-row">
+                <span class="value-label">Err:</span>
+                <span class="value-number" style="color: var(--err-color);">0.0001 (all v)</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Comp:</span>
+                <span class="value-number" style="color: var(--comp-color);">0.30 (complex)</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Viol:</span>
+                <span class="value-number" style="color: var(--viol-color);">0 (valid)</span>
+              </div>
+              <div class="value-row" style="border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; margin-top: 0.5rem;">
+                <span class="value-label">&#948;<sub>R</sub>:</span>
+                <span class="value-number" style="color: var(--delta-primary);">0.150</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="example-conclusion">
+          At low velocities: &#948;<sub>N</sub> &#8776; &#948;<sub>R</sub> (equivalent fit)<br>
+          At high velocities: &#948;<sub>N</sub> &#8811; &#948;<sub>R</sub> (Newtonian breaks down)<br>
+          <strong>Frame extension F &#8594; F' shifts the origin from D<sub>N</sub> to D<sub>R</sub></strong>
+        </div>
+      </div>
+
+      <!-- Mathematics Example -->
+      <div class="example-card" style="--example-color: var(--invariant);">
+        <div class="example-header">
+          <span class="example-icon">&#128208;</span>
+          <span class="example-title">Mathematics: Euclidean vs Non-Euclidean Geometry</span>
+        </div>
+
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+          Consider the frame F = (Geometric Axioms, Consistency, Provability).
+          We compare Euclidean (D<sub>E</sub>) and Hyperbolic (D<sub>H</sub>) descriptions.
+        </p>
+
+        <div class="example-comparison">
+          <div class="comparison-box" style="--box-color: var(--invariant);">
+            <div class="comparison-title">D<sub>E</sub> (Euclidean)</div>
+            <div class="comparison-values">
+              <div class="value-row">
+                <span class="value-label">Err:</span>
+                <span class="value-number" style="color: var(--err-color);">0 (flat space)</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Comp:</span>
+                <span class="value-number" style="color: var(--comp-color);">0.05 (minimal)</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Viol:</span>
+                <span class="value-number" style="color: var(--viol-color);">0 (valid)</span>
+              </div>
+              <div class="value-row" style="border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; margin-top: 0.5rem;">
+                <span class="value-label">&#948;<sub>E</sub>:</span>
+                <span class="value-number" style="color: var(--delta-primary);">0.025</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="comparison-box" style="--box-color: var(--attractor);">
+            <div class="comparison-title">D<sub>H</sub> (Hyperbolic)</div>
+            <div class="comparison-values">
+              <div class="value-row">
+                <span class="value-label">Err:</span>
+                <span class="value-number" style="color: var(--err-color);">0 (curved space)</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Comp:</span>
+                <span class="value-number" style="color: var(--comp-color);">0.15 (higher)</span>
+              </div>
+              <div class="value-row">
+                <span class="value-label">Viol:</span>
+                <span class="value-number" style="color: var(--viol-color);">0 (valid)</span>
+              </div>
+              <div class="value-row" style="border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; margin-top: 0.5rem;">
+                <span class="value-label">&#948;<sub>H</sub>:</span>
+                <span class="value-number" style="color: var(--delta-primary);">0.075</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="example-conclusion">
+          In flat-space frame: &#948;<sub>E</sub> &lt; &#948;<sub>H</sub> (Euclidean is origin)<br>
+          When modeling curved surfaces: &#948;<sub>H</sub> &lt; &#948;<sub>E</sub> (origin shifts)<br>
+          <strong>The "best" geometry depends on the frame's constraints</strong>
+        </div>
+      </div>
+
+      <!-- Frame Extension -->
+      <div class="definition-card" style="--card-accent: var(--evolution);">
+        <div class="definition-header">
+          <span class="definition-type">KEY INSIGHT</span>
+          <span class="definition-name">&#948; Changes with Frame Extension</span>
+        </div>
+        <div class="definition-body">
+          When the frame extends from F to F':
+          <ul style="margin: 1rem 0 0 2rem;">
+            <li>New constraints may be added (C &#8594; C')</li>
+            <li>Language may expand (&#8466; &#8594; &#8466;')</li>
+            <li>Descriptions that were optimal may no longer be</li>
+            <li>New descriptions become expressible</li>
+          </ul>
+          <p style="margin-top: 1rem; color: var(--evolution);">
+            <strong>This is why science evolves:</strong> Frame extension changes the deficit landscape,
+            potentially revealing lower minima that were previously inaccessible.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Attractor Behavior -->
+    <section class="section" id="attractors">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Attractors and &#948; &#8594; 0</h2>
+      </div>
+
+      <div class="attractor-section">
+        <div class="attractor-title">DEFICIT FLOW TOWARD ATTRACTORS</div>
+
+        <div class="attractor-flow">
+          <div class="flow-node">D<sub>0</sub><br><small>&#948; = 0.8</small></div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-node">D<sub>1</sub><br><small>&#948; = 0.5</small></div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-node">D<sub>2</sub><br><small>&#948; = 0.2</small></div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-node">D<sub>3</sub><br><small>&#948; = 0.05</small></div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-node active">D*<br><small>&#948; &#8594; 0</small></div>
+        </div>
+
+        <p style="color: var(--text-secondary); text-align: center; margin-top: 1.5rem;">
+          Along refinement chains, descriptions evolve toward fixed points where &#948; is minimized.
+          At attractors, the description stabilizes &mdash; further refinement yields no improvement.
+        </p>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--attractor);">
+        <div class="definition-header">
+          <span class="definition-type">THEOREM</span>
+          <span class="definition-name">Attractor Convergence</span>
+        </div>
+        <div class="definition-formal">
+          D<sub>t</sub> &#8594; D* as t &#8594; &#8734; if deficit landscape is strongly convex
+        </div>
+        <div class="definition-body">
+          If the deficit function &#948;(&#183;|F) is well-behaved (strongly convex or has unique minimum),
+          then iterative refinement converges to the attractor D*. At D*:
+          <ul style="margin: 1rem 0 0 2rem;">
+            <li>&#948;(D*|F) is minimal (possibly zero)</li>
+            <li>D* is stable under small perturbations</li>
+            <li>D* is the "origin" of frame F</li>
+          </ul>
+          <p style="margin-top: 1rem; color: var(--attractor);">
+            <strong>But:</strong> When g<sub>t</sub> &#8776; 0 (near-degeneracy), origins bifurcate
+            instead of converging &mdash; multiple attractors compete.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: MTR Connections -->
+    <section class="section" id="connections">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">Connection to MTR Principles</h2>
+      </div>
+
+      <div class="connection-grid">
+        <!-- Link back to Step Zero -->
+        <a href="vn-mtr-000-language-before-observers.html" class="connection-card" style="--conn-color: #ffffff;">
+          <div class="connection-arrow">&#8592; STEP ZERO</div>
+          <div class="connection-title">Language Before Observers</div>
+          <div class="connection-description">
+            The language &#8466; in F = (&#8466;, C, &#928;) comes from Step Zero.
+            Descriptions D &#8712; &#8466; are elements of the compositional closure X*.
+          </div>
+        </a>
+
+        <!-- Link to Boundary -->
+        <a href="mtr-decision-tree.html#principle-2" class="connection-card" style="--conn-color: var(--boundary);">
+          <div class="connection-arrow">&#8594; PRINCIPLE II</div>
+          <div class="connection-title">Boundary &#8706;F</div>
+          <div class="connection-description">
+            High &#948; near z<sub>c</sub> indicates proximity to the frame boundary.
+            &#8706;F &#8800; &#8709; guarantees incompleteness &mdash; some truths lie beyond.
+          </div>
+        </a>
+
+        <!-- Link to Invariants -->
+        <a href="mtr-decision-tree.html#principle-3" class="connection-card" style="--conn-color: var(--invariant);">
+          <div class="connection-arrow">&#8594; PRINCIPLE III</div>
+          <div class="connection-title">Invariants I</div>
+          <div class="connection-description">
+            Invariants constrain &#948; computation. Viol(D|C) counts violations
+            of invariant constraints. Laws persist across frame extensions.
+          </div>
+        </a>
+
+        <!-- Link to Evolution -->
+        <a href="mtr-decision-tree.html#principle-4" class="connection-card" style="--conn-color: var(--evolution);">
+          <div class="connection-arrow">&#8594; PRINCIPLE IV</div>
+          <div class="connection-title">Evolution F &#8594; F'</div>
+          <div class="connection-description">
+            &#8706;F &#8800; &#8709; implies &#8707;F' with &#948;*(F') &lt; &#948;*(F).
+            Frame extension improves achievable closure.
+          </div>
+        </a>
+
+        <!-- Link to Attractors -->
+        <a href="mtr-decision-tree.html#principle-5" class="connection-card" style="--conn-color: var(--attractor);">
+          <div class="connection-arrow">&#8594; PRINCIPLE V</div>
+          <div class="connection-title">Attractors D*</div>
+          <div class="connection-description">
+            &#948; &#8594; 0 at attractors. Origins converge or bifurcate
+            depending on the gap g<sub>t</sub> between competing minima.
+          </div>
+        </a>
+
+        <!-- Link to MTR Tree -->
+        <a href="mtr-decision-tree.html" class="connection-card" style="--conn-color: var(--origin);">
+          <div class="connection-arrow">&#8594; FULL TREE</div>
+          <div class="connection-title">MTR Decision Tree</div>
+          <div class="connection-description">
+            See the complete decision flow: F &#8594; &#948; &#8594; Origin &#8594; &#8706;F &#8594; Extension &#8594; Convergence.
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      &#948;(D|F) = &#945;&#183;Err + &#946;&#183;Comp + &#961;&#183;Viol &#8594; Origin(F) = argmin &#948;
+    </div>
+    <p>VN-MTR-001 | Closure Deficit Computation | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // Interactive Calculator
+    function updateCalculator() {
+      // Get component values
+      const err = parseInt(document.getElementById('errSlider').value) / 100;
+      const comp = parseInt(document.getElementById('compSlider').value) / 100;
+      const viol = parseInt(document.getElementById('violSlider').value) / 100;
+
+      // Get weight values
+      const alpha = parseInt(document.getElementById('alphaSlider').value) / 100;
+      const beta = parseInt(document.getElementById('betaSlider').value) / 100;
+      const rho = parseInt(document.getElementById('rhoSlider').value) / 100;
+
+      // Update displayed values
+      document.getElementById('errValue').textContent = err.toFixed(2);
+      document.getElementById('compValue').textContent = comp.toFixed(2);
+      document.getElementById('violValue').textContent = viol.toFixed(2);
+      document.getElementById('alphaValue').textContent = alpha.toFixed(2);
+      document.getElementById('betaValue').textContent = beta.toFixed(2);
+      document.getElementById('rhoValue').textContent = rho.toFixed(2);
+
+      // Calculate delta
+      const delta = alpha * err + beta * comp + rho * viol;
+
+      // Update result display
+      document.getElementById('resultDelta').textContent = `\u03B4 = ${delta.toFixed(3)}`;
+      document.getElementById('resultBreakdown').innerHTML =
+        `= ${alpha.toFixed(2)} \u00D7 ${err.toFixed(2)} + ${beta.toFixed(2)} \u00D7 ${comp.toFixed(2)} + ${rho.toFixed(2)} \u00D7 ${viol.toFixed(2)}`;
+
+      // Update proximity marker (clamp to 0-100%)
+      const proximityPercent = Math.min(100, Math.max(0, delta * 100));
+      document.getElementById('proximityMarker').style.left = `${proximityPercent}%`;
+
+      // Color code the result based on delta value
+      const resultEl = document.getElementById('resultDelta');
+      if (delta < 0.2) {
+        resultEl.style.color = 'var(--invariant)';
+      } else if (delta < 0.5) {
+        resultEl.style.color = 'var(--origin)';
+      } else if (delta < 0.8) {
+        resultEl.style.color = 'var(--delta-primary)';
+      } else {
+        resultEl.style.color = 'var(--attractor)';
+      }
+    }
+
+    // Initialize calculator
+    updateCalculator();
+  </script>
+
+</body>
+</html>

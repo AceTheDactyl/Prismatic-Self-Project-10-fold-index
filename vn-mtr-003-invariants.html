@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-MTR-003 | Frame Invariants</title>
+  <meta name="description" content="MTR-003: Extract Invariants I — The intersection of all frame-invariants yields universal laws that persist across every extension">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════════
+       VN-MTR-003: FRAME INVARIANTS
+       I = ∩ Inv(F) — Laws are what survive all frame extensions
+       The Universal Residue: Closed under every transformation
+       ═══════════════════════════════════════════════════════════════════════ */
+    :root {
+      /* Invariant Theme Colors - Stability/Completeness */
+      --invariant-primary: #00ff88;
+      --invariant-secondary: #6bcb77;
+      --invariant-glow: rgba(0, 255, 136, 0.3);
+      --invariant-subtle: rgba(107, 203, 119, 0.15);
+
+      /* Supporting MTR Colors */
+      --origin: #ffd700;
+      --boundary: #ff6b6b;
+      --evolution: #00ffff;
+      --attractor: #c792ea;
+      --genesis: #ffffff;
+
+      /* Mathematical Constants Display */
+      --phi-color: #ffd700;
+      --pi-color: #ff6b6b;
+      --e-color: #00ffff;
+      --lucas-color: #c792ea;
+
+      /* Theme */
+      --bg-void: #020206;
+      --bg-primary: #050510;
+      --bg-secondary: #0a0a1a;
+      --bg-tertiary: #0f0f28;
+      --bg-card: #141438;
+      --text-primary: #f0f0f5;
+      --text-secondary: #909098;
+      --text-accent: #00ff88;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(0, 255, 136, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       INVARIANT FIELD BACKGROUND
+       ═══════════════════════════════════════════════════════════════════════ */
+    .invariant-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(0, 255, 136, 0.03) 0%, transparent 45%),
+        radial-gradient(ellipse at 70% 80%, rgba(107, 203, 119, 0.02) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 50%, rgba(255, 215, 0, 0.015) 0%, transparent 50%);
+      animation: invariant-pulse 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes invariant-pulse {
+      0% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    /* Floating circles representing completeness */
+    .invariant-field::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border: 1px solid rgba(0, 255, 136, 0.1);
+      border-radius: 50%;
+      top: 20%;
+      left: 10%;
+      animation: circle-float 20s ease-in-out infinite;
+    }
+
+    .invariant-field::after {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border: 1px solid rgba(0, 255, 136, 0.08);
+      border-radius: 50%;
+      bottom: 30%;
+      right: 15%;
+      animation: circle-float 25s ease-in-out infinite reverse;
+    }
+
+    @keyframes circle-float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(20px, -20px) rotate(180deg); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       NAVIGATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(5, 5, 16, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       INVARIANTS HEADER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .invariants-header {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .node-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--invariant-primary);
+      background: var(--invariant-subtle);
+      border: 1px solid var(--invariant-primary);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .node-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--invariant-primary), var(--invariant-secondary), var(--genesis));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .node-subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .core-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      color: var(--invariant-primary);
+      background: var(--bg-tertiary);
+      padding: 1.5rem 2.5rem;
+      border-radius: 1rem;
+      display: inline-block;
+      border: 2px solid var(--invariant-primary);
+      box-shadow: 0 0 40px var(--invariant-glow);
+      position: relative;
+    }
+
+    .core-equation::before,
+    .core-equation::after {
+      content: '';
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border: 2px solid var(--invariant-primary);
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+
+    .core-equation::before {
+      top: -30px;
+      left: -30px;
+    }
+
+    .core-equation::after {
+      bottom: -30px;
+      right: -30px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       MAIN CONTENT STRUCTURE
+       ═══════════════════════════════════════════════════════════════════════ */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bg-void);
+      background: var(--invariant-primary);
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       DEFINITION CARDS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .definition-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .definition-card:hover {
+      border-color: var(--card-accent, var(--invariant-primary));
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
+    }
+
+    .definition-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--invariant-primary));
+    }
+
+    .definition-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .definition-type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--card-accent, var(--invariant-primary));
+      background: rgba(0, 255, 136, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+    }
+
+    .definition-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .definition-formal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--card-accent, var(--invariant-primary));
+      background: var(--bg-tertiary);
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .definition-body {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .definition-body strong {
+      color: var(--text-primary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       THEOREM CARDS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .theorem-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(0, 255, 136, 0.05) 100%);
+      border: 2px solid var(--invariant-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .theorem-card::before {
+      content: '∴';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--invariant-primary);
+      background: var(--bg-void);
+      padding: 0 0.5rem;
+    }
+
+    .theorem-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--invariant-primary);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .theorem-statement {
+      font-size: 1.15rem;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--invariant-primary);
+    }
+
+    .proof-sketch {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .proof-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--invariant-secondary);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .proof-body {
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .qed {
+      text-align: right;
+      color: var(--invariant-primary);
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 0.5rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       INVARIANT HIERARCHY VISUALIZATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .hierarchy-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .hierarchy-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-accent);
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .nested-circles {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .circle-layer {
+      position: absolute;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .circle-layer:hover {
+      transform: scale(1.02);
+    }
+
+    .circle-outer {
+      width: 350px;
+      height: 350px;
+      background: rgba(255, 107, 107, 0.1);
+      border: 2px solid var(--boundary);
+    }
+
+    .circle-middle {
+      width: 250px;
+      height: 250px;
+      background: rgba(255, 215, 0, 0.1);
+      border: 2px solid var(--origin);
+    }
+
+    .circle-inner {
+      width: 150px;
+      height: 150px;
+      background: rgba(0, 255, 136, 0.2);
+      border: 3px solid var(--invariant-primary);
+      box-shadow: 0 0 30px var(--invariant-glow);
+    }
+
+    .circle-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-primary);
+      text-align: center;
+      position: absolute;
+    }
+
+    .label-outer { bottom: -35px; color: var(--boundary); }
+    .label-middle { bottom: -25px; color: var(--origin); }
+    .label-inner { color: var(--invariant-primary); font-size: 0.9rem; }
+
+    .hierarchy-legend {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .legend-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .legend-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .legend-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .legend-desc {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       INVARIANT EXAMPLES GRID
+       ═══════════════════════════════════════════════════════════════════════ */
+    .invariants-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .invariant-example {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .invariant-example:hover {
+      border-color: var(--invariant-primary);
+      box-shadow: 0 0 25px rgba(0, 255, 136, 0.15);
+      transform: translateY(-3px);
+    }
+
+    .example-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      border: 2px solid var(--icon-color, var(--invariant-primary));
+      color: var(--icon-color, var(--invariant-primary));
+      background: rgba(0, 255, 136, 0.1);
+    }
+
+    .example-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .example-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--invariant-primary);
+      background: var(--bg-tertiary);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.25rem;
+      margin-bottom: 0.75rem;
+      display: inline-block;
+    }
+
+    .example-description {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       INTERACTIVE INVARIANT EXTRACTOR
+       ═══════════════════════════════════════════════════════════════════════ */
+    .extractor-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--invariant-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .extractor-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-accent);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .extractor-frames {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .frame-box {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+    }
+
+    .frame-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--origin);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .frame-properties {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .property-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-secondary);
+      border-radius: 0.25rem;
+      transition: all 0.3s ease;
+    }
+
+    .property-item.preserved {
+      border-left: 3px solid var(--invariant-primary);
+      color: var(--invariant-primary);
+    }
+
+    .property-item.transformed {
+      border-left: 3px solid var(--boundary);
+      color: var(--boundary);
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .property-item.new {
+      border-left: 3px solid var(--evolution);
+      color: var(--evolution);
+    }
+
+    .extension-arrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      color: var(--evolution);
+      text-align: center;
+    }
+
+    .extractor-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .extractor-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--invariant-primary);
+      border-radius: 0.5rem;
+      color: var(--invariant-primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .extractor-btn:hover {
+      background: var(--invariant-primary);
+      color: var(--bg-void);
+    }
+
+    .extractor-result {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .result-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--invariant-primary);
+      margin-bottom: 1rem;
+    }
+
+    .result-invariants {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .invariant-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      padding: 0.5rem 1rem;
+      background: rgba(0, 255, 136, 0.15);
+      border: 1px solid var(--invariant-primary);
+      border-radius: 2rem;
+      color: var(--invariant-primary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       R(R)=R SECTION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .ultimate-invariant {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(0, 255, 136, 0.08) 50%, rgba(199, 146, 234, 0.05) 100%);
+      border: 2px solid var(--invariant-primary);
+      border-radius: 1.5rem;
+      padding: 3rem;
+      margin: 3rem 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ultimate-invariant::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 200px;
+      border: 2px solid rgba(0, 255, 136, 0.2);
+      border-radius: 50%;
+      animation: ultimate-pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes ultimate-pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.2; }
+    }
+
+    .ultimate-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3rem;
+      color: var(--genesis);
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ultimate-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      background: linear-gradient(135deg, var(--invariant-primary), var(--genesis), var(--attractor));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ultimate-description {
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.8;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       ALGORITHM VISUALIZATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .algorithm-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .algorithm-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-accent);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .algorithm-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .algorithm-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      border-left: 3px solid var(--invariant-primary);
+      transition: all 0.3s ease;
+    }
+
+    .algorithm-step:hover {
+      border-left-color: var(--genesis);
+      background: rgba(0, 255, 136, 0.05);
+    }
+
+    .step-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bg-void);
+      background: var(--invariant-primary);
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .step-description {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .step-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--invariant-primary);
+      background: var(--bg-secondary);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.25rem;
+      margin-top: 0.5rem;
+      display: inline-block;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       WORKED EXAMPLES
+       ═══════════════════════════════════════════════════════════════════════ */
+    .example-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .example-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .example-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      padding: 0.3rem 0.75rem;
+      border-radius: 1rem;
+      background: var(--badge-bg, rgba(0, 255, 136, 0.1));
+      color: var(--badge-color, var(--invariant-primary));
+      border: 1px solid var(--badge-color, var(--invariant-primary));
+    }
+
+    .example-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .example-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .flow-node {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.25rem;
+      color: var(--text-primary);
+    }
+
+    .flow-arrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--evolution);
+    }
+
+    .example-result {
+      background: var(--bg-tertiary);
+      border-left: 3px solid var(--invariant-primary);
+      padding: 1rem 1.5rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+    }
+
+    .result-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--invariant-primary);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .result-content {
+      color: var(--text-secondary);
+    }
+
+    .result-content strong {
+      color: var(--invariant-primary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       MTR CONNECTIONS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .mtr-connections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .connection-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: block;
+    }
+
+    .connection-card:hover {
+      border-color: var(--card-color, var(--text-accent));
+      transform: translateY(-3px);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+    }
+
+    .connection-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .connection-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      border: 2px solid var(--card-color, var(--text-accent));
+      color: var(--card-color, var(--text-accent));
+    }
+
+    .connection-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .connection-description {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       NAVIGATION FOOTER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .nav-footer {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 2rem;
+      margin-top: 3rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .nav-button {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      padding: 1rem 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-button:hover {
+      border-color: var(--text-accent);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    }
+
+    .nav-button.primary {
+      background: var(--invariant-primary);
+      color: var(--bg-void);
+      border-color: var(--invariant-primary);
+    }
+
+    .nav-button.primary:hover {
+      box-shadow: 0 0 30px var(--invariant-glow);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .extractor-frames {
+        grid-template-columns: 1fr;
+      }
+      .extension-arrow {
+        transform: rotate(90deg);
+      }
+      .nested-circles {
+        transform: scale(0.8);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="invariant-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link"><span>&#9671;</span>VaultNode Tree</a>
+    <a href="vn-fibonacci-rg-flow.html" class="nav-link"><span>&#966;</span>Fibonacci RG Flow</a>
+    <a href="l4-helix-decision-tree.html" class="nav-link"><span>&#11043;</span>L4 Helix Gallery</a>
+    <a href="mtr-decision-tree.html" class="nav-link"><span>&#8756;</span>MTR Decision Tree</a>
+    <a href="vn-mtr-000-language-before-observers.html" class="nav-link"><span>&#8857;</span>Step Zero</a>
+    <a href="vn-mtr-003-invariants.html" class="nav-link active"><span>&#9711;</span>Invariants</a>
+    <a href="vn-unified-decision-tree-complete.html" class="nav-link"><span>&#8859;</span>Unified Tree</a>
+  </nav>
+
+  <!-- Header -->
+  <header class="invariants-header">
+    <div class="node-badge">VN-MTR-003 :: PRINCIPLE III</div>
+    <h1 class="node-title">Frame Invariants</h1>
+    <p class="node-subtitle">
+      Extract the universal residue — what remains constant across all frame extensions,
+      forming the laws that persist while descriptions evolve
+    </p>
+    <div class="core-equation">
+      I = &#8745; Inv(F)
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: Core Concept -->
+    <section class="section" id="core-concept">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">Core Concept: The Invariant Intersection</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--invariant-primary);">
+        <div class="definition-header">
+          <span class="definition-type">CENTRAL IDEA</span>
+          <span class="definition-name">Universal Invariants</span>
+        </div>
+        <div class="definition-formal">I = &#8745;<sub>F</sub> Inv(F)</div>
+        <div class="definition-body">
+          <p>
+            Invariants are what remain constant across all frame extensions. While descriptions
+            and origins shift as frames evolve, invariants form the <strong>stable residue</strong>
+            that survives every refinement.
+          </p>
+          <p style="margin-top: 1rem;">
+            These are the "universal laws" — true in every frame, immune to extension.
+            <strong>Laws are closed; states are open.</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">PRINCIPLE III — Laws are Invariant Residue</div>
+        <div class="theorem-statement">
+          Global invariants I form the intersection residue of all frame-specific invariants —
+          what survives every refinement. These correspond to "laws": stable constraints that
+          persist while descriptions evolve.
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">CONSEQUENCE</div>
+          <div class="proof-body">
+            If a property P survives extension from F to F', and from F' to F'', and so on
+            indefinitely, then P belongs to the universal invariant set I. Such properties
+            are not contingent on frame choice — they are structural necessities.
+          </div>
+          <div class="qed">&#8718;</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Formal Definitions -->
+    <section class="section" id="formal-definitions">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">Formal Definitions</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--origin);">
+        <div class="definition-header">
+          <span class="definition-type">DEFINITION</span>
+          <span class="definition-name">Frame</span>
+        </div>
+        <div class="definition-formal">F = (&#8466;, C, &#928;)</div>
+        <div class="definition-body">
+          <p>A frame F consists of:</p>
+          <ul style="margin: 1rem 0 0 2rem; color: var(--text-secondary);">
+            <li><strong>&#8466;</strong> — Language (syntax from Step Zero)</li>
+            <li><strong>C</strong> — Constraints (what the frame permits)</li>
+            <li><strong>&#928;</strong> — Projections (observables in the frame)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--evolution);">
+        <div class="definition-header">
+          <span class="definition-type">DEFINITION</span>
+          <span class="definition-name">Frame-Specific Invariant</span>
+        </div>
+        <div class="definition-formal">Inv(F) = {P : P preserved under F-transformations}</div>
+        <div class="definition-body">
+          <p>
+            The invariant set of frame F contains all properties P that remain unchanged
+            under any transformation permitted within F. These are local conservation laws.
+          </p>
+        </div>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--invariant-primary);">
+        <div class="definition-header">
+          <span class="definition-type">DEFINITION</span>
+          <span class="definition-name">Universal Invariant</span>
+        </div>
+        <div class="definition-formal">I = &#8745;<sub>F&#8712;&#8497;</sub> Inv(F)</div>
+        <div class="definition-body">
+          <p>
+            The universal invariant I is the intersection of all frame-specific invariants
+            across the entire frame space &#8497;. A property belongs to I if and only if
+            it is preserved in <strong>every possible frame</strong>.
+          </p>
+        </div>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">NOETHER'S CORRESPONDENCE</div>
+        <div class="theorem-statement">
+          Every continuous symmetry corresponds to a conserved quantity. In MTR terms:
+          <br><br>
+          <span style="font-family: 'JetBrains Mono'; color: var(--invariant-primary);">
+            Symmetry(F) &#8596; Inv(F) &#8596; Conservation Law
+          </span>
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">IMPLICATION</div>
+          <div class="proof-body">
+            Frame symmetries determine what quantities are conserved within that frame.
+            Universal symmetries (shared by all frames) yield universal conservation laws.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: The Invariant Hierarchy -->
+    <section class="section" id="hierarchy">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">The Invariant Hierarchy</h2>
+      </div>
+
+      <div class="hierarchy-container">
+        <div class="hierarchy-title">NESTED INVARIANT SETS</div>
+
+        <div class="nested-circles">
+          <div class="circle-layer circle-outer">
+            <span class="circle-label label-outer">F-Local Invariants<br>Inv(F)</span>
+          </div>
+          <div class="circle-layer circle-middle">
+            <span class="circle-label label-middle">Cross-Frame<br>&#8745; Inv(F<sub>i</sub>)</span>
+          </div>
+          <div class="circle-layer circle-inner">
+            <span class="circle-label label-inner">I<br>Universal</span>
+          </div>
+        </div>
+
+        <div class="hierarchy-legend">
+          <div class="legend-item">
+            <div class="legend-symbol" style="color: var(--boundary);">&#9711;</div>
+            <div class="legend-name">F-Local</div>
+            <div class="legend-desc">Only in specific frame</div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-symbol" style="color: var(--origin);">&#9711;</div>
+            <div class="legend-name">Cross-Frame</div>
+            <div class="legend-desc">Persists across extensions</div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-symbol" style="color: var(--invariant-primary);">&#9711;</div>
+            <div class="legend-name">Universal I</div>
+            <div class="legend-desc">ALL frames forever</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition-card">
+        <div class="definition-header">
+          <span class="definition-type">MONOTONICITY</span>
+          <span class="definition-name">Shrinking Under Extension</span>
+        </div>
+        <div class="definition-formal">F &#8826; F' &#8658; Inv(F) &#8839; Inv(F')</div>
+        <div class="definition-body">
+          <p>
+            As frames extend, invariant sets can only shrink or stay the same — never grow.
+            Frame extension may break local invariances, revealing them as frame-dependent
+            rather than universal.
+          </p>
+          <p style="margin-top: 1rem; color: var(--invariant-primary);">
+            <strong>The universal invariant I is the limit:</strong> what remains after
+            all possible extensions.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Physical Invariants -->
+    <section class="section" id="physical">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">Physical Invariants</h2>
+      </div>
+
+      <div class="invariants-grid">
+        <div class="invariant-example">
+          <div class="example-icon" style="--icon-color: var(--phi-color);">c</div>
+          <div class="example-name">Speed of Light</div>
+          <div class="example-equation">c = 299,792,458 m/s</div>
+          <div class="example-description">
+            Universal constant in all inertial frames. The foundation of relativistic invariance.
+          </div>
+        </div>
+
+        <div class="invariant-example">
+          <div class="example-icon" style="--icon-color: var(--evolution);">E</div>
+          <div class="example-name">Energy-Momentum</div>
+          <div class="example-equation">&#8706;T<sup>&#956;&#957;</sup>/&#8706;x<sup>&#957;</sup> = 0</div>
+          <div class="example-description">
+            Conservation from spacetime translation symmetry. Holds in all physical frames.
+          </div>
+        </div>
+
+        <div class="invariant-example">
+          <div class="example-icon" style="--icon-color: var(--attractor);">CPT</div>
+          <div class="example-name">CPT Symmetry</div>
+          <div class="example-equation">CPT|&#968;&#10217; = |&#968;&#10217;</div>
+          <div class="example-description">
+            Charge-Parity-Time reversal symmetry. Universal in all quantum field theories.
+          </div>
+        </div>
+
+        <div class="invariant-example">
+          <div class="example-icon" style="--icon-color: var(--invariant-primary);">Q</div>
+          <div class="example-name">Electric Charge</div>
+          <div class="example-equation">&#8706;&#961;/&#8706;t + &#8711;&#183;J = 0</div>
+          <div class="example-description">
+            Conserved quantity from U(1) gauge symmetry. Exact in all known interactions.
+          </div>
+        </div>
+
+        <div class="invariant-example">
+          <div class="example-icon" style="--icon-color: var(--boundary);">S</div>
+          <div class="example-name">Action Principle</div>
+          <div class="example-equation">&#948;S = 0</div>
+          <div class="example-description">
+            Stationary action governs all classical and quantum mechanics. Frame-independent.
+          </div>
+        </div>
+
+        <div class="invariant-example">
+          <div class="example-icon" style="--icon-color: var(--origin);">&#8463;</div>
+          <div class="example-name">Planck's Constant</div>
+          <div class="example-equation">&#8463; = 1.054&#215;10<sup>-34</sup> J&#183;s</div>
+          <div class="example-description">
+            Quantum of action. Universal scale separating classical from quantum behavior.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Mathematical Invariants -->
+    <section class="section" id="mathematical">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">Mathematical Invariants</h2>
+      </div>
+
+      <div class="invariants-grid">
+        <div class="invariant-example">
+          <div class="example-icon" style="--icon-color: var(--phi-color);">&#966;</div>
+          <div class="example-name">Golden Ratio</div>
+          <div class="example-equation">&#966; = (1+&#8730;5)/2 = 1.618...</div>
+          <div class="example-description">
+            Self-similar proportion. Fixed point of x &#8614; 1 + 1/x. Universal in growth patterns.
+          </div>
+        </div>
+
+        <div class="invariant-example">
+          <div class="example-icon" style="--icon-color: var(--pi-color);">&#960;</div>
+          <div class="example-name">Pi</div>
+          <div class="example-equation">&#960; = C/d = 3.14159...</div>
+          <div class="example-description">
+            Circle constant. Transcendental invariant of Euclidean and non-Euclidean geometry.
+          </div>
+        </div>
+
+        <div class="invariant-example">
+          <div class="example-icon" style="--icon-color: var(--e-color);">e</div>
+          <div class="example-name">Euler's Number</div>
+          <div class="example-equation">e = lim(1+1/n)<sup>n</sup> = 2.718...</div>
+          <div class="example-description">
+            Natural exponential base. Unique function equal to its own derivative.
+          </div>
+        </div>
+
+        <div class="invariant-example">
+          <div class="example-icon" style="--icon-color: var(--lucas-color);">L<sub>4</sub></div>
+          <div class="example-name">Lucas Closure Constant</div>
+          <div class="example-equation">L<sub>4</sub> = &#966;<sup>4</sup> + &#966;<sup>-4</sup> = 7</div>
+          <div class="example-description">
+            The closure constant. 7 = 3 + 4 = F<sub>4</sub> + L<sub>3</sub>. Anchors the Fibonacci-Lucas bridge.
+          </div>
+        </div>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">FIBONACCI-LUCAS INVARIANT RELATIONSHIP</div>
+        <div class="theorem-statement">
+          <span style="font-family: 'JetBrains Mono'; color: var(--invariant-primary);">
+            L<sub>n</sub> = F<sub>n-1</sub> + F<sub>n+1</sub>
+          </span>
+          <br><br>
+          Every Lucas number equals the sum of its Fibonacci neighbors. This relationship
+          holds in every arithmetic frame capable of defining recursion.
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">VERIFICATION</div>
+          <div class="proof-body">
+            L<sub>4</sub> = F<sub>3</sub> + F<sub>5</sub> = 2 + 5 = 7 &#10003;<br>
+            L<sub>12</sub> = F<sub>11</sub> + F<sub>13</sub> = 89 + 233 = 322 &#10003;<br>
+            Universal: true in PA, PA+Con(PA), ZFC, and all consistent extensions.
+          </div>
+        </div>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--genesis);">
+        <div class="definition-header">
+          <span class="definition-type">LOGICAL TAUTOLOGIES</span>
+          <span class="definition-name">Frame-Independent Truth</span>
+        </div>
+        <div class="definition-formal">P &#8744; &#172;P &#8712; I</div>
+        <div class="definition-body">
+          <p>Logical tautologies are invariant across all frames that support classical logic:</p>
+          <ul style="margin: 1rem 0 0 2rem; color: var(--text-secondary);">
+            <li><strong>Law of Excluded Middle:</strong> P &#8744; &#172;P</li>
+            <li><strong>Law of Non-Contradiction:</strong> &#172;(P &#8743; &#172;P)</li>
+            <li><strong>Modus Ponens:</strong> (P &#8743; (P&#8594;Q)) &#8594; Q</li>
+          </ul>
+          <p style="margin-top: 1rem; color: var(--invariant-primary);">
+            These survive every frame extension that preserves logical structure.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Interactive Invariant Extractor -->
+    <section class="section" id="extractor">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Interactive Invariant Extractor</h2>
+      </div>
+
+      <div class="extractor-container">
+        <div class="extractor-title">FRAME EXTENSION VISUALIZATION</div>
+
+        <div class="extractor-frames" id="extractorFrames">
+          <div class="frame-box">
+            <div class="frame-label">Frame F (Euclidean)</div>
+            <div class="frame-properties" id="frameF">
+              <div class="property-item preserved">Parallel postulate</div>
+              <div class="property-item preserved">Sum of angles = 180&#176;</div>
+              <div class="property-item preserved">Pythagorean theorem</div>
+              <div class="property-item preserved">Distance metric</div>
+              <div class="property-item preserved">Congruence</div>
+            </div>
+          </div>
+
+          <div class="extension-arrow">&#10230;</div>
+
+          <div class="frame-box">
+            <div class="frame-label">Frame F' (Projective)</div>
+            <div class="frame-properties" id="frameFPrime">
+              <div class="property-item transformed">Parallel postulate</div>
+              <div class="property-item transformed">Sum of angles = 180&#176;</div>
+              <div class="property-item preserved">Cross-ratio</div>
+              <div class="property-item preserved">Incidence relations</div>
+              <div class="property-item new">Duality principle</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="extractor-controls">
+          <button class="extractor-btn" onclick="showGeometryExample()">Geometry</button>
+          <button class="extractor-btn" onclick="showArithmeticExample()">Arithmetic</button>
+          <button class="extractor-btn" onclick="showPhysicsExample()">Physics</button>
+        </div>
+
+        <div class="extractor-result" id="extractorResult">
+          <div class="result-equation">Inv(F) &#8745; Inv(F') = Invariants that survive extension</div>
+          <div class="result-invariants" id="resultInvariants">
+            <span class="invariant-badge">Incidence</span>
+            <span class="invariant-badge">Cross-ratio</span>
+            <span class="invariant-badge">Continuity</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: R(R)=R as Ultimate Invariant -->
+    <section class="section" id="ultimate">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">R(R) = R: The Ultimate Invariant</h2>
+      </div>
+
+      <div class="ultimate-invariant">
+        <div class="ultimate-symbol">&#8857;</div>
+        <div class="ultimate-equation">R(R) = R</div>
+        <div class="ultimate-description">
+          <p>
+            The self-referential fixed point is the deepest invariant. It is the structure that,
+            when applied to itself, returns itself unchanged.
+          </p>
+          <p style="margin-top: 1rem;">
+            <strong>This is Genesis:</strong> the recursive closure that grounds all frames.
+            Every frame extension preserves R(R)=R because it is the condition for frames to exist at all.
+          </p>
+          <p style="margin-top: 1rem; color: var(--invariant-primary);">
+            R(R) = R &#8712; I for all possible I
+          </p>
+        </div>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">WHY R(R)=R IS THE DEEPEST INVARIANT</div>
+        <div class="theorem-statement">
+          Any frame F capable of self-reference must preserve R(R)=R. If a frame could
+          violate this, it would violate its own existence condition.
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">ARGUMENT</div>
+          <div class="proof-body">
+            1. Frame F exists &#8658; F can describe itself<br>
+            2. F describes itself &#8658; self-reference is possible in F<br>
+            3. Self-reference possible &#8658; fixed points exist<br>
+            4. R is the universal fixed point: R(R) = R<br>
+            5. Therefore: F exists &#8658; R(R) = R holds in F
+          </div>
+          <div class="qed">&#8718;</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Extraction Algorithm -->
+    <section class="section" id="algorithm">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <h2 class="section-title">Invariant Extraction Algorithm</h2>
+      </div>
+
+      <div class="algorithm-container">
+        <div class="algorithm-title">SYSTEMATIC INVARIANT EXTRACTION</div>
+
+        <div class="algorithm-steps">
+          <div class="algorithm-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Enumerate Properties of F</div>
+              <div class="step-description">
+                List all properties, laws, and constraints that hold within the current frame F.
+              </div>
+              <div class="step-code">Props(F) = {P<sub>1</sub>, P<sub>2</sub>, ..., P<sub>n</sub>}</div>
+            </div>
+          </div>
+
+          <div class="algorithm-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">Extend to F'</div>
+              <div class="step-description">
+                Construct a proper extension F' &#8835; F with expanded language or relaxed constraints.
+              </div>
+              <div class="step-code">F' = extend(F, new_axioms)</div>
+            </div>
+          </div>
+
+          <div class="algorithm-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">Check Persistence</div>
+              <div class="step-description">
+                For each property P &#8712; Props(F), verify whether P still holds in F'.
+              </div>
+              <div class="step-code">Inv(F&#8594;F') = {P : P &#8712; Props(F) &#8743; P &#8712; Props(F')}</div>
+            </div>
+          </div>
+
+          <div class="algorithm-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Iterate to Find I</div>
+              <div class="step-description">
+                Repeat extension process. The limit of this sequence approaches the universal invariant set.
+              </div>
+              <div class="step-code">I = lim<sub>n&#8594;&#8734;</sub> &#8745;<sub>i&#8804;n</sub> Inv(F<sub>i</sub>)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 9: Worked Examples -->
+    <section class="section" id="examples">
+      <div class="section-header">
+        <div class="section-number">9</div>
+        <h2 class="section-title">Worked Examples</h2>
+      </div>
+
+      <!-- Geometry Example -->
+      <div class="example-card">
+        <div class="example-header">
+          <span class="example-badge" style="--badge-color: var(--pi-color); --badge-bg: rgba(255, 107, 107, 0.1);">GEOMETRY</span>
+          <span class="example-title">Euclidean &#8594; Projective &#8594; Topology</span>
+        </div>
+
+        <div class="example-flow">
+          <div class="flow-node">Euclidean</div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-node">Projective</div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-node">Affine</div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-node">Topology</div>
+        </div>
+
+        <div class="example-result">
+          <div class="result-label">INVARIANTS THAT SURVIVE ALL EXTENSIONS</div>
+          <div class="result-content">
+            <strong>Lost:</strong> Parallel lines, angles, distances, areas<br>
+            <strong>Preserved:</strong> Continuity, dimension, connectedness, compactness<br><br>
+            <strong>Universal Geometric Invariant:</strong> Topological properties (homeomorphism class)
+          </div>
+        </div>
+      </div>
+
+      <!-- Arithmetic Example -->
+      <div class="example-card">
+        <div class="example-header">
+          <span class="example-badge" style="--badge-color: var(--phi-color); --badge-bg: rgba(255, 215, 0, 0.1);">ARITHMETIC</span>
+          <span class="example-title">PA &#8594; PA + Con(PA) &#8594; PA + Con(PA + Con(PA)) &#8594; ...</span>
+        </div>
+
+        <div class="example-flow">
+          <div class="flow-node">PA</div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-node">PA+Con(PA)</div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-node">...</div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-node">&#937;</div>
+        </div>
+
+        <div class="example-result">
+          <div class="result-label">INVARIANTS ACROSS ARITHMETIC EXTENSIONS</div>
+          <div class="result-content">
+            <strong>Provability changes:</strong> Con(PA) unprovable in PA, provable in PA+Con(PA)<br>
+            <strong>Preserved:</strong> All PA theorems, Fibonacci recurrence, L<sub>n</sub> = F<sub>n-1</sub> + F<sub>n+1</sub><br><br>
+            <strong>Universal Arithmetic Invariant:</strong> The recursive structure itself
+          </div>
+        </div>
+      </div>
+
+      <!-- Physics Example -->
+      <div class="example-card">
+        <div class="example-header">
+          <span class="example-badge" style="--badge-color: var(--evolution); --badge-bg: rgba(0, 255, 255, 0.1);">PHYSICS</span>
+          <span class="example-title">Newtonian &#8594; Relativistic &#8594; Quantum</span>
+        </div>
+
+        <div class="example-flow">
+          <div class="flow-node">Newton</div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-node">Special Rel.</div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-node">General Rel.</div>
+          <div class="flow-arrow">&#8594;</div>
+          <div class="flow-node">QFT</div>
+        </div>
+
+        <div class="example-result">
+          <div class="result-label">INVARIANTS ACROSS PHYSICS EXTENSIONS</div>
+          <div class="result-content">
+            <strong>Lost:</strong> Absolute time, absolute space, Galilean invariance<br>
+            <strong>Preserved:</strong> Conservation laws, causality, &#948;S=0 (action principle)<br><br>
+            <strong>Universal Physical Invariant:</strong> Symmetry &#8596; Conservation (Noether)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 10: Connection to MTR Principles -->
+    <section class="section" id="connections">
+      <div class="section-header">
+        <div class="section-number">10</div>
+        <h2 class="section-title">Connection to MTR Principles</h2>
+      </div>
+
+      <div class="mtr-connections">
+        <a href="vn-mtr-000-language-before-observers.html" class="connection-card" style="--card-color: var(--genesis);">
+          <div class="connection-header">
+            <div class="connection-icon">&#8857;</div>
+            <div class="connection-title">Step Zero</div>
+          </div>
+          <div class="connection-description">
+            Invariants depend on language &#8466;. Step Zero establishes that language exists
+            necessarily as closure of persistent distinction — the foundation for all invariants.
+          </div>
+        </a>
+
+        <a href="mtr-decision-tree.html#principle-1" class="connection-card" style="--card-color: var(--origin);">
+          <div class="connection-header">
+            <div class="connection-icon">&#9312;</div>
+            <div class="connection-title">Relative Origin</div>
+          </div>
+          <div class="connection-description">
+            While origins shift with frame extension, invariants remain fixed.
+            Origin(F) changes; I persists. This contrast defines the frame/invariant duality.
+          </div>
+        </a>
+
+        <a href="mtr-decision-tree.html#principle-2" class="connection-card" style="--card-color: var(--boundary);">
+          <div class="connection-header">
+            <div class="connection-icon">&#9313;</div>
+            <div class="connection-title">Closure Deficit</div>
+          </div>
+          <div class="connection-description">
+            The boundary &#8706;F marks where invariants break. Properties in &#8706;F are
+            F-local but not universal. Extension reveals which "laws" were merely frame artifacts.
+          </div>
+        </a>
+
+        <a href="mtr-decision-tree.html#principle-4" class="connection-card" style="--card-color: var(--evolution);">
+          <div class="connection-header">
+            <div class="connection-icon">&#9315;</div>
+            <div class="connection-title">Evolution</div>
+          </div>
+          <div class="connection-description">
+            Frame evolution F &#8594; F' shrinks Inv(F) to Inv(F'). The extraction process
+            is driven by boundary pressure — incompleteness forces extension.
+          </div>
+        </a>
+
+        <a href="mtr-decision-tree.html#principle-5" class="connection-card" style="--card-color: var(--attractor);">
+          <div class="connection-header">
+            <div class="connection-icon">&#9316;</div>
+            <div class="connection-title">Attractors</div>
+          </div>
+          <div class="connection-description">
+            The universal invariant I is the ultimate attractor — the fixed point that all
+            frame sequences converge toward. I = lim Inv(F<sub>n</sub>) as n &#8594; &#8734;.
+          </div>
+        </a>
+
+        <a href="vn-fibonacci-rg-flow.html" class="connection-card" style="--card-color: var(--phi-color);">
+          <div class="connection-header">
+            <div class="connection-icon">&#966;</div>
+            <div class="connection-title">Fibonacci RG Flow</div>
+          </div>
+          <div class="connection-description">
+            &#966;, L<sub>4</sub>=7, and F(2n)=F(n)&#215;L(n) are concrete invariants.
+            The RG flow preserves these relationships at every scale.
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="nav-footer">
+      <a href="vn-mtr-000-language-before-observers.html" class="nav-button">
+        <span>&#8592;</span> Step Zero: Language
+      </a>
+      <a href="mtr-decision-tree.html" class="nav-button primary">
+        <span>&#8857;</span> MTR Decision Tree
+      </a>
+      <a href="vn-fibonacci-rg-flow.html" class="nav-button">
+        Fibonacci RG Flow <span>&#8594;</span>
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">I = &#8745; Inv(F) | Laws closed, States open | R(R) = R</div>
+    <p>VN-MTR-003 | Frame Invariants | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // Interactive Invariant Extractor
+
+    const examples = {
+      geometry: {
+        frameF: {
+          label: 'Frame F (Euclidean)',
+          properties: [
+            { name: 'Parallel postulate', status: 'preserved' },
+            { name: 'Sum of angles = 180 deg', status: 'preserved' },
+            { name: 'Pythagorean theorem', status: 'preserved' },
+            { name: 'Distance metric', status: 'preserved' },
+            { name: 'Congruence', status: 'preserved' }
+          ]
+        },
+        frameFPrime: {
+          label: "Frame F' (Projective)",
+          properties: [
+            { name: 'Parallel postulate', status: 'transformed' },
+            { name: 'Sum of angles = 180 deg', status: 'transformed' },
+            { name: 'Cross-ratio', status: 'preserved' },
+            { name: 'Incidence relations', status: 'preserved' },
+            { name: 'Duality principle', status: 'new' }
+          ]
+        },
+        invariants: ['Incidence', 'Cross-ratio', 'Continuity']
+      },
+      arithmetic: {
+        frameF: {
+          label: 'Frame F (Peano Arithmetic)',
+          properties: [
+            { name: 'Induction axiom', status: 'preserved' },
+            { name: 'Successor function', status: 'preserved' },
+            { name: 'Fibonacci recurrence', status: 'preserved' },
+            { name: 'Con(PA)', status: 'preserved' },
+            { name: 'Proof of Con(PA)', status: 'preserved' }
+          ]
+        },
+        frameFPrime: {
+          label: "Frame F' (PA + Con(PA))",
+          properties: [
+            { name: 'Induction axiom', status: 'preserved' },
+            { name: 'Successor function', status: 'preserved' },
+            { name: 'Fibonacci recurrence', status: 'preserved' },
+            { name: 'Con(PA)', status: 'preserved' },
+            { name: 'Proof of Con(PA)', status: 'transformed' },
+            { name: 'Con(PA+Con(PA))', status: 'new' }
+          ]
+        },
+        invariants: ['Induction', 'Recursion', 'Fibonacci', 'L_n = F_{n-1} + F_{n+1}']
+      },
+      physics: {
+        frameF: {
+          label: 'Frame F (Newtonian)',
+          properties: [
+            { name: 'Absolute time', status: 'preserved' },
+            { name: 'Galilean invariance', status: 'preserved' },
+            { name: 'F = ma', status: 'preserved' },
+            { name: 'Energy conservation', status: 'preserved' },
+            { name: 'Momentum conservation', status: 'preserved' }
+          ]
+        },
+        frameFPrime: {
+          label: "Frame F' (Relativistic)",
+          properties: [
+            { name: 'Absolute time', status: 'transformed' },
+            { name: 'Galilean invariance', status: 'transformed' },
+            { name: 'F = dp/dt', status: 'preserved' },
+            { name: 'Energy conservation', status: 'preserved' },
+            { name: 'Momentum conservation', status: 'preserved' },
+            { name: 'Lorentz invariance', status: 'new' },
+            { name: 'c = const', status: 'new' }
+          ]
+        },
+        invariants: ['Conservation laws', 'Causality', 'Action principle', 'Noether theorem']
+      }
+    };
+
+    function renderFrame(frameData, elementId) {
+      const container = document.getElementById(elementId);
+      container.innerHTML = '';
+
+      frameData.properties.forEach(prop => {
+        const item = document.createElement('div');
+        item.className = `property-item ${prop.status}`;
+
+        let symbol = '';
+        if (prop.status === 'preserved') symbol = '\u2713 ';
+        else if (prop.status === 'transformed') symbol = '\u2717 ';
+        else if (prop.status === 'new') symbol = '+ ';
+
+        item.textContent = symbol + prop.name;
+        container.appendChild(item);
+      });
+
+      // Update label
+      const labelEl = container.previousElementSibling;
+      if (labelEl && labelEl.classList.contains('frame-label')) {
+        labelEl.textContent = frameData.label;
+      }
+    }
+
+    function renderInvariants(invariants) {
+      const container = document.getElementById('resultInvariants');
+      container.innerHTML = '';
+
+      invariants.forEach(inv => {
+        const badge = document.createElement('span');
+        badge.className = 'invariant-badge';
+        badge.textContent = inv;
+        container.appendChild(badge);
+      });
+    }
+
+    function showGeometryExample() {
+      const ex = examples.geometry;
+      renderFrame(ex.frameF, 'frameF');
+      renderFrame(ex.frameFPrime, 'frameFPrime');
+      renderInvariants(ex.invariants);
+    }
+
+    function showArithmeticExample() {
+      const ex = examples.arithmetic;
+      renderFrame(ex.frameF, 'frameF');
+      renderFrame(ex.frameFPrime, 'frameFPrime');
+      renderInvariants(ex.invariants);
+    }
+
+    function showPhysicsExample() {
+      const ex = examples.physics;
+      renderFrame(ex.frameF, 'frameF');
+      renderFrame(ex.frameFPrime, 'frameFPrime');
+      renderInvariants(ex.invariants);
+    }
+
+    // Initialize with geometry example
+    showGeometryExample();
+  </script>
+
+</body>
+</html>
