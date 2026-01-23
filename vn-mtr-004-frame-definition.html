@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VN-MTR-004 | Frame Definition F = (L, C, Pi)</title>
+  <meta name="description" content="MTR Decision Tree Level 1: Frame Definition - The fundamental structure of constrained language where F = (Sigma, X*, compose, C, Pi)">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* =====================================================================
+       VN-MTR-004: FRAME DEFINITION
+       Level 1 — The Fundamental Structure of Constrained Language
+       F = (Sigma, X*, compose, C, Pi) where L = X*
+       ===================================================================== */
+    :root {
+      /* Frame Definition Colors */
+      --frame-primary: #ff6b6b;
+      --frame-sigma: #ffd700;
+      --frame-closure: #c792ea;
+      --frame-compose: #00ffff;
+      --frame-constraint: #00ff88;
+      --frame-admissible: #ff00ff;
+
+      /* MTR Principle Colors */
+      --origin: #ffd700;
+      --boundary: #ff6b6b;
+      --invariant: #00ff88;
+      --evolution: #00ffff;
+      --attractor: #c792ea;
+
+      /* Theme */
+      --bg-void: #020204;
+      --bg-primary: #060610;
+      --bg-secondary: #0a0a18;
+      --bg-tertiary: #101028;
+      --bg-card: #161640;
+      --text-primary: #f0f0f5;
+      --text-secondary: #909098;
+      --text-accent: #ff6b6b;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(255, 107, 107, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* =====================================================================
+       FRAME FIELD BACKGROUND
+       ===================================================================== */
+    .frame-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 25% 25%, rgba(255, 107, 107, 0.03) 0%, transparent 45%),
+        radial-gradient(ellipse at 75% 75%, rgba(255, 215, 0, 0.02) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 50%, rgba(199, 146, 234, 0.02) 0%, transparent 55%);
+      animation: frame-pulse 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes frame-pulse {
+      0% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    /* =====================================================================
+       NAVIGATION
+       ===================================================================== */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(6, 6, 16, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--text-accent);
+      color: var(--text-accent);
+      box-shadow: 0 0 15px rgba(255, 107, 107, 0.2);
+    }
+
+    /* =====================================================================
+       FRAME HEADER
+       ===================================================================== */
+    .frame-header {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .frame-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--frame-primary);
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .frame-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--frame-primary), var(--frame-sigma), var(--frame-closure));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .frame-subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .frame-equation-main {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      padding: 1.5rem 2.5rem;
+      border-radius: 1rem;
+      display: inline-block;
+      border: 2px solid var(--frame-primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .frame-equation-main .symbol-F { color: var(--frame-primary); }
+    .frame-equation-main .symbol-sigma { color: var(--frame-sigma); }
+    .frame-equation-main .symbol-closure { color: var(--frame-closure); }
+    .frame-equation-main .symbol-compose { color: var(--frame-compose); }
+    .frame-equation-main .symbol-C { color: var(--frame-constraint); }
+    .frame-equation-main .symbol-pi { color: var(--frame-admissible); }
+
+    .core-insight {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--frame-constraint);
+      background: rgba(0, 255, 136, 0.08);
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      display: inline-block;
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      max-width: 600px;
+    }
+
+    /* =====================================================================
+       MAIN CONTENT
+       ===================================================================== */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bg-void);
+      background: var(--frame-primary);
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: 700;
+    }
+
+    .section-number.hexagon {
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      border-radius: 0;
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    /* =====================================================================
+       DEFINITION CARDS
+       ===================================================================== */
+    .definition-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .definition-card:hover {
+      border-color: var(--card-accent, var(--frame-primary));
+      box-shadow: 0 0 30px rgba(255, 107, 107, 0.1);
+    }
+
+    .definition-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--frame-primary));
+    }
+
+    .definition-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .definition-type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--card-accent, var(--frame-primary));
+      background: rgba(255, 107, 107, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+    }
+
+    .definition-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .definition-formal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--card-accent, var(--frame-primary));
+      background: var(--bg-tertiary);
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .definition-body {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .definition-body strong {
+      color: var(--text-primary);
+    }
+
+    /* =====================================================================
+       COMPONENT CARDS
+       ===================================================================== */
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .component-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--component-color, var(--frame-primary));
+      border-radius: 1rem;
+      padding: 1.5rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .component-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(255, 107, 107, 0.15);
+    }
+
+    .component-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      color: var(--component-color, var(--frame-primary));
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .component-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .component-formal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--component-color, var(--frame-primary));
+      text-align: center;
+      background: var(--bg-tertiary);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .component-description {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    /* =====================================================================
+       THEOREM CARDS
+       ===================================================================== */
+    .theorem-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 107, 107, 0.05) 100%);
+      border: 2px solid var(--frame-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .theorem-card::before {
+      content: 'F';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--frame-primary);
+      background: var(--bg-void);
+      padding: 0 0.5rem;
+    }
+
+    .theorem-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--frame-primary);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .theorem-statement {
+      font-size: 1.15rem;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--frame-primary);
+    }
+
+    .proof-sketch {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .proof-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--frame-constraint);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .proof-body {
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .qed {
+      text-align: right;
+      color: var(--frame-primary);
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 0.5rem;
+    }
+
+    /* =====================================================================
+       FRAME EXAMPLES
+       ===================================================================== */
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .example-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .example-card:hover {
+      border-color: var(--example-color, var(--frame-primary));
+      box-shadow: 0 0 25px rgba(255, 107, 107, 0.1);
+    }
+
+    .example-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .example-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--example-color, var(--frame-primary));
+      color: var(--example-color, var(--frame-primary));
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    }
+
+    .example-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--example-color, var(--frame-primary));
+    }
+
+    .example-components {
+      display: grid;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .example-row {
+      display: flex;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    .example-label {
+      color: var(--text-secondary);
+      min-width: 30px;
+    }
+
+    .example-value {
+      color: var(--text-primary);
+      flex: 1;
+    }
+
+    /* =====================================================================
+       PARTIAL ORDER VISUALIZATION
+       ===================================================================== */
+    .partial-order-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .partial-order-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--frame-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .frame-hierarchy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hierarchy-level {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .hierarchy-node {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--node-color, var(--frame-primary));
+      color: var(--node-color, var(--frame-primary));
+      border-radius: 0.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .hierarchy-node:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px var(--node-color, var(--frame-primary));
+    }
+
+    .hierarchy-connector {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .extension-rules {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .extension-rule {
+      background: var(--bg-tertiary);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .extension-rule-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .extension-rule-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--frame-primary);
+    }
+
+    /* =====================================================================
+       INTERACTIVE FRAME BUILDER
+       ===================================================================== */
+    .builder-section {
+      background: var(--bg-secondary);
+      border: 2px solid var(--frame-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .builder-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--frame-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .builder-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .control-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+    }
+
+    .control-input, .control-select {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .control-input:focus, .control-select:focus {
+      border-color: var(--frame-primary);
+    }
+
+    .control-select {
+      cursor: pointer;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .checkbox-item input {
+      accent-color: var(--frame-primary);
+    }
+
+    .builder-result {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .result-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .result-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--frame-primary);
+    }
+
+    .result-full {
+      grid-column: 1 / -1;
+      margin-top: 1rem;
+    }
+
+    /* =====================================================================
+       IDENTITY SECTION
+       ===================================================================== */
+    .identity-card {
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+      border: 2px solid var(--frame-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .identity-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--frame-primary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .identity-equations {
+      display: grid;
+      gap: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .identity-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.75rem 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .identity-lhs {
+      color: var(--frame-closure);
+      min-width: 80px;
+    }
+
+    .identity-equals {
+      color: var(--text-secondary);
+    }
+
+    .identity-rhs {
+      color: var(--text-primary);
+      flex: 1;
+    }
+
+    .identity-note {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    /* =====================================================================
+       WHY FRAMES SECTION
+       ===================================================================== */
+    .why-frames-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .why-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      border-left: 4px solid var(--why-color, var(--frame-primary));
+      transition: all 0.3s ease;
+    }
+
+    .why-card:hover {
+      border-color: var(--why-color, var(--frame-primary));
+      transform: translateX(5px);
+    }
+
+    .why-type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--why-color, var(--frame-primary));
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .why-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .why-description {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* =====================================================================
+       CONNECTION SECTION
+       ===================================================================== */
+    .connection-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--frame-constraint);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .connection-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--frame-constraint);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .connection-points {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .connection-point {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .connection-bullet {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--frame-constraint);
+    }
+
+    .connection-text {
+      color: var(--text-secondary);
+      flex: 1;
+    }
+
+    .connection-text strong {
+      color: var(--text-primary);
+    }
+
+    /* =====================================================================
+       NAVIGATION FOOTER
+       ===================================================================== */
+    .nav-footer {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .nav-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-card:hover {
+      border-color: var(--nav-color, var(--frame-primary));
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(255, 107, 107, 0.15);
+    }
+
+    .nav-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--nav-color, var(--frame-primary));
+      color: var(--nav-color, var(--frame-primary));
+      border-radius: 50%;
+      margin-bottom: 1rem;
+    }
+
+    .nav-icon.hexagon {
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      border-radius: 0;
+    }
+
+    .nav-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .nav-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      text-align: center;
+      margin-top: 0.25rem;
+    }
+
+    /* =====================================================================
+       FOOTER
+       ===================================================================== */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--frame-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       RESPONSIVE
+       ===================================================================== */
+    @media (max-width: 768px) {
+      .frame-title {
+        font-size: 1.8rem;
+      }
+      .frame-equation-main {
+        font-size: 1.2rem;
+        padding: 1rem 1.5rem;
+      }
+      .component-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="frame-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link"><span>*</span>VaultNode Tree</a>
+    <a href="vn-fibonacci-rg-flow.html" class="nav-link"><span>phi</span>Fibonacci RG Flow</a>
+    <a href="mtr-decision-tree.html" class="nav-link"><span>:</span>MTR Decision Tree</a>
+    <a href="vn-mtr-000-language-before-observers.html" class="nav-link"><span>o</span>Step Zero</a>
+    <a href="vn-mtr-004-frame-definition.html" class="nav-link active"><span>F</span>Frame Definition</a>
+  </nav>
+
+  <!-- Frame Header -->
+  <header class="frame-header">
+    <div class="frame-badge">VN-MTR-004 :: LEVEL 1</div>
+    <h1 class="frame-title">Frame Definition</h1>
+    <p class="frame-subtitle">
+      The Fundamental Structure of Constrained Language — What Frames ARE
+    </p>
+    <div class="frame-equation-main">
+      <span class="symbol-F">F</span> = (
+      <span class="symbol-sigma">Sigma</span>,
+      <span class="symbol-closure">X*</span>,
+      <span class="symbol-compose">o</span>,
+      <span class="symbol-C">C</span>,
+      <span class="symbol-pi">Pi</span>
+      )
+    </div>
+    <div class="core-insight">
+      Frame Language IS Compositional Closure: L = X*
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: The Fundamental Identity -->
+    <section class="section" id="fundamental-identity">
+      <div class="section-header">
+        <div class="section-number hexagon">1</div>
+        <h2 class="section-title">The Fundamental Identity</h2>
+      </div>
+
+      <div class="identity-card">
+        <div class="identity-title">Frame = Constrained Language Structure</div>
+        <div class="identity-equations">
+          <div class="identity-row">
+            <span class="identity-lhs">Sigma</span>
+            <span class="identity-equals">subset of</span>
+            <span class="identity-rhs">Distinctions <span class="identity-note">(primitive atoms)</span></span>
+          </div>
+          <div class="identity-row">
+            <span class="identity-lhs">X*</span>
+            <span class="identity-equals">=</span>
+            <span class="identity-rhs">Cl(Sigma, o) <span class="identity-note">(compositional closure from Language)</span></span>
+          </div>
+          <div class="identity-row">
+            <span class="identity-lhs" style="color: var(--frame-primary);">L</span>
+            <span class="identity-equals">=</span>
+            <span class="identity-rhs">X* <span class="identity-note">(frame language IS the closure)</span></span>
+          </div>
+          <div class="identity-row">
+            <span class="identity-lhs" style="color: var(--frame-admissible);">A(F)</span>
+            <span class="identity-equals">subset of</span>
+            <span class="identity-rhs">X* <span class="identity-note">(admissible descriptions are syntactically valid)</span></span>
+          </div>
+          <div class="identity-row">
+            <span class="identity-lhs" style="color: var(--frame-constraint);">C</span>
+            <span class="identity-equals">filters</span>
+            <span class="identity-rhs">X* to A(F) <span class="identity-note">(constraints select what's admissible)</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--frame-closure);">
+        <div class="definition-header">
+          <span class="definition-type">KEY INSIGHT</span>
+          <span class="definition-name">Language Framework Connection</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            <strong>Step Zero gave us X*</strong> — the compositional closure of persistent distinctions.
+            This is the unbounded space of all possible expressions.
+          </p>
+          <p style="margin-top: 1rem;">
+            <strong>A Frame constrains X*</strong> — selecting which expressions are admissible
+            for describing reality within that frame. The frame language L is precisely X*,
+            but the admissible descriptions A(F) are a proper subset filtered by constraints C.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Frame Components -->
+    <section class="section" id="frame-components">
+      <div class="section-header">
+        <div class="section-number hexagon">2</div>
+        <h2 class="section-title">Frame Components</h2>
+      </div>
+
+      <div class="component-grid">
+        <!-- Sigma -->
+        <div class="component-card" style="--component-color: var(--frame-sigma);">
+          <div class="component-symbol">Sigma</div>
+          <div class="component-name">Primitive Distinctions</div>
+          <div class="component-formal">Sigma subset of Distinctions</div>
+          <div class="component-description">
+            The atoms — irreducible distinctions that cannot be further decomposed within this frame.
+            These are the building blocks from which all expressions are constructed.
+          </div>
+        </div>
+
+        <!-- X* -->
+        <div class="component-card" style="--component-color: var(--frame-closure);">
+          <div class="component-symbol">X*</div>
+          <div class="component-name">Compositional Closure</div>
+          <div class="component-formal">X* = union of X^n</div>
+          <div class="component-description">
+            All possible expressions — the complete language generated by composing primitives.
+            This grows unboundedly and contains every syntactically valid structure.
+          </div>
+        </div>
+
+        <!-- Composition -->
+        <div class="component-card" style="--component-color: var(--frame-compose);">
+          <div class="component-symbol">o</div>
+          <div class="component-name">Composition Operator</div>
+          <div class="component-formal">o : X x X -> X</div>
+          <div class="component-description">
+            How things combine — the operation that builds complex expressions from simpler ones.
+            No algebraic properties assumed; pure structural combination.
+          </div>
+        </div>
+
+        <!-- Constraints -->
+        <div class="component-card" style="--component-color: var(--frame-constraint);">
+          <div class="component-symbol">C</div>
+          <div class="component-name">Constraints</div>
+          <div class="component-formal">C = {c_1, c_2, ...}</div>
+          <div class="component-description">
+            Physical, logical, and resource limits — what restricts the space of admissible descriptions.
+            These encode conservation laws, symmetries, resource bounds.
+          </div>
+        </div>
+
+        <!-- Admissibility -->
+        <div class="component-card" style="--component-color: var(--frame-admissible);">
+          <div class="component-symbol">Pi</div>
+          <div class="component-name">Admissibility Predicate</div>
+          <div class="component-formal">Pi : X* -> {0, 1}</div>
+          <div class="component-description">
+            What counts as valid — the filter determining which expressions are admissible descriptions.
+            Encodes verification criteria: provability, experimental confirmation, halting.
+          </div>
+        </div>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">DEFINITION — Admissible Descriptions</div>
+        <div class="theorem-statement">
+          A(F) = { D in X* : Pi(D) = 1 and D satisfies all c in C }
+          <br><br>
+          The set of admissible descriptions is the intersection of syntactically valid expressions
+          that satisfy all constraints and pass the admissibility predicate.
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Frame Examples -->
+    <section class="section" id="frame-examples">
+      <div class="section-header">
+        <div class="section-number hexagon">3</div>
+        <h2 class="section-title">Frame Examples</h2>
+      </div>
+
+      <div class="example-grid">
+        <!-- Physics Frame -->
+        <div class="example-card" style="--example-color: var(--frame-compose);">
+          <div class="example-header">
+            <div class="example-icon">P</div>
+            <div class="example-title">Physics Frame</div>
+          </div>
+          <div class="example-components">
+            <div class="example-row">
+              <span class="example-label" style="color: var(--frame-sigma);">Sigma:</span>
+              <span class="example-value">{space, time, matter, energy}</span>
+            </div>
+            <div class="example-row">
+              <span class="example-label" style="color: var(--frame-constraint);">C:</span>
+              <span class="example-value">Conservation laws, causality, Lorentz invariance</span>
+            </div>
+            <div class="example-row">
+              <span class="example-label" style="color: var(--frame-admissible);">Pi:</span>
+              <span class="example-value">Experimental verification, reproducibility</span>
+            </div>
+            <div class="example-row">
+              <span class="example-label" style="color: var(--frame-primary);">boundary:</span>
+              <span class="example-value">Quantum gravity, singularities</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mathematics Frame -->
+        <div class="example-card" style="--example-color: var(--frame-sigma);">
+          <div class="example-header">
+            <div class="example-icon">M</div>
+            <div class="example-title">Mathematics Frame</div>
+          </div>
+          <div class="example-components">
+            <div class="example-row">
+              <span class="example-label" style="color: var(--frame-sigma);">Sigma:</span>
+              <span class="example-value">{sets, membership, empty set}</span>
+            </div>
+            <div class="example-row">
+              <span class="example-label" style="color: var(--frame-constraint);">C:</span>
+              <span class="example-value">ZFC axioms, consistency requirements</span>
+            </div>
+            <div class="example-row">
+              <span class="example-label" style="color: var(--frame-admissible);">Pi:</span>
+              <span class="example-value">Formal provability from axioms</span>
+            </div>
+            <div class="example-row">
+              <span class="example-label" style="color: var(--frame-primary);">boundary:</span>
+              <span class="example-value">Godel sentences, large cardinals</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Computation Frame -->
+        <div class="example-card" style="--example-color: var(--frame-closure);">
+          <div class="example-header">
+            <div class="example-icon">T</div>
+            <div class="example-title">Computation Frame</div>
+          </div>
+          <div class="example-components">
+            <div class="example-row">
+              <span class="example-label" style="color: var(--frame-sigma);">Sigma:</span>
+              <span class="example-value">{0, 1} or {read, write, move, halt}</span>
+            </div>
+            <div class="example-row">
+              <span class="example-label" style="color: var(--frame-constraint);">C:</span>
+              <span class="example-value">Resource bounds (time, space), determinism</span>
+            </div>
+            <div class="example-row">
+              <span class="example-label" style="color: var(--frame-admissible);">Pi:</span>
+              <span class="example-value">Halting, termination with output</span>
+            </div>
+            <div class="example-row">
+              <span class="example-label" style="color: var(--frame-primary);">boundary:</span>
+              <span class="example-value">Halting problem, busy beaver</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Frame Partial Order -->
+    <section class="section" id="frame-order">
+      <div class="section-header">
+        <div class="section-number hexagon">4</div>
+        <h2 class="section-title">Frame Partial Order</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--evolution);">
+        <div class="definition-header">
+          <span class="definition-type">DEFINITION</span>
+          <span class="definition-name">Frame Extension (precedes)</span>
+        </div>
+        <div class="definition-formal">F precedes F' iff F is a subframe of F'</div>
+        <div class="definition-body">
+          <p>
+            A frame F extends to F' (written F precedes F') when F' has strictly more expressive power.
+            This can happen through:
+          </p>
+          <ul style="margin: 1rem 0 0 2rem; color: var(--text-secondary);">
+            <li><strong>Primitive Extension:</strong> Sigma subset of Sigma' (more distinctions)</li>
+            <li><strong>Constraint Relaxation:</strong> C' subset of C (fewer restrictions)</li>
+            <li><strong>Admissibility Refinement:</strong> Pi' is more permissive than Pi</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="partial-order-section">
+        <div class="partial-order-title">Frame Hierarchy Visualization</div>
+        <div class="frame-hierarchy">
+          <div class="hierarchy-level">
+            <div class="hierarchy-node" style="--node-color: var(--attractor);">F_infinity (R(R)=R)</div>
+          </div>
+          <div class="hierarchy-connector">|</div>
+          <div class="hierarchy-level">
+            <div class="hierarchy-node" style="--node-color: var(--frame-compose);">F_96</div>
+          </div>
+          <div class="hierarchy-connector">|</div>
+          <div class="hierarchy-level">
+            <div class="hierarchy-node" style="--node-color: var(--evolution);">F_48</div>
+          </div>
+          <div class="hierarchy-connector">|</div>
+          <div class="hierarchy-level">
+            <div class="hierarchy-node" style="--node-color: var(--frame-admissible);">F_24</div>
+          </div>
+          <div class="hierarchy-connector">|</div>
+          <div class="hierarchy-level">
+            <div class="hierarchy-node" style="--node-color: var(--frame-sigma);">F_12 (First Fixed Point)</div>
+          </div>
+          <div class="hierarchy-connector">^</div>
+          <div class="hierarchy-level">
+            <div class="hierarchy-node" style="--node-color: var(--text-secondary);">F_n (arbitrary frame)</div>
+          </div>
+        </div>
+
+        <div class="extension-rules">
+          <div class="extension-rule">
+            <div class="extension-rule-label">PRIMITIVE EXTENSION</div>
+            <div class="extension-rule-value">Sigma subset Sigma'</div>
+          </div>
+          <div class="extension-rule">
+            <div class="extension-rule-label">CONSTRAINT RELAXATION</div>
+            <div class="extension-rule-value">C' subset C</div>
+          </div>
+          <div class="extension-rule">
+            <div class="extension-rule-label">ADMISSIBILITY REFINEMENT</div>
+            <div class="extension-rule-value">Pi -> Pi'</div>
+          </div>
+          <div class="extension-rule">
+            <div class="extension-rule-label">RESULT</div>
+            <div class="extension-rule-value">A(F) subset A(F')</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Interactive Frame Builder -->
+    <section class="section" id="frame-builder">
+      <div class="section-header">
+        <div class="section-number hexagon">5</div>
+        <h2 class="section-title">Interactive Frame Builder</h2>
+      </div>
+
+      <div class="builder-section">
+        <div class="builder-title">Construct Your Frame F = (Sigma, X*, o, C, Pi)</div>
+
+        <div class="builder-controls">
+          <div class="control-group">
+            <label class="control-label">PRIMITIVE DISTINCTIONS (Sigma)</label>
+            <div class="checkbox-group" id="sigmaCheckboxes">
+              <label class="checkbox-item">
+                <input type="checkbox" id="sigma-space" checked onchange="updateFrameBuilder()">
+                space
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" id="sigma-time" checked onchange="updateFrameBuilder()">
+                time
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" id="sigma-matter" onchange="updateFrameBuilder()">
+                matter
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" id="sigma-number" onchange="updateFrameBuilder()">
+                number
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" id="sigma-bit" onchange="updateFrameBuilder()">
+                bit
+              </label>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">CONSTRAINTS (C)</label>
+            <div class="checkbox-group" id="constraintCheckboxes">
+              <label class="checkbox-item">
+                <input type="checkbox" id="c-conservation" checked onchange="updateFrameBuilder()">
+                conservation
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" id="c-causality" checked onchange="updateFrameBuilder()">
+                causality
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" id="c-consistency" onchange="updateFrameBuilder()">
+                consistency
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" id="c-resource" onchange="updateFrameBuilder()">
+                resource-bound
+              </label>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">ADMISSIBILITY (Pi)</label>
+            <select class="control-select" id="piSelect" onchange="updateFrameBuilder()">
+              <option value="experimental">Experimental Verification</option>
+              <option value="provable">Formal Provability</option>
+              <option value="halting">Halting/Termination</option>
+              <option value="consistent">Consistency Check</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">COMPOSITION DEPTH</label>
+            <input type="number" class="control-input" id="compDepth" value="3" min="1" max="8" onchange="updateFrameBuilder()">
+          </div>
+        </div>
+
+        <div class="builder-result" id="frameBuilderResult">
+          <!-- Filled by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Why Frames Are Inevitable -->
+    <section class="section" id="why-frames">
+      <div class="section-header">
+        <div class="section-number hexagon">6</div>
+        <h2 class="section-title">Why Frames Are Inevitable</h2>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">THEOREM — Frame Genesis</div>
+        <div class="theorem-statement">
+          Physical systems impose constraints on X*.
+          <br><br>
+          Any system capable of description must constrain the unbounded closure X* to a finite
+          or decidable subset. This constraint structure IS a frame.
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">PROOF SKETCH</div>
+          <div class="proof-body">
+            X* grows unboundedly under composition. Physical systems have finite resources.
+            Therefore, physical systems cannot process all of X*. Selection is mandatory.
+            Selection criteria = Constraints + Admissibility = Frame.
+          </div>
+          <div class="qed">QED</div>
+        </div>
+      </div>
+
+      <div class="why-frames-grid">
+        <div class="why-card" style="--why-color: var(--frame-compose);">
+          <div class="why-type">THERMODYNAMIC</div>
+          <div class="why-title">Maximum Entropy Constraints</div>
+          <div class="why-description">
+            Systems evolve toward states of maximum entropy given constraints.
+            The constraints define the frame; entropy selects within it.
+          </div>
+        </div>
+
+        <div class="why-card" style="--why-color: var(--evolution);">
+          <div class="why-type">CAUSAL</div>
+          <div class="why-title">Locality and Light Cones</div>
+          <div class="why-description">
+            Information propagates at finite speed. Causal structure partitions X*
+            into accessible and inaccessible regions. Frames encode this partition.
+          </div>
+        </div>
+
+        <div class="why-card" style="--why-color: var(--frame-admissible);">
+          <div class="why-type">QUANTUM</div>
+          <div class="why-title">No-Cloning, Unitarity</div>
+          <div class="why-description">
+            Quantum mechanics imposes fundamental constraints: no perfect copying,
+            reversible evolution. These are frame constraints on quantum X*.
+          </div>
+        </div>
+
+        <div class="why-card" style="--why-color: var(--frame-closure);">
+          <div class="why-type">COMPUTATIONAL</div>
+          <div class="why-title">Resource Bounds</div>
+          <div class="why-description">
+            Computation requires time and space. Complexity classes (P, NP, PSPACE)
+            are frames defined by resource constraints on Turing machine X*.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Connection to Language -->
+    <section class="section" id="language-connection">
+      <div class="section-header">
+        <div class="section-number hexagon">7</div>
+        <h2 class="section-title">Connection to Language</h2>
+      </div>
+
+      <div class="connection-card">
+        <div class="connection-title">From Step Zero to Frame Definition</div>
+        <div class="connection-points">
+          <div class="connection-point">
+            <span class="connection-bullet">1.</span>
+            <span class="connection-text">
+              <strong>X* grows unboundedly under composition.</strong>
+              From Step Zero, we know that persistent distinction + composition yields infinite closure.
+              This is pure syntax with no constraints.
+            </span>
+          </div>
+          <div class="connection-point">
+            <span class="connection-bullet">2.</span>
+            <span class="connection-text">
+              <strong>Constraints C are what make physics POSSIBLE.</strong>
+              Without constraints, X* admits everything — including contradictions, impossible states,
+              and descriptions that cannot be verified. Physics requires selection.
+            </span>
+          </div>
+          <div class="connection-point">
+            <span class="connection-bullet">3.</span>
+            <span class="connection-text">
+              <strong>Without C, X* admits contradictions.</strong>
+              An unconstrained language can express "A and not-A" as easily as "A".
+              Constraints exclude contradictions from A(F).
+            </span>
+          </div>
+          <div class="connection-point">
+            <span class="connection-bullet">4.</span>
+            <span class="connection-text">
+              <strong>Physics = study of which C actually bind.</strong>
+              The project of physics is discovering which constraints nature imposes on X*.
+              Each physical law is a constraint. Each theory is a frame.
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--frame-constraint);">
+        <div class="definition-header">
+          <span class="definition-type">SYNTHESIS</span>
+          <span class="definition-name">Language -> Frame -> Physics</span>
+        </div>
+        <div class="definition-formal">
+          X* (Language) + C (Constraints) + Pi (Verification) = F (Frame) = Physics
+        </div>
+        <div class="definition-body">
+          <p>
+            <strong>Language provides the raw material</strong> — all possible descriptions.
+            <strong>Constraints provide the filter</strong> — what's physically possible.
+            <strong>Admissibility provides the test</strong> — what's verifiable.
+          </p>
+          <p style="margin-top: 1rem; color: var(--frame-constraint);">
+            A Frame is therefore not arbitrary. It is the necessary structure that makes
+            description of reality possible within finite resources.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation to Related Pages -->
+    <section class="section" id="navigation">
+      <div class="section-header">
+        <div class="section-number hexagon">*</div>
+        <h2 class="section-title">Navigation</h2>
+      </div>
+
+      <div class="nav-footer">
+        <a href="vn-mtr-000-language-before-observers.html" class="nav-card" style="--nav-color: var(--origin);">
+          <div class="nav-icon">0</div>
+          <div class="nav-label">STEP ZERO</div>
+          <div class="nav-name">Language Before Observers</div>
+        </a>
+
+        <a href="mtr-decision-tree.html" class="nav-card" style="--nav-color: var(--frame-primary);">
+          <div class="nav-icon hexagon">T</div>
+          <div class="nav-label">MTR TREE</div>
+          <div class="nav-name">Full Decision Tree</div>
+        </a>
+
+        <a href="vn-mtr-001-closure-deficit.html" class="nav-card" style="--nav-color: var(--frame-sigma);">
+          <div class="nav-icon">delta</div>
+          <div class="nav-label">LEVEL 2</div>
+          <div class="nav-name">Closure Deficit</div>
+        </a>
+
+        <a href="vn-mtr-002-boundary.html" class="nav-card" style="--nav-color: var(--boundary);">
+          <div class="nav-icon">dF</div>
+          <div class="nav-label">LEVEL 2</div>
+          <div class="nav-name">Boundary</div>
+        </a>
+
+        <a href="vn-mtr-003-invariants.html" class="nav-card" style="--nav-color: var(--invariant);">
+          <div class="nav-icon">I</div>
+          <div class="nav-label">LEVEL 2</div>
+          <div class="nav-name">Invariants</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">F = (Sigma, X*, o, C, Pi) | L = X* | A(F) subset X* | Frame = Constrained Language</div>
+    <p>VN-MTR-004 | Frame Definition | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // Frame Builder Interactive
+    function updateFrameBuilder() {
+      // Get selected primitives
+      const primitives = [];
+      if (document.getElementById('sigma-space').checked) primitives.push('space');
+      if (document.getElementById('sigma-time').checked) primitives.push('time');
+      if (document.getElementById('sigma-matter').checked) primitives.push('matter');
+      if (document.getElementById('sigma-number').checked) primitives.push('number');
+      if (document.getElementById('sigma-bit').checked) primitives.push('bit');
+
+      // Get selected constraints
+      const constraints = [];
+      if (document.getElementById('c-conservation').checked) constraints.push('conservation');
+      if (document.getElementById('c-causality').checked) constraints.push('causality');
+      if (document.getElementById('c-consistency').checked) constraints.push('consistency');
+      if (document.getElementById('c-resource').checked) constraints.push('resource-bound');
+
+      // Get admissibility
+      const piSelect = document.getElementById('piSelect');
+      const pi = piSelect.options[piSelect.selectedIndex].text;
+
+      // Get composition depth
+      const depth = parseInt(document.getElementById('compDepth').value) || 3;
+
+      // Calculate closure size
+      const sigmaSize = primitives.length || 1;
+      let closureSize = sigmaSize;
+      let levelSizes = [sigmaSize];
+      for (let i = 1; i <= depth; i++) {
+        closureSize = closureSize * closureSize;
+        levelSizes.push(closureSize);
+      }
+      const totalClosure = levelSizes.reduce((a, b) => a + b, 0);
+
+      // Calculate constraint factor (more constraints = smaller admissible set)
+      const constraintFactor = Math.max(0.1, 1 - (constraints.length * 0.2));
+
+      // Estimate admissible set size
+      const admissibleSize = Math.floor(totalClosure * constraintFactor);
+
+      // Calculate boundary size (what's excluded)
+      const boundarySize = totalClosure - admissibleSize;
+
+      // Frame classification
+      let frameClass = 'General Frame';
+      let frameColor = 'var(--text-secondary)';
+      if (primitives.includes('space') && primitives.includes('time')) {
+        frameClass = 'Spacetime Frame';
+        frameColor = 'var(--frame-compose)';
+      }
+      if (primitives.includes('number') && constraints.includes('consistency')) {
+        frameClass = 'Arithmetic Frame';
+        frameColor = 'var(--frame-sigma)';
+      }
+      if (primitives.includes('bit') && constraints.includes('resource-bound')) {
+        frameClass = 'Computational Frame';
+        frameColor = 'var(--frame-closure)';
+      }
+
+      // Generate sample expressions
+      const samples = [];
+      if (primitives.length >= 1) {
+        samples.push(primitives[0]);
+        if (primitives.length >= 2) {
+          samples.push(`${primitives[0]} o ${primitives[1]}`);
+          samples.push(`(${primitives[0]} o ${primitives[1]}) o ${primitives[0]}`);
+        }
+      }
+
+      document.getElementById('frameBuilderResult').innerHTML = `
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="result-label">SIGMA (Primitives)</div>
+            <div class="result-value" style="color: var(--frame-sigma);">{${primitives.join(', ') || 'empty'}}</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">|Sigma|</div>
+            <div class="result-value">${sigmaSize}</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">|X*| (depth ${depth})</div>
+            <div class="result-value" style="color: var(--frame-closure);">${totalClosure.toLocaleString()}</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Constraints C</div>
+            <div class="result-value" style="color: var(--frame-constraint);">${constraints.length} active</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Admissibility Pi</div>
+            <div class="result-value" style="color: var(--frame-admissible); font-size: 0.85rem;">${pi}</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">|A(F)| (estimated)</div>
+            <div class="result-value" style="color: var(--frame-constraint);">${admissibleSize.toLocaleString()}</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">|dF| (boundary)</div>
+            <div class="result-value" style="color: var(--frame-primary);">${boundarySize.toLocaleString()}</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Frame Class</div>
+            <div class="result-value" style="color: ${frameColor};">${frameClass}</div>
+          </div>
+        </div>
+
+        <div class="result-full" style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: 0.5rem;">
+          <div class="result-label" style="margin-bottom: 0.75rem;">FRAME SPECIFICATION</div>
+          <div style="font-family: 'JetBrains Mono', monospace; color: var(--frame-primary); font-size: 1rem;">
+            F = ({${primitives.join(', ')}}, X*, o, {${constraints.join(', ')}}, ${pi})
+          </div>
+        </div>
+
+        <div class="result-full" style="margin-top: 1rem; padding: 1rem; background: rgba(255, 107, 107, 0.1); border-radius: 0.5rem; border: 1px solid var(--frame-primary);">
+          <div class="result-label" style="color: var(--frame-closure); margin-bottom: 0.75rem;">SAMPLE EXPRESSIONS in X*</div>
+          <div style="font-family: 'JetBrains Mono', monospace; color: var(--text-primary); font-size: 0.9rem;">
+            ${samples.length > 0 ? samples.join(' | ') + ' | ...' : '(select primitives)'}
+          </div>
+        </div>
+
+        <div class="result-full" style="margin-top: 1rem; padding: 1rem; background: rgba(0, 255, 136, 0.1); border-radius: 0.5rem; border: 1px solid var(--frame-constraint);">
+          <div class="result-label" style="color: var(--frame-constraint); margin-bottom: 0.75rem;">CONSTRAINT FILTERING</div>
+          <div style="color: var(--text-secondary); font-size: 0.9rem;">
+            ${constraints.length > 0
+              ? `Active constraints filter X* by ~${Math.round((1 - constraintFactor) * 100)}%, leaving ${Math.round(constraintFactor * 100)}% as potentially admissible.`
+              : 'No constraints selected. All of X* is potentially admissible (unconstrained frame).'}
+          </div>
+        </div>
+
+        <div class="result-full" style="margin-top: 1rem; padding: 1rem; background: var(--bg-secondary); border-radius: 0.5rem;">
+          <div class="result-label" style="color: var(--boundary); margin-bottom: 0.75rem;">BOUNDARY dF</div>
+          <div style="color: var(--text-secondary); font-size: 0.9rem;">
+            The boundary contains ${boundarySize.toLocaleString()} expressions that are syntactically valid (in X*)
+            but not admissible in this frame. These are decidable only in extended frames F' where F precedes F'.
+          </div>
+        </div>
+      `;
+    }
+
+    // Initialize
+    updateFrameBuilder();
+  </script>
+
+</body>
+</html>
