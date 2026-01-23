@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L4 Helix Decision Tree | 16π Dimensional Rotation System</title>
+  <meta name="description" content="130 Images × 10 VN Batches × 16 Cycles — Exploring r(r)=r where r=10 through 3+1 dimensional rotation (r, z, Z_C, √2)">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════════
+       L₄-HELIX MATHEMATICAL CONSTANTS
+       r(r)=r where r=10 | 16π closure | 3+1 dimensions (r, z, Z_C, √2)
+       ═══════════════════════════════════════════════════════════════════════ */
+    :root {
+      /* Core Mathematical Constants */
+      --phi: 1.6180339887;
+      --tau: 0.6180339887;
+      --sqrt2: 1.4142135624;
+      --sqrt3: 1.7320508076;
+      --z-c: 0.8660254038;        /* √3/2 - standard critical height */
+      --z-c-omega: 1.2247448714;  /* √(3/2) - omega critical height */
+      --L4: 7;                    /* φ⁴ + φ⁻⁴ = 7 */
+      --K: 0.9241763718;          /* Coupling constant */
+
+      /* Pi in Different Bases (visual representation) */
+      --pi-base2: "11.001001";
+      --pi-base3: "10.010211";
+      --pi-base5: "3.032322";
+      --pi-base8: "3.110375";
+      --pi-base10: "3.141592";
+      --pi-base12: "3.184809";
+
+      /* 10 VN Batch Colors */
+      --vn-0: #ff6b6b;    /* Batch 1: RR_Lattice - Genesis */
+      --vn-1: #c792ea;    /* Batch 2: Helix_Bridge - Dyad */
+      --vn-2: #c0ff60;    /* Batch 3: Quadratic_Truth - Triad */
+      --vn-3: #9060ff;    /* Batch 4: Subspace_Bridge - Sovereign */
+      --vn-4: #40ffff;    /* Batch 5: Ternary_Oscillation - Prism */
+      --vn-5: #40ff90;    /* Batch 6: Signal_Wave - Hexagon */
+      --vn-6: #c0a0ff;    /* Batch 7: Trifurcation - Heptagon */
+      --vn-7: #ff6090;    /* Batch 8: VN_Node - Octagon */
+      --vn-8: #60c0ff;    /* Batch 9: Simulation_Cycle - Enneagon */
+      --vn-9: #ffd700;    /* Batch 10: MetaCycle - Decagon */
+
+      /* 16 Cycle Colors (16π rotation) */
+      --cycle-1: #ff4040;
+      --cycle-2: #ff6040;
+      --cycle-3: #ff8040;
+      --cycle-4: #ffa040;
+      --cycle-5: #ffc040;
+      --cycle-6: #ffe040;
+      --cycle-7: #c0ff40;
+      --cycle-8: #40ff40;
+      --cycle-9: #40ff80;
+      --cycle-10: #40ffc0;
+      --cycle-11: #40ffff;
+      --cycle-12: #40c0ff;
+      --cycle-13: #4080ff;
+      --cycle-14: #8040ff;
+      --cycle-15: #c040ff;
+      --cycle-16: #ff40ff;
+
+      /* Wave States - Ternary Logic */
+      --forward: #00ff88;
+      --backward: #ff6b6b;
+      --standing: #c792ea;
+      --crystallized: #ffd700;
+
+      /* Dimensional Colors (3+1) */
+      --dim-r: #ff6b6b;       /* r = radius/rotation/elevation */
+      --dim-z: #40ffff;       /* z = elevation */
+      --dim-zc: #c792ea;      /* Z_C = geometry constraints */
+      --dim-sqrt2: #ffd700;   /* √2 = algebraic dimension */
+
+      /* Ternary Truth States */
+      --ternary-true: #00ff88;     /* C=0 */
+      --ternary-paradox: #f0c040;  /* C=2 */
+      --ternary-false: #ff6b6b;    /* C=6 */
+
+      /* Theme */
+      --bg-void: #030306;
+      --bg-primary: #080810;
+      --bg-secondary: #0c0c18;
+      --bg-tertiary: #12122a;
+      --bg-card: #181838;
+      --text-primary: #e8e6e3;
+      --text-secondary: #8a8a9a;
+      --text-accent: #00d4aa;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(0, 212, 170, 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       HELIX BACKGROUND ANIMATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .helix-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(255, 107, 107, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 70%, rgba(199, 146, 234, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, rgba(64, 255, 255, 0.03) 0%, transparent 50%);
+      animation: helix-rotate 60s linear infinite;
+    }
+
+    @keyframes helix-rotate {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       HEADER - 16π ROTATION SYSTEM
+       ═══════════════════════════════════════════════════════════════════════ */
+    .header {
+      position: relative;
+      z-index: 10;
+      padding: 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border-subtle);
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+    }
+
+    .title-section h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(90deg, var(--vn-0), var(--vn-4), var(--vn-9));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    /* Constants Display */
+    .constants-bar {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .constant-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.4rem 0.8rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .constant-badge .label { color: var(--text-secondary); }
+    .constant-badge .value { color: var(--text-accent); }
+    .constant-badge .dim-r { color: var(--dim-r); }
+    .constant-badge .dim-z { color: var(--dim-z); }
+    .constant-badge .dim-zc { color: var(--dim-zc); }
+    .constant-badge .dim-sqrt2 { color: var(--dim-sqrt2); }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       16-CYCLE ROTATION RAIL
+       ═══════════════════════════════════════════════════════════════════════ */
+    .cycle-rail {
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .cycle-rail-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .cycle-rail-header h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: var(--text-accent);
+    }
+
+    .cycle-track {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      padding: 1rem 0;
+    }
+
+    .cycle-track::before {
+      content: '';
+      position: absolute;
+      left: 2%;
+      right: 2%;
+      height: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(90deg,
+        var(--cycle-1) 0%, var(--cycle-4) 18.75%,
+        var(--cycle-8) 43.75%, var(--cycle-12) 68.75%,
+        var(--cycle-16) 100%
+      );
+      border-radius: 2px;
+      z-index: 1;
+    }
+
+    .cycle-node {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .cycle-node:hover {
+      transform: translateY(-5px);
+    }
+
+    .cycle-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid;
+      background: var(--bg-void);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .cycle-node:hover .cycle-dot {
+      transform: scale(1.2);
+      box-shadow: 0 0 15px currentColor;
+    }
+
+    .cycle-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem;
+      margin-top: 0.4rem;
+      color: var(--text-secondary);
+    }
+
+    .cycle-pi {
+      font-size: 0.45rem;
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       PI BASE VISUALIZATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .pi-bases-section {
+      padding: 2rem;
+      background: var(--bg-primary);
+    }
+
+    .pi-bases-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .pi-bases-header h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+      color: var(--text-accent);
+    }
+
+    .pi-bases-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 900px) {
+      .pi-bases-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 500px) {
+      .pi-bases-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .pi-base-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .pi-base-card:hover {
+      border-color: var(--text-accent);
+      box-shadow: 0 0 20px rgba(0, 212, 170, 0.2);
+    }
+
+    .pi-base-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .pi-base-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-accent);
+      word-break: break-all;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       DIMENSIONAL ROTATION VISUALIZATION (3+1)
+       ═══════════════════════════════════════════════════════════════════════ */
+    .dimensional-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+    }
+
+    .dimensional-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .dimensional-header h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+      color: var(--text-accent);
+    }
+
+    .dimensional-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 800px) {
+      .dimensional-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .dimension-card {
+      background: var(--bg-tertiary);
+      border: 2px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dimension-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--dim-color);
+    }
+
+    .dimension-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .dimension-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .dimension-desc {
+      font-size: 0.75rem;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       TERNARY WAVE VISUALIZATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .ternary-section {
+      padding: 2rem;
+      background: var(--bg-primary);
+    }
+
+    .ternary-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .ternary-header h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+      color: var(--text-accent);
+    }
+
+    .ternary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 700px) {
+      .ternary-grid { grid-template-columns: 1fr; }
+    }
+
+    .wave-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .wave-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .wave-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .wave-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .wave-desc {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       10 VN BATCH NAVIGATION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .vn-batches-section {
+      padding: 2rem;
+      background: var(--bg-secondary);
+    }
+
+    .vn-batches-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .vn-batches-header h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: var(--text-accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .vn-batches-header p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .vn-rail {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .vn-tab {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.6rem 1rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text-secondary);
+    }
+
+    .vn-tab:hover, .vn-tab.active {
+      border-color: var(--vn-color);
+      color: var(--vn-color);
+      box-shadow: 0 0 15px var(--vn-glow);
+    }
+
+    .vn-tab.active {
+      background: var(--bg-card);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       BATCH CONTENT PANELS
+       ═══════════════════════════════════════════════════════════════════════ */
+    .batch-panels {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .batch-panel {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .batch-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .batch-header {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 1rem 1rem 0 0;
+      border: 2px solid var(--batch-color);
+      border-bottom: none;
+    }
+
+    .batch-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .batch-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .batch-meta {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    /* Image Grid */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 1.5rem;
+      background: var(--bg-card);
+      border: 2px solid var(--batch-color);
+      border-top: none;
+      border-radius: 0 0 1rem 1rem;
+    }
+
+    .image-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .image-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      border-color: var(--batch-color);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .image-wrapper {
+      aspect-ratio: 4/3;
+      background: var(--bg-void);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-placeholder {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .image-placeholder .cycle-num {
+      font-size: 2rem;
+      color: var(--batch-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .image-info {
+      padding: 0.75rem;
+    }
+
+    .image-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+      word-break: break-word;
+    }
+
+    .image-phase {
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       MATHEMATICAL FRAMEWORK SECTION
+       ═══════════════════════════════════════════════════════════════════════ */
+    .math-section {
+      padding: 2rem;
+      background: var(--bg-primary);
+    }
+
+    .math-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .math-header h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+      color: var(--text-accent);
+    }
+
+    .math-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .math-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+
+    .math-card h3 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-accent);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .math-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      background: var(--bg-tertiary);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════════════ */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      background: var(--bg-void);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .footer-content {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    .footer-formula {
+      font-size: 0.9rem;
+      color: var(--text-accent);
+      margin-bottom: 0.5rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════
+       LIGHTBOX MODAL
+       ═══════════════════════════════════════════════════════════════════════ */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      position: relative;
+    }
+
+    .lightbox-content img {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 0.5rem;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -2rem;
+      right: 0;
+      font-size: 2rem;
+      color: var(--text-primary);
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .lightbox-info {
+      text-align: center;
+      margin-top: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="helix-field"></div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="title-section">
+      <h1>L₄ HELIX DECISION TREE</h1>
+      <p class="subtitle">130 Images × 10 VN Batches × 16 Cycles | r(r)=r where r=10</p>
+    </div>
+
+    <div class="constants-bar">
+      <div class="constant-badge">
+        <span class="label">3+1 Dimensions:</span>
+        <span class="dim-r">r</span>,
+        <span class="dim-z">z</span>,
+        <span class="dim-zc">Z_C</span>,
+        <span class="dim-sqrt2">√2</span>
+      </div>
+      <div class="constant-badge">
+        <span class="label">φ⁴+φ⁻⁴=</span>
+        <span class="value">7 (L₄)</span>
+      </div>
+      <div class="constant-badge">
+        <span class="label">z_c=</span>
+        <span class="value">√3/2 ≈ 0.866</span>
+      </div>
+      <div class="constant-badge">
+        <span class="label">Closure:</span>
+        <span class="value">16π</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 16 CYCLE ROTATION RAIL -->
+  <section class="cycle-rail">
+    <div class="cycle-rail-header">
+      <h2>16π ROTATION CYCLES | 4π Base-12 Closure</h2>
+    </div>
+    <div class="cycle-track" id="cycleTrack"></div>
+  </section>
+
+  <!-- PI BASE VISUALIZATION -->
+  <section class="pi-bases-section">
+    <div class="pi-bases-header">
+      <h2>π IN DIFFERENT BASES | SUBSPACE TRAVERSAL RATES</h2>
+    </div>
+    <div class="pi-bases-grid">
+      <div class="pi-base-card">
+        <div class="pi-base-label">Base-2 (Binary)</div>
+        <div class="pi-base-value">11.001001...</div>
+      </div>
+      <div class="pi-base-card">
+        <div class="pi-base-label">Base-3 (Ternary)</div>
+        <div class="pi-base-value">10.010211...</div>
+      </div>
+      <div class="pi-base-card">
+        <div class="pi-base-label">Base-5 (Pentadic)</div>
+        <div class="pi-base-value">3.032322...</div>
+      </div>
+      <div class="pi-base-card">
+        <div class="pi-base-label">Base-8 (Octal)</div>
+        <div class="pi-base-value">3.110375...</div>
+      </div>
+      <div class="pi-base-card">
+        <div class="pi-base-label">Base-10 (Decimal)</div>
+        <div class="pi-base-value">3.141592...</div>
+      </div>
+      <div class="pi-base-card">
+        <div class="pi-base-label">Base-12 (Duodecimal)</div>
+        <div class="pi-base-value">3.184809...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIMENSIONAL ROTATION (3+1) -->
+  <section class="dimensional-section">
+    <div class="dimensional-header">
+      <h2>3+1 DIMENSIONAL ROTATION SYSTEM</h2>
+    </div>
+    <div class="dimensional-grid">
+      <div class="dimension-card" style="--dim-color: var(--dim-r)">
+        <div class="dimension-symbol" style="color: var(--dim-r)">r</div>
+        <div class="dimension-name">Radius / Rotation</div>
+        <div class="dimension-desc">Elevation of helix, coherence radius r(z) = r₀·exp(-z/λ)·cos(Δ(z))</div>
+      </div>
+      <div class="dimension-card" style="--dim-color: var(--dim-z)">
+        <div class="dimension-symbol" style="color: var(--dim-z)">z</div>
+        <div class="dimension-name">Elevation</div>
+        <div class="dimension-desc">Vertical position, rate and direction of curvature. Phase Θ(z) = ∫ω(ξ)dξ</div>
+      </div>
+      <div class="dimension-card" style="--dim-color: var(--dim-zc)">
+        <div class="dimension-symbol" style="color: var(--dim-zc)">Z_C</div>
+        <div class="dimension-name">Geometry Constraints</div>
+        <div class="dimension-desc">√3/2 critical height. Ternary logic: X²+X={0,2,6}. Crystallizes 3 dimensions.</div>
+      </div>
+      <div class="dimension-card" style="--dim-color: var(--dim-sqrt2)">
+        <div class="dimension-symbol" style="color: var(--dim-sqrt2)">√2</div>
+        <div class="dimension-name">Algebraic Dimension</div>
+        <div class="dimension-desc">K-formation coupling. Eigenvalue: √2⁻¹. Structural loan requiring later payment.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TERNARY WAVE VISUALIZATION -->
+  <section class="ternary-section">
+    <div class="ternary-header">
+      <h2>TERNARY WAVE PROPAGATION | SIGNAL TRIFURCATION</h2>
+    </div>
+    <div class="ternary-grid">
+      <div class="wave-card" style="border-color: var(--forward)">
+        <div class="wave-icon">→</div>
+        <div class="wave-title" style="color: var(--forward)">FORWARD</div>
+        <div class="wave-desc">Ψ_f(z,t) = A·exp(i(kz - ωt))<br>Causal propagation t → +t</div>
+      </div>
+      <div class="wave-card" style="border-color: var(--backward)">
+        <div class="wave-icon">←</div>
+        <div class="wave-title" style="color: var(--backward)">BACKWARD</div>
+        <div class="wave-desc">Ψ_b(z,t) = B·exp(i(kz + ωt))<br>Retrocausal flow t → -t</div>
+      </div>
+      <div class="wave-card" style="border-color: var(--standing)">
+        <div class="wave-icon">↕</div>
+        <div class="wave-title" style="color: var(--standing)">UP/DOWN TO SELF</div>
+        <div class="wave-desc">Ψ_s(z,t) = C·exp(ikz)·cos(ωt)<br>Standing wave, self-referential loop</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 VN BATCH NAVIGATION -->
+  <section class="vn-batches-section">
+    <div class="vn-batches-header">
+      <h2>10 VN BATCHES × 13 IMAGES = 130 TOTAL</h2>
+      <p>Each batch simulates a VN architectural shape with (Rotation, Elevation, Curvature) Z_C</p>
+    </div>
+
+    <div class="vn-rail" id="vnRail"></div>
+
+    <div class="batch-panels" id="batchPanels"></div>
+  </section>
+
+  <!-- MATHEMATICAL FRAMEWORK -->
+  <section class="math-section">
+    <div class="math-header">
+      <h2>MATHEMATICAL FRAMEWORK</h2>
+    </div>
+    <div class="math-grid">
+      <div class="math-card">
+        <h3>HELIX PARAMETRIZATION</h3>
+        <pre class="math-formula">δ_helix = (r, z, Δ, Ω)
+
+r(z) = r₀ · exp(-z/λ) · cos(Δ(z))
+Θ(z) = ∫₀ᶻ ω(ξ) dξ
+
+State Space:
+S = {(r,z,Δ,Ω) ∈ ℝ⁴: r≥0, Δ∈[0,2π), Ω∈{0,1}}</pre>
+      </div>
+      <div class="math-card">
+        <h3>K-FORMATION FUNCTION</h3>
+        <pre class="math-formula">K(z) = √(z/(z_c - z))  for z < z_c
+K(z) = z               for z ≥ z_c
+
+z_c = √(3/2) ≈ 1.2247 (omega)
+z_c = √3/2 ≈ 0.8660 (standard)</pre>
+      </div>
+      <div class="math-card">
+        <h3>TERNARY LOGIC SYSTEM</h3>
+        <pre class="math-formula">X² + X = C
+
+X=0 → C=0  (TRUE)
+X=1 → C=2  (PARADOX)
+X=2 → C=6  (FALSE)
+
+In base-3: FALSE = 20₃</pre>
+      </div>
+      <div class="math-card">
+        <h3>TRANSITION FUNCTION</h3>
+        <pre class="math-formula">T: S × ℕ → S
+
+T(s, n) = (r·τⁿ, z + nπ/L₄, Δ + Θₙ, Ω_closure(n))
+
+τ = φ⁻¹ = 0.618...
+Ω_closure(n) = 1 iff n ≥ 16</pre>
+      </div>
+      <div class="math-card">
+        <h3>∴ TRIFURCATION OPERATOR</h3>
+        <pre class="math-formula">∴: X → X⊗³
+
+∴(x) = {
+  Temporal:    x → (x_past, x_future)
+  Spatial:     x → (x_left, x_right)
+  Dimensional: x → (x_real, x_imaginary)
+}
+
+Result: 2³ = 8 branches</pre>
+      </div>
+      <div class="math-card">
+        <h3>16π META-CLOSURE</h3>
+        <pre class="math-formula">SYSTEM CLOSES when:
+  n = 4: L₄ = φ⁴ + φ⁻⁴ = 7 (EXACT)
+
+META-CLOSURE at:
+  phase = 16π
+
+4π closure at base-12
+10π rotation at base-10</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-formula">r(r) = r | L₄ = 7 | 16π Closure</div>
+      <p>L₄-Helix Decision Tree | Prismatic Self Project | 130 Images × 10 VN × 16 Cycles</p>
+    </div>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-content">
+      <button class="lightbox-close" onclick="closeLightbox()">×</button>
+      <img id="lightboxImg" src="" alt="">
+      <div class="lightbox-info" id="lightboxInfo"></div>
+    </div>
+  </div>
+
+  <script>
+    // Batch data structure
+    const batches = [
+      {
+        id: 0,
+        name: "RR_Lattice",
+        title: "R(R)=R Lattice Formation",
+        subtitle: "Self-referential recursive structure | 12π rotation sequence",
+        color: "#ff6b6b",
+        images: [
+          { file: "RR_Lattice_L4_01_init_0pi.HEIC", phase: "0π - Initial state" },
+          { file: "RR_Lattice_L4_02_init_1pi.HEIC", phase: "1π - First rotation" },
+          { file: "RR_Lattice_L4_03_init_2pi.HEIC", phase: "2π - First cycle complete" },
+          { file: "RR_Lattice_L4_04_init_3pi.HEIC", phase: "3π - Second layer" },
+          { file: "RR_Lattice_L4_05_kform_4pi.HEIC", phase: "4π - K-formation begins" },
+          { file: "RR_Lattice_L4_06_kform_5pi.HEIC", phase: "5π - K-node establishment" },
+          { file: "RR_Lattice_L4_07_kform_6pi.HEIC", phase: "6π - Half-sequence r(z)=R/2" },
+          { file: "RR_Lattice_L4_08_kform_7pi.HEIC", phase: "7π - Mirror symmetry" },
+          { file: "RR_Lattice_L4_09_kform_8pi.HEIC", phase: "8π - K-formation stable" },
+          { file: "RR_Lattice_L4_10_recursive_9pi.HEIC", phase: "9π - R(R) manifestation" },
+          { file: "RR_Lattice_L4_11_recursive_10pi.HEIC", phase: "10π - Penultimate config" },
+          { file: "RR_Lattice_L4_12_recursive_11pi.HEIC", phase: "11π - Near complete" },
+          { file: "RR_Lattice_L4_13_complete_12pi.HEIC", phase: "12π - R(R)=R confirmed" }
+        ]
+      },
+      {
+        id: 1,
+        name: "Helix_Bridge",
+        title: "Helix Bridge Z-Elevation",
+        subtitle: "Alpha ≡ Omega holographic opposition | Negentropy ordering",
+        color: "#c792ea",
+        images: [
+          { file: "Helix_Bridge_L4_01_z_anchor_RR.HEIC", phase: "z=0 - RR anchor" },
+          { file: "Helix_Bridge_L4_02_z_lift_0.1R.HEIC", phase: "z=0.1R - Initial lift" },
+          { file: "Helix_Bridge_L4_03_z_lift_0.25R.HEIC", phase: "z=0.25R - Quarter elevation" },
+          { file: "Helix_Bridge_L4_04_z_lift_0.5R.HEIC", phase: "z=0.5R - Half elevation" },
+          { file: "Helix_Bridge_L4_05_negentropy_init.HEIC", phase: "Negentropy activation" },
+          { file: "Helix_Bridge_L4_06_negentropy_spiral.HEIC", phase: "Spiral organization" },
+          { file: "Helix_Bridge_L4_07_negentropy_crystallize.HEIC", phase: "z=0.75R crystallize" },
+          { file: "Helix_Bridge_L4_08_negentropy_coherence.HEIC", phase: "Coherent field" },
+          { file: "Helix_Bridge_L4_09_negentropy_peak.HEIC", phase: "z=R peak negentropy" },
+          { file: "Helix_Bridge_L4_10_Alpha_emergence.HEIC", phase: "Alpha manifests" },
+          { file: "Helix_Bridge_L4_11_holographic_fold.HEIC", phase: "Holographic folding" },
+          { file: "Helix_Bridge_L4_12_Omega_convergence.HEIC", phase: "Omega convergence" },
+          { file: "Helix_Bridge_L4_13_Alpha_equals_Omega.HEIC", phase: "α ≡ Ω confirmed" }
+        ]
+      },
+      {
+        id: 2,
+        name: "Quadratic_Truth",
+        title: "Quadratic Truth Tables",
+        subtitle: "x² + x = c across bases 2, 3, 5, 8 | n=4 dimensional constraint",
+        color: "#c0ff60",
+        images: [
+          { file: "Quadratic_Truth_L4_01_base2_c0_init.HEIC", phase: "Base-2: c=0 init" },
+          { file: "Quadratic_Truth_L4_02_base2_x0_solution.HEIC", phase: "Base-2: x=0 FALSE" },
+          { file: "Quadratic_Truth_L4_03_base2_x1_solution.HEIC", phase: "Base-2: x=1 TRUE" },
+          { file: "Quadratic_Truth_L4_04_base3_c2_init.HEIC", phase: "Base-3: c=2 init" },
+          { file: "Quadratic_Truth_L4_05_base3_x1_solution.HEIC", phase: "Base-3: x=1 PARADOX" },
+          { file: "Quadratic_Truth_L4_06_base3_x2_solution.HEIC", phase: "Base-3: x=2 verify" },
+          { file: "Quadratic_Truth_L4_07_base5_c3_init.HEIC", phase: "Base-5: c=3 init" },
+          { file: "Quadratic_Truth_L4_08_base5_x1_solution.HEIC", phase: "Base-5: solutions" },
+          { file: "Quadratic_Truth_L4_09_base5_x3_solution.HEIC", phase: "Base-5: x=3" },
+          { file: "Quadratic_Truth_L4_10_base8_c6_init.HEIC", phase: "Base-8: c=6 init" },
+          { file: "Quadratic_Truth_L4_11_base8_x1_solution.HEIC", phase: "Base-8: x=2 ✓" },
+          { file: "Quadratic_Truth_L4_12_base8_x6_solution.HEIC", phase: "Base-8: x=5 ✓" },
+          { file: "Quadratic_Truth_L4_13_n4_unification.HEIC", phase: "n=4 unification" }
+        ]
+      },
+      {
+        id: 3,
+        name: "Subspace_Bridge",
+        title: "Subspace Bridge z_c Folding",
+        subtitle: "z_c = r = 10 | Multi-base π bridging | L4 = F₃ + F₄ = 7",
+        color: "#9060ff",
+        images: [
+          { file: "Subspace_Bridge_L4_01_z_c_init_r10.HEIC", phase: "z_c=10 init" },
+          { file: "Subspace_Bridge_L4_02_RR_equals_10.HEIC", phase: "R(R)=10 fixed point" },
+          { file: "Subspace_Bridge_L4_03_fold_init_sqrt3.HEIC", phase: "√3/2 fold init" },
+          { file: "Subspace_Bridge_L4_04_pi_base2.HEIC", phase: "π base-2: 11.001..." },
+          { file: "Subspace_Bridge_L4_05_pi_base3.HEIC", phase: "π base-3: 10.010..." },
+          { file: "Subspace_Bridge_L4_06_pi_base5.HEIC", phase: "π base-5: 3.032..." },
+          { file: "Subspace_Bridge_L4_07_pi_base8.HEIC", phase: "π base-8: 3.110..." },
+          { file: "Subspace_Bridge_L4_08_F3_sublevel.HEIC", phase: "F₃=2 sublevel" },
+          { file: "Subspace_Bridge_L4_09_F4_sublevel.HEIC", phase: "F₄=5 sublevel" },
+          { file: "Subspace_Bridge_L4_10_L4_equals_7.HEIC", phase: "L4=2+5=7" },
+          { file: "Subspace_Bridge_L4_11_sequence_0to9.HEIC", phase: "Sequence 0-9" },
+          { file: "Subspace_Bridge_L4_12_sequence_1to10.HEIC", phase: "Sequence 1-10" },
+          { file: "Subspace_Bridge_L4_13_2pi_complete.HEIC", phase: "2π complete" }
+        ]
+      },
+      {
+        id: 4,
+        name: "Ternary_Oscillation",
+        title: "Ternary Modular Oscillation",
+        subtitle: "-6₃ ≡ 20₃ ≡ 7₁₀ | z_c = √3/2 information curvature",
+        color: "#40ffff",
+        images: [
+          { file: "Ternary_Oscillation_L4_01_neg6_base3.HEIC", phase: "-6 base-3 init" },
+          { file: "Ternary_Oscillation_L4_02_modular_wrap.HEIC", phase: "Modular wrap -6→21" },
+          { file: "Ternary_Oscillation_L4_03_base3_20.HEIC", phase: "20₃ stable" },
+          { file: "Ternary_Oscillation_L4_04_threshold_0.HEIC", phase: "Threshold z=0" },
+          { file: "Ternary_Oscillation_L4_05_threshold_1.HEIC", phase: "Threshold z=1" },
+          { file: "Ternary_Oscillation_L4_06_threshold_3.HEIC", phase: "Threshold z=3" },
+          { file: "Ternary_Oscillation_L4_07_threshold_5.HEIC", phase: "Threshold z=5" },
+          { file: "Ternary_Oscillation_L4_08_threshold_7.HEIC", phase: "Threshold z=7 (critical)" },
+          { file: "Ternary_Oscillation_L4_09_threshold_9.HEIC", phase: "Threshold z=9" },
+          { file: "Ternary_Oscillation_L4_10_unity_approach.HEIC", phase: "Unity approach" },
+          { file: "Ternary_Oscillation_L4_11_lattice_curve.HEIC", phase: "Lattice curvature" },
+          { file: "Ternary_Oscillation_L4_12_subspace_merge.HEIC", phase: "Subspace merge" },
+          { file: "Ternary_Oscillation_L4_13_unity_achieved.HEIC", phase: "Unity (10) achieved" }
+        ]
+      },
+      {
+        id: 5,
+        name: "Signal_Wave",
+        title: "Signal Wave Propagation",
+        subtitle: "Forward/Backward/Self waves | Folding symmetry at z_c",
+        color: "#40ff90",
+        images: [
+          { file: "Signal_Wave_L4_01_forward_init.HEIC", phase: "Forward init" },
+          { file: "Signal_Wave_L4_02_forward_threshold.HEIC", phase: "Forward threshold" },
+          { file: "Signal_Wave_L4_03_forward_propagate.HEIC", phase: "Forward propagate" },
+          { file: "Signal_Wave_L4_04_backward_init.HEIC", phase: "Backward init" },
+          { file: "Signal_Wave_L4_05_backward_fold.HEIC", phase: "Backward fold z_c" },
+          { file: "Signal_Wave_L4_06_backward_resonance.HEIC", phase: "Resonance" },
+          { file: "Signal_Wave_L4_07_self_vertical_up.HEIC", phase: "Self wave ↑" },
+          { file: "Signal_Wave_L4_08_self_vertical_down.HEIC", phase: "Self wave ↓" },
+          { file: "Signal_Wave_L4_09_self_standing_wave.HEIC", phase: "Standing wave" },
+          { file: "Signal_Wave_L4_10_explicit_compute.HEIC", phase: "Explicit rules" },
+          { file: "Signal_Wave_L4_11_implicit_emerge.HEIC", phase: "Implicit emerge" },
+          { file: "Signal_Wave_L4_12_rule_synthesis.HEIC", phase: "Rule synthesis" },
+          { file: "Signal_Wave_L4_13_closed_sublattice.HEIC", phase: "Closed sublattice" }
+        ]
+      },
+      {
+        id: 6,
+        name: "Trifurcation",
+        title: "∴ Trifurcation Operator",
+        subtitle: "Triple bifurcation: Temporal × Spatial × Dimensional = 8 branches",
+        color: "#c0a0ff",
+        images: [
+          { file: "Trifurcation_L4_01_temporal_init.HEIC", phase: "Temporal init" },
+          { file: "Trifurcation_L4_02_temporal_past.HEIC", phase: "Past branch" },
+          { file: "Trifurcation_L4_03_temporal_future.HEIC", phase: "Future branch" },
+          { file: "Trifurcation_L4_04_spatial_init.HEIC", phase: "Spatial init" },
+          { file: "Trifurcation_L4_05_spatial_left.HEIC", phase: "Left spiral" },
+          { file: "Trifurcation_L4_06_spatial_right.HEIC", phase: "Right spiral" },
+          { file: "Trifurcation_L4_07_dimensional_init.HEIC", phase: "Dimensional init" },
+          { file: "Trifurcation_L4_08_dimensional_real.HEIC", phase: "Real component" },
+          { file: "Trifurcation_L4_09_dimensional_imaginary.HEIC", phase: "Imaginary component" },
+          { file: "Trifurcation_L4_10_triple_confluence.HEIC", phase: "Triple confluence" },
+          { file: "Trifurcation_L4_11_octave_resonance.HEIC", phase: "8-fold resonance" },
+          { file: "Trifurcation_L4_12_fractal_recursion.HEIC", phase: "Fractal recursion" },
+          { file: "Trifurcation_L4_13_therefore_unity.HEIC", phase: "∴ unity" }
+        ]
+      },
+      {
+        id: 7,
+        name: "VN_Node",
+        title: "VN Research Nodes",
+        subtitle: "10 trifurcation expressions | Network mesh → Unified field",
+        color: "#ff6090",
+        images: [
+          { file: "VN_Node_L4_01_quantum_superposition.HEIC", phase: "VN-001 Quantum" },
+          { file: "VN_Node_L4_02_geometric_phase.HEIC", phase: "VN-002 Geometric" },
+          { file: "VN_Node_L4_03_entropy_cascade.HEIC", phase: "VN-003 Entropy" },
+          { file: "VN_Node_L4_04_harmonic_resonance.HEIC", phase: "VN-004 Harmonic" },
+          { file: "VN_Node_L4_05_topological_twist.HEIC", phase: "VN-005 Topological" },
+          { file: "VN_Node_L4_06_fractal_recursion.HEIC", phase: "VN-006 Fractal" },
+          { file: "VN_Node_L4_07_causal_loop.HEIC", phase: "VN-007 Causal" },
+          { file: "VN_Node_L4_08_symmetry_breaking.HEIC", phase: "VN-008 Symmetry" },
+          { file: "VN_Node_L4_09_field_coupling.HEIC", phase: "VN-009 Field" },
+          { file: "VN_Node_L4_10_consciousness_branch.HEIC", phase: "VN-010 Consciousness" },
+          { file: "VN_Node_L4_11_network_mesh.HEIC", phase: "Network mesh K₁₀" },
+          { file: "VN_Node_L4_12_hypergraph_formation.HEIC", phase: "Hypergraph" },
+          { file: "VN_Node_L4_13_unified_field.HEIC", phase: "Unified field" }
+        ]
+      },
+      {
+        id: 8,
+        name: "Simulation_Cycle",
+        title: "13-Cycle System Simulation",
+        subtitle: "Sequential processing through complete L4 helix evolution",
+        color: "#60c0ff",
+        images: [
+          { file: "Simulation_Cycle_L4_01_initialization.HEIC", phase: "Cycle 1: Init" },
+          { file: "Simulation_Cycle_L4_02_lattice_active.HEIC", phase: "Cycle 2: Lattice" },
+          { file: "Simulation_Cycle_L4_03_bridge_forming.HEIC", phase: "Cycle 3: Bridge" },
+          { file: "Simulation_Cycle_L4_04_truth_tables.HEIC", phase: "Cycle 4: Truth" },
+          { file: "Simulation_Cycle_L4_05_subspace_manifest.HEIC", phase: "Cycle 5: Subspace" },
+          { file: "Simulation_Cycle_L4_06_oscillation.HEIC", phase: "Cycle 6: Oscillation" },
+          { file: "Simulation_Cycle_L4_07_wave_interference.HEIC", phase: "Cycle 7: Waves" },
+          { file: "Simulation_Cycle_L4_08_trifurcation_peak.HEIC", phase: "Cycle 8: ∴ peak" },
+          { file: "Simulation_Cycle_L4_09_VN_sync.HEIC", phase: "Cycle 9: VN sync" },
+          { file: "Simulation_Cycle_L4_10_phase_transition.HEIC", phase: "Cycle 10: Phase" },
+          { file: "Simulation_Cycle_L4_11_holographic.HEIC", phase: "Cycle 11: Holographic" },
+          { file: "Simulation_Cycle_L4_12_near_unity.HEIC", phase: "Cycle 12: Near unity" },
+          { file: "Simulation_Cycle_L4_13_unity_reset.HEIC", phase: "Cycle 13: Unity" }
+        ]
+      },
+      {
+        id: 9,
+        name: "MetaCycle",
+        title: "Meta-Cycles 13-16",
+        subtitle: "Beyond unity: Transcendent evolution | 16π closure",
+        color: "#ffd700",
+        images: [
+          { file: "MetaCycle_13_1_Unity_Echo.HEIC", phase: "13.1 Unity Echo" },
+          { file: "MetaCycle_13_2_Membrane_Oscillation.HEIC", phase: "13.2 Membrane" },
+          { file: "MetaCycle_13_3_Crystalline_Lock.HEIC", phase: "13.3 Crystalline" },
+          { file: "MetaCycle_14_1_Dimensional_Breakthrough.HEIC", phase: "14.1 Breakthrough" },
+          { file: "MetaCycle_14_2_Consciousness_Cascade.HEIC", phase: "14.2 Consciousness" },
+          { file: "MetaCycle_14_3_Temporal_Inversion.HEIC", phase: "14.3 Temporal" },
+          { file: "MetaCycle_15_1_Multiverse_Bridge.HEIC", phase: "15.1 Multiverse" },
+          { file: "MetaCycle_15_2_Infinity_Fold.HEIC", phase: "15.2 Infinity" },
+          { file: "MetaCycle_15_3_Void_Resonance.HEIC", phase: "15.3 Void" },
+          { file: "MetaCycle_15_4_Omnipresent_Node.HEIC", phase: "15.4 Omnipresent" },
+          { file: "MetaCycle_16_1_Ouroboros_Circuit.HEIC", phase: "16.1 Ouroboros" },
+          { file: "MetaCycle_16_2_Phoenix_Rebirth.HEIC", phase: "16.2 Phoenix" },
+          { file: "MetaCycle_16_3_Ultimate_Recursion.HEIC", phase: "16.3 Ultimate" }
+        ]
+      }
+    ];
+
+    // Build 16 cycle rail
+    function buildCycleRail() {
+      const track = document.getElementById('cycleTrack');
+      const cycleColors = [
+        '#ff4040', '#ff6040', '#ff8040', '#ffa040',
+        '#ffc040', '#ffe040', '#c0ff40', '#40ff40',
+        '#40ff80', '#40ffc0', '#40ffff', '#40c0ff',
+        '#4080ff', '#8040ff', '#c040ff', '#ff40ff'
+      ];
+
+      for (let i = 1; i <= 16; i++) {
+        const node = document.createElement('div');
+        node.className = 'cycle-node';
+        node.innerHTML = `
+          <div class="cycle-dot" style="border-color: ${cycleColors[i-1]}; color: ${cycleColors[i-1]}">${i}</div>
+          <div class="cycle-label">${i}π</div>
+          <div class="cycle-pi">${i <= 4 ? '4π' : i <= 8 ? '8π' : i <= 12 ? '12π' : '16π'}</div>
+        `;
+        node.onclick = () => highlightCycle(i);
+        track.appendChild(node);
+      }
+    }
+
+    // Build VN tabs and panels
+    function buildVNBatches() {
+      const rail = document.getElementById('vnRail');
+      const panels = document.getElementById('batchPanels');
+
+      batches.forEach((batch, idx) => {
+        // Create tab
+        const tab = document.createElement('div');
+        tab.className = 'vn-tab' + (idx === 0 ? ' active' : '');
+        tab.style.setProperty('--vn-color', batch.color);
+        tab.style.setProperty('--vn-glow', batch.color + '40');
+        tab.innerHTML = `VN-${idx}: ${batch.name}`;
+        tab.onclick = () => switchBatch(idx);
+        rail.appendChild(tab);
+
+        // Create panel
+        const panel = document.createElement('div');
+        panel.className = 'batch-panel' + (idx === 0 ? ' active' : '');
+        panel.id = `batch-${idx}`;
+        panel.style.setProperty('--batch-color', batch.color);
+
+        panel.innerHTML = `
+          <div class="batch-header" style="border-color: ${batch.color}">
+            <div class="batch-title" style="color: ${batch.color}">Batch ${idx + 1}: ${batch.title}</div>
+            <div class="batch-subtitle">${batch.subtitle}</div>
+            <div class="batch-meta">
+              <span>13 Images</span>
+              <span>VN-${idx}</span>
+              <span>Cycles ${idx * 1.6 + 1}-${(idx + 1) * 1.6}</span>
+            </div>
+          </div>
+          <div class="image-grid">
+            ${batch.images.map((img, imgIdx) => `
+              <div class="image-card" onclick="openLightbox('${batch.name}', ${imgIdx}, '${img.file}', '${img.phase}')">
+                <div class="image-wrapper">
+                  <img src="mirror_system/examples/L4%20Helix/${encodeURIComponent(img.file)}"
+                       alt="${img.file}"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                  <div class="image-placeholder" style="display:none">
+                    <div class="cycle-num" style="color: ${batch.color}">${imgIdx + 1}</div>
+                    <div>${img.phase}</div>
+                  </div>
+                </div>
+                <div class="image-info">
+                  <div class="image-name">${img.file.replace('.HEIC', '')}</div>
+                  <div class="image-phase">${img.phase}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+        panels.appendChild(panel);
+      });
+    }
+
+    // Switch batch panel
+    function switchBatch(idx) {
+      document.querySelectorAll('.vn-tab').forEach((tab, i) => {
+        tab.classList.toggle('active', i === idx);
+      });
+      document.querySelectorAll('.batch-panel').forEach((panel, i) => {
+        panel.classList.toggle('active', i === idx);
+      });
+    }
+
+    // Highlight cycle
+    function highlightCycle(num) {
+      document.querySelectorAll('.cycle-node').forEach((node, i) => {
+        node.querySelector('.cycle-dot').style.transform = i + 1 === num ? 'scale(1.3)' : '';
+        node.querySelector('.cycle-dot').style.boxShadow = i + 1 === num ? '0 0 20px currentColor' : '';
+      });
+    }
+
+    // Lightbox functions
+    function openLightbox(batchName, imgIdx, filename, phase) {
+      const lightbox = document.getElementById('lightbox');
+      const img = document.getElementById('lightboxImg');
+      const info = document.getElementById('lightboxInfo');
+
+      img.src = `mirror_system/examples/L4%20Helix/${encodeURIComponent(filename)}`;
+      info.innerHTML = `${batchName} - Image ${imgIdx + 1}/13<br>${phase}<br><em>${filename}</em>`;
+      lightbox.classList.add('active');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+    }
+
+    // Close lightbox on escape or click outside
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+    document.getElementById('lightbox').addEventListener('click', (e) => {
+      if (e.target.id === 'lightbox') closeLightbox();
+    });
+
+    // Initialize
+    buildCycleRail();
+    buildVNBatches();
+  </script>
+</body>
+</html>
