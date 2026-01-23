@@ -823,7 +823,7 @@
       cursor: pointer;
     }
 
-    .flip-card.flipped .flip-card-inner {
+    .flip-card:hover .flip-card-inner {
       transform: rotateY(180deg);
     }
 
@@ -843,6 +843,7 @@
       border: 1px solid var(--border-subtle);
       display: flex;
       flex-direction: column;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .flip-card:hover .flip-card-front {
@@ -1664,8 +1665,8 @@ META-CLOSURE at phase = 16π
   </div>
 
   <!-- IMAGE DETAIL MODAL -->
-  <div class="image-modal-overlay" id="imageDetailModal">
-    <div class="image-modal" id="imageModalContent">
+  <div class="image-modal-overlay" id="imageDetailModal" onclick="closeImageModal()">
+    <div class="image-modal" id="imageModalContent" onclick="event.stopPropagation()">
       <button class="image-modal-close" onclick="closeImageModal()">×</button>
 
       <!-- Left: Visual -->
@@ -2200,14 +2201,13 @@ ${cycle.formula}
             <div class="batch-title" style="color: ${batch.color}">${batch.title}</div>
             <div class="batch-subtitle">${batch.subtitle}</div>
             <div class="batch-meta">
-              <span>13 Images</span><span>VN-${idx}</span><span>Click to flip | Double-click for details</span>
+              <span>13 Images</span><span>VN-${idx}</span><span>Click to expand</span>
             </div>
           </div>
           <div class="image-grid">
             ${batch.images.map((img, imgIdx) => `
               <div class="flip-card" style="--batch-color: ${batch.color}"
-                   onclick="this.classList.toggle('flipped')"
-                   ondblclick="event.stopPropagation(); openImageModal(${idx}, ${imgIdx})">
+                   onclick="openImageModal(${idx}, ${imgIdx})">
                 <div class="flip-card-inner">
                   <!-- FRONT -->
                   <div class="flip-card-front">
@@ -2223,11 +2223,11 @@ ${cycle.formula}
                     <div class="image-info">
                       <div class="image-name">${img.file.replace('.HEIC', '')}</div>
                       <div class="image-phase">${img.phase}</div>
-                      <div class="flip-hint">↻ Click flip | ⬚ Double-click expand</div>
+                      <div class="flip-hint">Click to expand</div>
                     </div>
                   </div>
-                  <!-- BACK -->
-                  <div class="flip-card-back" onclick="event.stopPropagation(); openImageModal(${idx}, ${imgIdx})">
+                  <!-- BACK (hover preview) -->
+                  <div class="flip-card-back">
                     <div class="card-back-header">
                       <div class="card-back-num">${imgIdx + 1}</div>
                       <div class="card-back-phase">${img.phase}</div>
@@ -2243,7 +2243,7 @@ ${cycle.formula}
                       </div>
                     </div>
                     <div class="card-back-footer">
-                      <div class="flip-back-hint">⬚ Click for full details</div>
+                      <div class="flip-back-hint">Click to expand</div>
                     </div>
                   </div>
                 </div>
