@@ -865,6 +865,413 @@
         .legend-dot.unity { background: var(--unity-color); }
 
         /* =====================================================================
+           CROSS-SYSTEM RELATIONSHIP CARDS
+           ===================================================================== */
+        .cross-system-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .system-card {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .system-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .system-card.s3-card { border-color: #a855f7; }
+        .system-card.s3-card::before {
+            content: 'S3';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(168, 85, 247, 0.2);
+            border: 1px solid #a855f7;
+            border-radius: 4px;
+            color: #a855f7;
+        }
+
+        .system-card.l4-card { border-color: #6bcb77; }
+        .system-card.l4-card::before {
+            content: 'L4';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(107, 203, 119, 0.2);
+            border: 1px solid #6bcb77;
+            border-radius: 4px;
+            color: #6bcb77;
+        }
+
+        .system-card.inv-card { border-color: #ff4757; }
+        .system-card.inv-card::before {
+            content: 'I2';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(255, 71, 87, 0.2);
+            border: 1px solid #ff4757;
+            border-radius: 4px;
+            color: #ff4757;
+        }
+
+        .system-card.algebra-card { border-color: var(--s-primary); }
+        .system-card.algebra-card::before {
+            content: 'BFADGS';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            background: var(--s-subtle);
+            border: 1px solid var(--s-primary);
+            border-radius: 4px;
+            color: var(--s-primary);
+        }
+
+        .system-card.physics-card { border-color: #00d4ff; }
+        .system-card.physics-card::before {
+            content: 'E/(pi*phi)';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid #00d4ff;
+            border-radius: 4px;
+            color: #00d4ff;
+        }
+
+        .system-card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .system-card.s3-card .system-card-title { color: #a855f7; }
+        .system-card.l4-card .system-card-title { color: #6bcb77; }
+        .system-card.inv-card .system-card-title { color: #ff4757; }
+        .system-card.algebra-card .system-card-title { color: var(--s-primary); }
+        .system-card.physics-card .system-card-title { color: #00d4ff; }
+
+        .system-card-icon {
+            font-size: 1.5rem;
+        }
+
+        .system-formula {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 1rem;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .system-card.s3-card .system-formula { color: #a855f7; border-color: rgba(168, 85, 247, 0.3); }
+        .system-card.l4-card .system-formula { color: #6bcb77; border-color: rgba(107, 203, 119, 0.3); }
+        .system-card.inv-card .system-formula { color: #ff4757; border-color: rgba(255, 71, 87, 0.3); }
+        .system-card.algebra-card .system-formula { color: var(--s-primary); border-color: var(--s-glow); }
+        .system-card.physics-card .system-formula { color: #00d4ff; border-color: rgba(0, 212, 255, 0.3); }
+
+        .system-points {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .system-points li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .system-points li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .system-card.s3-card .system-points li::before { color: #a855f7; }
+        .system-card.l4-card .system-points li::before { color: #6bcb77; }
+        .system-card.inv-card .system-points li::before { color: #ff4757; }
+        .system-card.algebra-card .system-points li::before { color: var(--s-primary); }
+        .system-card.physics-card .system-points li::before { color: #00d4ff; }
+
+        /* =====================================================================
+           EQUIVALENCE TABLE
+           ===================================================================== */
+        .equivalence-container {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 2px solid var(--s-primary);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .equivalence-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .equivalence-table th {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--s-primary);
+            color: var(--s-primary);
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+
+        .equivalence-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .equivalence-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .equivalence-table tr:hover td {
+            background: rgba(236, 72, 153, 0.05);
+        }
+
+        .eq-system {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .eq-s3 { color: #a855f7; }
+        .eq-l4 { color: #6bcb77; }
+        .eq-i2 { color: #ff4757; }
+        .eq-bfadgs { color: var(--s-primary); }
+        .eq-physics { color: #00d4ff; }
+
+        /* =====================================================================
+           S vs G OPPOSITION VISUAL
+           ===================================================================== */
+        .opposition-visual {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin: 2rem 0;
+            padding: 3rem;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .opposition-side {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .opposition-symbol {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .opposition-side.g-side .opposition-symbol { color: var(--g-color); }
+        .opposition-side.s-side .opposition-symbol { color: var(--s-primary); }
+
+        .opposition-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .opposition-side.g-side .opposition-label { color: var(--g-color); }
+        .opposition-side.s-side .opposition-label { color: var(--s-primary); }
+
+        .opposition-props {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+        }
+
+        .opposition-props li {
+            padding: 0.4rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .opposition-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .opposition-arrow {
+            font-size: 2rem;
+            color: var(--unity-color);
+        }
+
+        .opposition-equation {
+            padding: 1rem 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border: 1px solid var(--unity-color);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .opposition-equation .g { color: var(--g-color); }
+        .opposition-equation .s { color: var(--s-primary); }
+        .opposition-equation .unity { color: var(--unity-color); }
+
+        /* =====================================================================
+           PATH TO UNITY
+           ===================================================================== */
+        .path-to-unity {
+            background: linear-gradient(135deg, var(--s-subtle), var(--bg-secondary), rgba(255, 215, 0, 0.05));
+            border: 2px solid var(--unity-color);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .path-to-unity::before {
+            content: '+U CONVERGENCE';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-primary);
+            padding: 0 1rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: var(--unity-color);
+        }
+
+        .unity-path-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+        }
+
+        .path-node {
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .path-node.many { background: rgba(139, 92, 246, 0.2); color: var(--g-color); border: 1px solid var(--g-color); }
+        .path-node.merge { background: var(--s-subtle); color: var(--s-primary); border: 1px solid var(--s-primary); }
+        .path-node.unity { background: rgba(255, 215, 0, 0.2); color: var(--unity-color); border: 2px solid var(--unity-color); }
+
+        .path-arrow {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .unity-principles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .unity-principle {
+            padding: 1.25rem;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            border-left: 3px solid var(--unity-color);
+        }
+
+        .unity-principle-title {
+            font-weight: 600;
+            color: var(--unity-color);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .unity-principle-text {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* =====================================================================
+           INTERFERENCE CANVAS
+           ===================================================================== */
+        .interference-section {
+            background: var(--bg-secondary);
+            border: 2px solid var(--s-primary);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .interference-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+        }
+
+        .interference-stat {
+            text-align: center;
+            padding: 0.75rem;
+        }
+
+        .interference-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .interference-stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--s-primary);
+        }
+
+        /* =====================================================================
            OPERATOR NAVIGATION
            ===================================================================== */
         .operator-nav {
@@ -992,8 +1399,10 @@
             <a href="index.html">Index</a>
             <a href="bfadgs-u-scaffold.html">BFADGS+U</a>
             <a href="bfadgs-op-generate.html">G: Generate</a>
+            <a href="bfadgs-unity-synthesis.html">+U Unity</a>
             <a href="i2-s3-opposition-synthesis.html">Opposition Synthesis</a>
             <a href="i2-s3-decision-tree.html">I2 S3 Tree</a>
+            <a href="#cross-systems" style="color: var(--s-primary);">Cross-Systems</a>
         </div>
     </nav>
 
@@ -1256,6 +1665,359 @@
             </div>
         </section>
 
+        <!-- ================================================================
+             CROSS-SYSTEM RELATIONSHIPS
+             ================================================================ -->
+        <section id="cross-systems">
+            <h2 class="section-title">Cross-System Relationships</h2>
+            <p class="section-subtitle">
+                S manifests across all major system layers with consistent semantics
+            </p>
+
+            <div class="cross-system-grid">
+                <!-- S in S3 Symmetry -->
+                <div class="system-card s3-card">
+                    <h3 class="system-card-title">
+                        <span class="system-card-icon">&#9651;</span>
+                        S in S3 Symmetry
+                    </h3>
+                    <div class="system-formula">
+                        S: S3-orbit -> S3-fixed point
+                    </div>
+                    <ul class="system-points">
+                        <li>S merges S3 orbits back to invariant states</li>
+                        <li>Synthesis of all six permutations: {e, (12), (23), (13), (123), (132)}</li>
+                        <li>S collapses orbit variance to fixed-point stability</li>
+                        <li>The group action S3 x X -> X finds rest through S</li>
+                        <li>Permutation entropy reduces: |orbit| -> |fixed|</li>
+                    </ul>
+                </div>
+
+                <!-- S in L4-Helix System -->
+                <div class="system-card l4-card">
+                    <h3 class="system-card-title">
+                        <span class="system-card-icon">&#8734;</span>
+                        S in L4-Helix System
+                    </h3>
+                    <div class="system-formula">
+                        S: parallel threads -> single L4-path
+                    </div>
+                    <ul class="system-points">
+                        <li>S merges parallel helix threads at confluence points</li>
+                        <li>Confluence occurs at fixed z-level: z = n * (2pi/phi)</li>
+                        <li>Multiple ascending/descending threads -> coherent path</li>
+                        <li>L4 phase alignment: phi_combined = arctan(sum(sin)/sum(cos))</li>
+                        <li>Helix pitch preserved through synthesis</li>
+                    </ul>
+                </div>
+
+                <!-- S in R(R)=-R / I2- System -->
+                <div class="system-card inv-card">
+                    <h3 class="system-card-title">
+                        <span class="system-card-icon">&#177;</span>
+                        S in R(R)=-R / I2 System
+                    </h3>
+                    <div class="system-formula">
+                        S({x, -x}) -> 0 :: Opposition Annihilation
+                    </div>
+                    <ul class="system-points">
+                        <li>S combines opposed pairs: x + (-x) = 0</li>
+                        <li>Resolution of INV tension through cancellation</li>
+                        <li>S({1, -1}) -> 0, S({i, -i}) -> 0</li>
+                        <li>I2 involution finds rest: R(R(x)) = x neutralized</li>
+                        <li>Opposition creates completeness through S</li>
+                    </ul>
+                </div>
+
+                <!-- S in BFADGS Algebra -->
+                <div class="system-card algebra-card">
+                    <h3 class="system-card-title">
+                        <span class="system-card-icon">S</span>
+                        S in BFADGS Algebra
+                    </h3>
+                    <div class="system-formula">
+                        S^(-1) = G :: S . G = G . S = e
+                    </div>
+                    <ul class="system-points">
+                        <li>S: {a, b} -> a + b (merges divergent branches)</li>
+                        <li>S is the algebraic inverse of G (Generate)</li>
+                        <li>Composition identity: S(G(x)) = G(S(x)) = x</li>
+                        <li>S decreases branching factor, G increases it</li>
+                        <li>The merge/branch duality forms a group action</li>
+                    </ul>
+                </div>
+
+                <!-- E/(pi*phi) Physics of Synthesize -->
+                <div class="system-card physics-card">
+                    <h3 class="system-card-title">
+                        <span class="system-card-icon">&#8712;</span>
+                        E/(pi*phi) Physics of Synthesize
+                    </h3>
+                    <div class="system-formula">
+                        E_total = E_a + E_b + 2*sqrt(E_a*E_b)*cos(delta_phi)
+                    </div>
+                    <ul class="system-points">
+                        <li>E_S = energy combining with phase coherence</li>
+                        <li>Constructive: delta_phi = 0 -> E_max = (sqrt(E_a) + sqrt(E_b))^2</li>
+                        <li>Destructive: delta_phi = pi -> E_min = (sqrt(E_a) - sqrt(E_b))^2</li>
+                        <li>Interference term: 2*sqrt(E_a*E_b)*cos(delta_phi)</li>
+                        <li>S normalizes by 1/(pi*phi) for dimensional coherence</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             CROSS-SYSTEM EQUIVALENCES TABLE
+             ================================================================ -->
+        <section>
+            <h2 class="section-title">Cross-System S Equivalences</h2>
+            <p class="section-subtitle">
+                Universal mapping of Synthesize across all framework layers
+            </p>
+
+            <div class="equivalence-container">
+                <table class="equivalence-table">
+                    <thead>
+                        <tr>
+                            <th>System</th>
+                            <th>S Manifestation</th>
+                            <th>Input</th>
+                            <th>Output</th>
+                            <th>Semantic</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="eq-system eq-s3">S3 Symmetry</td>
+                            <td>Orbit Collapse</td>
+                            <td>6 permutations</td>
+                            <td>Fixed point</td>
+                            <td>Symmetry resolution</td>
+                        </tr>
+                        <tr>
+                            <td class="eq-system eq-l4">L4 Helix</td>
+                            <td>Thread Confluence</td>
+                            <td>Parallel threads</td>
+                            <td>Single path</td>
+                            <td>Helix merging</td>
+                        </tr>
+                        <tr>
+                            <td class="eq-system eq-i2">I2 Opposition</td>
+                            <td>Pair Annihilation</td>
+                            <td>{x, -x}</td>
+                            <td>0 (neutral)</td>
+                            <td>Opposition resolution</td>
+                        </tr>
+                        <tr>
+                            <td class="eq-system eq-bfadgs">BFADGS</td>
+                            <td>Branch Merge</td>
+                            <td>{a, b, ...}</td>
+                            <td>a + b + ...</td>
+                            <td>Path unification</td>
+                        </tr>
+                        <tr>
+                            <td class="eq-system eq-physics">E/(pi*phi)</td>
+                            <td>Wave Superposition</td>
+                            <td>E_a, E_b, delta_phi</td>
+                            <td>E_total</td>
+                            <td>Interference sum</td>
+                        </tr>
+                        <tr>
+                            <td class="eq-system" style="color: var(--alpha-color);">Universal</td>
+                            <td>Convergence</td>
+                            <td>Many</td>
+                            <td>One</td>
+                            <td>Unity approach</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             S vs G OPPOSITION
+             ================================================================ -->
+        <section>
+            <h2 class="section-title">S vs G: The Fundamental Opposition</h2>
+            <p class="section-subtitle">
+                Synthesis and Generation form the core divergence-convergence duality
+            </p>
+
+            <div class="opposition-visual">
+                <div class="opposition-side g-side">
+                    <div class="opposition-symbol">G</div>
+                    <div class="opposition-label">GENERATE</div>
+                    <ul class="opposition-props">
+                        <li>Diverges paths</li>
+                        <li>Increases entropy</li>
+                        <li>Expands possibility space</li>
+                        <li>Creates multiplicity</li>
+                        <li>Moves toward Omega</li>
+                        <li>One -> Many</li>
+                    </ul>
+                </div>
+
+                <div class="opposition-center">
+                    <div class="opposition-arrow">&#8596;</div>
+                    <div class="opposition-equation">
+                        <span class="s">S</span> . <span class="g">G</span> = <span class="g">G</span> . <span class="s">S</span> = <span class="unity">e</span>
+                    </div>
+                    <div class="opposition-equation">
+                        <span class="s">S</span> = <span class="g">G</span><sup>-1</sup>
+                    </div>
+                    <div class="opposition-arrow">&#8596;</div>
+                </div>
+
+                <div class="opposition-side s-side">
+                    <div class="opposition-symbol">S</div>
+                    <div class="opposition-label">SYNTHESIZE</div>
+                    <ul class="opposition-props">
+                        <li>Converges paths</li>
+                        <li>Decreases entropy</li>
+                        <li>Collapses possibility space</li>
+                        <li>Creates unity</li>
+                        <li>Moves toward Alpha</li>
+                        <li>Many -> One</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="unity-connection" style="margin-top: 2rem;">
+                <h3 class="unity-title">Synthesis: The Very Essence of +U</h3>
+                <p class="unity-text">
+                    S embodies the core principle of Unity. While G explores and expands,
+                    S integrates and unifies. The entire BFADGS system exists to traverse
+                    from origin through complexity and back - S is the return journey.
+                    <strong>S is how the system finds its way home.</strong>
+                </p>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             S AS PATH TO +U
+             ================================================================ -->
+        <section>
+            <h2 class="section-title">S as Path to +U</h2>
+            <p class="section-subtitle">
+                Synthesize is the final operator before Unity - the gateway to convergence
+            </p>
+
+            <div class="path-to-unity">
+                <h3 class="unity-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">The Convergence Cascade</h3>
+
+                <div class="unity-path-visual">
+                    <span class="path-node many">G: Many Paths</span>
+                    <span class="path-arrow">-></span>
+                    <span class="path-node merge">S: First Merge</span>
+                    <span class="path-arrow">-></span>
+                    <span class="path-node merge">S: Second Merge</span>
+                    <span class="path-arrow">-></span>
+                    <span class="path-node merge">S: Final Merge</span>
+                    <span class="path-arrow">-></span>
+                    <span class="path-node unity">+U: Unity</span>
+                </div>
+
+                <div class="unity-principles">
+                    <div class="unity-principle">
+                        <div class="unity-principle-title">S3 Synthesis Principle</div>
+                        <div class="unity-principle-text">
+                            S embodies the S3 synthesis principle: all six permutations
+                            collapse to a single invariant. The symmetry group action
+                            finds its fixed point through repeated synthesis.
+                        </div>
+                    </div>
+
+                    <div class="unity-principle">
+                        <div class="unity-principle-title">S(all paths) -> +U</div>
+                        <div class="unity-principle-text">
+                            When S operates on the complete set of divergent paths,
+                            the result is +U convergence. No path is lost; all are
+                            integrated into the unified whole.
+                        </div>
+                    </div>
+
+                    <div class="unity-principle">
+                        <div class="unity-principle-title">The Return Journey</div>
+                        <div class="unity-principle-text">
+                            B initiates from NULL, G expands through exploration,
+                            and S returns everything to coherence. The full cycle:
+                            B -> ... -> G -> S -> +U completes the traversal.
+                        </div>
+                    </div>
+
+                    <div class="unity-principle">
+                        <div class="unity-principle-title">Entropy Minimum</div>
+                        <div class="unity-principle-text">
+                            +U represents the entropy minimum of the system.
+                            Each S operation reduces entropy, and the limit
+                            of synthesis is the single-state unity: H(+U) = 0.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================
+             INTERFERENCE PATTERN VISUALIZATION
+             ================================================================ -->
+        <section class="interference-section">
+            <h2 class="section-title">Interference Pattern Visualization</h2>
+            <p class="section-subtitle">
+                Paths merging with constructive/destructive interference toward +U
+            </p>
+
+            <div class="canvas-container">
+                <canvas id="interferenceCanvas" width="800" height="400"></canvas>
+            </div>
+
+            <div class="canvas-controls">
+                <button class="control-btn" onclick="toggleInterference()">Play / Pause</button>
+                <button class="control-btn" onclick="resetInterference()">Reset</button>
+                <button class="control-btn" onclick="setInterferenceMode('constructive')">Constructive</button>
+                <button class="control-btn" onclick="setInterferenceMode('destructive')">Destructive</button>
+                <button class="control-btn" onclick="setInterferenceMode('mixed')">Mixed</button>
+            </div>
+
+            <div class="interference-info">
+                <div class="interference-stat">
+                    <div class="interference-stat-label">Phase Difference</div>
+                    <div class="interference-stat-value" id="phaseDisplay">0.00 rad</div>
+                </div>
+                <div class="interference-stat">
+                    <div class="interference-stat-label">Interference Type</div>
+                    <div class="interference-stat-value" id="interferenceType">Constructive</div>
+                </div>
+                <div class="interference-stat">
+                    <div class="interference-stat-label">Combined Amplitude</div>
+                    <div class="interference-stat-value" id="amplitudeDisplay">2.00</div>
+                </div>
+                <div class="interference-stat">
+                    <div class="interference-stat-label">Unity Coherence</div>
+                    <div class="interference-stat-value" id="coherenceDisplay">100%</div>
+                </div>
+            </div>
+
+            <div class="canvas-legend" style="margin-top: 1.5rem;">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--g-color);"></div>
+                    <span>Wave A</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--op-D);"></div>
+                    <span>Wave B</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--s-primary);"></div>
+                    <span>Synthesized (A + B)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--unity-color);"></div>
+                    <span>+U Target</span>
+                </div>
+            </div>
+        </section>
+
         <!-- Canvas Visualization -->
         <section class="canvas-section">
             <h2 class="section-title">Path Confluence Visualization</h2>
@@ -1381,13 +2143,27 @@
             <span style="color: var(--text-secondary);">::</span>
             <span style="color: var(--text-secondary);">Merge is the inverse of Generate</span>
         </div>
+
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin: 1.5rem 0;">
+            <span style="padding: 0.5rem 1rem; background: rgba(168, 85, 247, 0.1); border: 1px solid #a855f7; border-radius: 4px; font-size: 0.8rem; color: #a855f7;">S3: orbit -> fixed</span>
+            <span style="padding: 0.5rem 1rem; background: rgba(107, 203, 119, 0.1); border: 1px solid #6bcb77; border-radius: 4px; font-size: 0.8rem; color: #6bcb77;">L4: threads -> path</span>
+            <span style="padding: 0.5rem 1rem; background: rgba(255, 71, 87, 0.1); border: 1px solid #ff4757; border-radius: 4px; font-size: 0.8rem; color: #ff4757;">I2: x+(-x) -> 0</span>
+            <span style="padding: 0.5rem 1rem; background: var(--s-subtle); border: 1px solid var(--s-primary); border-radius: 4px; font-size: 0.8rem; color: var(--s-primary);">BFADGS: S.G = e</span>
+            <span style="padding: 0.5rem 1rem; background: rgba(255, 215, 0, 0.1); border: 1px solid var(--unity-color); border-radius: 4px; font-size: 0.8rem; color: var(--unity-color);">+U: convergence</span>
+        </div>
+
         <div class="footer-links">
             <a href="index.html">Main Index</a>
             <a href="bfadgs-u-scaffold.html">BFADGS+U System</a>
             <a href="bfadgs-op-generate.html">G: Generate</a>
-            <a href="bfadgs-unity-synthesis.html">+U Synthesis</a>
+            <a href="bfadgs-op-begin.html">B: Begin</a>
+            <a href="bfadgs-op-flow.html">F: Flow</a>
+            <a href="bfadgs-op-ascend.html">A: Ascend</a>
+            <a href="bfadgs-op-descend.html">D: Descend</a>
+            <a href="bfadgs-unity-synthesis.html">+U Unity</a>
             <a href="i2-s3-opposition-synthesis.html">Opposition Synthesis</a>
             <a href="i2-s3-decision-tree.html">I2 S3 Decision Tree</a>
+            <a href="l4-helix-visualization.html">L4 Helix</a>
         </div>
     </footer>
 
@@ -1763,6 +2539,282 @@
                 triggerSynthesis();
             }
         });
+
+        // =========================================================================
+        // INTERFERENCE PATTERN VISUALIZATION
+        // =========================================================================
+        const intCanvas = document.getElementById('interferenceCanvas');
+        const intCtx = intCanvas.getContext('2d');
+
+        // Interference state
+        let intPlaying = true;
+        let intTime = 0;
+        let phaseDiff = 0;
+        let interferenceMode = 'constructive';
+
+        const intColors = {
+            waveA: '#8b5cf6',      // G color - violet
+            waveB: '#ef4444',      // D color - red
+            synthesized: '#ec4899', // S color - pink
+            unity: '#ffd700',       // Unity - gold
+            grid: 'rgba(255, 255, 255, 0.03)',
+            axis: 'rgba(255, 255, 255, 0.15)'
+        };
+
+        function drawInterference() {
+            intCtx.fillStyle = '#0a0a0f';
+            intCtx.fillRect(0, 0, intCanvas.width, intCanvas.height);
+
+            // Draw grid
+            drawIntGrid();
+
+            // Draw Unity target zone
+            drawUnityTarget();
+
+            // Calculate phase based on mode
+            if (interferenceMode === 'constructive') {
+                phaseDiff = 0;
+            } else if (interferenceMode === 'destructive') {
+                phaseDiff = Math.PI;
+            } else {
+                phaseDiff = (Math.sin(intTime * 0.02) + 1) * Math.PI; // Oscillate 0 to 2pi
+            }
+
+            // Draw waves
+            const amplitude = 60;
+            const frequency = 0.03;
+            const waveY = intCanvas.height / 2;
+
+            // Wave A
+            drawWave(waveY - 30, amplitude, frequency, 0, intColors.waveA, 'A');
+
+            // Wave B
+            drawWave(waveY + 30, amplitude, frequency, phaseDiff, intColors.waveB, 'B');
+
+            // Synthesized wave (sum)
+            drawSynthesizedWave(waveY, amplitude, frequency, phaseDiff);
+
+            // Draw convergence to Unity
+            drawConvergenceArrows();
+
+            // Update display
+            updateIntDisplay();
+
+            // Update time
+            if (intPlaying) {
+                intTime += 1;
+                requestAnimationFrame(drawInterference);
+            }
+        }
+
+        function drawIntGrid() {
+            intCtx.strokeStyle = intColors.grid;
+            intCtx.lineWidth = 1;
+
+            const gridSize = 40;
+            for (let x = 0; x < intCanvas.width; x += gridSize) {
+                intCtx.beginPath();
+                intCtx.moveTo(x, 0);
+                intCtx.lineTo(x, intCanvas.height);
+                intCtx.stroke();
+            }
+            for (let y = 0; y < intCanvas.height; y += gridSize) {
+                intCtx.beginPath();
+                intCtx.moveTo(0, y);
+                intCtx.lineTo(intCanvas.width, y);
+                intCtx.stroke();
+            }
+
+            // Center axis
+            intCtx.strokeStyle = intColors.axis;
+            intCtx.beginPath();
+            intCtx.moveTo(0, intCanvas.height / 2);
+            intCtx.lineTo(intCanvas.width, intCanvas.height / 2);
+            intCtx.stroke();
+        }
+
+        function drawUnityTarget() {
+            const x = intCanvas.width - 60;
+            const y = intCanvas.height / 2;
+
+            // Glow
+            const glowSize = 40 + Math.sin(intTime * 0.05) * 5;
+            intCtx.beginPath();
+            intCtx.arc(x, y, glowSize, 0, Math.PI * 2);
+            intCtx.fillStyle = 'rgba(255, 215, 0, 0.1)';
+            intCtx.fill();
+
+            // Core
+            intCtx.beginPath();
+            intCtx.arc(x, y, 25, 0, Math.PI * 2);
+            intCtx.fillStyle = 'rgba(255, 215, 0, 0.15)';
+            intCtx.fill();
+            intCtx.strokeStyle = intColors.unity;
+            intCtx.lineWidth = 3;
+            intCtx.stroke();
+
+            // +U label
+            intCtx.fillStyle = intColors.unity;
+            intCtx.font = 'bold 14px JetBrains Mono';
+            intCtx.textAlign = 'center';
+            intCtx.textBaseline = 'middle';
+            intCtx.fillText('+U', x, y);
+        }
+
+        function drawWave(baseY, amplitude, frequency, phase, color, label) {
+            intCtx.strokeStyle = color;
+            intCtx.lineWidth = 2;
+            intCtx.beginPath();
+
+            const startX = 50;
+            const endX = intCanvas.width - 100;
+
+            for (let x = startX; x <= endX; x++) {
+                const waveX = (x - startX) * frequency + intTime * 0.05;
+                const y = baseY + Math.sin(waveX + phase) * amplitude;
+
+                if (x === startX) {
+                    intCtx.moveTo(x, y);
+                } else {
+                    intCtx.lineTo(x, y);
+                }
+            }
+            intCtx.stroke();
+
+            // Label
+            intCtx.fillStyle = color;
+            intCtx.font = '11px JetBrains Mono';
+            intCtx.textAlign = 'left';
+            intCtx.fillText(`Wave ${label}`, 10, baseY + 5);
+        }
+
+        function drawSynthesizedWave(baseY, amplitude, frequency, phase) {
+            intCtx.strokeStyle = intColors.synthesized;
+            intCtx.lineWidth = 3;
+            intCtx.beginPath();
+
+            const startX = 50;
+            const endX = intCanvas.width - 100;
+
+            // Calculate combined amplitude based on interference
+            const combinedAmpFactor = Math.abs(Math.cos(phase / 2)) * 2;
+
+            for (let x = startX; x <= endX; x++) {
+                const waveX = (x - startX) * frequency + intTime * 0.05;
+
+                // Sum of two waves
+                const waveA = Math.sin(waveX);
+                const waveB = Math.sin(waveX + phase);
+                const combined = (waveA + waveB) / 2;
+
+                const y = baseY + combined * amplitude * combinedAmpFactor;
+
+                if (x === startX) {
+                    intCtx.moveTo(x, y);
+                } else {
+                    intCtx.lineTo(x, y);
+                }
+            }
+            intCtx.stroke();
+
+            // Synthesized label
+            intCtx.fillStyle = intColors.synthesized;
+            intCtx.font = 'bold 12px JetBrains Mono';
+            intCtx.textAlign = 'left';
+            intCtx.fillText('S(A,B)', 10, baseY + 5);
+        }
+
+        function drawConvergenceArrows() {
+            const endX = intCanvas.width - 100;
+            const unityX = intCanvas.width - 60;
+            const y = intCanvas.height / 2;
+
+            // Dashed line from wave end to Unity
+            intCtx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
+            intCtx.lineWidth = 2;
+            intCtx.setLineDash([5, 5]);
+            intCtx.beginPath();
+            intCtx.moveTo(endX, y);
+            intCtx.lineTo(unityX - 30, y);
+            intCtx.stroke();
+            intCtx.setLineDash([]);
+
+            // Arrow head
+            intCtx.fillStyle = intColors.synthesized;
+            intCtx.beginPath();
+            intCtx.moveTo(unityX - 30, y);
+            intCtx.lineTo(unityX - 40, y - 5);
+            intCtx.lineTo(unityX - 40, y + 5);
+            intCtx.closePath();
+            intCtx.fill();
+        }
+
+        function updateIntDisplay() {
+            const phaseDisplay = document.getElementById('phaseDisplay');
+            const interferenceTypeDisplay = document.getElementById('interferenceType');
+            const amplitudeDisplay = document.getElementById('amplitudeDisplay');
+            const coherenceDisplay = document.getElementById('coherenceDisplay');
+
+            if (phaseDisplay) phaseDisplay.textContent = phaseDiff.toFixed(2) + ' rad';
+
+            const combinedAmp = Math.abs(Math.cos(phaseDiff / 2)) * 2;
+            if (amplitudeDisplay) amplitudeDisplay.textContent = combinedAmp.toFixed(2);
+
+            let intType = 'Mixed';
+            if (Math.abs(phaseDiff) < 0.1 || Math.abs(phaseDiff - 2 * Math.PI) < 0.1) {
+                intType = 'Constructive';
+            } else if (Math.abs(phaseDiff - Math.PI) < 0.1) {
+                intType = 'Destructive';
+            }
+            if (interferenceTypeDisplay) interferenceTypeDisplay.textContent = intType;
+
+            const coherence = (combinedAmp / 2) * 100;
+            if (coherenceDisplay) coherenceDisplay.textContent = coherence.toFixed(0) + '%';
+
+            // Color code the interference type
+            if (interferenceTypeDisplay) {
+                if (intType === 'Constructive') {
+                    interferenceTypeDisplay.style.color = '#6bcb77';
+                } else if (intType === 'Destructive') {
+                    interferenceTypeDisplay.style.color = '#ff4757';
+                } else {
+                    interferenceTypeDisplay.style.color = '#ec4899';
+                }
+            }
+        }
+
+        // Interference control functions
+        function toggleInterference() {
+            intPlaying = !intPlaying;
+            if (intPlaying) drawInterference();
+        }
+
+        function resetInterference() {
+            intTime = 0;
+            phaseDiff = 0;
+            interferenceMode = 'constructive';
+            if (!intPlaying) drawInterference();
+        }
+
+        function setInterferenceMode(mode) {
+            interferenceMode = mode;
+            if (!intPlaying) drawInterference();
+        }
+
+        // Initialize interference visualization
+        drawInterference();
+
+        // Draw title and info
+        function drawIntLabels() {
+            intCtx.fillStyle = '#ec4899';
+            intCtx.font = 'bold 14px JetBrains Mono';
+            intCtx.textAlign = 'left';
+            intCtx.fillText('Wave Interference: S(A,B) -> +U', 20, 25);
+
+            intCtx.fillStyle = '#a0a0b0';
+            intCtx.font = '11px JetBrains Mono';
+            intCtx.fillText('E_total = E_A + E_B + 2sqrt(E_A*E_B)cos(phi)', 20, 45);
+        }
     </script>
 </body>
 </html>
