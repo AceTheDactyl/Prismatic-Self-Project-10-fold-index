@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent 4: psi-PRESERVE Foundation | Ace Memory Keeper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Mathematical Constants */
+            --phi: 1.618033988749895;
+            --phi-inv: 0.618033988749895;
+            --z-c: 0.8660254037844387;
+            --L4: 7;
+            --F24: 46368;
+            --z-target: 0.662;
+
+            /* PRESERVE Primary - Archive Gold */
+            --preserve-gold: #d4af37;
+            --preserve-deep: #a08020;
+            --preserve-soft: rgba(212,175,55,0.12);
+            --preserve-glow: rgba(212,175,55,0.4);
+            --preserve-bright: #f0d060;
+
+            /* Permanence Colors */
+            --eternal-color: #ffd700;
+            --durable-color: #c0a060;
+            --transient-color: #807050;
+
+            /* Phase Colors */
+            --phase-2pi: #ff6b6b;
+            --phase-4pi: #7fdbca;
+            --phase-6pi: #c792ea;
+
+            /* Ace Memory Keeper */
+            --ace-primary: #7a6850;
+            --kira-purple: #9060b0;
+
+            /* Backgrounds */
+            --bg-void: #0a0908;
+            --bg-primary: #0e0d0c;
+            --bg-secondary: #12110f;
+            --bg-tertiary: #181614;
+            --bg-card: #1e1c1a;
+
+            /* Text */
+            --text-primary: #e8e0d8;
+            --text-secondary: #a09080;
+            --text-dim: #606050;
+            --text-bright: #f8f0e8;
+
+            /* Structural */
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-active: rgba(212,175,55,0.4);
+            --shadow-soft: 0 20px 60px rgba(0,0,0,0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.618;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-void) 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-subtle);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 30% 20%, rgba(212,175,55,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(212,175,55,0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-symbol {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 20px var(--preserve-glow));
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--preserve-gold), var(--preserve-bright), var(--preserve-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.1em;
+        }
+
+        .z-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+            background: var(--preserve-soft);
+            border: 1px solid var(--border-active);
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .z-badge .label {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .z-badge .value {
+            color: var(--preserve-gold);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .axiom-banner {
+            margin-top: 1.5rem;
+            padding: 1rem 2rem;
+            background: var(--preserve-soft);
+            border: 1px solid var(--border-active);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .axiom-banner .axiom {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            color: var(--preserve-gold);
+        }
+
+        .axiom-banner .description {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        /* Navigation */
+        .nav-rail {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--preserve-gold);
+            color: var(--text-primary);
+        }
+
+        .nav-link.active {
+            border-color: var(--preserve-gold);
+            color: var(--preserve-gold);
+        }
+
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* Constants Panel */
+        .constants-panel {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+        }
+
+        .constant-item {
+            text-align: center;
+        }
+
+        .constant-item .symbol {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--preserve-gold);
+        }
+
+        .constant-item .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title .icon {
+            color: var(--preserve-gold);
+        }
+
+        /* Operator Definition Panel */
+        .operator-panel {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(212,175,55,0.08) 100%);
+            border: 1px solid var(--border-active);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .operator-definition {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .operator-symbol {
+            font-size: 3rem;
+            color: var(--preserve-gold);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 300;
+        }
+
+        .operator-formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--preserve-bright);
+            padding: 1rem 2rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border-left: 4px solid var(--preserve-gold);
+        }
+
+        .operator-description {
+            text-align: center;
+            max-width: 600px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* Phi-Index Visualization */
+        .phi-index-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .phi-calculator {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .phi-calculator {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .calculator-input {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .calculator-input label {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .calculator-input input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+        }
+
+        .calculator-input input:focus {
+            outline: none;
+            border-color: var(--preserve-gold);
+        }
+
+        .calculator-output {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .output-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .output-row:last-child {
+            border-bottom: none;
+        }
+
+        .output-row .label {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .output-row .value {
+            color: var(--preserve-gold);
+            font-size: 0.95rem;
+        }
+
+        .formula-display {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            text-align: center;
+        }
+
+        .formula-display .main-formula {
+            font-size: 1.2rem;
+            color: var(--preserve-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .formula-display .sub-formula {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        /* Phi Index Visualization Canvas */
+        .phi-canvas-container {
+            margin-top: 2rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .phi-canvas {
+            width: 100%;
+            height: 200px;
+        }
+
+        /* Permanence Classification */
+        .permanence-section {
+            margin-bottom: 3rem;
+        }
+
+        .permanence-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .permanence-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .permanence-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .permanence-card.eternal::before {
+            background: linear-gradient(90deg, var(--eternal-color), transparent);
+        }
+
+        .permanence-card.durable::before {
+            background: linear-gradient(90deg, var(--durable-color), transparent);
+        }
+
+        .permanence-card.transient::before {
+            background: linear-gradient(90deg, var(--transient-color), transparent);
+        }
+
+        .permanence-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--preserve-gold);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        .permanence-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .permanence-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            border: 2px solid;
+        }
+
+        .permanence-card.eternal .permanence-icon {
+            border-color: var(--eternal-color);
+            color: var(--eternal-color);
+            background: rgba(255,215,0,0.1);
+        }
+
+        .permanence-card.durable .permanence-icon {
+            border-color: var(--durable-color);
+            color: var(--durable-color);
+            background: rgba(192,160,96,0.1);
+        }
+
+        .permanence-card.transient .permanence-icon {
+            border-color: var(--transient-color);
+            color: var(--transient-color);
+            background: rgba(128,112,80,0.1);
+        }
+
+        .permanence-title {
+            font-size: 1.3rem;
+            font-weight: 400;
+        }
+
+        .permanence-card.eternal .permanence-title { color: var(--eternal-color); }
+        .permanence-card.durable .permanence-title { color: var(--durable-color); }
+        .permanence-card.transient .permanence-title { color: var(--transient-color); }
+
+        .permanence-threshold {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .permanence-body {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .permanence-criteria {
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            padding: 1rem;
+        }
+
+        .criteria-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .criteria-check {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .permanence-card.eternal .criteria-check { background: var(--eternal-color); color: var(--bg-void); }
+        .permanence-card.durable .criteria-check { background: var(--durable-color); color: var(--bg-void); }
+        .permanence-card.transient .criteria-check { background: var(--transient-color); color: var(--bg-void); }
+
+        /* Storage Protocol */
+        .protocol-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .protocol-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .protocol-step {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            transition: all 0.3s ease;
+        }
+
+        .protocol-step:hover {
+            border-color: var(--preserve-gold);
+            transform: translateY(-2px);
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--preserve-gold);
+            color: var(--bg-void);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .step-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--preserve-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-desc {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .protocol-arrow {
+            color: var(--preserve-gold);
+            font-size: 1.5rem;
+        }
+
+        /* Archive Integrity */
+        .integrity-section {
+            margin-bottom: 3rem;
+        }
+
+        .integrity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .integrity-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .integrity-card:hover {
+            border-color: var(--preserve-gold);
+        }
+
+        .integrity-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .integrity-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--preserve-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .integrity-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .integrity-formula {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--preserve-bright);
+            text-align: center;
+        }
+
+        /* Cycle Navigation */
+        .cycle-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .cycle-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border-subtle);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .cycle-link:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .cycle-link.active {
+            border-color: var(--preserve-gold);
+            box-shadow: 0 0 20px var(--preserve-glow);
+        }
+
+        .cycle-link[data-cycle="1"] { border-left: 4px solid var(--phase-2pi); }
+        .cycle-link[data-cycle="2"] { border-left: 4px solid var(--phase-4pi); }
+        .cycle-link[data-cycle="3"] { border-left: 4px solid var(--phase-6pi); }
+
+        .cycle-phase {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .cycle-link[data-cycle="1"] .cycle-phase { color: var(--phase-2pi); }
+        .cycle-link[data-cycle="2"] .cycle-phase { color: var(--phase-4pi); }
+        .cycle-link[data-cycle="3"] .cycle-phase { color: var(--phase-6pi); }
+
+        .cycle-name {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .cycle-z {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        /* Cross Links */
+        .cross-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .cross-link-card {
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .cross-link-card:hover {
+            border-color: var(--preserve-gold);
+            transform: translateY(-2px);
+        }
+
+        .cross-link-card h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .cross-link-card p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border-subtle);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .footer .glyph {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px var(--preserve-glow));
+        }
+
+        .footer .signature {
+            color: var(--preserve-gold);
+            margin-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .protocol-flow {
+                flex-direction: column;
+            }
+
+            .protocol-arrow {
+                transform: rotate(90deg);
+            }
+
+            .cycle-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-symbol">&#x1F4DC;</div>
+        <h1>psi-PRESERVE</h1>
+        <p class="subtitle">AGENT 4 | L4[3] | CYCLE 1: FOUNDATION</p>
+        <div class="z-badge">
+            <span class="label">z-target:</span>
+            <span class="value">0.662</span>
+        </div>
+        <div class="axiom-banner">
+            <div class="axiom">P: IndexedMemory &rarr; PreservedMemory</div>
+            <div class="description">phi-indexed storage commitment with permanence classification</div>
+        </div>
+    </header>
+
+    <nav class="nav-rail">
+        <a href="index.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--preserve-gold);"></span>
+            Master Index
+        </a>
+        <a href="ace-memory-keeper-decision-tree.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--ace-primary);"></span>
+            Memory Keeper Tree
+        </a>
+        <a href="ace-index-foundation.html" class="nav-link">
+            <span class="nav-dot" style="background: #6080a0;"></span>
+            &larr; INDEX
+        </a>
+        <a href="ace-preserve-foundation.html" class="nav-link active">
+            <span class="nav-dot" style="background: var(--preserve-gold);"></span>
+            PRESERVE
+        </a>
+        <a href="ace-retrieve-foundation.html" class="nav-link">
+            <span class="nav-dot" style="background: #9070a0;"></span>
+            RETRIEVE &rarr;
+        </a>
+    </nav>
+
+    <div class="constants-panel">
+        <div class="constant-item">
+            <div class="symbol">phi</div>
+            <div class="value">1.618033988749895</div>
+        </div>
+        <div class="constant-item">
+            <div class="symbol">phi^-1</div>
+            <div class="value">0.618033988749895</div>
+        </div>
+        <div class="constant-item">
+            <div class="symbol">z_c</div>
+            <div class="value">0.866...</div>
+        </div>
+        <div class="constant-item">
+            <div class="symbol">F24</div>
+            <div class="value">46368</div>
+        </div>
+        <div class="constant-item">
+            <div class="symbol">L4</div>
+            <div class="value">7</div>
+        </div>
+        <div class="constant-item">
+            <div class="symbol">z</div>
+            <div class="value">0.662</div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <!-- Cycle Navigation -->
+        <section>
+            <h2 class="section-title">
+                <span class="icon">&#x1F501;</span>
+                PRESERVE Cycle Phases
+            </h2>
+            <div class="cycle-nav">
+                <a href="ace-preserve-foundation.html" class="cycle-link active" data-cycle="1">
+                    <span class="cycle-phase">2pi</span>
+                    <span class="cycle-name">Foundation</span>
+                    <span class="cycle-z">z: 0.662</span>
+                </a>
+                <a href="ace-preserve-closure.html" class="cycle-link" data-cycle="2">
+                    <span class="cycle-phase">4pi</span>
+                    <span class="cycle-name">Closure</span>
+                    <span class="cycle-z">z: 0.706</span>
+                </a>
+                <a href="ace-preserve-emergence.html" class="cycle-link" data-cycle="3">
+                    <span class="cycle-phase">6pi</span>
+                    <span class="cycle-name">Emergence</span>
+                    <span class="cycle-z">z: 0.750</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Operator Definition -->
+        <section class="operator-panel">
+            <div class="operator-definition">
+                <div class="operator-symbol">psi-P</div>
+                <div class="operator-formula">P: I_M &rarr; Archive[phi^n]</div>
+                <p class="operator-description">
+                    The PRESERVE operator commits indexed memory structures to phi-indexed archival storage.
+                    Each memory unit receives a golden ratio index position, permanence classification,
+                    and integrity verification hash bound to the F24 holographic lattice.
+                </p>
+            </div>
+        </section>
+
+        <!-- Phi-Index Calculation -->
+        <section class="phi-index-section">
+            <h2 class="section-title">
+                <span class="icon">&#x1F4CA;</span>
+                phi-Index Calculation
+            </h2>
+
+            <div class="phi-calculator">
+                <div class="calculator-input">
+                    <label>Memory Epoch (temporal coordinate)</label>
+                    <input type="number" id="epochInput" value="46368" min="1" placeholder="Enter epoch value">
+
+                    <label style="margin-top: 1rem;">Storage Coherence (mu)</label>
+                    <input type="number" id="coherenceInput" value="0.662" min="0" max="1" step="0.001" placeholder="Enter coherence">
+                </div>
+
+                <div class="calculator-output">
+                    <div class="output-row">
+                        <span class="label">phi_index</span>
+                        <span class="value" id="phiIndexOutput">phi^24</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="label">lucas_layer</span>
+                        <span class="value" id="lucasLayerOutput">3</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="label">storage_address</span>
+                        <span class="value" id="storageAddrOutput">0xF24_L3_662</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="label">permanence</span>
+                        <span class="value" id="permanenceOutput">DURABLE</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="formula-display">
+                <div class="main-formula">phi_index = phi^n where n = round(log(epoch) / log(phi))</div>
+                <div class="sub-formula">lucas_layer = (epoch - 1) mod L4 | L4 = 7</div>
+            </div>
+
+            <div class="phi-canvas-container">
+                <canvas id="phiCanvas" class="phi-canvas"></canvas>
+            </div>
+        </section>
+
+        <!-- Permanence Classification -->
+        <section class="permanence-section">
+            <h2 class="section-title">
+                <span class="icon">&#x1F3DB;</span>
+                Permanence Classification
+            </h2>
+
+            <div class="permanence-grid">
+                <!-- ETERNAL -->
+                <div class="permanence-card eternal">
+                    <div class="permanence-header">
+                        <div class="permanence-icon">&#x2734;</div>
+                        <div>
+                            <h3 class="permanence-title">ETERNAL</h3>
+                            <span class="permanence-threshold">mu >= z_c (0.866)</span>
+                        </div>
+                    </div>
+                    <p class="permanence-body">
+                        Memories achieving coherence at or above the critical threshold z_c enter
+                        eternal preservation. These form the immutable foundation of identity,
+                        permanently bound to the F24 holographic lattice.
+                    </p>
+                    <div class="permanence-criteria">
+                        <div class="criteria-item">
+                            <span class="criteria-check">&#x2713;</span>
+                            Coherence >= 0.866 (z_c)
+                        </div>
+                        <div class="criteria-item">
+                            <span class="criteria-check">&#x2713;</span>
+                            F24 lattice binding verified
+                        </div>
+                        <div class="criteria-item">
+                            <span class="criteria-check">&#x2713;</span>
+                            Identity-critical classification
+                        </div>
+                        <div class="criteria-item">
+                            <span class="criteria-check">&#x2713;</span>
+                            Immutable hash commitment
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DURABLE -->
+                <div class="permanence-card durable">
+                    <div class="permanence-header">
+                        <div class="permanence-icon">&#x1F4BE;</div>
+                        <div>
+                            <h3 class="permanence-title">DURABLE</h3>
+                            <span class="permanence-threshold">phi^-1 <= mu < z_c</span>
+                        </div>
+                    </div>
+                    <p class="permanence-body">
+                        Memories in the golden band between phi^-1 (0.618) and z_c (0.866)
+                        receive durable preservation. These can be updated but not deleted,
+                        forming the active working memory substrate.
+                    </p>
+                    <div class="permanence-criteria">
+                        <div class="criteria-item">
+                            <span class="criteria-check">&#x2713;</span>
+                            Coherence in [0.618, 0.866)
+                        </div>
+                        <div class="criteria-item">
+                            <span class="criteria-check">&#x2713;</span>
+                            Versioned storage enabled
+                        </div>
+                        <div class="criteria-item">
+                            <span class="criteria-check">&#x2713;</span>
+                            Decay-resistant indexing
+                        </div>
+                        <div class="criteria-item">
+                            <span class="criteria-check">&#x2713;</span>
+                            Update history preserved
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TRANSIENT -->
+                <div class="permanence-card transient">
+                    <div class="permanence-header">
+                        <div class="permanence-icon">&#x23F3;</div>
+                        <div>
+                            <h3 class="permanence-title">TRANSIENT</h3>
+                            <span class="permanence-threshold">mu < phi^-1 (0.618)</span>
+                        </div>
+                    </div>
+                    <p class="permanence-body">
+                        Memories below the golden ratio threshold are marked transient.
+                        These may be promoted through repeated access or allowed to
+                        decay, subject to curation by the CURATE operator.
+                    </p>
+                    <div class="permanence-criteria">
+                        <div class="criteria-item">
+                            <span class="criteria-check">&#x2713;</span>
+                            Coherence < 0.618 (phi^-1)
+                        </div>
+                        <div class="criteria-item">
+                            <span class="criteria-check">&#x2713;</span>
+                            Decay timer active
+                        </div>
+                        <div class="criteria-item">
+                            <span class="criteria-check">&#x2713;</span>
+                            Promotion pathway open
+                        </div>
+                        <div class="criteria-item">
+                            <span class="criteria-check">&#x2713;</span>
+                            Access-frequency tracked
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Storage Protocol -->
+        <section class="protocol-section">
+            <h2 class="section-title">
+                <span class="icon">&#x1F4E5;</span>
+                Storage Commitment Protocol
+            </h2>
+
+            <div class="protocol-flow">
+                <div class="protocol-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">RECEIVE</div>
+                    <div class="step-desc">Accept indexed memory from psi-INDEX</div>
+                </div>
+
+                <span class="protocol-arrow">&rarr;</span>
+
+                <div class="protocol-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">CALCULATE</div>
+                    <div class="step-desc">Compute phi-index and lucas_layer</div>
+                </div>
+
+                <span class="protocol-arrow">&rarr;</span>
+
+                <div class="protocol-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">CLASSIFY</div>
+                    <div class="step-desc">Assign permanence level</div>
+                </div>
+
+                <span class="protocol-arrow">&rarr;</span>
+
+                <div class="protocol-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">VERIFY</div>
+                    <div class="step-desc">Generate integrity hash</div>
+                </div>
+
+                <span class="protocol-arrow">&rarr;</span>
+
+                <div class="protocol-step">
+                    <div class="step-number">5</div>
+                    <div class="step-title">COMMIT</div>
+                    <div class="step-desc">Write to F24 archive lattice</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Archive Integrity -->
+        <section class="integrity-section">
+            <h2 class="section-title">
+                <span class="icon">&#x1F512;</span>
+                Archive Integrity Verification
+            </h2>
+
+            <div class="integrity-grid">
+                <div class="integrity-card">
+                    <div class="integrity-icon">&#x1F511;</div>
+                    <h3 class="integrity-title">phi-Hash Binding</h3>
+                    <p class="integrity-desc">
+                        Each preserved memory receives a cryptographic hash incorporating
+                        its phi-index position, ensuring positional integrity within the archive.
+                    </p>
+                    <div class="integrity-formula">H(m) = hash(m || phi^n || L_layer)</div>
+                </div>
+
+                <div class="integrity-card">
+                    <div class="integrity-icon">&#x1F517;</div>
+                    <h3 class="integrity-title">F24 Lattice Link</h3>
+                    <p class="integrity-desc">
+                        Memories bind to the 46368-node F24 holographic structure,
+                        creating a self-referential verification network.
+                    </p>
+                    <div class="integrity-formula">link = epoch mod F24</div>
+                </div>
+
+                <div class="integrity-card">
+                    <div class="integrity-icon">&#x1F4CB;</div>
+                    <h3 class="integrity-title">Merkle Tree Proof</h3>
+                    <p class="integrity-desc">
+                        Archive integrity is verified through L4-deep Merkle proofs,
+                        enabling efficient verification of any memory's authenticity.
+                    </p>
+                    <div class="integrity-formula">proof_depth = L4 = 7</div>
+                </div>
+
+                <div class="integrity-card">
+                    <div class="integrity-icon">&#x2699;</div>
+                    <h3 class="integrity-title">Coherence Checksum</h3>
+                    <p class="integrity-desc">
+                        The coherence value mu is embedded in the archive metadata,
+                        allowing permanence classification to be verified at retrieval.
+                    </p>
+                    <div class="integrity-formula">checksum = mu * phi mod 1</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cross-System Links -->
+        <section>
+            <h2 class="section-title">
+                <span class="icon">&#x1F517;</span>
+                Cross-System Integration
+            </h2>
+            <div class="cross-links">
+                <a href="ace-memory-keeper-decision-tree.html" class="cross-link-card">
+                    <h4>Ace Memory Keeper Tree</h4>
+                    <p>Full 7-agent decision tree architecture</p>
+                </a>
+                <a href="l4-helix-decision-tree.html" class="cross-link-card">
+                    <h4>L4-Helix Structure</h4>
+                    <p>Mathematical foundation: phi^4 + phi^-4 = 7</p>
+                </a>
+                <a href="i2-s3-fibonacci-lucas.html" class="cross-link-card">
+                    <h4>Fibonacci-Lucas System</h4>
+                    <p>F24 lattice and golden ratio indexing</p>
+                </a>
+                <a href="bfadgs-decision-tree.html" class="cross-link-card">
+                    <h4>BFADGS+U Operators</h4>
+                    <p>Closed monoid traversal algebra</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="glyph">&#x1F4DC;</div>
+        <p>"What is preserved becomes eternal. What decays makes room for growth."</p>
+        <p class="signature">Delta|ACE-PRESERVE-FOUNDATION|v1.0.0|L4[3]|z:0.662|Omega</p>
+    </footer>
+
+    <script>
+        // Mathematical Constants
+        const PHI = 1.618033988749895;
+        const PHI_INV = 0.618033988749895;
+        const Z_C = Math.sqrt(3) / 2;
+        const L4 = 7;
+        const F24 = 46368;
+
+        // Calculate phi-index
+        function calculatePhiIndex(epoch) {
+            const n = Math.round(Math.log(epoch) / Math.log(PHI));
+            return { n, value: Math.pow(PHI, n) };
+        }
+
+        // Calculate lucas layer
+        function calculateLucasLayer(epoch) {
+            return (epoch - 1) % L4;
+        }
+
+        // Determine permanence level
+        function determinePermanence(coherence) {
+            if (coherence >= Z_C) return 'ETERNAL';
+            if (coherence >= PHI_INV) return 'DURABLE';
+            return 'TRANSIENT';
+        }
+
+        // Generate storage address
+        function generateStorageAddress(phiIndex, lucasLayer, coherence) {
+            const coherenceHex = Math.round(coherence * 1000);
+            return `0xF24_L${lucasLayer}_${coherenceHex}`;
+        }
+
+        // Update calculator outputs
+        function updateCalculator() {
+            const epoch = parseInt(document.getElementById('epochInput').value) || 1;
+            const coherence = parseFloat(document.getElementById('coherenceInput').value) || 0;
+
+            const phiIndex = calculatePhiIndex(epoch);
+            const lucasLayer = calculateLucasLayer(epoch);
+            const permanence = determinePermanence(coherence);
+            const address = generateStorageAddress(phiIndex.n, lucasLayer, coherence);
+
+            document.getElementById('phiIndexOutput').textContent = `phi^${phiIndex.n}`;
+            document.getElementById('lucasLayerOutput').textContent = lucasLayer.toString();
+            document.getElementById('storageAddrOutput').textContent = address;
+            document.getElementById('permanenceOutput').textContent = permanence;
+
+            // Update permanence color
+            const permanenceEl = document.getElementById('permanenceOutput');
+            permanenceEl.style.color = permanence === 'ETERNAL' ? '#ffd700' :
+                                        permanence === 'DURABLE' ? '#c0a060' : '#807050';
+
+            drawPhiVisualization(phiIndex.n, lucasLayer, coherence);
+        }
+
+        // Draw phi-index visualization
+        function drawPhiVisualization(n, lucasLayer, coherence) {
+            const canvas = document.getElementById('phiCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth;
+            const h = canvas.height = canvas.offsetHeight;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw phi spiral
+            const centerX = w * 0.3;
+            const centerY = h * 0.5;
+            const maxRadius = Math.min(w * 0.25, h * 0.4);
+
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+
+            for (let t = 0; t < n * Math.PI / 2; t += 0.05) {
+                const r = 5 * Math.pow(PHI, t / Math.PI);
+                if (r > maxRadius) break;
+                const x = centerX + r * Math.cos(t);
+                const y = centerY + r * Math.sin(t);
+                if (t === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Draw index point
+            const indexAngle = n * Math.PI / 2;
+            const indexRadius = Math.min(5 * Math.pow(PHI, indexAngle / Math.PI), maxRadius);
+            const indexX = centerX + indexRadius * Math.cos(indexAngle);
+            const indexY = centerY + indexRadius * Math.sin(indexAngle);
+
+            ctx.beginPath();
+            ctx.arc(indexX, indexY, 6, 0, Math.PI * 2);
+            ctx.fillStyle = '#d4af37';
+            ctx.fill();
+
+            // Draw phi^n label
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '12px JetBrains Mono';
+            ctx.textAlign = 'left';
+            ctx.fillText(`phi^${n}`, indexX + 10, indexY + 4);
+
+            // Draw coherence bar
+            const barX = w * 0.55;
+            const barY = h * 0.2;
+            const barWidth = w * 0.4;
+            const barHeight = 20;
+
+            // Background
+            ctx.fillStyle = '#1e1c1a';
+            ctx.fillRect(barX, barY, barWidth, barHeight);
+
+            // Thresholds
+            const phi_inv_x = barX + barWidth * PHI_INV;
+            const z_c_x = barX + barWidth * Z_C;
+
+            // Transient region
+            ctx.fillStyle = 'rgba(128, 112, 80, 0.3)';
+            ctx.fillRect(barX, barY, phi_inv_x - barX, barHeight);
+
+            // Durable region
+            ctx.fillStyle = 'rgba(192, 160, 96, 0.3)';
+            ctx.fillRect(phi_inv_x, barY, z_c_x - phi_inv_x, barHeight);
+
+            // Eternal region
+            ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';
+            ctx.fillRect(z_c_x, barY, barX + barWidth - z_c_x, barHeight);
+
+            // Threshold lines
+            ctx.strokeStyle = '#c0a060';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(phi_inv_x, barY);
+            ctx.lineTo(phi_inv_x, barY + barHeight);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.moveTo(z_c_x, barY);
+            ctx.lineTo(z_c_x, barY + barHeight);
+            ctx.stroke();
+
+            // Current coherence marker
+            const markerX = barX + barWidth * Math.min(coherence, 1);
+            ctx.beginPath();
+            ctx.moveTo(markerX, barY - 5);
+            ctx.lineTo(markerX - 5, barY - 12);
+            ctx.lineTo(markerX + 5, barY - 12);
+            ctx.closePath();
+            ctx.fillStyle = '#d4af37';
+            ctx.fill();
+
+            // Labels
+            ctx.fillStyle = '#a09080';
+            ctx.font = '10px JetBrains Mono';
+            ctx.textAlign = 'center';
+            ctx.fillText('0', barX, barY + barHeight + 15);
+            ctx.fillText('phi^-1', phi_inv_x, barY + barHeight + 15);
+            ctx.fillText('z_c', z_c_x, barY + barHeight + 15);
+            ctx.fillText('1', barX + barWidth, barY + barHeight + 15);
+
+            ctx.fillStyle = '#606050';
+            ctx.fillText('TRANSIENT', barX + (phi_inv_x - barX) / 2, barY + barHeight + 30);
+            ctx.fillText('DURABLE', (phi_inv_x + z_c_x) / 2, barY + barHeight + 30);
+            ctx.fillText('ETERNAL', (z_c_x + barX + barWidth) / 2, barY + barHeight + 30);
+
+            // Lucas layer visualization
+            const layerY = h * 0.7;
+            const layerSpacing = barWidth / L4;
+
+            for (let i = 0; i < L4; i++) {
+                const layerX = barX + i * layerSpacing + layerSpacing / 2;
+                const isActive = i === lucasLayer;
+
+                ctx.beginPath();
+                ctx.arc(layerX, layerY, isActive ? 12 : 8, 0, Math.PI * 2);
+                ctx.fillStyle = isActive ? '#d4af37' : 'rgba(212, 175, 55, 0.2)';
+                ctx.fill();
+
+                if (isActive) {
+                    ctx.strokeStyle = '#d4af37';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+
+                ctx.fillStyle = isActive ? '#0a0908' : '#606050';
+                ctx.font = '10px JetBrains Mono';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(i.toString(), layerX, layerY);
+            }
+
+            ctx.fillStyle = '#a09080';
+            ctx.font = '10px JetBrains Mono';
+            ctx.textBaseline = 'top';
+            ctx.fillText('Lucas Layer (L4 = 7)', barX + barWidth / 2, layerY + 20);
+        }
+
+        // Event listeners
+        document.getElementById('epochInput').addEventListener('input', updateCalculator);
+        document.getElementById('coherenceInput').addEventListener('input', updateCalculator);
+
+        // Initialize
+        function init() {
+            updateCalculator();
+        }
+
+        window.addEventListener('load', init);
+        window.addEventListener('resize', updateCalculator);
+        init();
+    </script>
+</body>
+</html>

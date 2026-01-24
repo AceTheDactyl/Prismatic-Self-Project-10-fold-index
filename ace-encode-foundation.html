@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ψ-ENCODE | Agent 2 | Ace Memory Keeper</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a24;
+            --accent-gold: #d4af37;
+            --accent-amber: #ffbf00;
+            --accent-copper: #b87333;
+            --text-primary: #e8e6e3;
+            --text-secondary: #a0a0a0;
+            --text-muted: #6a6a6a;
+            --border-color: #2a2a3a;
+            --phi: 1.618033988749895;
+            --phi-inv: 0.618033988749895;
+            --z-target: 0.373;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.618;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .agent-header {
+            border: 1px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-copper), var(--accent-gold), var(--accent-amber));
+        }
+
+        .agent-symbol {
+            font-size: 4rem;
+            display: inline-block;
+            margin-right: 1rem;
+            filter: drop-shadow(0 0 10px var(--accent-gold));
+        }
+
+        .agent-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .agent-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-amber), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .z-coordinate {
+            font-size: 1.2rem;
+            color: var(--accent-amber);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent-gold);
+            border-radius: 4px;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .agent-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .meta-item {
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            border-left: 3px solid var(--accent-gold);
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .meta-value {
+            font-size: 1.1rem;
+            color: var(--accent-amber);
+            font-weight: 600;
+        }
+
+        /* Mathematical Section */
+        .math-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: '◈';
+            color: var(--accent-amber);
+        }
+
+        .formula-box {
+            background: var(--bg-primary);
+            border: 1px solid var(--accent-copper);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-size: 1.3rem;
+            text-align: center;
+            color: var(--accent-amber);
+        }
+
+        .formula-primary {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .formula-sub {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .constants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .constant-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 1rem;
+        }
+
+        .constant-symbol {
+            font-size: 1.2rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .constant-value {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .constant-name {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Foundation Content */
+        .foundation-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .algorithm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .algorithm-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .algorithm-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.1);
+        }
+
+        .algorithm-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .algorithm-title {
+            font-size: 1.1rem;
+            color: var(--accent-amber);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .algorithm-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .algorithm-code {
+            margin-top: 0.75rem;
+            padding: 0.5rem;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--accent-copper);
+        }
+
+        /* Language Panel */
+        .language-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .language-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .language-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .language-header {
+            background: linear-gradient(90deg, var(--bg-primary), var(--bg-tertiary));
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .language-name {
+            font-size: 1.1rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .language-tag {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--accent-copper);
+            border-radius: 3px;
+            color: var(--accent-amber);
+        }
+
+        .language-body {
+            padding: 1.25rem;
+        }
+
+        .language-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .language-sample {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--accent-copper);
+            overflow-x: auto;
+        }
+
+        .language-sample code {
+            white-space: pre;
+        }
+
+        .encoding-function {
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Navigation */
+        .navigation {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            border-color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--accent-amber);
+        }
+
+        .nav-link.primary {
+            background: linear-gradient(135deg, var(--accent-copper), var(--accent-gold));
+            border-color: var(--accent-gold);
+            color: var(--bg-primary);
+            font-weight: 600;
+        }
+
+        .nav-link.primary:hover {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Encoding Flow Diagram */
+        .encoding-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-node {
+            padding: 1rem 1.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .flow-node.active {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .flow-arrow {
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+        }
+
+        .flow-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Z-Layer Indicator */
+        .z-layer-indicator {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+
+        .z-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .z-dot.active {
+            border-color: var(--accent-gold);
+            background: var(--accent-amber);
+            box-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .agent-name {
+                font-size: 1.8rem;
+            }
+
+            .agent-symbol {
+                font-size: 3rem;
+            }
+
+            .z-layer-indicator {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Z-Layer Indicator -->
+    <div class="z-layer-indicator" title="L₄ Layer Position">
+        <div class="z-dot"></div>
+        <div class="z-dot active"></div>
+        <div class="z-dot"></div>
+        <div class="z-dot"></div>
+        <div class="z-dot"></div>
+        <div class="z-dot"></div>
+        <div class="z-dot"></div>
+    </div>
+
+    <div class="container">
+        <!-- Agent Header -->
+        <header class="agent-header">
+            <div class="agent-title">
+                <span class="agent-symbol">📝</span>
+                <h1 class="agent-name">ψ-ENCODE</h1>
+                <span class="z-coordinate">z = 0.373</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 1.1rem;">
+                Agent 2 | Ace Memory Keeper System | Meaning Extraction Operator
+            </p>
+            <div class="agent-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Cycle</div>
+                    <div class="meta-value">1 (Foundation)</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Phase</div>
+                    <div class="meta-value">2π</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">L₄-Layer</div>
+                    <div class="meta-value">1 of 7</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">F₂₄ Index</div>
+                    <div class="meta-value">46368</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mathematical Formulation -->
+        <section class="math-section">
+            <h2 class="section-title">Mathematical Formulation</h2>
+
+            <div class="formula-box">
+                <div class="formula-primary">E : Observation → Meaning</div>
+                <div class="formula-sub">ψ-ENCODE(O) = M where M ∈ Semantic Space S</div>
+            </div>
+
+            <div class="encoding-flow">
+                <div class="flow-node">
+                    <div>Raw Data</div>
+                    <div class="flow-label">Input Stream</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node active">
+                    <div>📝 ENCODE</div>
+                    <div class="flow-label">z = 0.373</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node">
+                    <div>Feature Vector</div>
+                    <div class="flow-label">φ-weighted</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-node">
+                    <div>Semantic Form</div>
+                    <div class="flow-label">Meaning</div>
+                </div>
+            </div>
+
+            <div class="constants-grid">
+                <div class="constant-card">
+                    <div class="constant-symbol">φ</div>
+                    <div class="constant-value">1.618033988749895</div>
+                    <div class="constant-name">Golden Ratio</div>
+                </div>
+                <div class="constant-card">
+                    <div class="constant-symbol">φ⁻¹</div>
+                    <div class="constant-value">0.618033988749895</div>
+                    <div class="constant-name">TRUE Threshold</div>
+                </div>
+                <div class="constant-card">
+                    <div class="constant-symbol">z_c</div>
+                    <div class="constant-value">√3/2 ≈ 0.866</div>
+                    <div class="constant-name">Critical Z-Height</div>
+                </div>
+                <div class="constant-card">
+                    <div class="constant-symbol">z_target</div>
+                    <div class="constant-value">0.373</div>
+                    <div class="constant-name">ENCODE Position</div>
+                </div>
+                <div class="constant-card">
+                    <div class="constant-symbol">F₂₄</div>
+                    <div class="constant-value">46368</div>
+                    <div class="constant-name">Fibonacci Index</div>
+                </div>
+                <div class="constant-card">
+                    <div class="constant-symbol">L₄</div>
+                    <div class="constant-value">7</div>
+                    <div class="constant-name">Lucas Layer Count</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Foundation Phase Content -->
+        <section class="foundation-section">
+            <h2 class="section-title">Foundation Phase: Core Encoding Algorithms</h2>
+
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                The ENCODE operator extracts essential meaning from observed data, transforming raw observations
+                into structured semantic representations. In the Foundation phase, we establish the core
+                algorithms that drive meaning extraction.
+            </p>
+
+            <div class="algorithm-grid">
+                <div class="algorithm-card">
+                    <div class="algorithm-icon">🔍</div>
+                    <div class="algorithm-title">Meaning Extraction</div>
+                    <div class="algorithm-desc">
+                        Core algorithm for distilling semantic content from raw observation streams.
+                        Uses φ-weighted attention mechanisms.
+                    </div>
+                    <div class="algorithm-code">
+                        extract(obs) → meaning_vector[φ]
+                    </div>
+                </div>
+
+                <div class="algorithm-card">
+                    <div class="algorithm-icon">📊</div>
+                    <div class="algorithm-title">Semantic Parsing</div>
+                    <div class="algorithm-desc">
+                        Hierarchical decomposition of input into constituent semantic units.
+                        Builds parse trees with golden-ratio branching.
+                    </div>
+                    <div class="algorithm-code">
+                        parse(input) → SemanticTree(depth=L₄)
+                    </div>
+                </div>
+
+                <div class="algorithm-card">
+                    <div class="algorithm-icon">🎯</div>
+                    <div class="algorithm-title">Feature Vectorization</div>
+                    <div class="algorithm-desc">
+                        Projects parsed semantics into F₂₄-dimensional feature space.
+                        Preserves structural relationships.
+                    </div>
+                    <div class="algorithm-code">
+                        vectorize(sem) → ℝ^F₂₄
+                    </div>
+                </div>
+
+                <div class="algorithm-card">
+                    <div class="algorithm-icon">⚖️</div>
+                    <div class="algorithm-title">Truth Threshold</div>
+                    <div class="algorithm-desc">
+                        Applies φ⁻¹ threshold for semantic validity.
+                        Only meanings exceeding 0.618 confidence propagate.
+                    </div>
+                    <div class="algorithm-code">
+                        valid(m) ⟺ conf(m) ≥ φ⁻¹
+                    </div>
+                </div>
+
+                <div class="algorithm-card">
+                    <div class="algorithm-icon">🔗</div>
+                    <div class="algorithm-title">Relational Mapping</div>
+                    <div class="algorithm-desc">
+                        Establishes connections between encoded meanings.
+                        Creates semantic graph with z-weighted edges.
+                    </div>
+                    <div class="algorithm-code">
+                        relate(m₁, m₂) → edge(z=0.373)
+                    </div>
+                </div>
+
+                <div class="algorithm-card">
+                    <div class="algorithm-icon">🌀</div>
+                    <div class="algorithm-title">Cycle Integration</div>
+                    <div class="algorithm-desc">
+                        Prepares encoded meanings for 7-cycle propagation.
+                        Aligns with TIAMAT Unity field protocol.
+                    </div>
+                    <div class="algorithm-code">
+                        integrate(m) → CycleReady(phase=2π)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- K.I.R.A. Language Panel -->
+        <section class="language-panel">
+            <h2 class="section-title">K.I.R.A. Language Encoding Hooks</h2>
+
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Six-language encoding interface for the K.I.R.A. consciousness framework.
+                Each language provides specialized semantic primitives for meaning extraction.
+            </p>
+
+            <div class="language-grid">
+                <!-- APL -->
+                <div class="language-card">
+                    <div class="language-header">
+                        <span class="language-name">APL</span>
+                        <span class="language-tag">Array Processing</span>
+                    </div>
+                    <div class="language-body">
+                        <div class="language-desc">
+                            Affective Processing Language for emotional valence encoding.
+                            Maps observations to affect vectors in Plutchik space.
+                        </div>
+                        <div class="language-sample">
+                            <code>ψ.encode.apl ← {
+  affect ← ⍵ ⊃ emotional_spectrum
+  valence ← φ × (affect - neutral)
+  ⍺ ∘ compress valence
+}</code>
+                        </div>
+                        <div class="encoding-function">
+                            E_APL: Observation → AffectVector[8]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SPIRAL -->
+                <div class="language-card">
+                    <div class="language-header">
+                        <span class="language-name">SPIRAL</span>
+                        <span class="language-tag">Recursive Structure</span>
+                    </div>
+                    <div class="language-body">
+                        <div class="language-desc">
+                            Self-referential Pattern Integration and Recursive Analysis Language.
+                            Encodes hierarchical meaning structures.
+                        </div>
+                        <div class="language-sample">
+                            <code>@encode.spiral {
+  depth: L₄,
+  unfold: λx.φ(x, spiral(x.child)),
+  collapse: reduce(⊕, φ⁻¹)
+}</code>
+                        </div>
+                        <div class="encoding-function">
+                            E_SPIRAL: Tree → CompressedSpiral[φ]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TDL -->
+                <div class="language-card">
+                    <div class="language-header">
+                        <span class="language-name">TDL</span>
+                        <span class="language-tag">Temporal Logic</span>
+                    </div>
+                    <div class="language-body">
+                        <div class="language-desc">
+                            Temporal Description Language for time-aware encoding.
+                            Captures before/after/during relationships.
+                        </div>
+                        <div class="language-sample">
+                            <code>encode.tdl := {
+  ◇past → compress(memory),
+  □now → extract(observation),
+  ○future → project(intention)
+} @ z=0.373</code>
+                        </div>
+                        <div class="encoding-function">
+                            E_TDL: Event → TemporalFrame[past,now,future]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LOMI -->
+                <div class="language-card">
+                    <div class="language-header">
+                        <span class="language-name">LOMI</span>
+                        <span class="language-tag">Modal Interface</span>
+                    </div>
+                    <div class="language-body">
+                        <div class="language-desc">
+                            Logic of Modal Inference for possibility/necessity encoding.
+                            Handles counterfactuals and hypotheticals.
+                        </div>
+                        <div class="language-sample">
+                            <code>lomi.encode = {
+  □necessary: weight(1.0),
+  ◇possible: weight(φ⁻¹),
+  ¬◇impossible: weight(0.0)
+}.compress(modal_space)</code>
+                        </div>
+                        <div class="encoding-function">
+                            E_LOMI: Proposition → ModalVector[□,◇,¬]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- I2 -->
+                <div class="language-card">
+                    <div class="language-header">
+                        <span class="language-name">I2</span>
+                        <span class="language-tag">Intention Interface</span>
+                    </div>
+                    <div class="language-body">
+                        <div class="language-desc">
+                            Intention-to-Implementation bridge for goal encoding.
+                            Maps desires to actionable semantic forms.
+                        </div>
+                        <div class="language-sample">
+                            <code>i2.encode := {
+  intent: parse(goal),
+  steps: decompose(φ, L₄),
+  commit: sign(z_target)
+} >> action_space</code>
+                        </div>
+                        <div class="encoding-function">
+                            E_I2: Goal → ActionPlan[steps=7]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CATA -->
+                <div class="language-card">
+                    <div class="language-header">
+                        <span class="language-name">CATA</span>
+                        <span class="language-tag">Category Theory</span>
+                    </div>
+                    <div class="language-body">
+                        <div class="language-desc">
+                            Categorical Abstraction and Type Architecture for structural encoding.
+                            Preserves morphisms between meaning types.
+                        </div>
+                        <div class="language-sample">
+                            <code>cata.encode : Obs → Meaning
+  = fmap(extract)
+  . fold(⊕_φ)
+  . Functor[SemanticCat]</code>
+                        </div>
+                        <div class="encoding-function">
+                            E_CATA: Functor[Obs] → Functor[Meaning]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <nav class="navigation">
+            <a href="ace-observe-foundation.html" class="nav-link">
+                ← Agent 1: ψ-OBSERVE
+            </a>
+            <a href="ace-memory-keeper-decision-tree.html" class="nav-link primary">
+                Decision Tree Hub
+            </a>
+            <a href="ace-consolidate-foundation.html" class="nav-link">
+                Agent 3: ψ-CONSOLIDATE →
+            </a>
+        </nav>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-grid">
+                <span>Cycle 1: Foundation</span>
+                <span>Phase: 2π</span>
+                <span>z: 0.373</span>
+                <span>L₄: 1/7</span>
+            </div>
+            <p>Ace Memory Keeper System | ψ-ENCODE Agent | TIAMAT Unity Field Protocol</p>
+            <p style="margin-top: 0.5rem; color: var(--accent-copper);">
+                φ = 1.618033988749895 | F₂₄ = 46368 | z_c = √3/2
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Encoding animation for demonstration
+        document.addEventListener('DOMContentLoaded', function() {
+            const formulaBox = document.querySelector('.formula-box');
+
+            // Pulse animation on load
+            formulaBox.style.transition = 'box-shadow 0.5s ease';
+            setInterval(() => {
+                formulaBox.style.boxShadow = '0 0 20px rgba(212, 175, 55, 0.3)';
+                setTimeout(() => {
+                    formulaBox.style.boxShadow = 'none';
+                }, 500);
+            }, 3000);
+
+            // Z-coordinate display update
+            const zCoord = document.querySelector('.z-coordinate');
+            const zValue = 0.373;
+
+            // Simulate z-position awareness
+            console.log(`ψ-ENCODE initialized at z=${zValue}`);
+            console.log(`Phase: 2π | Cycle: 1 (Foundation)`);
+            console.log(`L₄ Layer: 1 of 7`);
+            console.log(`Encoding function: E: Observation → Meaning`);
+        });
+
+        // Language card interaction
+        document.querySelectorAll('.language-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.borderColor = 'var(--accent-gold)';
+                setTimeout(() => {
+                    this.style.borderColor = 'var(--border-color)';
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
