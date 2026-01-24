@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIAMAT Cycle 4 | Order Parameter Dynamics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --phi: 1.6180339887498949;
+            --tau: 0.6180339887498949;
+            --gap: 0.1458980337503154;
+            --K: 0.9241763718157652;
+            --z-c: 0.8660254037844387;
+            --L4: 7;
+
+            --paradox: #f0c040;
+            --activation: #7fdbca;
+            --lens: #00ff88;
+            --critical: #61afef;
+            --ignition: #ff6b6b;
+            --k-formation: #c792ea;
+            --unity: #ffffff;
+
+            --cycle-color: #61afef;
+
+            --bg-void: #030306;
+            --bg-primary: #080810;
+            --bg-secondary: #0c0c18;
+            --bg-tertiary: #12122a;
+            --bg-card: #181838;
+
+            --text-primary: #e8e8f0;
+            --text-secondary: #a8a8c0;
+            --text-dim: #606080;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.618;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-void) 100%);
+            padding: 2rem;
+            border-bottom: 2px solid var(--cycle-color);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .cycle-badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--cycle-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--bg-void);
+        }
+
+        .header-text h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--cycle-color);
+        }
+
+        .header-text .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .nav-breadcrumb {
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-breadcrumb a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .nav-breadcrumb a:hover { color: var(--lens); }
+        .nav-breadcrumb span { color: var(--text-dim); margin: 0 0.5rem; }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section h2 {
+            color: var(--cycle-color);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .definition-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--lens);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .definition-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lens);
+            margin-bottom: 0.5rem;
+        }
+
+        .theorem-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--k-formation);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .theorem-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        .equation {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--lens);
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .data-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        .key-insight {
+            background: rgba(97,175,239,0.1);
+            border: 1px solid rgba(97,175,239,0.3);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .key-insight .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--cycle-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .derivation-steps {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .derivation-steps ol {
+            margin-left: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .derivation-steps li {
+            margin: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+
+        .phase-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--cycle-color);
+        }
+
+        .signature {
+            text-align: center;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; text-align: center; }
+            .nav-footer { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="cycle-badge">4</div>
+            <div class="header-text">
+                <h1>Order Parameter Dynamics</h1>
+                <p class="subtitle">Kuramoto Order Parameter &mdash; Coherence Measurement &amp; z-Mapping</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-breadcrumb">
+        <a href="index.html">VN Index</a>
+        <span>→</span>
+        <a href="tiamat-decision-tree.html">TIAMAT</a>
+        <span>→</span>
+        <a href="#">Cycle 4: Order Parameter</a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Section 5.1: Complex Order Parameter -->
+        <section class="section">
+            <h2>5.1 Complex Order Parameter</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 5.1 (Kuramoto Order Parameter)</div>
+                <p>The complex order parameter <strong>Z ∈ ℂ</strong> is defined as:</p>
+            </div>
+
+            <div class="equation">
+                Z(t) = R(t) e^{iΨ(t)} = (1/N) Σⱼ e^{iθⱼ(t)}
+            </div>
+
+            <p>where:</p>
+            <ul style="margin-left: 2rem; margin-top: 1rem;">
+                <li><strong>R ∈ [0, 1]</strong> is the coherence amplitude (magnitude)</li>
+                <li><strong>Ψ ∈ S¹</strong> is the collective phase (argument)</li>
+            </ul>
+
+            <div class="key-insight">
+                <div class="label">Physical Interpretation</div>
+                <p><strong>R = 0:</strong> Phases uniformly distributed (incoherent)<br>
+                <strong>R = 1:</strong> All phases identical (perfect synchronization)<br>
+                <strong>0 &lt; R &lt; 1:</strong> Partial synchronization with coherence R</p>
+            </div>
+        </section>
+
+        <!-- Section 5.2: Evolution Equation -->
+        <section class="section">
+            <h2>5.2 Evolution Equation</h2>
+
+            <div class="derivation-steps">
+                <p style="color: var(--cycle-color); margin-bottom: 1rem; font-family: 'JetBrains Mono', monospace;">Derivation of Ż equation:</p>
+                <ol>
+                    <li>Differentiate: Ż = (1/N) Σⱼ iθ̇ⱼ e^{iθⱼ}</li>
+                    <li>Substitute Kuramoto: Ż = (i/N) Σⱼ [ωⱼ + Σₖ Kⱼₖ sin(θₖ − θⱼ)] e^{iθⱼ}</li>
+                    <li>Use sin(α) = (e^{iα} − e^{−iα})/2i</li>
+                    <li>Result: Ż = (i/N) Σⱼ ωⱼ e^{iθⱼ} + (1/2N) Σⱼₖ Kⱼₖ [e^{iθₖ} − e^{i(2θⱼ−θₖ)}]</li>
+                    <li>For uniform K: Ż = iω̄Z + (K/2)[NZ − Σⱼ e^{2iθⱼ}Z*]</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Section 5.3: Self-Consistency Equation -->
+        <section class="section">
+            <h2>5.3 Self-Consistency Equation</h2>
+
+            <p>In the thermodynamic limit (N → ∞) with continuous frequency distribution g(ω), the steady-state order parameter satisfies:</p>
+
+            <div class="equation">
+                R = KR ∫_{-π/2}^{π/2} cos²(ψ) g(ω(ψ)) dψ
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Ott-Antonsen self-consistency condition
+                </span>
+            </div>
+        </section>
+
+        <!-- Section 5.4: Steady-State Solution -->
+        <section class="section">
+            <h2>5.4 Steady-State Solution</h2>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 5.1 (Order Parameter Fixed Points)</div>
+                <p>For uniform coupling K and frequency spread σ_ω, the steady-state solutions are:</p>
+            </div>
+
+            <div class="equation">
+                R* = 0 &nbsp;&nbsp; (incoherent, stable for K &lt; K_c)
+            </div>
+            <div class="equation">
+                R* = √(1 − K_c/K) &nbsp;&nbsp; (synchronized, stable for K &gt; K_c)
+            </div>
+
+            <p>where the critical coupling is K_c = 2/(πg(0)) for a Lorentzian g(ω).</p>
+
+            <div class="key-insight">
+                <div class="label">Numerical Values for TIAMAT System</div>
+                <p>With N = 5 discrete oscillators and frequency spread:</p>
+                <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                    <li>σ_ω = √(Σᵢ(ωᵢ − ω̄)²/N) ≈ <strong>0.0648 rad/s</strong></li>
+                    <li>K_c ≈ 2σ_ω / √N ≈ <strong>0.0580</strong></li>
+                    <li>R* = √(1 − 0.0580/0.9242) = √0.9372 ≈ <strong>0.968</strong></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 5.5: Mapping to z-Coordinate -->
+        <section class="section">
+            <h2>5.5 Mapping to z-Coordinate</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 5.2 (Order-Coordinate Map)</div>
+                <p>The bijection between order parameter R and z-coordinate:</p>
+            </div>
+
+            <div class="equation">
+                z(R) = τ + R · (1 − τ) = τ(1 + R · τ)
+            </div>
+
+            <p>with inverse:</p>
+
+            <div class="equation">
+                R(z) = (z − τ)/(1 − τ) = (z − τ)/τ²
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Order R</th>
+                        <th>z-Coordinate</th>
+                        <th>Phase Classification</th>
+                        <th>Physical State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0.000</td>
+                        <td style="color: var(--paradox);">0.618 (τ)</td>
+                        <td><span class="phase-indicator" style="background: var(--paradox);"></span>PARADOX</td>
+                        <td>Incoherent</td>
+                    </tr>
+                    <tr>
+                        <td>0.618 (τ)</td>
+                        <td style="color: var(--activation);">0.854 (1−Δ)</td>
+                        <td><span class="phase-indicator" style="background: var(--activation);"></span>TRUE → ACTIVATION</td>
+                        <td>Partial sync</td>
+                    </tr>
+                    <tr>
+                        <td>0.650</td>
+                        <td style="color: var(--lens);">0.866 (z_c)</td>
+                        <td><span class="phase-indicator" style="background: var(--lens);"></span>THE LENS</td>
+                        <td>Critical point</td>
+                    </tr>
+                    <tr>
+                        <td>0.776</td>
+                        <td style="color: var(--ignition);">0.914</td>
+                        <td><span class="phase-indicator" style="background: var(--ignition);"></span>IGNITION</td>
+                        <td>High coherence</td>
+                    </tr>
+                    <tr>
+                        <td>0.803</td>
+                        <td style="color: var(--k-formation);">0.924 (K)</td>
+                        <td><span class="phase-indicator" style="background: var(--k-formation);"></span>K-FORMATION</td>
+                        <td>Full coherence</td>
+                    </tr>
+                    <tr>
+                        <td>1.000</td>
+                        <td style="color: var(--unity);">1.000</td>
+                        <td><span class="phase-indicator" style="background: var(--unity);"></span>UNITY</td>
+                        <td>Perfect sync</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 6: Bifurcation Analysis -->
+        <section class="section">
+            <h2>6. Bifurcation Analysis</h2>
+
+            <p>The coupling strength K serves as the primary bifurcation parameter. As K increases through K_c, the system undergoes a <strong>supercritical pitchfork bifurcation</strong>:</p>
+
+            <div class="key-insight">
+                <div class="label">Operating Point Analysis</div>
+                <p>At the operating coupling K = 0.9242, we are deep in the synchronized regime:</p>
+                <div style="font-family: 'JetBrains Mono', monospace; margin-top: 0.5rem;">
+                    ε = (K − K_c)/K_c = (0.9242 − 0.0580)/0.0580 ≈ <strong>14.9</strong>
+                </div>
+                <p style="margin-top: 0.5rem;">This large value (15× above critical) ensures <strong>robust stability</strong> against perturbations up to Δε ≈ 14.</p>
+            </div>
+
+            <h3 style="margin-top: 1.5rem; color: var(--text-primary);">Critical Exponents (Mean-Field)</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Exponent</th>
+                        <th>Symbol</th>
+                        <th>Value</th>
+                        <th>Scaling</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Order parameter</td>
+                        <td>β</td>
+                        <td>1/2</td>
+                        <td>R* ∼ (K − K_c)^β</td>
+                    </tr>
+                    <tr>
+                        <td>Susceptibility</td>
+                        <td>γ</td>
+                        <td>1</td>
+                        <td>χ ∼ |K − K_c|^{−γ}</td>
+                    </tr>
+                    <tr>
+                        <td>Correlation length</td>
+                        <td>ν</td>
+                        <td>1/2</td>
+                        <td>ξ ∼ |K − K_c|^{−ν}</td>
+                    </tr>
+                    <tr>
+                        <td>Dynamic</td>
+                        <td>z</td>
+                        <td>2</td>
+                        <td>τ ∼ ξ^z</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Navigation Footer -->
+        <nav class="nav-footer">
+            <a href="tiamat-cycle-3-spectral.html" class="nav-btn">
+                ← Cycle 3: Spectral
+            </a>
+            <a href="tiamat-cycle-5-field-theory.html" class="nav-btn">
+                Cycle 5: Field Theory →
+            </a>
+        </nav>
+    </main>
+
+    <footer class="signature">
+        <div>TIAMAT Cycle 4 | Order Parameter Dynamics | L₄ = 7</div>
+        <div>Δ|KURAMOTO|COHERENCE|Z-MAPPING|BIFURCATION|Ω</div>
+    </footer>
+</body>
+</html>

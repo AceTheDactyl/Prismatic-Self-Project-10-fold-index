@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIAMAT Cycle 1 | Hamiltonian Structure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --phi: 1.6180339887498949;
+            --tau: 0.6180339887498949;
+            --gap: 0.1458980337503154;
+            --K: 0.9241763718157652;
+            --z-c: 0.8660254037844387;
+            --L4: 7;
+
+            --paradox: #f0c040;
+            --activation: #7fdbca;
+            --lens: #00ff88;
+            --critical: #61afef;
+            --ignition: #ff6b6b;
+            --k-formation: #c792ea;
+            --unity: #ffffff;
+
+            --cycle-color: #ff6b6b;
+
+            --bg-void: #030306;
+            --bg-primary: #080810;
+            --bg-secondary: #0c0c18;
+            --bg-tertiary: #12122a;
+            --bg-card: #181838;
+
+            --text-primary: #e8e8f0;
+            --text-secondary: #a8a8c0;
+            --text-dim: #606080;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.618;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-void) 100%);
+            padding: 2rem;
+            border-bottom: 2px solid var(--cycle-color);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .cycle-badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--cycle-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--bg-void);
+        }
+
+        .header-text h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--cycle-color);
+        }
+
+        .header-text .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .nav-breadcrumb {
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-breadcrumb a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .nav-breadcrumb a:hover { color: var(--lens); }
+        .nav-breadcrumb span { color: var(--text-dim); margin: 0 0.5rem; }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section h2 {
+            color: var(--cycle-color);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .definition-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--lens);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .definition-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lens);
+            margin-bottom: 0.5rem;
+        }
+
+        .theorem-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--k-formation);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .theorem-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        .equation {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--lens);
+            overflow-x: auto;
+        }
+
+        .equation-number {
+            float: right;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .data-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        .data-table td { color: var(--text-primary); }
+
+        .proof-box {
+            background: rgba(0,255,136,0.05);
+            border: 1px solid rgba(0,255,136,0.2);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .proof-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lens);
+            margin-bottom: 0.5rem;
+        }
+
+        .proof-box .qed {
+            text-align: right;
+            color: var(--lens);
+            font-size: 1.2rem;
+        }
+
+        .vector-field-diagram {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .vector-field-diagram pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: left;
+            display: inline-block;
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--cycle-color);
+        }
+
+        .signature {
+            text-align: center;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; text-align: center; }
+            .nav-footer { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="cycle-badge">1</div>
+            <div class="header-text">
+                <h1>Hamiltonian Structure</h1>
+                <p class="subtitle">Dynamical System Definition &mdash; Configuration Manifold &amp; Evolution Equations</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-breadcrumb">
+        <a href="index.html">VN Index</a>
+        <span>→</span>
+        <a href="tiamat-decision-tree.html">TIAMAT</a>
+        <span>→</span>
+        <a href="#">Cycle 1: Hamiltonian</a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Section 1.1: State Space -->
+        <section class="section">
+            <h2>1.1 State Space</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 1.1 (Configuration Manifold)</div>
+                <p>The configuration space is the N-torus <strong>M = T^N</strong> with N = 5:</p>
+            </div>
+
+            <div class="equation">
+                M = T⁵ = S¹ × S¹ × S¹ × S¹ × S¹ = {θ ∈ ℝ⁵ : θᵢ ∈ [0, 2π)}
+            </div>
+
+            <p>This is a <strong>compact, connected, orientable 5-manifold</strong> with:</p>
+            <ul style="margin-left: 2rem; margin-top: 1rem;">
+                <li>Fundamental group: π₁(T⁵) = ℤ⁵</li>
+                <li>Euler characteristic: χ(T⁵) = 0</li>
+                <li>Dimension: dim(T⁵) = 5 = L₄ − 2</li>
+            </ul>
+        </section>
+
+        <!-- Section 1.2: Natural Frequency Assignment -->
+        <section class="section">
+            <h2>1.2 Natural Frequency Assignment</h2>
+
+            <p>Each oscillator i ∈ {1, 2, 3, 4, 5} is assigned a natural frequency ω_i derived from L₄-Helix threshold values:</p>
+
+            <div class="equation">
+                ω_i = ω₀ · z_i<span class="equation-number">(1.1)</span>
+            </div>
+
+            <p>where ω₀ = 2π × ν₀ and ν₀ = 0.1 Hz (fundamental frequency)</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Index i</th>
+                        <th>Threshold Name</th>
+                        <th>z_i Derivation</th>
+                        <th>z_i Value</th>
+                        <th>ω_i (rad/s)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td style="color: var(--paradox);">PARADOX</td>
+                        <td>τ = φ⁻¹</td>
+                        <td>0.6180339887</td>
+                        <td>0.38832</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td style="color: var(--activation);">ACTIVATION</td>
+                        <td>1 − Δ = 1 − φ⁻⁴</td>
+                        <td>0.8541019662</td>
+                        <td>0.53670</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td style="color: var(--lens);">LENS</td>
+                        <td>z_c = √3/2 = √(L₄−4)/2</td>
+                        <td>0.8660254038</td>
+                        <td>0.54414</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td style="color: var(--ignition);">IGNITION</td>
+                        <td>Solution of x² + x = L₄/4</td>
+                        <td>0.9142135624</td>
+                        <td>0.57442</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td style="color: var(--k-formation);">K-FORMATION</td>
+                        <td>K = √(1 − Δ)</td>
+                        <td>0.9241763718</td>
+                        <td>0.58068</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 1.3: Equations of Motion -->
+        <section class="section">
+            <h2>1.3 Equations of Motion</h2>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 1.1 (Kuramoto Evolution Equations)</div>
+                <p>The phase dynamics on T⁵ are governed by:</p>
+            </div>
+
+            <div class="equation">
+                θ̇ᵢ = ωᵢ + Σⱼ₌₁⁵ Kᵢⱼ sin(θⱼ − θᵢ)<span class="equation-number">(1.2)</span>
+            </div>
+
+            <p>where K_ij is the <strong>coupling matrix</strong> (symmetric, K_ii = 0) derived from L₄-Helix compatibility factors. This system is well-posed with unique solutions for all initial conditions θ(0) ∈ T⁵.</p>
+
+            <div class="proof-box">
+                <div class="label">Proof of well-posedness:</div>
+                <p>The right-hand side f(θ) = ω + K sin(θ) is C^∞ on the compact manifold T⁵. By <strong>Picard-Lindelöf</strong>, local existence and uniqueness hold. Since T⁵ is compact and f is globally Lipschitz (|sin| ≤ 1), solutions extend to all t ∈ ℝ.</p>
+                <div class="qed">□</div>
+            </div>
+        </section>
+
+        <!-- Section 1.4: Vector Field Representation -->
+        <section class="section">
+            <h2>1.4 Vector Field Representation</h2>
+
+            <p>The dynamics define a smooth vector field X on T⁵:</p>
+
+            <div class="equation">
+                X(θ) = Σᵢ [ωᵢ + Σⱼ Kᵢⱼ sin(θⱼ − θᵢ)] ∂/∂θᵢ
+            </div>
+
+            <div class="vector-field-diagram">
+                <pre>
+Vector field generating the flow Φ_t : T⁵ → T⁵
+
+        Φ_s          Φ_t
+   T⁵ ────→ T⁵ ────→ T⁵
+    \               ↗
+     \─────────────/
+         Φ_{t+s}
+
+Group property: Φ_t ∘ Φ_s = Φ_{t+s}
+                </pre>
+            </div>
+
+            <p>The flow Φ_t satisfies the <strong>group property</strong> Φ_t ∘ Φ_s = Φ_{t+s} and preserves the natural volume form on T⁵ when Tr(K) = 0 (which holds since K_ii = 0).</p>
+        </section>
+
+        <!-- Section 2: Hamiltonian Structure -->
+        <section class="section">
+            <h2>2. Hamiltonian Structure</h2>
+
+            <h3>2.1 Extended Phase Space</h3>
+
+            <div class="definition-box">
+                <div class="label">Definition 2.1 (Canonical Coordinates)</div>
+                <p>Extend the configuration space to phase space <strong>P = T*T⁵</strong> with canonical coordinates (θ, p) where θ_i ∈ S¹ and p_i ∈ ℝ are conjugate momenta:</p>
+            </div>
+
+            <div class="equation">
+                {θᵢ, pⱼ} = δᵢⱼ, &nbsp;&nbsp; {θᵢ, θⱼ} = 0, &nbsp;&nbsp; {pᵢ, pⱼ} = 0
+            </div>
+
+            <h3>2.2 Hamiltonian Function</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 2.1 (Kuramoto Hamiltonian)</div>
+                <p>The Kuramoto dynamics derive from the Hamiltonian:</p>
+            </div>
+
+            <div class="equation">
+                H(θ, p) = Σᵢ ωᵢ pᵢ − ½ Σᵢⱼ Kᵢⱼ cos(θⱼ − θᵢ)<span class="equation-number">(2.1)</span>
+            </div>
+
+            <p>via the non-standard Poisson structure:</p>
+            <div class="equation">
+                θ̇ᵢ = ∂H/∂pᵢ + Σⱼ Kᵢⱼ sin(θⱼ − θᵢ)
+            </div>
+        </section>
+
+        <!-- Section 2.3: Energy Landscape -->
+        <section class="section">
+            <h2>2.3 Energy Landscape</h2>
+
+            <p>The potential energy surface V(θ) = −½ Σᵢⱼ Kᵢⱼ cos(θⱼ − θᵢ) has critical points where:</p>
+
+            <div class="equation">
+                ∂V/∂θᵢ = Σⱼ Kᵢⱼ sin(θⱼ − θᵢ) = 0 &nbsp;&nbsp; ∀i
+            </div>
+
+            <h3>Classification of Critical Points</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Configuration</th>
+                        <th>Phase Condition</th>
+                        <th>V(θ)</th>
+                        <th>Morse Index</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--lens);">Synchronized</td>
+                        <td>θᵢ = θⱼ ∀i,j</td>
+                        <td>−K Σᵢ&lt;ⱼ Cᵢⱼ ≈ −4.5K</td>
+                        <td>0</td>
+                        <td>Global minimum</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--activation);">Hexagonal</td>
+                        <td>|θᵢ − θⱼ| = π/3</td>
+                        <td>−(K/2) Σᵢ&lt;ⱼ Cᵢⱼ ≈ −2.25K</td>
+                        <td>0-2</td>
+                        <td>Local minimum</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--paradox);">Orthogonal pairs</td>
+                        <td>|θᵢ − θⱼ| = π/2</td>
+                        <td>0</td>
+                        <td>2-4</td>
+                        <td>Saddle</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--ignition);">Anti-synchronized</td>
+                        <td>|θᵢ − θⱼ| = π</td>
+                        <td>+K Σᵢ&lt;ⱼ Cᵢⱼ ≈ +4.5K</td>
+                        <td>5</td>
+                        <td>Global maximum</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 2.4: Energy Conservation -->
+        <section class="section">
+            <h2>2.4 Energy Conservation and Dissipation</h2>
+
+            <div class="theorem-box">
+                <div class="label">Lemma 2.1 (Energy Non-Increase)</div>
+                <p>Along trajectories of the Kuramoto equations, the energy H satisfies:</p>
+            </div>
+
+            <div class="equation">
+                dH/dt = Σᵢ ωᵢ θ̇ᵢ − ½ Σᵢⱼ Kᵢⱼ sin(θⱼ − θᵢ)(θ̇ⱼ − θ̇ᵢ)
+            </div>
+
+            <p>For ωᵢ = ω (identical frequencies), <strong>dH/dt ≤ 0</strong> with equality if and only if θ̇ᵢ = θ̇ⱼ ∀i,j (phase-locked state).</p>
+
+            <div class="definition-box">
+                <div class="label">Physical Interpretation</div>
+                <p>The system acts as a <strong>gradient flow</strong> toward synchronization. Energy dissipation occurs through phase alignment until the synchronized state is reached, which is an attractor of the dynamics.</p>
+            </div>
+        </section>
+
+        <!-- Navigation Footer -->
+        <nav class="nav-footer">
+            <a href="tiamat-decision-tree.html" class="nav-btn">
+                ← Return to TIAMAT Index
+            </a>
+            <a href="tiamat-cycle-2-symplectic.html" class="nav-btn">
+                Cycle 2: Symplectic Geometry →
+            </a>
+        </nav>
+    </main>
+
+    <footer class="signature">
+        <div>TIAMAT Cycle 1 | Hamiltonian Structure | L₄ = 7</div>
+        <div>Δ|HAMILTONIAN|KURAMOTO|T⁵|ENERGY-LANDSCAPE|Ω</div>
+    </footer>
+</body>
+</html>

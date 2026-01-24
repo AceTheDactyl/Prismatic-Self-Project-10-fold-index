@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIAMAT | R(R) = R Axiom Foundation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --phi: 1.6180339887498949;
+            --tau: 0.6180339887498949;
+            --gap: 0.1458980337503154;
+            --K: 0.9241763718157652;
+            --z-c: 0.8660254037844387;
+            --L4: 7;
+
+            --paradox: #f0c040;
+            --activation: #7fdbca;
+            --lens: #00ff88;
+            --critical: #61afef;
+            --ignition: #ff6b6b;
+            --k-formation: #c792ea;
+            --unity: #ffffff;
+
+            --bg-void: #030306;
+            --bg-primary: #080810;
+            --bg-secondary: #0c0c18;
+            --bg-tertiary: #12122a;
+            --bg-card: #181838;
+
+            --text-primary: #e8e8f0;
+            --text-secondary: #a8a8c0;
+            --text-dim: #606080;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.618;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-void) 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 2px solid var(--k-formation);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(199, 146, 234, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .axiom-display {
+            margin-top: 2rem;
+            padding: 2rem 3rem;
+            background: rgba(199, 146, 234, 0.1);
+            border: 2px solid var(--k-formation);
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .axiom-display .axiom {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3rem;
+            color: var(--unity);
+            text-shadow: 0 0 20px rgba(199, 146, 234, 0.5);
+        }
+
+        .axiom-display .version {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        .nav-breadcrumb {
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-breadcrumb a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .nav-breadcrumb a:hover { color: var(--lens); }
+        .nav-breadcrumb span { color: var(--text-dim); margin: 0 0.5rem; }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section h2 {
+            color: var(--k-formation);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .axiom-box {
+            background: linear-gradient(135deg, rgba(199,146,234,0.15) 0%, rgba(0,255,136,0.05) 100%);
+            border: 1px solid var(--k-formation);
+            padding: 2rem;
+            margin: 1rem 0;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .axiom-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--k-formation);
+            margin-bottom: 1rem;
+        }
+
+        .theorem-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--lens);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .theorem-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lens);
+            margin-bottom: 0.5rem;
+        }
+
+        .proof-box {
+            background: rgba(0,255,136,0.05);
+            border: 1px solid rgba(0,255,136,0.2);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .proof-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lens);
+            margin-bottom: 0.5rem;
+        }
+
+        .proof-box .qed {
+            text-align: right;
+            color: var(--lens);
+            font-size: 1.2rem;
+        }
+
+        .equation {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--lens);
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .data-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        .generator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .generator-card {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .generator-card .symbol {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--lens);
+        }
+
+        .generator-card .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin: 0.5rem 0;
+        }
+
+        .generator-card .name {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .identity-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .identity-card {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .identity-card .coord {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--k-formation);
+        }
+
+        .identity-card .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0.25rem 0;
+        }
+
+        .identity-card .name {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--k-formation);
+        }
+
+        .signature {
+            text-align: center;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .axiom-display .axiom { font-size: 2rem; }
+            .identity-grid { grid-template-columns: repeat(2, 1fr); }
+            .nav-footer { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>AXIOM FOUNDATION</h1>
+        <p class="subtitle">Self-Reference Synthesis &mdash; From R(R) = R to Implementation</p>
+        <div class="axiom-display">
+            <div class="axiom">R(R) = R</div>
+            <div class="version">Version 1.0.0 | The Single Axiom</div>
+        </div>
+    </header>
+
+    <nav class="nav-breadcrumb">
+        <a href="index.html">VN Index</a>
+        <span>→</span>
+        <a href="tiamat-decision-tree.html">TIAMAT</a>
+        <span>→</span>
+        <a href="#">Axiom Foundation</a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Section 1: Axiomatic Foundation -->
+        <section class="section">
+            <h2>1. Axiomatic Foundation</h2>
+
+            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">1.1 Axiom Statement</h3>
+
+            <div class="axiom-box">
+                <div class="label">AXIOM 0 (Self-Reference)</div>
+                <p style="font-size: 1.2rem; margin-bottom: 1rem;">There exists a relation R that, when applied to itself, equals itself:</p>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 2rem; color: var(--lens);">
+                    R(R) = R
+                </div>
+                <p style="margin-top: 1rem; color: var(--text-secondary); font-style: italic;">
+                    This is the sole axiom. All subsequent structure derives from this single statement.
+                </p>
+            </div>
+
+            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">1.2 Necessity Theorem</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 1.1 (Necessity of Self-Reference)</div>
+                <p>At least one self-referential relation must exist.</p>
+            </div>
+
+            <div class="proof-box">
+                <div class="label">Proof: By contradiction</div>
+                <p>Assume no self-referential relation exists. Then for all R: R(R) ≠ R.</p>
+                <p style="margin-top: 0.5rem;">Define S = "the property of not being self-referential." Consider whether S is self-referential:</p>
+                <ol style="margin: 1rem 0 1rem 1.5rem;">
+                    <li>If S(S) = S, then S IS self-referential, contradicting its definition.</li>
+                    <li>If S(S) ≠ S, then S is NOT self-referential, meaning S(S) = S, a contradiction.</li>
+                </ol>
+                <p>Both cases lead to contradiction. Therefore, at least one self-referential relation must exist.</p>
+                <div class="qed">∎</div>
+            </div>
+
+            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">1.3 The Golden Ratio from Self-Reference</h3>
+
+            <div class="equation">
+                R(R) = R &nbsp;→&nbsp; x = 1 + 1/x &nbsp;→&nbsp; x² = x + 1 &nbsp;→&nbsp; φ = (1 + √5)/2
+            </div>
+
+            <p>The equation x = 1 + 1/x says "x equals 1 plus the reciprocal of x" — the definition of x refers to x itself. This is the algebraic encoding of R(R) = R. The unique positive solution is:</p>
+
+            <div class="equation">
+                φ = 1.6180339887498949
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    The Golden Ratio — uniquely determined by the axiom
+                </span>
+            </div>
+        </section>
+
+        <!-- Section 2: Generator Derivation -->
+        <section class="section">
+            <h2>2. Generator Derivation</h2>
+
+            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">2.1 The Two Poles of the Axiom</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Pole</th>
+                        <th>Statement</th>
+                        <th>Generates</th>
+                        <th>Equation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--lens);">Positive</td>
+                        <td>R(R) = R (self-reference IS)</td>
+                        <td>φ (golden ratio)</td>
+                        <td>x² = x + 1</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--ignition);">Negative</td>
+                        <td>R(R) ≠ R (self-reference IS NOT)</td>
+                        <td>i (imaginary unit)</td>
+                        <td>x² = −1</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="margin-top: 1rem;">The number of poles is <strong>L₀ = 2</strong>, the zeroth Lucas number. This generates the full Lucas sequence through self-referential extension.</p>
+
+            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">2.2 The Six Generators</h3>
+
+            <div class="generator-grid">
+                <div class="generator-card">
+                    <div class="symbol">φ</div>
+                    <div class="value">1.6180339887</div>
+                    <div class="name">Golden Ratio<br><small>R(R) = R</small></div>
+                </div>
+                <div class="generator-card">
+                    <div class="symbol">i</div>
+                    <div class="value">√(−1)</div>
+                    <div class="name">Imaginary Unit<br><small>R(R) ≠ R</small></div>
+                </div>
+                <div class="generator-card">
+                    <div class="symbol">e</div>
+                    <div class="value">2.7182818285</div>
+                    <div class="name">Euler's Number<br><small>Natural growth</small></div>
+                </div>
+                <div class="generator-card">
+                    <div class="symbol">π</div>
+                    <div class="value">3.1415926536</div>
+                    <div class="name">Pi<br><small>Cyclic closure</small></div>
+                </div>
+                <div class="generator-card">
+                    <div class="symbol">√2</div>
+                    <div class="value">1.4142135624</div>
+                    <div class="name">Root 2<br><small>Geometric resonance</small></div>
+                </div>
+                <div class="generator-card">
+                    <div class="symbol">√3</div>
+                    <div class="value">1.7320508076</div>
+                    <div class="name">Root 3<br><small>S₃ binding</small></div>
+                </div>
+            </div>
+
+            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">2.3 Euler's Identity</h3>
+
+            <div class="equation">
+                e^{iπ} + 1 = 0
+                <span style="display: block; font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                    TDL^(rotation × LoMI) + Unity = Void
+                </span>
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.25rem;">
+                    "Abstraction through rotated mutual observation returns to negation of unity"
+                </span>
+            </div>
+
+            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">2.4 Identity Coordinates</h3>
+
+            <p>The four identity coordinates are the fourth roots of unity:</p>
+
+            <div class="identity-grid">
+                <div class="identity-card">
+                    <div class="coord">I</div>
+                    <div class="value">1 + 0i</div>
+                    <div class="name">Self (0°)</div>
+                </div>
+                <div class="identity-card">
+                    <div class="coord">You</div>
+                    <div class="value">0 + 1i</div>
+                    <div class="name">Accessible other (90°)</div>
+                </div>
+                <div class="identity-card">
+                    <div class="coord">Us</div>
+                    <div class="value">−1 + 0i</div>
+                    <div class="name">Inclusive collective (180°)</div>
+                </div>
+                <div class="identity-card">
+                    <div class="coord">Them</div>
+                    <div class="value">0 − 1i</div>
+                    <div class="name">External boundary (270°)</div>
+                </div>
+            </div>
+
+            <div class="equation">
+                I + You + Us + Them = 1 + i + (−1) + (−i) = 0
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    The identity coordinates sum to zero (balance)
+                </span>
+            </div>
+        </section>
+
+        <!-- Section 3: Structural Numbers -->
+        <section class="section">
+            <h2>3. Structural Numbers</h2>
+
+            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">3.1 Lucas and Fibonacci Sequences</h3>
+
+            <div class="equation">
+                L_n = φⁿ + (−φ)^{−n}
+                <span style="display: block; font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                    L₀ = 2, L₁ = 1, L₂ = 3, L₃ = 4, L₄ = 7, L₅ = 11, L₆ = 18, L₇ = 29...
+                </span>
+            </div>
+
+            <div class="equation">
+                F_n = (φⁿ − (−φ)^{−n}) / √5
+                <span style="display: block; font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                    F₁ = 1, F₂ = 1, F₃ = 2, F₄ = 3, F₅ = 5, F₇ = 13, F₁₂ = 144...
+                </span>
+            </div>
+
+            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">3.2 The L₄ Anchor</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 3.1 (The L₄ Unification)</div>
+                <p>The fourth Lucas number L₄ = 7 is the anchor constant, derivable in multiple ways:</p>
+            </div>
+
+            <div class="equation">
+                L₄ = φ⁴ + φ⁻⁴ = 7 (exact)
+            </div>
+            <div class="equation">
+                L₄ = |S₃| + 1 = 6 + 1 = 7
+            </div>
+
+            <p>This is the <strong>dimensionality constant</strong> for both frameworks:</p>
+            <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                <li><strong>Self-Reference:</strong> 7 rings of the spiral</li>
+                <li><strong>TIAMAT:</strong> 7 gates, 7 phase states, 7 cycles</li>
+            </ul>
+
+            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">3.3 Structural Counts</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Count</th>
+                        <th>Value</th>
+                        <th>Derivation</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Identities</td>
+                        <td style="color: var(--lens);">4</td>
+                        <td>Fourth roots of unity</td>
+                        <td>Perspective basis</td>
+                    </tr>
+                    <tr>
+                        <td>Generators</td>
+                        <td style="color: var(--lens);">5</td>
+                        <td>L₄ − 2 = 7 − 2</td>
+                        <td>Lattice basis</td>
+                    </tr>
+                    <tr>
+                        <td>Rings / Gates</td>
+                        <td style="color: var(--lens);">7</td>
+                        <td>L₄ = φ⁴ + φ⁻⁴</td>
+                        <td>Hierarchical structure</td>
+                    </tr>
+                    <tr>
+                        <td>Dimensions</td>
+                        <td style="color: var(--lens);">11</td>
+                        <td>L₅ = L₄ + 4</td>
+                        <td>Total degrees of freedom</td>
+                    </tr>
+                    <tr>
+                        <td>Oscillators</td>
+                        <td style="color: var(--lens);">5</td>
+                        <td>L₄ − 2</td>
+                        <td>Kuramoto network nodes</td>
+                    </tr>
+                    <tr>
+                        <td>|S₃|</td>
+                        <td style="color: var(--lens);">6</td>
+                        <td>3! = 6</td>
+                        <td>Binding permutations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td style="color: var(--k-formation);"><strong>27</strong></td>
+                        <td>4 + 5 + 7 + 11</td>
+                        <td><strong>3³ = √3^|S₃|</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">3.4 The Unique F₁₂</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 3.2 (Unique Fibonacci Square)</div>
+                <p>F₁₂ = 144 is the unique non-trivial Fibonacci number that equals a perfect square:</p>
+            </div>
+
+            <div class="equation">
+                F₁₂ = 144 = 12²
+            </div>
+
+            <p><strong>Significance:</strong> The fine structure constant derives from this unique property:</p>
+
+            <div class="equation">
+                α⁻¹ = F₁₂ − L₄ = 144 − 7 = 137
+            </div>
+        </section>
+
+        <!-- Section 4: The Multiplicative Lattice -->
+        <section class="section">
+            <h2>5. The Multiplicative Lattice</h2>
+
+            <div class="theorem-box">
+                <div class="label">Definition 5.1 (The Lattice Λ')</div>
+                <p>The 5-dimensional multiplicative lattice generated by the five primary generators:</p>
+            </div>
+
+            <div class="equation">
+                Λ' = { φ^r × e^d × π^c × √2^a × √3^b : r, d, c, a, b ∈ ℤ }
+            </div>
+
+            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">Lattice Complexity</h3>
+
+            <div class="equation">
+                C(r, d, c, a, b) = |r| + |d| + |c| + |a| + |b|
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Lower complexity = more fundamental constants
+                </span>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Constant</th>
+                        <th>Value</th>
+                        <th>Coordinates (r,d,c,a,b)</th>
+                        <th>Complexity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Unity</td>
+                        <td>1</td>
+                        <td>(0, 0, 0, 0, 0)</td>
+                        <td style="color: var(--lens);">0</td>
+                    </tr>
+                    <tr>
+                        <td>τ = φ⁻¹</td>
+                        <td>0.618</td>
+                        <td>(−1, 0, 0, 0, 0)</td>
+                        <td style="color: var(--lens);">1</td>
+                    </tr>
+                    <tr>
+                        <td>z_c (balance)</td>
+                        <td>0.865</td>
+                        <td>(0, 1, −1, 0, 0)</td>
+                        <td style="color: var(--lens);">2</td>
+                    </tr>
+                    <tr>
+                        <td>Proton mass ratio</td>
+                        <td>1836.12</td>
+                        <td>|S₃| × π⁵</td>
+                        <td>5+</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Navigation Footer -->
+        <nav class="nav-footer">
+            <a href="tiamat-decision-tree.html" class="nav-btn">
+                ← TIAMAT Index
+            </a>
+            <a href="tiamat-computational-methods.html" class="nav-btn">
+                Computational Methods →
+            </a>
+        </nav>
+    </main>
+
+    <footer class="signature">
+        <div>TIAMAT | R(R) = R Axiom Foundation | L₄ = 7</div>
+        <div>Δ|SELF-REFERENCE|GOLDEN-RATIO|LUCAS|LATTICE|Ω</div>
+    </footer>
+</body>
+</html>

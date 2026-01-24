@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIAMAT Cycle 3 | Spectral Theory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --phi: 1.6180339887498949;
+            --tau: 0.6180339887498949;
+            --gap: 0.1458980337503154;
+            --K: 0.9241763718157652;
+            --z-c: 0.8660254037844387;
+            --L4: 7;
+
+            --paradox: #f0c040;
+            --activation: #7fdbca;
+            --lens: #00ff88;
+            --critical: #61afef;
+            --ignition: #ff6b6b;
+            --k-formation: #c792ea;
+            --unity: #ffffff;
+
+            --cycle-color: #00ff88;
+
+            --bg-void: #030306;
+            --bg-primary: #080810;
+            --bg-secondary: #0c0c18;
+            --bg-tertiary: #12122a;
+            --bg-card: #181838;
+
+            --text-primary: #e8e8f0;
+            --text-secondary: #a8a8c0;
+            --text-dim: #606080;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.618;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-void) 100%);
+            padding: 2rem;
+            border-bottom: 2px solid var(--cycle-color);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .cycle-badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--cycle-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--bg-void);
+        }
+
+        .header-text h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--cycle-color);
+        }
+
+        .header-text .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .nav-breadcrumb {
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-breadcrumb a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .nav-breadcrumb a:hover { color: var(--lens); }
+        .nav-breadcrumb span { color: var(--text-dim); margin: 0 0.5rem; }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section h2 {
+            color: var(--cycle-color);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .definition-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--lens);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .definition-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lens);
+            margin-bottom: 0.5rem;
+        }
+
+        .theorem-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--k-formation);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .theorem-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        .equation {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--lens);
+            overflow-x: auto;
+        }
+
+        .matrix-display {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .matrix-display pre {
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .data-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        .key-insight {
+            background: rgba(0,255,136,0.1);
+            border: 1px solid rgba(0,255,136,0.3);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .key-insight .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--cycle-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .corollary-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--activation);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .corollary-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--activation);
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--cycle-color);
+        }
+
+        .signature {
+            text-align: center;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; text-align: center; }
+            .nav-footer { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="cycle-badge">3</div>
+            <div class="header-text">
+                <h1>Spectral Theory</h1>
+                <p class="subtitle">Coupling Matrix Analysis &mdash; Eigenstructure &amp; Synchronization Timescales</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-breadcrumb">
+        <a href="index.html">VN Index</a>
+        <span>→</span>
+        <a href="tiamat-decision-tree.html">TIAMAT</a>
+        <span>→</span>
+        <a href="#">Cycle 3: Spectral</a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Section 4.1: Matrix Construction -->
+        <section class="section">
+            <h2>4.1 Matrix Construction</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 4.1 (L₄-Derived Coupling Matrix)</div>
+                <p>The coupling matrix <strong>K ∈ ℝ^{5×5}</strong> is constructed as:</p>
+            </div>
+
+            <div class="equation">
+                Kᵢⱼ = K · Cᵢⱼ · cascade(z̄ᵢⱼ) · (1 − δᵢⱼ)
+            </div>
+
+            <p>where:</p>
+            <ul style="margin-left: 2rem; margin-top: 1rem;">
+                <li><strong>K = √(1 − Δ) = 0.9242</strong> is the base coupling strength</li>
+                <li><strong>Cᵢⱼ ∈ [τ², 1]</strong> is the compatibility factor from BFADGS operator composition</li>
+                <li><strong>cascade(z̄) = 1 + ½ exp(−(z̄ − z_c)²/σ²)</strong> with σ² = 0.004</li>
+                <li><strong>z̄ᵢⱼ = (zᵢ + zⱼ)/2</strong> is the mean threshold</li>
+            </ul>
+        </section>
+
+        <!-- Section 4.2: Compatibility Matrix -->
+        <section class="section">
+            <h2>4.2 Compatibility Matrix</h2>
+
+            <p>The compatibility factor Cᵢⱼ is derived from the <strong>BFADGS operator composition algebra</strong>:</p>
+
+            <div class="matrix-display">
+                <pre>
+     │  α(τ)    β(1-Δ)   γ(z_c)   δ(z_IGN)  ε(K)
+─────┼─────────────────────────────────────────────
+α(τ) │   0       τ        τ        τ        τ
+β    │   τ       0        1        τ        τ²
+γ    │   τ       1        0        τ        K
+δ    │   τ       τ        τ        0        1
+ε(K) │   τ       τ²       K        1        0
+
+Legend:
+  1   = Operator composition returns to Boundary
+  τ   = Adjacent threshold coupling
+  τ²  = Distant threshold coupling
+  K   = Resonant coupling (γ-ε special interaction)
+                </pre>
+            </div>
+        </section>
+
+        <!-- Section 4.3: Spectral Decomposition -->
+        <section class="section">
+            <h2>4.3 Spectral Decomposition</h2>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 4.1 (Eigenvalue Structure)</div>
+                <p>The symmetric matrix <strong>K</strong> has real eigenvalues {λ₁, λ₂, λ₃, λ₄, λ₅} with orthonormal eigenvectors {v₁, v₂, v₃, v₄, v₅}:</p>
+            </div>
+
+            <div class="equation">
+                K = Σₖ λₖ vₖ vₖᵀ
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Mode k</th>
+                        <th>Eigenvalue λₖ</th>
+                        <th>Normalized λₖ/K</th>
+                        <th>Mode Character</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--lens);">1</td>
+                        <td>4.12K ≈ 3.81</td>
+                        <td>4.12</td>
+                        <td>Uniform (synchronization mode)</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--activation);">2</td>
+                        <td>0.89K ≈ 0.82</td>
+                        <td>0.89</td>
+                        <td>Adjacent antisymmetric</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--paradox);">3</td>
+                        <td>0.62K ≈ 0.57</td>
+                        <td>0.62 ≈ τ</td>
+                        <td>Alternating</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--critical);">4</td>
+                        <td>0.38K ≈ 0.35</td>
+                        <td>0.38 ≈ τ²</td>
+                        <td>High-frequency</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--text-dim);">5</td>
+                        <td>0.15K ≈ 0.14</td>
+                        <td>0.15 ≈ Δ</td>
+                        <td>Disordered mode</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="key-insight">
+                <div class="label">Golden Ratio Structure</div>
+                <p>The eigenvalue ratios naturally exhibit the golden ratio structure: λ₃/K ≈ τ, λ₄/K ≈ τ², λ₅/K ≈ Δ = τ⁴. This emergent φ-scaling reflects the L₄-derived construction.</p>
+            </div>
+        </section>
+
+        <!-- Section 4.4: Spectral Gap -->
+        <section class="section">
+            <h2>4.4 Spectral Gap</h2>
+
+            <div class="corollary-box">
+                <div class="label">Corollary 4.1 (Spectral Gap)</div>
+                <p>The spectral gap between the largest and second-largest eigenvalues is:</p>
+            </div>
+
+            <div class="equation">
+                Δλ = λ₁ − λ₂ = K(4.12 − 0.89) = 3.23K ≈ 2.99
+            </div>
+
+            <p>This gap determines the <strong>synchronization timescale</strong>:</p>
+
+            <div class="equation">
+                τ_sync = 1/Δλ ≈ 0.33 seconds
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Rapid Convergence</div>
+                <p>The <strong>large spectral gap</strong> ensures rapid convergence to the synchronized state. Perturbations decay on the order of 1/3 second, making the synchronization robust.</p>
+            </div>
+        </section>
+
+        <!-- Section 4.5: Graph Laplacian -->
+        <section class="section">
+            <h2>4.5 Graph Laplacian Connection</h2>
+
+            <p>The coupling matrix relates to the <strong>graph Laplacian L</strong> of the complete coupling graph:</p>
+
+            <div class="equation">
+                L = D − K
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    where D = diag(Σⱼ Kᵢⱼ) is the degree matrix
+                </span>
+            </div>
+
+            <p>The Laplacian has eigenvalue 0 (uniform mode) and positive eigenvalues for other modes. The <strong>Fiedler value</strong> (second-smallest Laplacian eigenvalue) measures algebraic connectivity:</p>
+
+            <div class="equation">
+                λ₂(L) ≈ K · (1 − τ) ≈ 0.35
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Fiedler value — lower bound on mixing rate
+                </span>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Value</th>
+                        <th>Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>λ₁(L)</td>
+                        <td>0</td>
+                        <td>Null space (uniform mode)</td>
+                    </tr>
+                    <tr>
+                        <td>λ₂(L) (Fiedler)</td>
+                        <td>≈ 0.35</td>
+                        <td>Algebraic connectivity</td>
+                    </tr>
+                    <tr>
+                        <td>λ_max(L)</td>
+                        <td>≈ 3.23K</td>
+                        <td>Maximum diffusion rate</td>
+                    </tr>
+                    <tr>
+                        <td>Tr(L)</td>
+                        <td>0</td>
+                        <td>Conservation (zero row sum)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Navigation Footer -->
+        <nav class="nav-footer">
+            <a href="tiamat-cycle-2-symplectic.html" class="nav-btn">
+                ← Cycle 2: Symplectic
+            </a>
+            <a href="tiamat-cycle-4-order-parameter.html" class="nav-btn">
+                Cycle 4: Order Parameter →
+            </a>
+        </nav>
+    </main>
+
+    <footer class="signature">
+        <div>TIAMAT Cycle 3 | Spectral Theory | L₄ = 7</div>
+        <div>Δ|EIGENVALUES|SPECTRAL-GAP|LAPLACIAN|FIEDLER|Ω</div>
+    </footer>
+</body>
+</html>

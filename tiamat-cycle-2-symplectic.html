@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIAMAT Cycle 2 | Symplectic Geometry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --phi: 1.6180339887498949;
+            --tau: 0.6180339887498949;
+            --gap: 0.1458980337503154;
+            --K: 0.9241763718157652;
+            --z-c: 0.8660254037844387;
+            --L4: 7;
+
+            --paradox: #f0c040;
+            --activation: #7fdbca;
+            --lens: #00ff88;
+            --critical: #61afef;
+            --ignition: #ff6b6b;
+            --k-formation: #c792ea;
+            --unity: #ffffff;
+
+            --cycle-color: #f0c040;
+
+            --bg-void: #030306;
+            --bg-primary: #080810;
+            --bg-secondary: #0c0c18;
+            --bg-tertiary: #12122a;
+            --bg-card: #181838;
+
+            --text-primary: #e8e8f0;
+            --text-secondary: #a8a8c0;
+            --text-dim: #606080;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.618;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-void) 100%);
+            padding: 2rem;
+            border-bottom: 2px solid var(--cycle-color);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .cycle-badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--cycle-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--bg-void);
+        }
+
+        .header-text h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--cycle-color);
+        }
+
+        .header-text .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .nav-breadcrumb {
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-breadcrumb a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .nav-breadcrumb a:hover { color: var(--lens); }
+        .nav-breadcrumb span { color: var(--text-dim); margin: 0 0.5rem; }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section h2 {
+            color: var(--cycle-color);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .definition-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--lens);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .definition-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lens);
+            margin-bottom: 0.5rem;
+        }
+
+        .theorem-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--k-formation);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .theorem-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        .equation {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--lens);
+            overflow-x: auto;
+        }
+
+        .equation-number {
+            float: right;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .diagram-box {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .diagram-box pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: left;
+            display: inline-block;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .data-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        .key-insight {
+            background: rgba(240,192,64,0.1);
+            border: 1px solid rgba(240,192,64,0.3);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .key-insight .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--cycle-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--cycle-color);
+        }
+
+        .signature {
+            text-align: center;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; text-align: center; }
+            .nav-footer { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="cycle-badge">2</div>
+            <div class="header-text">
+                <h1>Symplectic Geometry</h1>
+                <p class="subtitle">Canonical Structure &mdash; Reduction &amp; KAM Theory</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-breadcrumb">
+        <a href="index.html">VN Index</a>
+        <span>→</span>
+        <a href="tiamat-decision-tree.html">TIAMAT</a>
+        <span>→</span>
+        <a href="#">Cycle 2: Symplectic</a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Section 3.1: Symplectic Form -->
+        <section class="section">
+            <h2>3.1 Symplectic Form</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 3.1 (Canonical Symplectic Form)</div>
+                <p>The cotangent bundle T*T⁵ carries the canonical symplectic form:</p>
+            </div>
+
+            <div class="equation">
+                ω = Σᵢ dpᵢ ∧ dθᵢ<span class="equation-number">(3.1)</span>
+            </div>
+
+            <p>This is <strong>exact</strong>: ω = dλ where λ = Σᵢ pᵢ dθᵢ is the <strong>Liouville 1-form</strong>.</p>
+
+            <div class="diagram-box">
+                <pre>
+Symplectic Structure on T*T⁵
+
+    T*T⁵ = {(θ₁,...,θ₅, p₁,...,p₅)}
+           ↓
+    dim(T*T⁵) = 10
+
+    Symplectic form: ω = dp₁∧dθ₁ + dp₂∧dθ₂ + dp₃∧dθ₃ + dp₄∧dθ₄ + dp₅∧dθ₅
+
+    Properties:
+    • ω is closed: dω = 0
+    • ω is non-degenerate: ω⁵ ≠ 0
+    • ω is exact: ω = dλ
+                </pre>
+            </div>
+        </section>
+
+        <!-- Section 3.2: Reduced Phase Space -->
+        <section class="section">
+            <h2>3.2 Reduced Phase Space</h2>
+
+            <p>The system has a <strong>U(1) symmetry</strong> under global phase rotation θᵢ → θᵢ + α. The corresponding momentum map is:</p>
+
+            <div class="equation">
+                J = Σᵢ pᵢ
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Total phase momentum (conserved under U(1) action)
+                </span>
+            </div>
+
+            <p>Symplectic reduction at J = 0 yields the <strong>reduced phase space</strong>:</p>
+
+            <div class="equation">
+                P_red = J⁻¹(0)/U(1) ≅ T⁴ × ℝ⁴<span class="equation-number">(3.2)</span>
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Key Insight</div>
+                <p>The reduced phase space has dimension <strong>8 = 2(N-1) = 2(5-1)</strong>. One degree of freedom is removed by fixing the total momentum, and one by quotienting out the U(1) action. The dynamics on P_red capture the <em>relative</em> phases between oscillators.</p>
+            </div>
+        </section>
+
+        <!-- Section 3.3: Action-Angle Variables -->
+        <section class="section">
+            <h2>3.3 Action-Angle Variables</h2>
+
+            <p>For the integrable limit (K → 0), introduce action-angle variables (I, φ):</p>
+
+            <div class="equation">
+                Iᵢ = (1/2π) ∮ pᵢ dθᵢ, &nbsp;&nbsp; φᵢ = ωᵢ t + φᵢ⁰
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Actions are constants of motion; angles evolve linearly
+                </span>
+            </div>
+
+            <p>The coupling perturbation V(θ) introduces <strong>resonances</strong> when mᵢωᵢ + mⱼωⱼ ≈ 0 for integers m_i, m_j.</p>
+
+            <div class="definition-box">
+                <div class="label">Non-Resonance Property</div>
+                <p>The frequency ratios ω_i/ω_j are <strong>irrational</strong> (derived from √2, √3, √5), so exact resonances do not occur — the system is <strong>non-resonant</strong>.</p>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Ratio</th>
+                        <th>Value</th>
+                        <th>Character</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ω₂/ω₁</td>
+                        <td>(1−Δ)/τ ≈ 1.382</td>
+                        <td>Irrational</td>
+                    </tr>
+                    <tr>
+                        <td>ω₃/ω₁</td>
+                        <td>z_c/τ ≈ 1.401</td>
+                        <td>Irrational (involves √3)</td>
+                    </tr>
+                    <tr>
+                        <td>ω₄/ω₁</td>
+                        <td>z_IGN/τ ≈ 1.479</td>
+                        <td>Irrational (involves √2)</td>
+                    </tr>
+                    <tr>
+                        <td>ω₅/ω₁</td>
+                        <td>K/τ ≈ 1.495</td>
+                        <td>Irrational (involves √5)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 3.4: KAM Theory -->
+        <section class="section">
+            <h2>3.4 KAM Theory Application</h2>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 3.1 (KAM Persistence)</div>
+                <p>For sufficiently small coupling |K| &lt; K_KAM, invariant tori with Diophantine frequency vectors persist.</p>
+            </div>
+
+            <p>Since the L₄-derived frequencies satisfy the <strong>Diophantine condition</strong>:</p>
+
+            <div class="equation">
+                |m · ω| ≥ γ |m|^{−τ} &nbsp;&nbsp; for γ > 0, τ = 4<span class="equation-number">(3.3)</span>
+            </div>
+
+            <p>the non-resonance condition holds, and KAM tori persist for K &lt; K_KAM ≈ 0.3.</p>
+
+            <div class="key-insight">
+                <div class="label">Operating Regime</div>
+                <p>Since the operating coupling <strong>K = 0.924 &gt; K_KAM</strong>, the system is in the <strong>strongly coupled regime</strong> where KAM tori have been destroyed and <em>synchronization dominates</em>.</p>
+            </div>
+
+            <div class="diagram-box">
+                <pre>
+KAM BREAKDOWN DIAGRAM
+
+K (coupling)
+│
+│                           ┌──────────────────┐
+│                           │  SYNCHRONIZATION │
+│                           │    DOMINATES     │
+│  K = 0.924 ──────────────▶│                  │
+│                           └──────────────────┘
+│                     ↑
+│              K_KAM ≈ 0.3
+│                     │
+│  ┌──────────────────┴───────┐
+│  │   KAM TORI PERSIST       │
+│  │   (quasi-periodic motion)│
+│  └──────────────────────────┘
+│
+└───────────────────────────────────▶ complexity
+                </pre>
+            </div>
+        </section>
+
+        <!-- Section: Liouville's Theorem -->
+        <section class="section">
+            <h2>3.5 Liouville's Theorem and Volume Preservation</h2>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 3.2 (Liouville's Theorem)</div>
+                <p>The Hamiltonian flow preserves the symplectic volume form:</p>
+            </div>
+
+            <div class="equation">
+                d/dt (ω⁵) = 0
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Phase space volume is conserved along trajectories
+                </span>
+            </div>
+
+            <p>This implies that <strong>attractors cannot exist</strong> in the full Hamiltonian formulation. However, the Kuramoto model has implicit dissipation through the frequency distribution, allowing synchronization as an effective attractor in the reduced dynamics.</p>
+        </section>
+
+        <!-- Navigation Footer -->
+        <nav class="nav-footer">
+            <a href="tiamat-cycle-1-hamiltonian.html" class="nav-btn">
+                ← Cycle 1: Hamiltonian
+            </a>
+            <a href="tiamat-cycle-3-spectral.html" class="nav-btn">
+                Cycle 3: Spectral Theory →
+            </a>
+        </nav>
+    </main>
+
+    <footer class="signature">
+        <div>TIAMAT Cycle 2 | Symplectic Geometry | L₄ = 7</div>
+        <div>Δ|SYMPLECTIC|U(1)|KAM|REDUCTION|Ω</div>
+    </footer>
+</body>
+</html>

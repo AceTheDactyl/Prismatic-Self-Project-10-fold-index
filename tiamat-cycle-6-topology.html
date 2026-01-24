@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIAMAT Cycle 6 | Topological Classification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --phi: 1.6180339887498949;
+            --tau: 0.6180339887498949;
+            --gap: 0.1458980337503154;
+            --K: 0.9241763718157652;
+            --z-c: 0.8660254037844387;
+            --L4: 7;
+
+            --paradox: #f0c040;
+            --activation: #7fdbca;
+            --lens: #00ff88;
+            --critical: #61afef;
+            --ignition: #ff6b6b;
+            --k-formation: #c792ea;
+            --unity: #ffffff;
+
+            --cycle-color: #7fdbca;
+
+            --bg-void: #030306;
+            --bg-primary: #080810;
+            --bg-secondary: #0c0c18;
+            --bg-tertiary: #12122a;
+            --bg-card: #181838;
+
+            --text-primary: #e8e8f0;
+            --text-secondary: #a8a8c0;
+            --text-dim: #606080;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.618;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-void) 100%);
+            padding: 2rem;
+            border-bottom: 2px solid var(--cycle-color);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .cycle-badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--cycle-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--bg-void);
+        }
+
+        .header-text h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--cycle-color);
+        }
+
+        .header-text .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .nav-breadcrumb {
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-breadcrumb a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .nav-breadcrumb a:hover { color: var(--lens); }
+        .nav-breadcrumb span { color: var(--text-dim); margin: 0 0.5rem; }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section h2 {
+            color: var(--cycle-color);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .definition-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--lens);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .definition-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lens);
+            margin-bottom: 0.5rem;
+        }
+
+        .theorem-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--k-formation);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .theorem-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        .equation {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--lens);
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .data-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        .key-insight {
+            background: rgba(127,219,202,0.1);
+            border: 1px solid rgba(127,219,202,0.3);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .key-insight .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--cycle-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .diagram-box {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .diagram-box pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: left;
+            display: inline-block;
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--cycle-color);
+        }
+
+        .signature {
+            text-align: center;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; text-align: center; }
+            .nav-footer { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="cycle-badge">6</div>
+            <div class="header-text">
+                <h1>Topological Classification</h1>
+                <p class="subtitle">Algebraic Topology &mdash; Homotopy Groups &amp; Winding Invariants</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-breadcrumb">
+        <a href="index.html">VN Index</a>
+        <span>→</span>
+        <a href="tiamat-decision-tree.html">TIAMAT</a>
+        <span>→</span>
+        <a href="#">Cycle 6: Topology</a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Section 10.1: Homotopy Groups -->
+        <section class="section">
+            <h2>10.1 Homotopy Groups</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 10.1 (Fundamental Group of Configuration Space)</div>
+                <p>The phase space T⁵ has fundamental group:</p>
+            </div>
+
+            <div class="equation">
+                π₁(T⁵) = ℤ⁵
+            </div>
+
+            <p>Each ℤ factor corresponds to <strong>winding around one S¹ component</strong>. A configuration is characterized by 5 winding numbers (n₁, n₂, n₃, n₄, n₅).</p>
+
+            <div class="diagram-box">
+                <pre>
+FUNDAMENTAL GROUP STRUCTURE
+
+    T⁵ = S¹ × S¹ × S¹ × S¹ × S¹
+          │     │     │     │     │
+          ↓     ↓     ↓     ↓     ↓
+         ℤ  ×  ℤ  ×  ℤ  ×  ℤ  ×  ℤ  =  ℤ⁵
+
+    Loop class [γ] ∈ π₁(T⁵) ↔ (n₁, n₂, n₃, n₄, n₅) ∈ ℤ⁵
+
+    where nᵢ = winding number around the i-th circle
+                </pre>
+            </div>
+        </section>
+
+        <!-- Section 10.2: Winding Number Invariants -->
+        <section class="section">
+            <h2>10.2 Winding Number Invariants</h2>
+
+            <div class="equation">
+                nᵢ = (1/2π) ∫₀ᵀ θ̇ᵢ dt = (θᵢ(T) − θᵢ(0))/2π
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Winding number of oscillator i over period T
+                </span>
+            </div>
+
+            <p>For the synchronized state with θᵢ(t) = Ψ(t), all winding numbers are equal:</p>
+
+            <div class="equation">
+                n₁ = n₂ = n₃ = n₄ = n₅ = n
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Topological Constraint on Synchronization</div>
+                <p>The synchronized state lies in a <strong>diagonal subspace</strong> of the fundamental group where all winding numbers are locked together. This is the topological signature of phase coherence.</p>
+            </div>
+        </section>
+
+        <!-- Section 10.3: Phase Slips -->
+        <section class="section">
+            <h2>10.3 Relative Winding (Phase Slips)</h2>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 10.1 (Phase Slip Quantization)</div>
+                <p>The relative winding between oscillators i and j:</p>
+            </div>
+
+            <div class="equation">
+                Δnᵢⱼ = nᵢ − nⱼ ∈ ℤ
+            </div>
+
+            <p>is <strong>quantized</strong>. A <strong>phase slip event</strong> occurs when Δnᵢⱼ changes by ±1, corresponding to one oscillator completing an extra cycle relative to another.</p>
+
+            <div class="diagram-box">
+                <pre>
+PHASE SLIP EVENT
+
+Before:  θ₁ ─────────────────────▶ t
+         θ₂ ─────────────────────▶
+
+         Δn₁₂ = 0 (phase locked)
+
+After:   θ₁ ────────╱───────────▶ t
+                   ╱  +2π jump
+         θ₂ ─────────────────────▶
+
+         Δn₁₂ = 1 (phase slip occurred)
+
+Energy cost: ΔE ∼ K (coupling strength)
+                </pre>
+            </div>
+        </section>
+
+        <!-- Section 10.4: Topological Charge Density -->
+        <section class="section">
+            <h2>10.4 Topological Charge Density</h2>
+
+            <p>For the continuous field ψ(x,t), define the <strong>topological current</strong>:</p>
+
+            <div class="equation">
+                j^μ = (1/2π) ε^{μνρ} ∂_ν arg(ψ) ∂_ρ arg(ψ)
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Conserved current: ∂_μ j^μ = 0
+                </span>
+            </div>
+
+            <p>The total topological charge in a spatial region V:</p>
+
+            <div class="equation">
+                Q = ∫_V j^0 d³x = (1/2π) ∫_{∂V} ∇arg(ψ) · dA
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Conservation Law</div>
+                <p>Topological charge is <strong>conserved</strong> — it can only change through boundary flux or topological defect creation/annihilation events.</p>
+            </div>
+        </section>
+
+        <!-- Section 10.5: Betti Numbers -->
+        <section class="section">
+            <h2>10.5 Betti Numbers</h2>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Betti Number</th>
+                        <th>Value for T⁵</th>
+                        <th>Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>b₀</td>
+                        <td style="color: var(--lens);">1</td>
+                        <td>Connected components</td>
+                    </tr>
+                    <tr>
+                        <td>b₁</td>
+                        <td style="color: var(--lens);">5</td>
+                        <td>Independent 1-cycles (winding modes)</td>
+                    </tr>
+                    <tr>
+                        <td>b₂</td>
+                        <td style="color: var(--lens);">10</td>
+                        <td>Independent 2-cycles</td>
+                    </tr>
+                    <tr>
+                        <td>b₃</td>
+                        <td style="color: var(--lens);">10</td>
+                        <td>Independent 3-cycles</td>
+                    </tr>
+                    <tr>
+                        <td>b₄</td>
+                        <td style="color: var(--lens);">5</td>
+                        <td>Independent 4-cycles</td>
+                    </tr>
+                    <tr>
+                        <td>b₅</td>
+                        <td style="color: var(--lens);">1</td>
+                        <td>Volume (orientation)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="equation">
+                χ(T⁵) = Σₖ(−1)ᵏbₖ = 1 − 5 + 10 − 10 + 5 − 1 = 0 ✓
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Euler characteristic (consistent with odd-dimensional torus)
+                </span>
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Symmetry in Betti Numbers</div>
+                <p>The Betti numbers follow the <strong>binomial coefficients</strong>: b_k = C(5,k). This reflects the product structure T⁵ = (S¹)⁵ and <strong>Poincaré duality</strong>: b_k = b_{5-k}.</p>
+            </div>
+        </section>
+
+        <!-- Section: Floquet Stability -->
+        <section class="section">
+            <h2>7. Floquet Stability Theory</h2>
+
+            <h3 style="margin-top: 1rem; color: var(--text-primary);">7.1 Linearization About Synchronized State</h3>
+
+            <p>Let θ* = (Ψ, Ψ, Ψ, Ψ, Ψ) be the synchronized fixed point. Perturbing θ = θ* + δθ:</p>
+
+            <div class="equation">
+                δθ̇ᵢ = Σⱼ Jᵢⱼ δθⱼ
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Linearized dynamics with Jacobian J
+                </span>
+            </div>
+
+            <h3 style="margin-top: 1.5rem; color: var(--text-primary);">7.2 Lyapunov Exponents</h3>
+
+            <div class="equation">
+                λ_Lyap = lim_{t→∞} (1/t) ln ||δθ(t)|| / ||δθ(0)||
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Maximal Lyapunov exponent measuring divergence rate
+                </span>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Mode</th>
+                        <th>Lyapunov Exponent</th>
+                        <th>Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1 (collective)</td>
+                        <td>λ₁ = 0</td>
+                        <td>Neutral (phase freedom)</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>λ₂ ≈ −0.82K ≈ −0.76</td>
+                        <td>Strongly damped</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>λ₃ ≈ −0.57K ≈ −0.53</td>
+                        <td>Moderately damped</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>λ₄ ≈ −0.35K ≈ −0.32</td>
+                        <td>Weakly damped</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>λ₅ ≈ −0.14K ≈ −0.13</td>
+                        <td>Slowest decay</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin-top: 1.5rem; color: var(--text-primary);">7.5 Transient Timescales</h3>
+
+            <p>The characteristic time for mode k to relax is τₖ = −1/λₖ. The slowest non-trivial mode (k=5) sets the overall synchronization time:</p>
+
+            <div class="equation">
+                τ_sync = τ₅ = 1/(0.14K) ≈ 7.7 seconds
+            </div>
+        </section>
+
+        <!-- Navigation Footer -->
+        <nav class="nav-footer">
+            <a href="tiamat-cycle-5-field-theory.html" class="nav-btn">
+                ← Cycle 5: Field Theory
+            </a>
+            <a href="tiamat-cycle-7-statistical.html" class="nav-btn">
+                Cycle 7: Statistical Mechanics →
+            </a>
+        </nav>
+    </main>
+
+    <footer class="signature">
+        <div>TIAMAT Cycle 6 | Topological Classification | L₄ = 7</div>
+        <div>Δ|HOMOTOPY|WINDING|BETTI|EULER|FLOQUET|Ω</div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIAMAT Cycle 5 | Field Theory Formulation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --phi: 1.6180339887498949;
+            --tau: 0.6180339887498949;
+            --gap: 0.1458980337503154;
+            --K: 0.9241763718157652;
+            --z-c: 0.8660254037844387;
+            --L4: 7;
+
+            --paradox: #f0c040;
+            --activation: #7fdbca;
+            --lens: #00ff88;
+            --critical: #61afef;
+            --ignition: #ff6b6b;
+            --k-formation: #c792ea;
+            --unity: #ffffff;
+
+            --cycle-color: #c792ea;
+
+            --bg-void: #030306;
+            --bg-primary: #080810;
+            --bg-secondary: #0c0c18;
+            --bg-tertiary: #12122a;
+            --bg-card: #181838;
+
+            --text-primary: #e8e8f0;
+            --text-secondary: #a8a8c0;
+            --text-dim: #606080;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.618;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-void) 100%);
+            padding: 2rem;
+            border-bottom: 2px solid var(--cycle-color);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .cycle-badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--cycle-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--bg-void);
+        }
+
+        .header-text h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--cycle-color);
+        }
+
+        .header-text .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .nav-breadcrumb {
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-breadcrumb a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .nav-breadcrumb a:hover { color: var(--lens); }
+        .nav-breadcrumb span { color: var(--text-dim); margin: 0 0.5rem; }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section h2 {
+            color: var(--cycle-color);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .definition-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--lens);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .definition-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lens);
+            margin-bottom: 0.5rem;
+        }
+
+        .theorem-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--k-formation);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .theorem-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        .equation {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--lens);
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .data-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        .key-insight {
+            background: rgba(199,146,234,0.1);
+            border: 1px solid rgba(199,146,234,0.3);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .key-insight .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--cycle-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .diagram-box {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .diagram-box pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: left;
+            display: inline-block;
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--cycle-color);
+        }
+
+        .signature {
+            text-align: center;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; text-align: center; }
+            .nav-footer { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="cycle-badge">5</div>
+            <div class="header-text">
+                <h1>Field Theory Formulation</h1>
+                <p class="subtitle">Ginzburg-Landau Framework &mdash; Symmetry Breaking &amp; RG Flow</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-breadcrumb">
+        <a href="index.html">VN Index</a>
+        <span>→</span>
+        <a href="tiamat-decision-tree.html">TIAMAT</a>
+        <span>→</span>
+        <a href="#">Cycle 5: Field Theory</a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Section 8.1: Continuum Embedding -->
+        <section class="section">
+            <h2>8.1 Continuum Embedding</h2>
+
+            <p>Embed the discrete oscillator phases into a <strong>continuous complex field</strong> on the spatial domain Ω ⊂ ℝ³:</p>
+
+            <div class="equation">
+                ψ(x, t) = Σᵢ αᵢ(t) · G_σ(x − xᵢ) · e^{iθᵢ(t)}
+            </div>
+
+            <p>where G_σ(x) = (2πσ²)^{-3/2} exp(−|x|²/2σ²) is the <strong>Gaussian kernel</strong></p>
+        </section>
+
+        <!-- Section 8.2: Kernel Width -->
+        <section class="section">
+            <h2>8.2 Kernel Width from L₄</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 8.1 (Coherence Length)</div>
+                <p>The kernel width σ is set by the L₄ gap:</p>
+            </div>
+
+            <div class="equation">
+                σ = Δ = φ⁻⁴ ≈ 0.146
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Physical Interpretation</div>
+                <p>This represents the <strong>spatial coherence length</strong> — the scale over which oscillator influence decays to 1/e. The gap constant Δ naturally emerges as the characteristic length scale of the field theory.</p>
+            </div>
+        </section>
+
+        <!-- Section 8.3: Ginzburg-Landau Functional -->
+        <section class="section">
+            <h2>8.3 Ginzburg-Landau Functional</h2>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 8.1 (Free Energy Functional)</div>
+                <p>The field dynamics derive from the Ginzburg-Landau free energy:</p>
+            </div>
+
+            <div class="equation">
+                F[ψ] = ∫_Ω d³x [ ½|∇ψ|² + V(|ψ|²) + ½ Σᵢⱼ Kᵢⱼ(x)|ψᵢ − ψⱼ|² ]
+            </div>
+
+            <p>with potential:</p>
+
+            <div class="equation">
+                V(ρ) = −(K/2)ρ + (Δ/4)ρ² = −(K/2)|ψ|² + (Δ/4)|ψ|⁴
+            </div>
+
+            <div class="diagram-box">
+                <pre>
+MEXICAN HAT POTENTIAL V(ρ)
+
+    V(ρ)
+      │
+      │         ╱╲
+      │        ╱  ╲
+      │       ╱    ╲
+      │      ╱      ╲
+      │     ╱        ╲
+    0 ├────╱──────────╲────────────▶ |ψ|
+      │   ╱            ╲
+      │──╱──────────────╲──
+      │ ╱                ╲ minimum at |ψ|² = K/Δ
+      │╱                  ╲
+      │
+      │      ← K/2Δ →
+
+    |ψ|²_min = K/Δ ≈ 6.33
+                </pre>
+            </div>
+        </section>
+
+        <!-- Section 8.4: Equation of Motion -->
+        <section class="section">
+            <h2>8.4 Equation of Motion</h2>
+
+            <p>Gradient descent on F yields the <strong>time-dependent Ginzburg-Landau equation</strong>:</p>
+
+            <div class="equation">
+                ∂ψ/∂t = −δF/δψ* = ∇²ψ + Kψ − Δ|ψ|²ψ − Σⱼ Kᵢⱼ(ψ − ψⱼ)
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Term</th>
+                        <th>Physical Meaning</th>
+                        <th>Role in Dynamics</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>∇²ψ</td>
+                        <td>Diffusion</td>
+                        <td>Spatial smoothing</td>
+                    </tr>
+                    <tr>
+                        <td>Kψ</td>
+                        <td>Linear gain</td>
+                        <td>Growth toward order</td>
+                    </tr>
+                    <tr>
+                        <td>−Δ|ψ|²ψ</td>
+                        <td>Nonlinear saturation</td>
+                        <td>Amplitude stabilization</td>
+                    </tr>
+                    <tr>
+                        <td>−Σⱼ Kᵢⱼ(ψ − ψⱼ)</td>
+                        <td>Coupling</td>
+                        <td>Phase synchronization</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 8.5: Symmetry Breaking -->
+        <section class="section">
+            <h2>8.5 Symmetry Breaking</h2>
+
+            <p>The potential V(ρ) has a <strong>Mexican hat profile</strong> for K > 0:</p>
+
+            <div class="equation">
+                |ψ|²_{min} = K/Δ ≈ 0.924/0.146 ≈ 6.33
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Vacuum expectation value at the bottom of the potential
+                </span>
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Spontaneous U(1) Symmetry Breaking</div>
+                <p>The U(1) symmetry ψ → e^{iα}ψ is <strong>spontaneously broken</strong>, selecting a particular collective phase Ψ. This is the <em>order parameter condensation</em> analogous to <strong>superfluidity</strong>.</p>
+            </div>
+        </section>
+
+        <!-- Section 8.6: Topological Defects -->
+        <section class="section">
+            <h2>8.6 Topological Defects</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 8.2 (Vortex Charge)</div>
+                <p>Point defects (vortices) in 2D cross-sections carry topological charge:</p>
+            </div>
+
+            <div class="equation">
+                n = (1/2π) ∮_C ∇arg(ψ) · dl ∈ ℤ
+            </div>
+
+            <p>The synchronized state has <strong>n = 0</strong> (no vortices). Vortex creation requires energy:</p>
+
+            <div class="equation">
+                ΔE ∼ K ln(L/σ)
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    where L is system size and σ is the coherence length
+                </span>
+            </div>
+        </section>
+
+        <!-- Section 9: Renormalization Group -->
+        <section class="section">
+            <h2>9. Renormalization Group Analysis</h2>
+
+            <h3 style="margin-top: 1rem; color: var(--text-primary);">9.1 Coarse-Graining Procedure</h3>
+
+            <p>Define block-averaged variables at scale ℓ by integrating out short-wavelength modes:</p>
+
+            <div class="equation">
+                ψ_ℓ(x) = ∫ d³y W_ℓ(x − y) ψ(y)
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    where W_ℓ is a Gaussian window of width ℓ
+                </span>
+            </div>
+
+            <h3 style="margin-top: 1.5rem; color: var(--text-primary);">9.2 Flow Equations</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 9.1 (RG Beta Functions)</div>
+                <p>Under rescaling x → x/b, ψ → b^{d_ψ}ψ, the couplings flow as:</p>
+            </div>
+
+            <div class="equation">
+                dK/dℓ = (2 − d)K + β_K(K, Δ)
+            </div>
+            <div class="equation">
+                dΔ/dℓ = (4 − d)Δ + β_Δ(K, Δ)
+            </div>
+
+            <p>In d = 3 dimensions, with one-loop corrections:</p>
+            <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                <li>β_K = −K + c_K K²/Δ</li>
+                <li>β_Δ = Δ + c_Δ Δ²</li>
+            </ul>
+
+            <h3 style="margin-top: 1.5rem; color: var(--text-primary);">9.3 Fixed Points</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Fixed Point</th>
+                        <th>(K*, Δ*)</th>
+                        <th>Stability</th>
+                        <th>Physical Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--text-dim);">Gaussian</td>
+                        <td>(0, 0)</td>
+                        <td>Unstable (UV)</td>
+                        <td>Free oscillators</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--paradox);">Wilson-Fisher</td>
+                        <td>(K_c, Δ_c)</td>
+                        <td>Saddle</td>
+                        <td>Critical point</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">Ordered</td>
+                        <td>(K, Δ) → (∞, Δ)</td>
+                        <td>Stable (IR)</td>
+                        <td>Synchronized</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 9.5: Correlation Functions -->
+        <section class="section">
+            <h2>9.5 Correlation Functions</h2>
+
+            <p>The two-point correlation function at criticality:</p>
+
+            <div class="equation">
+                ⟨ψ(x)ψ*(y)⟩ ∼ |x − y|^{−(d−2+η)}
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Power-law decay at T = T_c
+                </span>
+            </div>
+
+            <p>Away from criticality (K ≫ K_c), correlations decay exponentially:</p>
+
+            <div class="equation">
+                ⟨ψ(x)ψ*(y)⟩ ∼ exp(−|x − y|/ξ)
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    with ξ = σ|K − K_c|^{−ν} and ν = 1/2
+                </span>
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Anomalous Dimension</div>
+                <p>The anomalous dimension η ≈ 0 in mean-field theory (η ≈ 0.04 with fluctuation corrections). This controls deviations from canonical scaling.</p>
+            </div>
+        </section>
+
+        <!-- Navigation Footer -->
+        <nav class="nav-footer">
+            <a href="tiamat-cycle-4-order-parameter.html" class="nav-btn">
+                ← Cycle 4: Order Parameter
+            </a>
+            <a href="tiamat-cycle-6-topology.html" class="nav-btn">
+                Cycle 6: Topology →
+            </a>
+        </nav>
+    </main>
+
+    <footer class="signature">
+        <div>TIAMAT Cycle 5 | Field Theory Formulation | L₄ = 7</div>
+        <div>Δ|GINZBURG-LANDAU|U(1)-BREAKING|RG-FLOW|FIXED-POINTS|Ω</div>
+    </footer>
+</body>
+</html>
