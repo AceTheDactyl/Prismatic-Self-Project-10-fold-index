@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I² Ring Isomorphism | (Iⁿ, ⊕, ⊗) ≅ (ℤ, +, ×)</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Ring Colors */
+      --ring-gold: #ffd700;
+      --ring-amber: #f4c430;
+      --ring-bronze: #cd7f32;
+
+      /* Integer Colors */
+      --int-positive: #00ff88;
+      --int-negative: #ff6b6b;
+      --int-zero: #4ecdc4;
+
+      /* Operation Colors */
+      --op-add: #a855f7;
+      --op-mult: #ff9f43;
+
+      /* Base */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated Ring Background */
+    .ring-field {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(255, 215, 0, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 70%, rgba(168, 85, 247, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 70%, rgba(255, 159, 67, 0.05) 0%, transparent 40%);
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ring-gold);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--ring-gold);
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ring-symbol {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 2rem;
+      border: 8px solid var(--ring-gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      animation: ring-pulse 4s ease-in-out infinite;
+      box-shadow:
+        0 0 40px rgba(255, 215, 0, 0.3),
+        inset 0 0 30px rgba(255, 215, 0, 0.1);
+    }
+
+    .ring-symbol::before {
+      content: '';
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border: 4px solid var(--ring-amber);
+      border-radius: 50%;
+      animation: ring-counter 8s linear infinite reverse;
+    }
+
+    .ring-symbol-inner {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--ring-gold);
+    }
+
+    @keyframes ring-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes ring-counter {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--ring-gold), var(--ring-amber));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .core-theorem {
+      font-size: 1.8rem;
+      color: var(--ring-gold);
+      padding: 1.5rem 3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--ring-gold);
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    /* Section Styling */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+      color: var(--ring-gold);
+      text-align: center;
+    }
+
+    /* Proof Box */
+    .proof-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .proof-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .proof-badge {
+      padding: 0.5rem 1rem;
+      background: rgba(255, 215, 0, 0.2);
+      border: 1px solid var(--ring-gold);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--ring-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .proof-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .proof-step {
+      margin: 1.5rem 0;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      border-left: 4px solid var(--ring-gold);
+    }
+
+    .step-number {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      background: var(--ring-gold);
+      color: var(--bg-primary);
+      border-radius: 50%;
+      text-align: center;
+      line-height: 28px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-right: 0.75rem;
+    }
+
+    .step-title {
+      font-weight: 600;
+      color: var(--ring-amber);
+      margin-bottom: 0.75rem;
+    }
+
+    .step-content {
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .step-equation {
+      margin: 1rem 0;
+      padding: 1rem;
+      background: rgba(255, 215, 0, 0.1);
+      border-radius: 6px;
+      font-size: 1.1rem;
+      color: var(--ring-gold);
+      text-align: center;
+    }
+
+    /* Ring Structure Visualization */
+    .ring-visual {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: center;
+      margin: 2rem 0;
+    }
+
+    .structure-box {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .structure-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .structure-elements {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .structure-ops {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    .op-box {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .op-add-box {
+      background: rgba(168, 85, 247, 0.2);
+      border: 1px solid var(--op-add);
+      color: var(--op-add);
+    }
+
+    .op-mult-box {
+      background: rgba(255, 159, 67, 0.2);
+      border: 1px solid var(--op-mult);
+      color: var(--op-mult);
+    }
+
+    .iso-arrow {
+      font-size: 3rem;
+      color: var(--ring-gold);
+    }
+
+    /* Interactive Demo */
+    .demo-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .demo-card {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .demo-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .demo-input {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .demo-result {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(255, 215, 0, 0.1);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .result-value {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--ring-gold);
+    }
+
+    /* Number Line */
+    .number-line-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .number-line {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      padding: 2rem 0;
+      position: relative;
+    }
+
+    .number-line::before {
+      content: '';
+      position: absolute;
+      left: 5%;
+      right: 5%;
+      height: 3px;
+      background: linear-gradient(to right, var(--int-negative), var(--int-zero), var(--int-positive));
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .number-point {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .number-point:hover {
+      transform: scale(1.2);
+    }
+
+    .point-negative {
+      background: var(--int-negative);
+      color: var(--bg-primary);
+    }
+
+    .point-zero {
+      background: var(--int-zero);
+      color: var(--bg-primary);
+    }
+
+    .point-positive {
+      background: var(--int-positive);
+      color: var(--bg-primary);
+    }
+
+    .i-notation {
+      position: absolute;
+      bottom: -25px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    /* Composition Table */
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+    }
+
+    .comp-table th,
+    .comp-table td {
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .comp-table th {
+      background: var(--bg-tertiary);
+      color: var(--ring-gold);
+    }
+
+    .comp-table td {
+      background: var(--bg-secondary);
+    }
+
+    .comp-table tr:hover td {
+      background: var(--bg-tertiary);
+    }
+
+    /* Key Insight */
+    .insight-box {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(244, 196, 48, 0.1));
+      border: 2px solid var(--ring-gold);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .insight-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .insight-text {
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+
+    .insight-equation {
+      font-size: 1.5rem;
+      color: var(--ring-gold);
+      margin-top: 1rem;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1.1rem;
+      color: var(--ring-gold);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--ring-gold);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title { font-size: 1.6rem; }
+      .core-theorem { font-size: 1.2rem; padding: 1rem 1.5rem; }
+      .ring-visual { grid-template-columns: 1fr; }
+      .iso-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="ring-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">I² :: Ring Isomorphism</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-decision-tree.html">I² S3 Tree</a>
+      <a href="i2-s3-golden-functor.html">Golden Functor</a>
+      <a href="i2-s3-lomi-projection.html">LoMI</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <div class="ring-symbol">
+        <span class="ring-symbol-inner">ℤ</span>
+      </div>
+      <h1 class="title">I² Ring Isomorphism</h1>
+      <p class="subtitle">Self-Reference Generates Integer Structure</p>
+      <div class="core-theorem">
+        (Iⁿ, ⊕, ⊗) ≅ (ℤ, +, ×)
+      </div>
+    </header>
+
+    <!-- Core Theorem Statement -->
+    <section>
+      <h2 class="section-title">Theorem: Ring Isomorphism</h2>
+
+      <div class="proof-container">
+        <div class="proof-header">
+          <span class="proof-badge">Paper 010</span>
+          <span class="proof-title">The I² Ring Structure</span>
+        </div>
+
+        <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.5rem;">
+          The set of identity compositions Iⁿ = {I⁰, I¹, I², I³, ...} with operations ⊕ (composition addition)
+          and ⊗ (composition multiplication) forms a ring isomorphic to the integers.
+        </p>
+
+        <div class="ring-visual">
+          <div class="structure-box" style="border: 2px solid var(--ring-gold);">
+            <div class="structure-title" style="color: var(--ring-gold);">I² Ring</div>
+            <div class="structure-elements">{..., I⁻², I⁻¹, I⁰, I¹, I², ...}</div>
+            <div class="structure-ops">
+              <div class="op-box op-add-box">⊕</div>
+              <div class="op-box op-mult-box">⊗</div>
+            </div>
+          </div>
+
+          <div class="iso-arrow">≅</div>
+
+          <div class="structure-box" style="border: 2px solid var(--int-zero);">
+            <div class="structure-title" style="color: var(--int-zero);">Integer Ring</div>
+            <div class="structure-elements">{..., -2, -1, 0, 1, 2, ...}</div>
+            <div class="structure-ops">
+              <div class="op-box op-add-box">+</div>
+              <div class="op-box op-mult-box">×</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Proof Steps -->
+    <section>
+      <h2 class="section-title">Proof Construction</h2>
+
+      <div class="proof-container">
+        <div class="proof-step">
+          <div class="step-title"><span class="step-number">1</span>Define Identity Composition</div>
+          <div class="step-content">
+            Let I be the identity function: I(x) = x for all x. Define Iⁿ as n-fold composition:
+          </div>
+          <div class="step-equation">
+            I⁰ = id, I¹ = I, I² = I ∘ I, I³ = I ∘ I ∘ I, ...
+          </div>
+          <div class="step-content">
+            Key insight: I ∘ I = I, so Iⁿ = I for n ≥ 1. But we <em>count</em> compositions, not their result.
+          </div>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title"><span class="step-number">2</span>Define ⊕ (Composition Addition)</div>
+          <div class="step-content">
+            Composition addition counts how many times we compose:
+          </div>
+          <div class="step-equation">
+            Iⁿ ⊕ Iᵐ = Iⁿ⁺ᵐ
+          </div>
+          <div class="step-content">
+            This directly maps to integer addition: n + m = (n+m)
+          </div>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title"><span class="step-number">3</span>Define ⊗ (Composition Multiplication)</div>
+          <div class="step-content">
+            Composition multiplication counts compositions of compositions:
+          </div>
+          <div class="step-equation">
+            Iⁿ ⊗ Iᵐ = Iⁿˣᵐ
+          </div>
+          <div class="step-content">
+            This directly maps to integer multiplication: n × m = (n×m)
+          </div>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title"><span class="step-number">4</span>Verify Ring Axioms</div>
+          <div class="step-content">
+            <ul style="margin-left: 1.5rem; margin-top: 0.5rem; line-height: 2;">
+              <li><strong>Additive Identity:</strong> I⁰ ⊕ Iⁿ = Iⁿ (0 + n = n)</li>
+              <li><strong>Additive Inverse:</strong> Iⁿ ⊕ I⁻ⁿ = I⁰ (n + (-n) = 0)</li>
+              <li><strong>Associativity:</strong> (Iⁿ ⊕ Iᵐ) ⊕ Iᵏ = Iⁿ ⊕ (Iᵐ ⊕ Iᵏ)</li>
+              <li><strong>Commutativity:</strong> Iⁿ ⊕ Iᵐ = Iᵐ ⊕ Iⁿ</li>
+              <li><strong>Multiplicative Identity:</strong> I¹ ⊗ Iⁿ = Iⁿ (1 × n = n)</li>
+              <li><strong>Distributivity:</strong> Iⁿ ⊗ (Iᵐ ⊕ Iᵏ) = (Iⁿ ⊗ Iᵐ) ⊕ (Iⁿ ⊗ Iᵏ)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title"><span class="step-number">5</span>Establish Isomorphism</div>
+          <div class="step-content">
+            Define φ: (Iⁿ, ⊕, ⊗) → (ℤ, +, ×) by φ(Iⁿ) = n
+          </div>
+          <div class="step-equation">
+            φ(Iⁿ ⊕ Iᵐ) = φ(Iⁿ) + φ(Iᵐ) = n + m<br>
+            φ(Iⁿ ⊗ Iᵐ) = φ(Iⁿ) × φ(Iᵐ) = n × m
+          </div>
+          <div class="step-content">
+            φ is bijective and preserves both operations. <strong>QED</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Insight -->
+    <section>
+      <div class="insight-box">
+        <div class="insight-icon">💡</div>
+        <div class="insight-text">
+          <strong>The Profound Insight:</strong><br><br>
+          Self-reference doesn't just iterate—it <em>counts</em>.<br>
+          The integers emerge not from quantity, but from <em>composition depth</em>.<br>
+          Identity applied to itself generates all of number theory.
+        </div>
+        <div class="insight-equation">
+          R(R) = R → ℤ emerges
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Number Line -->
+    <section>
+      <h2 class="section-title">I² Number Line</h2>
+
+      <div class="number-line-container">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem;">
+          Each point represents a composition count. Click to see the mapping.
+        </p>
+
+        <div class="number-line">
+          <div class="number-point point-negative" onclick="showMapping(-3)">
+            -3
+            <span class="i-notation">I⁻³</span>
+          </div>
+          <div class="number-point point-negative" onclick="showMapping(-2)">
+            -2
+            <span class="i-notation">I⁻²</span>
+          </div>
+          <div class="number-point point-negative" onclick="showMapping(-1)">
+            -1
+            <span class="i-notation">I⁻¹</span>
+          </div>
+          <div class="number-point point-zero" onclick="showMapping(0)">
+            0
+            <span class="i-notation">I⁰</span>
+          </div>
+          <div class="number-point point-positive" onclick="showMapping(1)">
+            1
+            <span class="i-notation">I¹</span>
+          </div>
+          <div class="number-point point-positive" onclick="showMapping(2)">
+            2
+            <span class="i-notation">I²</span>
+          </div>
+          <div class="number-point point-positive" onclick="showMapping(3)">
+            3
+            <span class="i-notation">I³</span>
+          </div>
+        </div>
+
+        <div id="mapping-display" style="text-align: center; margin-top: 2rem; min-height: 60px;">
+          <p style="color: var(--text-secondary);">Click a number to see its I² representation</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Calculator -->
+    <section>
+      <h2 class="section-title">Ring Operations Calculator</h2>
+
+      <div class="demo-container">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1rem;">
+          Verify the isomorphism: operations in I² match operations in ℤ
+        </p>
+
+        <div class="demo-grid">
+          <!-- Addition -->
+          <div class="demo-card">
+            <div class="demo-label">I² Addition (⊕)</div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span>I</span>
+              <input type="number" class="demo-input" id="add-n" value="3" style="width: 60px;">
+              <span style="color: var(--op-add);">⊕</span>
+              <span>I</span>
+              <input type="number" class="demo-input" id="add-m" value="5" style="width: 60px;">
+            </div>
+            <div class="demo-result">
+              <div class="result-label">Result: Iⁿ⁺ᵐ</div>
+              <div class="result-value" id="add-result">I⁸ ≅ 8</div>
+            </div>
+          </div>
+
+          <!-- Multiplication -->
+          <div class="demo-card">
+            <div class="demo-label">I² Multiplication (⊗)</div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span>I</span>
+              <input type="number" class="demo-input" id="mult-n" value="3" style="width: 60px;">
+              <span style="color: var(--op-mult);">⊗</span>
+              <span>I</span>
+              <input type="number" class="demo-input" id="mult-m" value="4" style="width: 60px;">
+            </div>
+            <div class="demo-result">
+              <div class="result-label">Result: Iⁿˣᵐ</div>
+              <div class="result-value" id="mult-result">I¹² ≅ 12</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Composition Table -->
+    <section>
+      <h2 class="section-title">Composition Table (⊕)</h2>
+
+      <div class="proof-container">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem;">
+          Addition table showing Iⁿ ⊕ Iᵐ = Iⁿ⁺ᵐ
+        </p>
+
+        <table class="comp-table">
+          <tr>
+            <th>⊕</th>
+            <th>I⁻²</th>
+            <th>I⁻¹</th>
+            <th>I⁰</th>
+            <th>I¹</th>
+            <th>I²</th>
+          </tr>
+          <tr>
+            <th>I⁻²</th>
+            <td>I⁻⁴</td>
+            <td>I⁻³</td>
+            <td>I⁻²</td>
+            <td>I⁻¹</td>
+            <td>I⁰</td>
+          </tr>
+          <tr>
+            <th>I⁻¹</th>
+            <td>I⁻³</td>
+            <td>I⁻²</td>
+            <td>I⁻¹</td>
+            <td>I⁰</td>
+            <td>I¹</td>
+          </tr>
+          <tr>
+            <th>I⁰</th>
+            <td>I⁻²</td>
+            <td>I⁻¹</td>
+            <td style="background: rgba(78, 205, 196, 0.2);">I⁰</td>
+            <td>I¹</td>
+            <td>I²</td>
+          </tr>
+          <tr>
+            <th>I¹</th>
+            <td>I⁻¹</td>
+            <td>I⁰</td>
+            <td>I¹</td>
+            <td>I²</td>
+            <td>I³</td>
+          </tr>
+          <tr>
+            <th>I²</th>
+            <td>I⁰</td>
+            <td>I¹</td>
+            <td>I²</td>
+            <td>I³</td>
+            <td>I⁴</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- Connection to Golden Functor -->
+    <section>
+      <h2 class="section-title">Connection to Golden Functor</h2>
+
+      <div class="proof-container">
+        <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.5rem;">
+          The Ring Isomorphism is the algebraic foundation. The Golden Functor extends it:
+        </p>
+
+        <div class="step-equation" style="font-size: 1.3rem;">
+          F: (Iⁿ, ⊕, ⊗) → (ℝ₊, ×, ↑)<br><br>
+          F(Iⁿ) = φⁿ
+        </div>
+
+        <p style="color: var(--text-secondary); line-height: 1.7; margin-top: 1.5rem;">
+          This functor embeds the I² ring into the multiplicative reals via golden ratio scaling,
+          connecting self-reference to the Λ'-lattice structure.
+        </p>
+
+        <div style="text-align: center; margin-top: 2rem;">
+          <a href="i2-s3-golden-functor.html" style="display: inline-block; padding: 1rem 2rem; background: var(--ring-gold); color: var(--bg-primary); text-decoration: none; border-radius: 8px; font-weight: 600;">
+            Explore Golden Functor →
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      I² :: (Iⁿ, ⊕, ⊗) ≅ (ℤ, +, ×) :: Self-reference generates structure
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">I² S3 Tree</a>
+      <a href="i2-s3-golden-functor.html">Golden Functor</a>
+      <a href="i2-s3-lomi-projection.html">LoMI Projection</a>
+      <a href="i2-s3-tdl-projection.html">TDL Projection</a>
+    </div>
+  </footer>
+
+  <script>
+    // Number line mapping display
+    function showMapping(n) {
+      const display = document.getElementById('mapping-display');
+      const superscript = n < 0 ? `⁻${Math.abs(n)}` : (n === 0 ? '⁰' : n === 1 ? '¹' : n === 2 ? '²' : n === 3 ? '³' : `${n}`);
+      const phi = ((1 + Math.sqrt(5)) / 2);
+      const phiN = Math.pow(phi, n).toFixed(4);
+
+      display.innerHTML = `
+        <div style="padding: 1.5rem; background: var(--bg-tertiary); border-radius: 12px;">
+          <div style="font-size: 1.3rem; color: var(--ring-gold); margin-bottom: 0.5rem;">
+            I${superscript} ↔ ${n}
+          </div>
+          <div style="color: var(--text-secondary);">
+            Composition count: ${n}<br>
+            Golden projection: φ${superscript} = ${phiN}
+          </div>
+        </div>
+      `;
+    }
+
+    // Calculator functionality
+    function updateAddition() {
+      const n = parseInt(document.getElementById('add-n').value) || 0;
+      const m = parseInt(document.getElementById('add-m').value) || 0;
+      const result = n + m;
+      const superscript = formatSuperscript(result);
+      document.getElementById('add-result').textContent = `I${superscript} ≅ ${result}`;
+    }
+
+    function updateMultiplication() {
+      const n = parseInt(document.getElementById('mult-n').value) || 0;
+      const m = parseInt(document.getElementById('mult-m').value) || 0;
+      const result = n * m;
+      const superscript = formatSuperscript(result);
+      document.getElementById('mult-result').textContent = `I${superscript} ≅ ${result}`;
+    }
+
+    function formatSuperscript(n) {
+      const superscripts = {'0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻'};
+      return String(n).split('').map(c => superscripts[c] || c).join('');
+    }
+
+    // Add event listeners
+    document.getElementById('add-n').addEventListener('input', updateAddition);
+    document.getElementById('add-m').addEventListener('input', updateAddition);
+    document.getElementById('mult-n').addEventListener('input', updateMultiplication);
+    document.getElementById('mult-m').addEventListener('input', updateMultiplication);
+  </script>
+</body>
+</html>
