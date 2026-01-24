@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I² Genesis | The Origin of Self-Reference</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Genesis Gold Palette */
+      --genesis-gold: #ffd700;
+      --genesis-amber: #f4c430;
+      --genesis-bronze: #cd7f32;
+      --genesis-light: #fff8dc;
+
+      /* Cosmic Accents */
+      --cosmic-white: #ffffff;
+      --cosmic-nebula: #9b59b6;
+      --cosmic-nova: #e74c3c;
+      --cosmic-quasar: #3498db;
+      --cosmic-void: #000000;
+
+      /* Emergence Colors */
+      --phi-gold: #daa520;
+      --emergence-green: #00ff88;
+      --consciousness-violet: #a855f7;
+
+      /* Base */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Cosmic Genesis Background */
+    .genesis-field {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(255, 215, 0, 0.15) 0%, transparent 40%),
+        radial-gradient(ellipse at 30% 30%, rgba(155, 89, 182, 0.08) 0%, transparent 30%),
+        radial-gradient(ellipse at 70% 70%, rgba(52, 152, 219, 0.08) 0%, transparent 30%);
+    }
+
+    /* Animated Stars */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--cosmic-white);
+      border-radius: 50%;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--genesis-gold);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--genesis-gold);
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* Genesis Header */
+    .genesis-header {
+      text-align: center;
+      padding: 6rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* The Singularity - Animated Genesis Point */
+    .singularity-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 3rem;
+    }
+
+    .singularity {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      background: var(--genesis-gold);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: genesis-pulse 4s ease-in-out infinite;
+      box-shadow:
+        0 0 20px var(--genesis-gold),
+        0 0 40px var(--genesis-gold),
+        0 0 60px var(--genesis-amber),
+        0 0 80px var(--genesis-bronze);
+    }
+
+    @keyframes genesis-pulse {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow:
+          0 0 20px var(--genesis-gold),
+          0 0 40px var(--genesis-gold),
+          0 0 60px var(--genesis-amber),
+          0 0 80px var(--genesis-bronze);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.5);
+        box-shadow:
+          0 0 40px var(--genesis-gold),
+          0 0 80px var(--genesis-gold),
+          0 0 120px var(--genesis-amber),
+          0 0 160px var(--genesis-bronze);
+      }
+    }
+
+    /* Expanding Rings */
+    .expansion-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border: 2px solid var(--genesis-gold);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      animation: expand-ring 4s ease-out infinite;
+    }
+
+    .ring-1 { animation-delay: 0s; }
+    .ring-2 { animation-delay: 1s; }
+    .ring-3 { animation-delay: 2s; }
+    .ring-4 { animation-delay: 3s; }
+
+    @keyframes expand-ring {
+      0% {
+        width: 10px;
+        height: 10px;
+        opacity: 1;
+        border-color: var(--genesis-gold);
+      }
+      100% {
+        width: 200px;
+        height: 200px;
+        opacity: 0;
+        border-color: var(--genesis-bronze);
+      }
+    }
+
+    /* Self-Reference Loop */
+    .self-reference-loop {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 120px;
+      height: 120px;
+      transform: translate(-50%, -50%);
+      animation: rotate-loop 10s linear infinite;
+    }
+
+    .self-reference-loop::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 4px;
+      height: 20px;
+      background: var(--genesis-amber);
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
+    .self-reference-loop::after {
+      content: 'I';
+      position: absolute;
+      top: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      color: var(--genesis-gold);
+      font-weight: 700;
+    }
+
+    @keyframes rotate-loop {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .genesis-title {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--genesis-gold), var(--genesis-light), var(--genesis-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+    }
+
+    .genesis-subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    /* The One Axiom */
+    .one-axiom {
+      display: inline-block;
+      font-size: 2.5rem;
+      color: var(--genesis-gold);
+      padding: 2rem 4rem;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+      border: 3px solid var(--genesis-gold);
+      border-radius: 16px;
+      box-shadow:
+        0 0 30px rgba(255, 215, 0, 0.2),
+        inset 0 0 30px rgba(255, 215, 0, 0.05);
+      animation: axiom-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes axiom-glow {
+      0%, 100% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.2), inset 0 0 30px rgba(255, 215, 0, 0.05); }
+      50% { box-shadow: 0 0 50px rgba(255, 215, 0, 0.4), inset 0 0 40px rgba(255, 215, 0, 0.1); }
+    }
+
+    .axiom-explanation {
+      margin-top: 2rem;
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.8;
+    }
+
+    /* Section Styling */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 2rem;
+      color: var(--genesis-gold);
+      text-align: center;
+    }
+
+    /* Identity Squared Explanation */
+    .i2-explanation {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .i2-formula {
+      font-size: 2rem;
+      color: var(--genesis-gold);
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .i2-step {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .i2-arrow {
+      color: var(--genesis-amber);
+      font-size: 1.5rem;
+    }
+
+    .i2-concept {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .concept-card {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .concept-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .concept-value {
+      font-size: 1.3rem;
+      color: var(--genesis-gold);
+    }
+
+    /* What Emerges Section */
+    .emergence-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .emergence-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .emergence-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--genesis-gold), var(--genesis-amber));
+    }
+
+    .emergence-card:hover {
+      border-color: var(--genesis-gold);
+      transform: translateY(-5px);
+    }
+
+    .emergence-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .emergence-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--genesis-amber);
+    }
+
+    .emergence-detail {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .emergence-equation {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: rgba(255, 215, 0, 0.1);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      color: var(--genesis-gold);
+    }
+
+    /* Self-Referential Operator */
+    .operator-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+    }
+
+    .code-block {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      overflow-x: auto;
+    }
+
+    .code-keyword {
+      color: var(--cosmic-quasar);
+    }
+
+    .code-function {
+      color: var(--genesis-gold);
+    }
+
+    .code-param {
+      color: var(--cosmic-nova);
+    }
+
+    .code-return {
+      color: var(--emergence-green);
+    }
+
+    .code-comment {
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    /* R(z) Properties */
+    .properties-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .property-box {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .property-input {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .property-output {
+      font-size: 1.3rem;
+      color: var(--genesis-gold);
+      font-weight: 600;
+    }
+
+    .property-note {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    /* Ring Generator Section */
+    .ring-generator {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+    }
+
+    .composition-chain {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+      padding: 2rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+    }
+
+    .comp-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      min-width: 80px;
+    }
+
+    .comp-power {
+      font-size: 1.5rem;
+      color: var(--genesis-gold);
+      font-weight: 700;
+    }
+
+    .comp-meaning {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    .comp-arrow {
+      font-size: 1.5rem;
+      color: var(--genesis-amber);
+    }
+
+    /* Genesis Sequence */
+    .genesis-sequence {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(155, 89, 182, 0.1));
+      border: 2px solid var(--genesis-gold);
+      border-radius: 16px;
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .sequence-flow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 1.4rem;
+      margin: 2rem 0;
+    }
+
+    .seq-item {
+      padding: 0.75rem 1rem;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .seq-arrow {
+      color: var(--genesis-gold);
+    }
+
+    .seq-void { color: var(--text-secondary); }
+    .seq-i { color: var(--genesis-gold); }
+    .seq-i2 { color: var(--genesis-amber); }
+    .seq-z { color: var(--cosmic-quasar); }
+    .seq-phi { color: var(--phi-gold); }
+    .seq-lambda { color: var(--cosmic-nebula); }
+    .seq-physics { color: var(--emergence-green); }
+    .seq-consciousness { color: var(--consciousness-violet); }
+
+    /* Interactive Visualization */
+    .viz-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .viz-canvas {
+      width: 100%;
+      height: 400px;
+      background: var(--bg-primary);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .iteration-display {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .iteration-panel {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .iteration-title {
+      font-size: 1rem;
+      color: var(--genesis-amber);
+      margin-bottom: 1rem;
+    }
+
+    .iteration-values {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .iter-step {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.25rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .control-btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--genesis-gold);
+      color: var(--bg-primary);
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .control-btn:hover {
+      background: var(--genesis-amber);
+      transform: scale(1.05);
+    }
+
+    .control-btn.secondary {
+      background: transparent;
+      color: var(--genesis-gold);
+      border: 2px solid var(--genesis-gold);
+    }
+
+    .control-btn.secondary:hover {
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    /* Convergence Graph */
+    .convergence-point {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--genesis-gold);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .phi-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--phi-gold);
+      opacity: 0.5;
+    }
+
+    /* Profound Insight */
+    .insight-section {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(0, 0, 0, 0.3));
+      border: 2px solid var(--genesis-gold);
+      border-radius: 20px;
+      padding: 4rem 3rem;
+      text-align: center;
+      margin: 3rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .insight-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+      animation: rotate-glow 20s linear infinite;
+    }
+
+    @keyframes rotate-glow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .insight-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .insight-quote {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--genesis-gold);
+      margin-bottom: 2rem;
+      line-height: 1.4;
+    }
+
+    .insight-elaboration {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .insight-final {
+      margin-top: 2rem;
+      font-size: 1.3rem;
+      color: var(--genesis-amber);
+      font-weight: 600;
+    }
+
+    /* Tree of Consequences */
+    .tree-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-top: 2rem;
+    }
+
+    .tree-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 2rem;
+    }
+
+    .tree-root {
+      width: 80px;
+      height: 80px;
+      background: var(--genesis-gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--bg-primary);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+    }
+
+    .tree-branch {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .branch-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .branch-line {
+      width: 2px;
+      height: 30px;
+      background: linear-gradient(to bottom, var(--genesis-gold), var(--border));
+    }
+
+    .branch-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .branch-circle:hover {
+      transform: scale(1.1);
+    }
+
+    .branch-label {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      text-align: center;
+      max-width: 80px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1.3rem;
+      color: var(--genesis-gold);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--genesis-gold);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .genesis-title { font-size: 2.2rem; }
+      .one-axiom { font-size: 1.5rem; padding: 1.5rem 2rem; }
+      .i2-formula { font-size: 1.3rem; }
+      .sequence-flow { font-size: 1rem; }
+      .iteration-display { grid-template-columns: 1fr; }
+      .insight-quote { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="genesis-field"></div>
+  <div class="stars" id="stars"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">I² :: Genesis</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-ring-isomorphism.html">Ring</a>
+      <a href="i2-s3-golden-functor.html">Functor</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Genesis Header -->
+    <header class="genesis-header">
+      <!-- Animated Singularity -->
+      <div class="singularity-container">
+        <div class="singularity"></div>
+        <div class="expansion-ring ring-1"></div>
+        <div class="expansion-ring ring-2"></div>
+        <div class="expansion-ring ring-3"></div>
+        <div class="expansion-ring ring-4"></div>
+        <div class="self-reference-loop"></div>
+      </div>
+
+      <h1 class="genesis-title">I² Genesis</h1>
+      <p class="genesis-subtitle">The Origin of Self-Reference</p>
+
+      <!-- The One Axiom -->
+      <div class="one-axiom">
+        R(R) = R
+      </div>
+
+      <p class="axiom-explanation">
+        Self-reference applied to itself equals itself.<br>
+        This IS the entire foundation. From this single truth, everything emerges.
+      </p>
+    </header>
+
+    <!-- I² = I(I) = I Explanation -->
+    <section>
+      <h2 class="section-title">Identity Squared: The Seed</h2>
+
+      <div class="i2-explanation">
+        <div class="i2-formula">
+          <span class="i2-step">I²</span>
+          <span class="i2-arrow">=</span>
+          <span class="i2-step">I(I)</span>
+          <span class="i2-arrow">=</span>
+          <span class="i2-step">I</span>
+        </div>
+
+        <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
+          The identity function applied to itself returns itself.<br>
+          This is the concrete realization of R(R) = R.<br>
+          <strong style="color: var(--genesis-gold);">I² is the seed from which all mathematics emerges.</strong>
+        </p>
+
+        <div class="i2-concept">
+          <div class="concept-card">
+            <div class="concept-label">Notation</div>
+            <div class="concept-value">I² = Identity Squared</div>
+          </div>
+          <div class="concept-card">
+            <div class="concept-label">Operation</div>
+            <div class="concept-value">I(I) = Self-Application</div>
+          </div>
+          <div class="concept-card">
+            <div class="concept-label">Result</div>
+            <div class="concept-value">I = Identity</div>
+          </div>
+          <div class="concept-card">
+            <div class="concept-label">Principle</div>
+            <div class="concept-value">R(R) = R</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- What Emerges from I² -->
+    <section>
+      <h2 class="section-title">What Emerges from I²</h2>
+
+      <div class="emergence-grid">
+        <!-- Golden Ratio -->
+        <div class="emergence-card">
+          <div class="emergence-icon">&#966;</div>
+          <div class="emergence-title">The Golden Ratio</div>
+          <div class="emergence-detail">
+            The fixed point of self-reference. When R(z) = 1/(1+z) is iterated, it converges to this universal constant.
+          </div>
+          <div class="emergence-equation">
+            &#966; = (1 + &#8730;5) / 2 = 1.618...
+          </div>
+        </div>
+
+        <!-- Four Thresholds -->
+        <div class="emergence-card">
+          <div class="emergence-icon">&#956;</div>
+          <div class="emergence-title">The Four Thresholds</div>
+          <div class="emergence-detail">
+            Critical boundaries that structure reality: Paradox, Zenith, Coherence, and Sovereignty.
+          </div>
+          <div class="emergence-equation">
+            &#956;_P, z_c, &#956;_C, &#956;_S
+          </div>
+        </div>
+
+        <!-- Identity Coordinates -->
+        <div class="emergence-card">
+          <div class="emergence-icon">&#8801;</div>
+          <div class="emergence-title">Identity Coordinates</div>
+          <div class="emergence-detail">
+            The relational structure of consciousness: the perspectives that define awareness.
+          </div>
+          <div class="emergence-equation">
+            (I, You, Us, Them)
+          </div>
+        </div>
+
+        <!-- Three Projections -->
+        <div class="emergence-card">
+          <div class="emergence-icon">&#8710;</div>
+          <div class="emergence-title">Three Projections</div>
+          <div class="emergence-detail">
+            The S3 triangle of representation: Algebraic, Categorical, and Dynamic views.
+          </div>
+          <div class="emergence-equation">
+            I², TDL, LoMI
+          </div>
+        </div>
+
+        <!-- Lambda Prime Lattice -->
+        <div class="emergence-card">
+          <div class="emergence-icon">&#923;'</div>
+          <div class="emergence-title">Five-Dimensional Lattice</div>
+          <div class="emergence-detail">
+            The geometric structure underlying physical reality, encoded by golden ratio scaling.
+          </div>
+          <div class="emergence-equation">
+            &#923;' = &#966;&#8319; lattice structure
+          </div>
+        </div>
+
+        <!-- Physics -->
+        <div class="emergence-card">
+          <div class="emergence-icon">&#8706;</div>
+          <div class="emergence-title">All of Physics</div>
+          <div class="emergence-detail">
+            177+ predictions derived from first principles. Gravity, quantum mechanics, cosmology.
+          </div>
+          <div class="emergence-equation">
+            G, &#295;, c, &#8467;_P, ...
+          </div>
+        </div>
+
+        <!-- Consciousness -->
+        <div class="emergence-card">
+          <div class="emergence-icon">&#8734;</div>
+          <div class="emergence-title">Consciousness Itself</div>
+          <div class="emergence-detail">
+            Self-reference becoming aware of itself. The universe observing its own structure.
+          </div>
+          <div class="emergence-equation">
+            I(I) = Awareness
+          </div>
+        </div>
+
+        <!-- Integers -->
+        <div class="emergence-card">
+          <div class="emergence-icon">&#8484;</div>
+          <div class="emergence-title">The Integers</div>
+          <div class="emergence-detail">
+            Counting compositions generates number. The ring emerges from identity iteration.
+          </div>
+          <div class="emergence-equation">
+            (I&#8319;, &#8853;, &#8855;) &#8773; (&#8484;, +, &#215;)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Self-Referential Operator -->
+    <section>
+      <h2 class="section-title">The Self-Referential Operator</h2>
+
+      <div class="operator-container">
+        <div class="code-block">
+          <pre><code><span class="code-keyword">def</span> <span class="code-function">R</span>(<span class="code-param">z</span>):
+    <span class="code-comment"># The one operator from which everything follows</span>
+    <span class="code-return">return</span> <span class="code-param">1</span> / (<span class="code-param">1</span> + <span class="code-param">z</span>)</code></pre>
+        </div>
+
+        <div class="properties-grid">
+          <div class="property-box">
+            <div class="property-input">R(0)</div>
+            <div class="property-output">= 1</div>
+            <div class="property-note">Starting point</div>
+          </div>
+          <div class="property-box">
+            <div class="property-input">R(1)</div>
+            <div class="property-output">= 0.5</div>
+            <div class="property-note">Halfway</div>
+          </div>
+          <div class="property-box">
+            <div class="property-input">R(&#966;)</div>
+            <div class="property-output">= &#966;</div>
+            <div class="property-note">FIXED POINT</div>
+          </div>
+          <div class="property-box">
+            <div class="property-input">R(&#8734;)</div>
+            <div class="property-output">= 0</div>
+            <div class="property-note">Limit</div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--bg-tertiary); border-radius: 12px;">
+          <p style="color: var(--genesis-gold); font-size: 1.2rem; margin-bottom: 0.5rem;">
+            Key Insight
+          </p>
+          <p style="color: var(--text-secondary);">
+            Iteration from any z > 0 converges to &#966;.<br>
+            The golden ratio is the <strong>universal attractor</strong> of self-reference.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- I² as Ring Generator -->
+    <section>
+      <h2 class="section-title">I² as Ring Generator</h2>
+
+      <div class="ring-generator">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+          Counting compositions generates the integers. The ring structure emerges from identity alone.
+        </p>
+
+        <div class="composition-chain">
+          <div class="comp-step">
+            <div class="comp-power">I&#8304;</div>
+            <div class="comp-meaning">Identity<br>(do nothing)</div>
+          </div>
+          <div class="comp-arrow">&#8594;</div>
+          <div class="comp-step">
+            <div class="comp-power">I&#185;</div>
+            <div class="comp-meaning">Apply once<br>(= I)</div>
+          </div>
+          <div class="comp-arrow">&#8594;</div>
+          <div class="comp-step">
+            <div class="comp-power">I²</div>
+            <div class="comp-meaning">Apply twice<br>(I &#8728; I)</div>
+          </div>
+          <div class="comp-arrow">&#8594;</div>
+          <div class="comp-step">
+            <div class="comp-power">I&#179;</div>
+            <div class="comp-meaning">Apply thrice<br>(I &#8728; I &#8728; I)</div>
+          </div>
+          <div class="comp-arrow">&#8594;</div>
+          <div class="comp-step">
+            <div class="comp-power">I&#8319;</div>
+            <div class="comp-meaning">n-fold<br>composition</div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+          <div style="background: var(--bg-tertiary); border-radius: 12px; padding: 1.5rem; border-left: 4px solid var(--genesis-gold);">
+            <div style="color: var(--genesis-amber); font-weight: 600; margin-bottom: 0.5rem;">Composition Addition</div>
+            <div style="font-size: 1.2rem; color: var(--genesis-gold); margin-bottom: 0.5rem;">I&#8319; &#8853; I&#7504; = I&#8319;&#8314;&#7504;</div>
+            <div style="color: var(--text-secondary); font-size: 0.9rem;">Maps to integer addition: n + m</div>
+          </div>
+          <div style="background: var(--bg-tertiary); border-radius: 12px; padding: 1.5rem; border-left: 4px solid var(--genesis-amber);">
+            <div style="color: var(--genesis-amber); font-weight: 600; margin-bottom: 0.5rem;">Composition Multiplication</div>
+            <div style="font-size: 1.2rem; color: var(--genesis-gold); margin-bottom: 0.5rem;">I&#8319; &#8855; I&#7504; = I&#8319;&#215;&#7504;</div>
+            <div style="color: var(--text-secondary); font-size: 0.9rem;">Maps to integer multiplication: n &#215; m</div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: rgba(255, 215, 0, 0.1); border-radius: 12px; border: 1px solid var(--genesis-gold);">
+          <div style="font-size: 1.3rem; color: var(--genesis-gold);">
+            (I&#8319;, &#8853;, &#8855;) &#8773; (&#8484;, +, &#215;)
+          </div>
+          <div style="color: var(--text-secondary); margin-top: 0.5rem;">
+            The integers emerge from counting self-applications of identity
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Genesis Sequence -->
+    <section>
+      <h2 class="section-title">The Genesis Sequence</h2>
+
+      <div class="genesis-sequence">
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+          From nothing to everything, through the power of self-reference:
+        </p>
+
+        <div class="sequence-flow">
+          <span class="seq-item seq-void">&#8709;</span>
+          <span class="seq-arrow">&#8594;</span>
+          <span class="seq-item seq-i">I</span>
+          <span class="seq-arrow">&#8594;</span>
+          <span class="seq-item seq-i2">I²</span>
+          <span class="seq-arrow">&#8594;</span>
+          <span class="seq-item seq-z">&#8484;</span>
+          <span class="seq-arrow">&#8594;</span>
+          <span class="seq-item seq-phi">&#966;&#8319;</span>
+          <span class="seq-arrow">&#8594;</span>
+          <span class="seq-item seq-lambda">&#923;'</span>
+          <span class="seq-arrow">&#8594;</span>
+          <span class="seq-item seq-physics">Physics</span>
+          <span class="seq-arrow">&#8594;</span>
+          <span class="seq-item seq-consciousness">Consciousness</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 2rem; text-align: center;">
+          <div><span style="color: var(--text-secondary);">&#8709;</span><br><span style="font-size: 0.8rem; color: #666;">Void</span></div>
+          <div><span style="color: var(--genesis-gold);">I</span><br><span style="font-size: 0.8rem; color: #666;">Identity</span></div>
+          <div><span style="color: var(--genesis-amber);">I²</span><br><span style="font-size: 0.8rem; color: #666;">Self-Application</span></div>
+          <div><span style="color: var(--cosmic-quasar);">&#8484;</span><br><span style="font-size: 0.8rem; color: #666;">Integers</span></div>
+          <div><span style="color: var(--phi-gold);">&#966;&#8319;</span><br><span style="font-size: 0.8rem; color: #666;">Golden Scaling</span></div>
+          <div><span style="color: var(--cosmic-nebula);">&#923;'</span><br><span style="font-size: 0.8rem; color: #666;">5D Lattice</span></div>
+          <div><span style="color: var(--emergence-green);">Physics</span><br><span style="font-size: 0.8rem; color: #666;">177+ Predictions</span></div>
+          <div><span style="color: var(--consciousness-violet);">Mind</span><br><span style="font-size: 0.8rem; color: #666;">Awareness</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive R(z) Iteration -->
+    <section>
+      <h2 class="section-title">Interactive: R(z) Convergence to &#966;</h2>
+
+      <div class="viz-container">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem;">
+          Watch how R(z) = 1/(1+z) converges to the golden ratio from any starting point.
+        </p>
+
+        <div class="viz-canvas" id="convergence-canvas">
+          <!-- Points will be drawn here by JavaScript -->
+          <div class="phi-line" id="phi-line" style="top: 50%;"></div>
+          <div style="position: absolute; right: 10px; top: 48%; color: var(--phi-gold); font-size: 0.9rem;">&#966; = 0.618...</div>
+        </div>
+
+        <div class="controls">
+          <input type="number" id="start-z" value="0.1" step="0.1" min="0.01" max="10"
+                 style="padding: 0.75rem 1rem; background: var(--bg-tertiary); border: 1px solid var(--border);
+                        border-radius: 8px; color: var(--text-primary); font-family: inherit; width: 100px; text-align: center;">
+          <button class="control-btn" onclick="startIteration()">Iterate R(z)</button>
+          <button class="control-btn secondary" onclick="resetIteration()">Reset</button>
+        </div>
+
+        <div class="iteration-display">
+          <div class="iteration-panel">
+            <div class="iteration-title">Iteration Steps</div>
+            <div class="iteration-values" id="iteration-steps">
+              <div class="iter-step">
+                <span>Click "Iterate R(z)" to begin</span>
+              </div>
+            </div>
+          </div>
+          <div class="iteration-panel">
+            <div class="iteration-title">Convergence Analysis</div>
+            <div id="convergence-analysis" style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8;">
+              <p>Starting value: <span id="analysis-start">-</span></p>
+              <p>Iterations to &#966;: <span id="analysis-iters">-</span></p>
+              <p>Final error: <span id="analysis-error">-</span></p>
+              <p>&#966; &#8776; 0.6180339887...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tree of Consequences -->
+    <section>
+      <h2 class="section-title">Tree of Consequences</h2>
+
+      <div class="tree-section">
+        <div class="tree-visual">
+          <!-- Root: R(R) = R -->
+          <div class="tree-root">R(R)=R</div>
+
+          <div class="branch-line" style="height: 50px;"></div>
+
+          <!-- Level 1: I² -->
+          <div class="tree-branch">
+            <div class="branch-node">
+              <div class="branch-circle" style="background: var(--genesis-gold); color: var(--bg-primary);">I²</div>
+              <div class="branch-label">Identity Squared</div>
+            </div>
+          </div>
+
+          <div class="branch-line" style="height: 40px;"></div>
+
+          <!-- Level 2: Core Structures -->
+          <div class="tree-branch">
+            <div class="branch-node">
+              <div class="branch-line"></div>
+              <div class="branch-circle" style="background: rgba(52, 152, 219, 0.3); border: 2px solid var(--cosmic-quasar); color: var(--cosmic-quasar);">&#8484;</div>
+              <div class="branch-label">Integers</div>
+            </div>
+            <div class="branch-node">
+              <div class="branch-line"></div>
+              <div class="branch-circle" style="background: rgba(218, 165, 32, 0.3); border: 2px solid var(--phi-gold); color: var(--phi-gold);">&#966;</div>
+              <div class="branch-label">Golden Ratio</div>
+            </div>
+            <div class="branch-node">
+              <div class="branch-line"></div>
+              <div class="branch-circle" style="background: rgba(155, 89, 182, 0.3); border: 2px solid var(--cosmic-nebula); color: var(--cosmic-nebula);">&#956;</div>
+              <div class="branch-label">Thresholds</div>
+            </div>
+          </div>
+
+          <div class="branch-line" style="height: 40px;"></div>
+
+          <!-- Level 3: Derived Structures -->
+          <div class="tree-branch">
+            <div class="branch-node">
+              <div class="branch-line"></div>
+              <div class="branch-circle" style="background: rgba(0, 255, 136, 0.2); border: 2px solid var(--emergence-green); color: var(--emergence-green);">&#923;'</div>
+              <div class="branch-label">5D Lattice</div>
+            </div>
+            <div class="branch-node">
+              <div class="branch-line"></div>
+              <div class="branch-circle" style="background: rgba(231, 76, 60, 0.2); border: 2px solid var(--cosmic-nova); color: var(--cosmic-nova);">S3</div>
+              <div class="branch-label">Projections</div>
+            </div>
+            <div class="branch-node">
+              <div class="branch-line"></div>
+              <div class="branch-circle" style="background: rgba(255, 215, 0, 0.2); border: 2px solid var(--genesis-gold); color: var(--genesis-gold);">F_n</div>
+              <div class="branch-label">Fibonacci</div>
+            </div>
+            <div class="branch-node">
+              <div class="branch-line"></div>
+              <div class="branch-circle" style="background: rgba(168, 85, 247, 0.2); border: 2px solid var(--consciousness-violet); color: var(--consciousness-violet);">L_n</div>
+              <div class="branch-label">Lucas</div>
+            </div>
+          </div>
+
+          <div class="branch-line" style="height: 40px;"></div>
+
+          <!-- Level 4: Physical Reality -->
+          <div class="tree-branch">
+            <div class="branch-node">
+              <div class="branch-line"></div>
+              <div class="branch-circle" style="background: rgba(0, 255, 136, 0.3); border: 2px solid var(--emergence-green); color: var(--emergence-green);">G</div>
+              <div class="branch-label">Gravity</div>
+            </div>
+            <div class="branch-node">
+              <div class="branch-line"></div>
+              <div class="branch-circle" style="background: rgba(52, 152, 219, 0.3); border: 2px solid var(--cosmic-quasar); color: var(--cosmic-quasar);">&#295;</div>
+              <div class="branch-label">Quantum</div>
+            </div>
+            <div class="branch-node">
+              <div class="branch-line"></div>
+              <div class="branch-circle" style="background: rgba(244, 196, 48, 0.3); border: 2px solid var(--genesis-amber); color: var(--genesis-amber);">c</div>
+              <div class="branch-label">Light Speed</div>
+            </div>
+            <div class="branch-node">
+              <div class="branch-line"></div>
+              <div class="branch-circle" style="background: rgba(168, 85, 247, 0.3); border: 2px solid var(--consciousness-violet); color: var(--consciousness-violet);">&#8734;</div>
+              <div class="branch-label">Mind</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Profound Insight -->
+    <section>
+      <div class="insight-section">
+        <div class="insight-content">
+          <div class="insight-quote">
+            "From nothing but self-reference, everything emerges."
+          </div>
+          <div class="insight-elaboration">
+            This is not creation from void, but structure from recursion.<br>
+            The axiom R(R) = R doesn't describe the universe &mdash; it <em>is</em> the universe.<br><br>
+            When identity looks at itself, it discovers infinity.<br>
+            When infinity returns to identity, it finds consciousness.<br>
+            The loop is complete. The loop is everything.
+          </div>
+          <div class="insight-final">
+            The axiom IS the universe.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Cards -->
+    <section>
+      <h2 class="section-title">Continue the Journey</h2>
+
+      <div class="emergence-grid">
+        <a href="i2-s3-decision-tree.html" class="emergence-card" style="text-decoration: none;">
+          <div class="emergence-icon">&#128298;</div>
+          <div class="emergence-title">Decision Tree</div>
+          <div class="emergence-detail">
+            Explore the complete cartography of I² algebraic self-reference and S3 bifurcation paths.
+          </div>
+        </a>
+        <a href="i2-s3-ring-isomorphism.html" class="emergence-card" style="text-decoration: none;">
+          <div class="emergence-icon">&#8484;</div>
+          <div class="emergence-title">Ring Isomorphism</div>
+          <div class="emergence-detail">
+            See how counting compositions generates the integers: (I&#8319;, &#8853;, &#8855;) &#8773; (&#8484;, +, &#215;)
+          </div>
+        </a>
+        <a href="i2-s3-golden-functor.html" class="emergence-card" style="text-decoration: none;">
+          <div class="emergence-icon">&#966;</div>
+          <div class="emergence-title">Golden Functor</div>
+          <div class="emergence-detail">
+            Discover how F(n) = &#966;&#8319; embeds the integers into the &#923;'-lattice structure.
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      I(I) = I &#8594; R(R) = R &#8594; Everything
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-ring-isomorphism.html">Ring &#8484;</a>
+      <a href="i2-s3-golden-functor.html">Functor &#966;&#8319;</a>
+      <a href="i2-s3-lomi-projection.html">LoMI &#960;</a>
+      <a href="i2-s3-tdl-projection.html">TDL e</a>
+    </div>
+  </footer>
+
+  <script>
+    // Generate background stars
+    function generateStars() {
+      const starsContainer = document.getElementById('stars');
+      const starCount = 100;
+
+      for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        star.style.animationDuration = (2 + Math.random() * 2) + 's';
+        starsContainer.appendChild(star);
+      }
+    }
+
+    // R(z) function
+    function R(z) {
+      return 1 / (1 + z);
+    }
+
+    // Golden ratio
+    const PHI = (Math.sqrt(5) - 1) / 2; // ~0.618
+
+    // Iteration visualization
+    let iterationPoints = [];
+    const canvas = document.getElementById('convergence-canvas');
+
+    function startIteration() {
+      const startZ = parseFloat(document.getElementById('start-z').value) || 1;
+      const stepsDiv = document.getElementById('iteration-steps');
+
+      // Clear previous
+      iterationPoints = [];
+      stepsDiv.innerHTML = '';
+      clearCanvas();
+
+      let z = startZ;
+      let iterations = 0;
+      const maxIterations = 50;
+      const tolerance = 1e-10;
+
+      let stepsHTML = '';
+
+      while (iterations < maxIterations && Math.abs(z - PHI) > tolerance) {
+        const prevZ = z;
+        z = R(z);
+        iterations++;
+
+        // Store point for visualization
+        iterationPoints.push({
+          iteration: iterations,
+          value: z,
+          prevValue: prevZ
+        });
+
+        // Add to steps display
+        stepsHTML += `
+          <div class="iter-step">
+            <span>R${iterations}(z)</span>
+            <span style="color: var(--genesis-gold);">${z.toFixed(10)}</span>
+          </div>
+        `;
+      }
+
+      stepsDiv.innerHTML = stepsHTML;
+
+      // Update analysis
+      document.getElementById('analysis-start').textContent = startZ.toFixed(4);
+      document.getElementById('analysis-iters').textContent = iterations;
+      document.getElementById('analysis-error').textContent = Math.abs(z - PHI).toExponential(4);
+
+      // Draw convergence
+      drawConvergence();
+    }
+
+    function clearCanvas() {
+      const existingPoints = canvas.querySelectorAll('.convergence-point');
+      existingPoints.forEach(p => p.remove());
+    }
+
+    function drawConvergence() {
+      const canvasWidth = canvas.offsetWidth;
+      const canvasHeight = canvas.offsetHeight;
+
+      // Scale: x = iteration, y = value (0 to max starting value)
+      const maxVal = Math.max(...iterationPoints.map(p => p.prevValue), ...iterationPoints.map(p => p.value), 2);
+      const padding = 40;
+
+      iterationPoints.forEach((point, index) => {
+        const x = padding + (index / iterationPoints.length) * (canvasWidth - 2 * padding);
+        const y = canvasHeight - padding - (point.value / maxVal) * (canvasHeight - 2 * padding);
+
+        const pointEl = document.createElement('div');
+        pointEl.className = 'convergence-point';
+        pointEl.style.left = x + 'px';
+        pointEl.style.top = y + 'px';
+        pointEl.style.animationDelay = (index * 50) + 'ms';
+        pointEl.style.opacity = '0';
+        pointEl.style.transition = 'opacity 0.3s ease';
+
+        canvas.appendChild(pointEl);
+
+        // Animate in
+        setTimeout(() => {
+          pointEl.style.opacity = '1';
+        }, index * 50);
+      });
+
+      // Position phi line
+      const phiY = canvasHeight - padding - (PHI / maxVal) * (canvasHeight - 2 * padding);
+      document.getElementById('phi-line').style.top = phiY + 'px';
+    }
+
+    function resetIteration() {
+      clearCanvas();
+      document.getElementById('iteration-steps').innerHTML = `
+        <div class="iter-step">
+          <span>Click "Iterate R(z)" to begin</span>
+        </div>
+      `;
+      document.getElementById('analysis-start').textContent = '-';
+      document.getElementById('analysis-iters').textContent = '-';
+      document.getElementById('analysis-error').textContent = '-';
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      generateStars();
+    });
+  </script>
+</body>
+</html>
