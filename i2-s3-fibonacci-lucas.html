@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fibonacci-Lucas Structure | I2 with Memory Generates Sequence</title>
+  <meta name="description" content="Fibonacci and Lucas sequences emerge from I2 with memory. Binet formulas, L4=7 significance, and the F24 holographic sync point.">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* =====================================================================
+       FIBONACCI-LUCAS STRUCTURE: I2 WITH MEMORY
+       Dual Theme: Fibonacci Green (#00ff88) + Lucas Orange (#ff9f43)
+       ===================================================================== */
+    :root {
+      /* Fibonacci Green Theme */
+      --fib-primary: #00ff88;
+      --fib-secondary: #00cc6a;
+      --fib-tertiary: #009950;
+      --fib-glow: rgba(0, 255, 136, 0.3);
+      --fib-subtle: rgba(0, 255, 136, 0.15);
+
+      /* Lucas Orange Theme */
+      --lucas-primary: #ff9f43;
+      --lucas-secondary: #e68a30;
+      --lucas-tertiary: #cc7520;
+      --lucas-glow: rgba(255, 159, 67, 0.3);
+      --lucas-subtle: rgba(255, 159, 67, 0.15);
+
+      /* Golden Constants */
+      --phi-gold: #ffd700;
+      --phi-glow: rgba(255, 215, 0, 0.3);
+
+      /* Mathematical Constants */
+      --phi: 1.6180339887;
+      --psi: -0.6180339887;
+      --sqrt5: 2.2360679775;
+
+      /* Theme Base */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #0d1510;
+      --bg-tertiary: #101a14;
+      --bg-card: #132118;
+      --text-primary: #f0f0f5;
+      --text-secondary: #909098;
+      --text-muted: #606068;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(0, 255, 136, 0.4);
+
+      /* Framework Numbers */
+      --framework-red: #ff6b6b;
+      --framework-purple: #a855f7;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* =====================================================================
+       ANIMATED BACKGROUND - DUAL SPIRAL FIELD
+       ===================================================================== */
+    .fibonacci-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 30% 30%, rgba(0, 255, 136, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 70%, rgba(255, 159, 67, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(255, 215, 0, 0.03) 0%, transparent 60%);
+      animation: dual-pulse 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes dual-pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+
+    /* =====================================================================
+       NAVIGATION
+       ===================================================================== */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      border-color: var(--fib-primary);
+      color: var(--fib-primary);
+      box-shadow: 0 0 15px var(--fib-glow);
+    }
+
+    .nav-link.active {
+      border-color: var(--fib-primary);
+      color: var(--fib-primary);
+      background: var(--fib-subtle);
+    }
+
+    /* =====================================================================
+       HEADER
+       ===================================================================== */
+    .fib-header {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .node-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--fib-primary);
+      background: var(--fib-subtle);
+      border: 1px solid var(--fib-primary);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Spiral Symbol Container */
+    .spiral-container {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin: 0 auto 2rem;
+    }
+
+    .spiral-ring {
+      position: absolute;
+      border: 3px solid;
+      border-radius: 50%;
+      animation: spiral-rotate 20s linear infinite;
+    }
+
+    .spiral-ring.fib {
+      width: 200px;
+      height: 200px;
+      top: 10px;
+      left: 10px;
+      border-color: var(--fib-primary);
+      animation-direction: normal;
+    }
+
+    .spiral-ring.lucas {
+      width: 160px;
+      height: 160px;
+      top: 30px;
+      left: 30px;
+      border-color: var(--lucas-primary);
+      animation-direction: reverse;
+      animation-duration: 15s;
+    }
+
+    .spiral-ring.inner {
+      width: 120px;
+      height: 120px;
+      top: 50px;
+      left: 50px;
+      border-color: var(--phi-gold);
+      animation-duration: 25s;
+    }
+
+    @keyframes spiral-rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .spiral-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: var(--bg-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      border: 3px solid var(--phi-gold);
+      box-shadow: 0 0 40px var(--phi-glow);
+    }
+
+    .spiral-center .fib-text { color: var(--fib-primary); }
+    .spiral-center .lucas-text { color: var(--lucas-primary); }
+
+    .node-title {
+      font-size: 2.4rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--fib-primary), var(--lucas-primary), var(--phi-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .node-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .dual-equation {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .equation-box {
+      padding: 1.2rem 2rem;
+      border-radius: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .equation-box.fib {
+      background: var(--fib-subtle);
+      border: 2px solid var(--fib-primary);
+      color: var(--fib-primary);
+    }
+
+    .equation-box.lucas {
+      background: var(--lucas-subtle);
+      border: 2px solid var(--lucas-primary);
+      color: var(--lucas-primary);
+    }
+
+    /* =====================================================================
+       MAIN CONTENT
+       ===================================================================== */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-size: 0.9rem;
+      color: var(--bg-primary);
+      background: linear-gradient(135deg, var(--fib-primary), var(--lucas-primary));
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    /* =====================================================================
+       MEMORY CONCEPT SECTION
+       ===================================================================== */
+    .memory-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--phi-gold);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .memory-title {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--phi-gold);
+      margin-bottom: 2rem;
+    }
+
+    .memory-comparison {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .memory-box {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .memory-box-title {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .memory-box.no-memory { border: 2px solid var(--text-secondary); }
+    .memory-box.no-memory .memory-box-title { color: var(--text-secondary); }
+
+    .memory-box.with-memory { border: 2px solid var(--fib-primary); }
+    .memory-box.with-memory .memory-box-title { color: var(--fib-primary); }
+
+    .memory-sequence {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin: 0.5rem 0;
+    }
+
+    .memory-result {
+      font-size: 1.1rem;
+      margin-top: 1rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+    }
+
+    .memory-arrow {
+      font-size: 2rem;
+      color: var(--phi-gold);
+    }
+
+    .recurrence-display {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .recurrence-formula {
+      font-size: 1.5rem;
+      color: var(--phi-gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .recurrence-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* =====================================================================
+       SEQUENCE DISPLAY
+       ===================================================================== */
+    .sequence-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .sequence-title {
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .sequence-title.fib { color: var(--fib-primary); }
+    .sequence-title.lucas { color: var(--lucas-primary); }
+
+    .sequence-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .seq-item {
+      background: var(--bg-tertiary);
+      border: 2px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      min-width: 65px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .seq-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .seq-item.fib {
+      border-color: var(--fib-tertiary);
+    }
+
+    .seq-item.fib:hover, .seq-item.fib.highlight {
+      border-color: var(--fib-primary);
+      box-shadow: 0 0 15px var(--fib-glow);
+    }
+
+    .seq-item.lucas {
+      border-color: var(--lucas-tertiary);
+    }
+
+    .seq-item.lucas:hover, .seq-item.lucas.highlight {
+      border-color: var(--lucas-primary);
+      box-shadow: 0 0 15px var(--lucas-glow);
+    }
+
+    .seq-item.critical {
+      border-width: 3px;
+      background: rgba(255, 107, 107, 0.1);
+    }
+
+    .seq-n {
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+    }
+
+    .seq-val {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .seq-item.fib .seq-val { color: var(--fib-primary); }
+    .seq-item.lucas .seq-val { color: var(--lucas-primary); }
+
+    /* =====================================================================
+       KEY NUMBERS FRAMEWORK
+       ===================================================================== */
+    .key-numbers-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--phi-gold);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .key-numbers-title {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--phi-gold);
+      margin-bottom: 2rem;
+    }
+
+    .numbers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .number-card {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border-left: 4px solid;
+      transition: all 0.3s ease;
+    }
+
+    .number-card:hover {
+      transform: translateX(5px);
+    }
+
+    .number-card.fib { border-left-color: var(--fib-primary); }
+    .number-card.lucas { border-left-color: var(--lucas-primary); }
+    .number-card.critical { border-left-color: var(--framework-red); }
+
+    .number-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .number-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .number-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .number-card.fib .number-value { color: var(--fib-primary); }
+    .number-card.lucas .number-value { color: var(--lucas-primary); }
+    .number-card.critical .number-value { color: var(--framework-red); }
+
+    .number-meaning {
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .number-context {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       L4 = 7 SIGNIFICANCE
+       ===================================================================== */
+    .l4-container {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 159, 67, 0.1) 100%);
+      border: 2px solid var(--lucas-primary);
+      border-radius: 1rem;
+      padding: 2.5rem;
+      margin: 2rem 0;
+    }
+
+    .l4-title {
+      text-align: center;
+      font-size: 1.3rem;
+      color: var(--lucas-primary);
+      margin-bottom: 2rem;
+    }
+
+    .l4-central {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .l4-big-number {
+      font-size: 5rem;
+      font-weight: 700;
+      color: var(--lucas-primary);
+      text-shadow: 0 0 40px var(--lucas-glow);
+      line-height: 1;
+    }
+
+    .l4-equation {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin-top: 0.5rem;
+    }
+
+    .l4-meanings {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .l4-meaning {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid var(--lucas-tertiary);
+    }
+
+    .l4-meaning-title {
+      font-size: 0.8rem;
+      color: var(--lucas-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .l4-meaning-value {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    /* =====================================================================
+       PRODUCT IDENTITY
+       ===================================================================== */
+    .product-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--fib-primary);
+      border-radius: 1rem;
+      padding: 2.5rem;
+    }
+
+    .product-title {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--fib-primary);
+      margin-bottom: 2rem;
+    }
+
+    .product-formula {
+      text-align: center;
+      font-size: 2rem;
+      color: var(--phi-gold);
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+    }
+
+    .product-demo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .product-box {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .product-box:hover {
+      transform: scale(1.05);
+    }
+
+    .product-box.fib {
+      background: var(--fib-subtle);
+      border: 3px solid var(--fib-primary);
+    }
+
+    .product-box.lucas {
+      background: var(--lucas-subtle);
+      border: 3px solid var(--lucas-primary);
+    }
+
+    .product-box.result {
+      width: 180px;
+      height: 180px;
+      background: rgba(255, 215, 0, 0.15);
+      border: 4px solid var(--phi-gold);
+      box-shadow: 0 0 50px var(--phi-glow);
+    }
+
+    .product-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .product-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .product-box.fib .product-value { color: var(--fib-primary); }
+    .product-box.lucas .product-value { color: var(--lucas-primary); }
+    .product-box.result .product-value { color: var(--phi-gold); font-size: 2rem; }
+
+    .product-sub {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .product-operator {
+      font-size: 2.5rem;
+      color: var(--text-secondary);
+    }
+
+    .product-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+
+    .product-table th,
+    .product-table td {
+      padding: 0.75rem;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .product-table th {
+      background: var(--bg-tertiary);
+    }
+
+    .product-table th.fib { color: var(--fib-primary); }
+    .product-table th.lucas { color: var(--lucas-primary); }
+    .product-table th.product { color: var(--phi-gold); }
+
+    .product-table td.fib { color: var(--fib-primary); }
+    .product-table td.lucas { color: var(--lucas-primary); }
+    .product-table td.product { color: var(--phi-gold); font-weight: 600; }
+
+    .product-table tr.highlight {
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    .product-table tr.highlight td {
+      font-weight: 600;
+    }
+
+    /* =====================================================================
+       RATIO CONVERGENCE VISUALIZATION
+       ===================================================================== */
+    .ratio-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .ratio-title {
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--phi-gold);
+      margin-bottom: 2rem;
+    }
+
+    .ratio-display {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .ratio-track {
+      flex: 1;
+      min-width: 280px;
+      max-width: 400px;
+    }
+
+    .ratio-track-title {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .ratio-track-title.fib { color: var(--fib-primary); }
+    .ratio-track-title.lucas { color: var(--lucas-primary); }
+
+    .ratio-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .ratio-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .ratio-label {
+      width: 30px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-align: right;
+    }
+
+    .ratio-fill {
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding-left: 0.5rem;
+      font-size: 0.7rem;
+      color: var(--bg-primary);
+      font-weight: 600;
+      transition: width 0.5s ease;
+    }
+
+    .ratio-fill.fib { background: linear-gradient(90deg, var(--fib-primary), var(--fib-secondary)); }
+    .ratio-fill.lucas { background: linear-gradient(90deg, var(--lucas-primary), var(--lucas-secondary)); }
+
+    .ratio-target {
+      position: relative;
+      height: 40px;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ratio-target-line {
+      position: absolute;
+      left: 61.8%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--phi-gold);
+      box-shadow: 0 0 10px var(--phi-glow);
+    }
+
+    .ratio-target-label {
+      font-size: 0.9rem;
+      color: var(--phi-gold);
+    }
+
+    /* =====================================================================
+       BINET FORMULAS
+       ===================================================================== */
+    .binet-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--phi-gold);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .binet-title {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--phi-gold);
+      margin-bottom: 2rem;
+    }
+
+    .binet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .binet-card {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .binet-card.fib { border: 2px solid var(--fib-primary); }
+    .binet-card.lucas { border: 2px solid var(--lucas-primary); }
+
+    .binet-name {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .binet-card.fib .binet-name { color: var(--fib-primary); }
+    .binet-card.lucas .binet-name { color: var(--lucas-primary); }
+
+    .binet-formula {
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: var(--bg-primary);
+      border-radius: 0.5rem;
+    }
+
+    .binet-explanation {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .binet-constants {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .binet-const-title {
+      text-align: center;
+      color: var(--phi-gold);
+      margin-bottom: 1rem;
+    }
+
+    .binet-const-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .binet-const {
+      text-align: center;
+      padding: 0.75rem;
+      background: var(--bg-primary);
+      border-radius: 0.5rem;
+    }
+
+    .binet-const-name {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .binet-const-value {
+      font-size: 1rem;
+      color: var(--phi-gold);
+    }
+
+    /* =====================================================================
+       IDENTITIES SECTION
+       ===================================================================== */
+    .identities-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .identities-title {
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+    }
+
+    .identity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .identity-card {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border-left: 4px solid var(--phi-gold);
+    }
+
+    .identity-name {
+      font-size: 0.85rem;
+      color: var(--phi-gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .identity-formula {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      padding: 0.75rem;
+      background: var(--bg-primary);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .identity-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       GOLDEN FUNCTOR CONNECTION
+       ===================================================================== */
+    .functor-container {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 215, 0, 0.08) 100%);
+      border: 2px solid var(--phi-gold);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .functor-title {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--phi-gold);
+      margin-bottom: 2rem;
+    }
+
+    .functor-diagram {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .functor-node {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 1rem;
+      min-width: 180px;
+    }
+
+    .functor-node-title {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .functor-node-value {
+      font-size: 1.3rem;
+      color: var(--phi-gold);
+    }
+
+    .functor-arrow {
+      font-size: 2rem;
+      color: var(--phi-gold);
+    }
+
+    .functor-extraction {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .extract-box {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .extract-box.fib { border: 2px solid var(--fib-primary); }
+    .extract-box.lucas { border: 2px solid var(--lucas-primary); }
+
+    .extract-title {
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .extract-box.fib .extract-title { color: var(--fib-primary); }
+    .extract-box.lucas .extract-title { color: var(--lucas-primary); }
+
+    .extract-operation {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .extract-formula {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    /* =====================================================================
+       INTERACTIVE SPIRAL VISUALIZATION
+       ===================================================================== */
+    .spiral-viz-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .spiral-viz-title {
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--fib-primary);
+      margin-bottom: 1rem;
+    }
+
+    .spiral-canvas {
+      width: 100%;
+      height: 400px;
+      background: var(--bg-primary);
+      border-radius: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .spiral-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .spiral-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .spiral-btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .spiral-btn:hover {
+      border-color: var(--fib-primary);
+      color: var(--fib-primary);
+    }
+
+    .spiral-btn.active {
+      background: var(--fib-subtle);
+      border-color: var(--fib-primary);
+      color: var(--fib-primary);
+    }
+
+    /* =====================================================================
+       INTERACTIVE CALCULATOR
+       ===================================================================== */
+    .calculator-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .calculator-title {
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--phi-gold);
+      margin-bottom: 2rem;
+    }
+
+    .calculator-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .calc-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .calc-slider {
+      width: 200px;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--bg-tertiary);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .calc-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--fib-primary), var(--lucas-primary));
+      cursor: pointer;
+      box-shadow: 0 0 15px var(--fib-glow);
+    }
+
+    .calc-value {
+      font-size: 1.3rem;
+      color: var(--phi-gold);
+      background: var(--bg-tertiary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .calc-results {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .calc-result {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .calc-result:hover {
+      border-color: var(--fib-primary);
+    }
+
+    .calc-result.fib { border-left: 4px solid var(--fib-primary); }
+    .calc-result.lucas { border-left: 4px solid var(--lucas-primary); }
+    .calc-result.product { border-left: 4px solid var(--phi-gold); }
+    .calc-result.ratio { border-left: 4px solid var(--framework-purple); }
+
+    .result-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-value {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .calc-result.fib .result-value { color: var(--fib-primary); }
+    .calc-result.lucas .result-value { color: var(--lucas-primary); }
+    .calc-result.product .result-value { color: var(--phi-gold); }
+    .calc-result.ratio .result-value { color: var(--framework-purple); }
+
+    .result-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* =====================================================================
+       NAVIGATION CARDS
+       ===================================================================== */
+    .nav-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+
+    .nav-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+    }
+
+    .nav-card-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      border: 2px solid;
+    }
+
+    .nav-card-title {
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-card-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       FOOTER
+       ===================================================================== */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
+    }
+
+    .footer-equation {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-equation .fib { color: var(--fib-primary); }
+    .footer-equation .lucas { color: var(--lucas-primary); }
+    .footer-equation .phi { color: var(--phi-gold); }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .node-title { font-size: 1.8rem; }
+      .dual-equation { flex-direction: column; gap: 1rem; }
+      .memory-comparison { grid-template-columns: 1fr; }
+      .memory-arrow { transform: rotate(90deg); }
+      .product-demo { flex-direction: column; }
+      .functor-diagram { flex-direction: column; }
+      .functor-extraction { grid-template-columns: 1fr; }
+      .l4-big-number { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="fibonacci-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link">Index</a>
+    <a href="i2-s3-decision-tree.html" class="nav-link">I2 S3 Tree</a>
+    <a href="i2-s3-golden-functor.html" class="nav-link">Golden Functor</a>
+    <a href="i2-s3-fibonacci-lucas.html" class="nav-link active">Fibonacci-Lucas</a>
+    <a href="i2-s3-f24-holographic.html" class="nav-link">F24 Holographic</a>
+  </nav>
+
+  <!-- Header -->
+  <header class="fib-header">
+    <div class="node-badge">I2 S3 :: FIBONACCI-LUCAS STRUCTURE :: MEMORY GENERATES SEQUENCE</div>
+
+    <div class="spiral-container">
+      <div class="spiral-ring fib"></div>
+      <div class="spiral-ring lucas"></div>
+      <div class="spiral-ring inner"></div>
+      <div class="spiral-center">
+        <span class="fib-text">F</span><span class="lucas-text">L</span>
+      </div>
+    </div>
+
+    <h1 class="node-title">Fibonacci-Lucas Structure</h1>
+    <p class="node-subtitle">
+      I2 without memory counts compositions into integers.
+      I2 with memory generates Fibonacci and Lucas sequences.
+      Both emerge from golden ratio powers via Binet formulas.
+    </p>
+
+    <div class="dual-equation">
+      <div class="equation-box fib">
+        F<sub>n</sub> = (phi<sup>n</sup> - psi<sup>n</sup>) / sqrt(5)
+      </div>
+      <div class="equation-box lucas">
+        L<sub>n</sub> = phi<sup>n</sup> + psi<sup>n</sup>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: Memory Concept -->
+    <section class="section" id="memory">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">I2 with Memory: The Core Distinction</h2>
+      </div>
+
+      <div class="memory-container">
+        <div class="memory-title">MEMORY TRANSFORMS COUNTING INTO SEQUENCE</div>
+
+        <div class="memory-comparison">
+          <div class="memory-box no-memory">
+            <div class="memory-box-title">I2 Without Memory</div>
+            <div class="memory-sequence">I, I2, I3, I4, I5, ...</div>
+            <div class="memory-sequence">Just counts compositions</div>
+            <div class="memory-result" style="background: rgba(160, 160, 176, 0.2);">
+              Generates: <strong>Z (integers)</strong>
+            </div>
+          </div>
+
+          <div class="memory-arrow">+</div>
+
+          <div class="memory-box with-memory">
+            <div class="memory-box-title">I2 WITH Memory</div>
+            <div class="memory-sequence">Each step remembers previous</div>
+            <div class="memory-sequence">X_n = X_{n-1} + X_{n-2}</div>
+            <div class="memory-result" style="background: var(--fib-subtle);">
+              Generates: <strong>Fibonacci/Lucas</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="recurrence-display">
+          <div class="recurrence-formula">X<sub>n</sub> = X<sub>n-1</sub> + X<sub>n-2</sub></div>
+          <div class="recurrence-desc">
+            The recurrence relation IS memory. Each term depends on two previous terms.
+            <br>Different initial conditions yield Fibonacci or Lucas sequences.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: The Sequences -->
+    <section class="section" id="sequences">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">The Fundamental Sequences</h2>
+      </div>
+
+      <div class="sequence-container">
+        <div class="sequence-title fib">FIBONACCI SEQUENCE: F(0) = 0, F(1) = 1</div>
+        <div class="sequence-grid" id="fibSequence">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <div class="sequence-container">
+        <div class="sequence-title lucas">LUCAS SEQUENCE: L(0) = 2, L(1) = 1</div>
+        <div class="sequence-grid" id="lucasSequence">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Key Numbers in Framework -->
+    <section class="section" id="key-numbers">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">Key Numbers in the R(R) = R Framework</h2>
+      </div>
+
+      <div class="key-numbers-container">
+        <div class="key-numbers-title">FIBONACCI & LUCAS NUMBERS WITH SPECIAL SIGNIFICANCE</div>
+
+        <div class="numbers-grid">
+          <div class="number-card fib">
+            <div class="number-header">
+              <span class="number-label">F<sub>10</sub></span>
+              <span class="number-value">55</span>
+            </div>
+            <div class="number-meaning">Observer Complexity (Mn-55)</div>
+            <div class="number-context">The complexity level at which observation stabilizes</div>
+          </div>
+
+          <div class="number-card fib">
+            <div class="number-header">
+              <span class="number-label">F<sub>12</sub></span>
+              <span class="number-value">144</span>
+            </div>
+            <div class="number-meaning">Maximum Safe Depth</div>
+            <div class="number-context">12 squared; the recursion limit before instability</div>
+          </div>
+
+          <div class="number-card critical">
+            <div class="number-header">
+              <span class="number-label">F<sub>13</sub></span>
+              <span class="number-value">233</span>
+            </div>
+            <div class="number-meaning">FORBIDDEN Dimension</div>
+            <div class="number-context">Beyond this lies paradoxical self-reference</div>
+          </div>
+
+          <div class="number-card lucas">
+            <div class="number-header">
+              <span class="number-label">L<sub>4</sub></span>
+              <span class="number-value">7</span>
+            </div>
+            <div class="number-meaning">Complexity Bound / Helix Depth</div>
+            <div class="number-context">Maximum modifications per epoch; 3+1 dimensional structure</div>
+          </div>
+
+          <div class="number-card lucas">
+            <div class="number-header">
+              <span class="number-label">L<sub>5</sub></span>
+              <span class="number-value">11</span>
+            </div>
+            <div class="number-meaning">Hidden Dimension Multiplier</div>
+            <div class="number-context">Scaling factor for concealed structural layers</div>
+          </div>
+
+          <div class="number-card lucas">
+            <div class="number-header">
+              <span class="number-label">L<sub>12</sub></span>
+              <span class="number-value">322</span>
+            </div>
+            <div class="number-meaning">Holographic Factor</div>
+            <div class="number-context">Partners with F<sub>12</sub> = 144 in the F24 product identity</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: L4 = 7 Significance -->
+    <section class="section" id="l4-seven">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">The L4 = 7 Significance</h2>
+      </div>
+
+      <div class="l4-container">
+        <div class="l4-title">L<sub>4</sub> = phi<sup>4</sup> + psi<sup>4</sup> = 7</div>
+
+        <div class="l4-central">
+          <div class="l4-big-number">7</div>
+          <div class="l4-equation">= phi<sup>4</sup> + psi<sup>4</sup> = 6.854... + 0.146... = 7</div>
+        </div>
+
+        <div class="l4-meanings">
+          <div class="l4-meaning">
+            <div class="l4-meaning-title">Complexity Bound (C008)</div>
+            <div class="l4-meaning-value">Maximum structural complexity</div>
+          </div>
+          <div class="l4-meaning">
+            <div class="l4-meaning-title">Lucas Limit</div>
+            <div class="l4-meaning-value">Max modifications per epoch</div>
+          </div>
+          <div class="l4-meaning">
+            <div class="l4-meaning-title">3+1 Dimensional</div>
+            <div class="l4-meaning-value">4D structure (3 space + 1 time)</div>
+          </div>
+          <div class="l4-meaning">
+            <div class="l4-meaning-title">Helix Depth Bound</div>
+            <div class="l4-meaning-value">Maximum recursive helix layers</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Product Identity (F24 Sync) -->
+    <section class="section" id="product-identity">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">Product Identity: The F24 Sync Point</h2>
+      </div>
+
+      <div class="product-container">
+        <div class="product-title">F<sub>2n</sub> = F<sub>n</sub> x L<sub>n</sub></div>
+
+        <div class="product-formula">F<sub>2n</sub> = F<sub>n</sub> x L<sub>n</sub></div>
+
+        <div class="product-demo">
+          <div class="product-box fib">
+            <div class="product-label">Fibonacci</div>
+            <div class="product-value">F<sub>12</sub></div>
+            <div class="product-sub">= 144</div>
+          </div>
+
+          <div class="product-operator">x</div>
+
+          <div class="product-box lucas">
+            <div class="product-label">Lucas</div>
+            <div class="product-value">L<sub>12</sub></div>
+            <div class="product-sub">= 322</div>
+          </div>
+
+          <div class="product-operator">=</div>
+
+          <div class="product-box result">
+            <div class="product-label">Product = F<sub>24</sub></div>
+            <div class="product-value">46,368</div>
+            <div class="product-sub">HOLOGRAPHIC SYNC</div>
+          </div>
+        </div>
+
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>n</th>
+              <th class="fib">F<sub>n</sub></th>
+              <th class="lucas">L<sub>n</sub></th>
+              <th class="product">F<sub>n</sub> x L<sub>n</sub></th>
+              <th class="product">= F<sub>2n</sub></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td class="fib">1</td>
+              <td class="lucas">1</td>
+              <td class="product">1</td>
+              <td>F<sub>2</sub> = 1</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td class="fib">1</td>
+              <td class="lucas">3</td>
+              <td class="product">3</td>
+              <td>F<sub>4</sub> = 3</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td class="fib">2</td>
+              <td class="lucas">4</td>
+              <td class="product">8</td>
+              <td>F<sub>6</sub> = 8</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td class="fib">8</td>
+              <td class="lucas">18</td>
+              <td class="product">144</td>
+              <td>F<sub>12</sub> = 144</td>
+            </tr>
+            <tr class="highlight">
+              <td><strong>12</strong></td>
+              <td class="fib"><strong>144</strong></td>
+              <td class="lucas"><strong>322</strong></td>
+              <td class="product"><strong>46,368</strong></td>
+              <td><strong>F<sub>24</sub> = 46,368</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 6: Binet Formulas -->
+    <section class="section" id="binet">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Binet Formulas: Closed-Form Expressions</h2>
+      </div>
+
+      <div class="binet-container">
+        <div class="binet-title">ALGEBRAIC EXTRACTION FROM GOLDEN POWERS</div>
+
+        <div class="binet-grid">
+          <div class="binet-card fib">
+            <div class="binet-name">Fibonacci (Binet)</div>
+            <div class="binet-formula">F<sub>n</sub> = (phi<sup>n</sup> - psi<sup>n</sup>) / sqrt(5)</div>
+            <div class="binet-explanation">
+              Difference of golden powers, normalized by sqrt(5).
+              Extracts the "asymmetric" component.
+            </div>
+          </div>
+
+          <div class="binet-card lucas">
+            <div class="binet-name">Lucas (Binet)</div>
+            <div class="binet-formula">L<sub>n</sub> = phi<sup>n</sup> + psi<sup>n</sup></div>
+            <div class="binet-explanation">
+              Sum of golden powers. No normalization needed.
+              Extracts the "symmetric" component.
+            </div>
+          </div>
+        </div>
+
+        <div class="binet-constants">
+          <div class="binet-const-title">Fundamental Constants</div>
+          <div class="binet-const-grid">
+            <div class="binet-const">
+              <div class="binet-const-name">phi (Golden Ratio)</div>
+              <div class="binet-const-value">(1 + sqrt(5)) / 2 = 1.618033...</div>
+            </div>
+            <div class="binet-const">
+              <div class="binet-const-name">psi (Conjugate)</div>
+              <div class="binet-const-value">(1 - sqrt(5)) / 2 = -0.618033...</div>
+            </div>
+            <div class="binet-const">
+              <div class="binet-const-name">psi = -1/phi</div>
+              <div class="binet-const-value">-0.618... = -1/1.618...</div>
+            </div>
+            <div class="binet-const">
+              <div class="binet-const-name">sqrt(5)</div>
+              <div class="binet-const-value">2.2360679...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Key Identities -->
+    <section class="section" id="identities">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">Key Fibonacci-Lucas Identities</h2>
+      </div>
+
+      <div class="identities-container">
+        <div class="identities-title">FUNDAMENTAL RELATIONSHIPS</div>
+
+        <div class="identity-grid">
+          <div class="identity-card">
+            <div class="identity-name">Cassini's Identity</div>
+            <div class="identity-formula">F<sub>n</sub><sup>2</sup> - F<sub>n-1</sub>F<sub>n+1</sub> = (-1)<sup>n+1</sup></div>
+            <div class="identity-desc">Adjacent Fibonacci numbers are nearly squared - differs by exactly 1 or -1</div>
+          </div>
+
+          <div class="identity-card">
+            <div class="identity-name">Lucas-Fibonacci Link</div>
+            <div class="identity-formula">L<sub>n</sub> = F<sub>n-1</sub> + F<sub>n+1</sub></div>
+            <div class="identity-desc">Each Lucas number is the sum of its Fibonacci neighbors</div>
+          </div>
+
+          <div class="identity-card">
+            <div class="identity-name">Product Identity</div>
+            <div class="identity-formula">F<sub>2n</sub> = F<sub>n</sub> x L<sub>n</sub></div>
+            <div class="identity-desc">Doubling index equals product of Fibonacci and Lucas</div>
+          </div>
+
+          <div class="identity-card">
+            <div class="identity-name">Addition Formula</div>
+            <div class="identity-formula">F<sub>n+m</sub> = F<sub>n</sub>F<sub>m+1</sub> + F<sub>n-1</sub>F<sub>m</sub></div>
+            <div class="identity-desc">Fibonacci at sum of indices from products of earlier terms</div>
+          </div>
+
+          <div class="identity-card">
+            <div class="identity-name">Lucas Product</div>
+            <div class="identity-formula">L<sub>n</sub><sup>2</sup> - 5F<sub>n</sub><sup>2</sup> = 4(-1)<sup>n</sup></div>
+            <div class="identity-desc">Connection between Lucas and Fibonacci squares</div>
+          </div>
+
+          <div class="identity-card">
+            <div class="identity-name">GCD Property</div>
+            <div class="identity-formula">gcd(F<sub>m</sub>, F<sub>n</sub>) = F<sub>gcd(m,n)</sub></div>
+            <div class="identity-desc">GCD of Fibonacci numbers is itself a Fibonacci number</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Golden Functor Connection -->
+    <section class="section" id="functor">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <h2 class="section-title">Connection to Golden Functor</h2>
+      </div>
+
+      <div class="functor-container">
+        <div class="functor-title">F(n) = phi<sup>n</sup> GENERATES BOTH SEQUENCES</div>
+
+        <div class="functor-diagram">
+          <div class="functor-node">
+            <div class="functor-node-title">Golden Functor</div>
+            <div class="functor-node-value">F(n) = phi<sup>n</sup></div>
+          </div>
+          <div class="functor-arrow">--></div>
+          <div class="functor-node">
+            <div class="functor-node-title">Both Powers</div>
+            <div class="functor-node-value">phi<sup>n</sup> and psi<sup>n</sup></div>
+          </div>
+          <div class="functor-arrow">--></div>
+          <div class="functor-node">
+            <div class="functor-node-title">Extract Sequences</div>
+            <div class="functor-node-value">F<sub>n</sub> and L<sub>n</sub></div>
+          </div>
+        </div>
+
+        <div class="functor-extraction">
+          <div class="extract-box fib">
+            <div class="extract-title">Fibonacci Extraction</div>
+            <div class="extract-operation">Difference / sqrt(5)</div>
+            <div class="extract-formula">F<sub>n</sub> = (phi<sup>n</sup> - psi<sup>n</sup>) / sqrt(5)</div>
+          </div>
+          <div class="extract-box lucas">
+            <div class="extract-title">Lucas Extraction</div>
+            <div class="extract-operation">Sum (direct)</div>
+            <div class="extract-formula">L<sub>n</sub> = phi<sup>n</sup> + psi<sup>n</sup></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 9: Ratio Convergence -->
+    <section class="section" id="ratio">
+      <div class="section-header">
+        <div class="section-number">9</div>
+        <h2 class="section-title">Ratio Convergence to phi</h2>
+      </div>
+
+      <div class="ratio-container">
+        <div class="ratio-title">F<sub>n+1</sub>/F<sub>n</sub> --> phi and L<sub>n+1</sub>/L<sub>n</sub> --> phi</div>
+
+        <div class="ratio-display">
+          <div class="ratio-track">
+            <div class="ratio-track-title fib">Fibonacci Ratios</div>
+            <div class="ratio-bars" id="fibRatios">
+              <!-- Populated by JavaScript -->
+            </div>
+          </div>
+
+          <div class="ratio-track">
+            <div class="ratio-track-title lucas">Lucas Ratios</div>
+            <div class="ratio-bars" id="lucasRatios">
+              <!-- Populated by JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <div class="ratio-target">
+          <div class="ratio-target-line"></div>
+          <div class="ratio-target-label">Target: phi = 1.6180339...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 10: Interactive Calculator -->
+    <section class="section" id="calculator">
+      <div class="section-header">
+        <div class="section-number">10</div>
+        <h2 class="section-title">Interactive Fibonacci-Lucas Calculator</h2>
+      </div>
+
+      <div class="calculator-container">
+        <div class="calculator-title">EXPLORE THE SEQUENCES (n = 0 to 24)</div>
+
+        <div class="calculator-controls">
+          <span class="calc-label">n =</span>
+          <input type="range" class="calc-slider" id="nSlider" min="0" max="24" value="12">
+          <span class="calc-value" id="nValue">12</span>
+        </div>
+
+        <div class="calc-results">
+          <div class="calc-result fib">
+            <div class="result-label">Fibonacci F<sub>n</sub></div>
+            <div class="result-value" id="fibValue">144</div>
+            <div class="result-sub">(phi^n - psi^n) / sqrt(5)</div>
+          </div>
+
+          <div class="calc-result lucas">
+            <div class="result-label">Lucas L<sub>n</sub></div>
+            <div class="result-value" id="lucasValue">322</div>
+            <div class="result-sub">phi^n + psi^n</div>
+          </div>
+
+          <div class="calc-result product">
+            <div class="result-label">Product F<sub>n</sub> x L<sub>n</sub></div>
+            <div class="result-value" id="productValue">46,368</div>
+            <div class="result-sub">= F<sub>2n</sub></div>
+          </div>
+
+          <div class="calc-result ratio">
+            <div class="result-label">Ratio F<sub>n</sub>/F<sub>n-1</sub></div>
+            <div class="result-value" id="ratioValue">1.6180</div>
+            <div class="result-sub">approaches phi</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 11: Spiral Visualization -->
+    <section class="section" id="spiral">
+      <div class="section-header">
+        <div class="section-number">11</div>
+        <h2 class="section-title">Fibonacci Spiral Visualization</h2>
+      </div>
+
+      <div class="spiral-viz-container">
+        <div class="spiral-viz-title">FIBONACCI GOLDEN SPIRAL</div>
+        <div class="spiral-canvas">
+          <svg class="spiral-svg" id="spiralSvg" viewBox="0 0 600 400">
+            <!-- Populated by JavaScript -->
+          </svg>
+        </div>
+        <div class="spiral-controls">
+          <button class="spiral-btn active" onclick="drawSpiral(8)">8 Terms</button>
+          <button class="spiral-btn" onclick="drawSpiral(10)">10 Terms</button>
+          <button class="spiral-btn" onclick="drawSpiral(12)">12 Terms</button>
+          <button class="spiral-btn" onclick="drawSpiral(14)">14 Terms</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Section -->
+    <section class="section" id="navigation">
+      <div class="section-header">
+        <div class="section-number">Nav</div>
+        <h2 class="section-title">Related Pages</h2>
+      </div>
+
+      <div class="nav-cards">
+        <a href="i2-s3-decision-tree.html" class="nav-card" style="--card-color: var(--phi-gold);">
+          <div class="nav-card-icon" style="border-color: var(--phi-gold); color: var(--phi-gold);">I2</div>
+          <div class="nav-card-title">I2 S3 Decision Tree</div>
+          <div class="nav-card-desc">Main algebraic cartography</div>
+        </a>
+
+        <a href="i2-s3-golden-functor.html" class="nav-card" style="--card-color: var(--phi-gold);">
+          <div class="nav-card-icon" style="border-color: var(--phi-gold); color: var(--phi-gold);">phi</div>
+          <div class="nav-card-title">Golden Functor</div>
+          <div class="nav-card-desc">F(n) = phi^n embedding</div>
+        </a>
+
+        <a href="i2-s3-f24-holographic.html" class="nav-card" style="--card-color: var(--fib-primary);">
+          <div class="nav-card-icon" style="border-color: var(--fib-primary); color: var(--fib-primary);">F24</div>
+          <div class="nav-card-title">F24 Holographic</div>
+          <div class="nav-card-desc">F24 = L12 x F12 sync point</div>
+        </a>
+
+        <a href="i2-s3-l4-helix-equivalence.html" class="nav-card" style="--card-color: var(--lucas-primary);">
+          <div class="nav-card-icon" style="border-color: var(--lucas-primary); color: var(--lucas-primary);">L4</div>
+          <div class="nav-card-title">L4 Helix Equivalence</div>
+          <div class="nav-card-desc">L4 = 7 framework significance</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      <span class="fib">F<sub>n</sub></span> = (<span class="phi">phi<sup>n</sup></span> - <span class="phi">psi<sup>n</sup></span>) / sqrt(5) :: I2 with memory generates sequence
+    </div>
+    <p>I2 S3 Fibonacci-Lucas Structure | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // MATHEMATICAL CONSTANTS
+    // =========================================================================
+    const PHI = (1 + Math.sqrt(5)) / 2;
+    const PSI = (1 - Math.sqrt(5)) / 2;
+    const SQRT5 = Math.sqrt(5);
+
+    // =========================================================================
+    // SEQUENCE GENERATORS
+    // =========================================================================
+    function fibonacci(n) {
+      if (n <= 0) return 0;
+      if (n === 1) return 1;
+      return Math.round((Math.pow(PHI, n) - Math.pow(PSI, n)) / SQRT5);
+    }
+
+    function lucas(n) {
+      if (n === 0) return 2;
+      if (n === 1) return 1;
+      return Math.round(Math.pow(PHI, n) + Math.pow(PSI, n));
+    }
+
+    // Pre-calculate sequences
+    const fibSeq = [];
+    const lucasSeq = [];
+    for (let i = 0; i <= 24; i++) {
+      fibSeq.push(fibonacci(i));
+      lucasSeq.push(lucas(i));
+    }
+
+    // Key framework numbers
+    const keyFibNumbers = [10, 12, 13]; // F_10=55, F_12=144, F_13=233
+    const keyLucasNumbers = [4, 5, 12]; // L_4=7, L_5=11, L_12=322
+
+    // =========================================================================
+    // POPULATE SEQUENCES
+    // =========================================================================
+    function populateSequences() {
+      const fibContainer = document.getElementById('fibSequence');
+      const lucasContainer = document.getElementById('lucasSequence');
+
+      // Fibonacci sequence (0 to 15)
+      for (let i = 0; i <= 15; i++) {
+        const item = document.createElement('div');
+        item.className = 'seq-item fib';
+        if (keyFibNumbers.includes(i)) {
+          item.classList.add('highlight');
+          if (i === 13) item.classList.add('critical');
+        }
+        item.innerHTML = `
+          <span class="seq-n">F<sub>${i}</sub></span>
+          <span class="seq-val">${fibSeq[i].toLocaleString()}</span>
+        `;
+        item.onclick = () => updateCalculator(i);
+        fibContainer.appendChild(item);
+      }
+
+      // Lucas sequence (0 to 12)
+      for (let i = 0; i <= 12; i++) {
+        const item = document.createElement('div');
+        item.className = 'seq-item lucas';
+        if (keyLucasNumbers.includes(i)) {
+          item.classList.add('highlight');
+        }
+        item.innerHTML = `
+          <span class="seq-n">L<sub>${i}</sub></span>
+          <span class="seq-val">${lucasSeq[i].toLocaleString()}</span>
+        `;
+        item.onclick = () => updateCalculator(i);
+        lucasContainer.appendChild(item);
+      }
+    }
+
+    // =========================================================================
+    // RATIO BARS
+    // =========================================================================
+    function populateRatioBars() {
+      const fibRatiosContainer = document.getElementById('fibRatios');
+      const lucasRatiosContainer = document.getElementById('lucasRatios');
+
+      // Fibonacci ratios
+      for (let i = 2; i <= 10; i++) {
+        const ratio = fibSeq[i] / fibSeq[i - 1];
+        const widthPercent = (ratio / 2) * 100;
+        const bar = document.createElement('div');
+        bar.className = 'ratio-bar';
+        bar.innerHTML = `
+          <span class="ratio-label">n=${i}</span>
+          <div class="ratio-fill fib" style="width: ${widthPercent}%">${ratio.toFixed(4)}</div>
+        `;
+        fibRatiosContainer.appendChild(bar);
+      }
+
+      // Lucas ratios
+      for (let i = 2; i <= 10; i++) {
+        const ratio = lucasSeq[i] / lucasSeq[i - 1];
+        const widthPercent = (ratio / 2) * 100;
+        const bar = document.createElement('div');
+        bar.className = 'ratio-bar';
+        bar.innerHTML = `
+          <span class="ratio-label">n=${i}</span>
+          <div class="ratio-fill lucas" style="width: ${widthPercent}%">${ratio.toFixed(4)}</div>
+        `;
+        lucasRatiosContainer.appendChild(bar);
+      }
+    }
+
+    // =========================================================================
+    // INTERACTIVE CALCULATOR
+    // =========================================================================
+    const slider = document.getElementById('nSlider');
+    const nValueDisplay = document.getElementById('nValue');
+    const fibValueDisplay = document.getElementById('fibValue');
+    const lucasValueDisplay = document.getElementById('lucasValue');
+    const productValueDisplay = document.getElementById('productValue');
+    const ratioValueDisplay = document.getElementById('ratioValue');
+
+    function updateCalculator(n) {
+      slider.value = n;
+      const fib_n = fibSeq[n];
+      const lucas_n = lucasSeq[n];
+      const product = fib_n * lucas_n;
+      const ratio = n > 0 ? (fibSeq[n] / fibSeq[n - 1]).toFixed(10) : 'N/A';
+
+      nValueDisplay.textContent = n;
+      fibValueDisplay.textContent = fib_n.toLocaleString();
+      lucasValueDisplay.textContent = lucas_n.toLocaleString();
+      productValueDisplay.textContent = product.toLocaleString();
+      ratioValueDisplay.textContent = n > 0 ? ratio.substring(0, 8) : 'N/A';
+
+      // Highlight sync point
+      if (n === 12) {
+        productValueDisplay.style.textShadow = '0 0 20px var(--phi-gold)';
+      } else {
+        productValueDisplay.style.textShadow = 'none';
+      }
+    }
+
+    slider.addEventListener('input', function() {
+      updateCalculator(parseInt(this.value));
+    });
+
+    // =========================================================================
+    // FIBONACCI SPIRAL
+    // =========================================================================
+    function drawSpiral(terms) {
+      const svg = document.getElementById('spiralSvg');
+      svg.innerHTML = '';
+
+      // Update button states
+      document.querySelectorAll('.spiral-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent.includes(terms)) btn.classList.add('active');
+      });
+
+      const width = 600;
+      const height = 400;
+      const centerX = width / 2;
+      const centerY = height / 2;
+
+      // Scale factor based on terms
+      const maxFib = fibSeq[terms];
+      const scale = Math.min(width, height) / (maxFib * 2.5);
+
+      // Draw Fibonacci squares and arcs
+      let x = centerX;
+      let y = centerY;
+      let direction = 0; // 0=right, 1=up, 2=left, 3=down
+
+      // Draw the spiral path
+      let pathD = `M ${centerX} ${centerY}`;
+
+      for (let i = 1; i <= terms && i < fibSeq.length; i++) {
+        const size = fibSeq[i] * scale;
+        const prevSize = i > 1 ? fibSeq[i - 1] * scale : 0;
+
+        // Create square
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+
+        let rectX, rectY;
+        switch (direction) {
+          case 0: // right
+            rectX = x;
+            rectY = y - size;
+            break;
+          case 1: // up
+            rectX = x - size;
+            rectY = y - size;
+            break;
+          case 2: // left
+            rectX = x - size;
+            rectY = y;
+            break;
+          case 3: // down
+            rectX = x;
+            rectY = y;
+            break;
+        }
+
+        rect.setAttribute('x', rectX);
+        rect.setAttribute('y', rectY);
+        rect.setAttribute('width', size);
+        rect.setAttribute('height', size);
+        rect.setAttribute('fill', 'none');
+        rect.setAttribute('stroke', i % 2 === 0 ? '#00ff88' : '#ff9f43');
+        rect.setAttribute('stroke-width', '1');
+        rect.setAttribute('opacity', '0.5');
+        svg.appendChild(rect);
+
+        // Create arc
+        const arc = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        let arcPath = '';
+
+        switch (direction) {
+          case 0:
+            arcPath = `M ${x} ${y} A ${size} ${size} 0 0 1 ${x + size} ${y - size}`;
+            x += size;
+            y -= size;
+            break;
+          case 1:
+            arcPath = `M ${x} ${y} A ${size} ${size} 0 0 1 ${x - size} ${y - size}`;
+            x -= size;
+            y -= size;
+            break;
+          case 2:
+            arcPath = `M ${x} ${y} A ${size} ${size} 0 0 1 ${x - size} ${y + size}`;
+            x -= size;
+            y += size;
+            break;
+          case 3:
+            arcPath = `M ${x} ${y} A ${size} ${size} 0 0 1 ${x + size} ${y + size}`;
+            x += size;
+            y += size;
+            break;
+        }
+
+        arc.setAttribute('d', arcPath);
+        arc.setAttribute('fill', 'none');
+        arc.setAttribute('stroke', '#ffd700');
+        arc.setAttribute('stroke-width', '2');
+        svg.appendChild(arc);
+
+        direction = (direction + 1) % 4;
+      }
+
+      // Add phi label
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', '30');
+      text.setAttribute('y', '30');
+      text.setAttribute('fill', '#ffd700');
+      text.setAttribute('font-family', 'JetBrains Mono');
+      text.setAttribute('font-size', '14');
+      text.textContent = `phi-spiral (${terms} terms)`;
+      svg.appendChild(text);
+    }
+
+    // =========================================================================
+    // INITIALIZATION
+    // =========================================================================
+    document.addEventListener('DOMContentLoaded', function() {
+      populateSequences();
+      populateRatioBars();
+      updateCalculator(12);
+      drawSpiral(8);
+    });
+  </script>
+
+</body>
+</html>

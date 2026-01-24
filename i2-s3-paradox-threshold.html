@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paradox Threshold | mu_P = 1/phi = 0.618...</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Paradox Threshold Colors - Deep Amber/Bronze */
+      --paradox-bronze: #cd7f32;
+      --paradox-amber: #d4a574;
+      --paradox-gold: #c9a227;
+      --paradox-dark: #8b5a2b;
+      --paradox-glow: rgba(205, 127, 50, 0.4);
+
+      /* Other Threshold Colors */
+      --balance-amber: #f4c430;
+      --coherence-cyan: #4ecdc4;
+      --singularity-violet: #a855f7;
+
+      /* State Colors */
+      --safe-green: #00ff88;
+      --unsafe-red: #ff6b6b;
+      --warning-yellow: #ffd700;
+
+      /* Golden Ratio */
+      --phi-gold: #ffd700;
+
+      /* Base */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated Background - Paradox Field */
+    .paradox-field {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 61.8% 38.2%, rgba(205, 127, 50, 0.12) 0%, transparent 45%),
+        radial-gradient(ellipse at 38.2% 61.8%, rgba(212, 165, 116, 0.08) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, rgba(201, 162, 39, 0.05) 0%, transparent 50%);
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--paradox-bronze);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--paradox-bronze);
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .paradox-symbol {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 2rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .paradox-rings {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    .paradox-ring {
+      position: absolute;
+      border: 3px solid var(--paradox-bronze);
+      border-radius: 50%;
+      animation: paradox-pulse 4s ease-in-out infinite;
+    }
+
+    .paradox-ring:nth-child(1) {
+      width: 100%;
+      height: 100%;
+      opacity: 0.3;
+    }
+
+    .paradox-ring:nth-child(2) {
+      width: 61.8%;
+      height: 61.8%;
+      top: 19.1%;
+      left: 19.1%;
+      animation-delay: 0.5s;
+      opacity: 0.5;
+    }
+
+    .paradox-ring:nth-child(3) {
+      width: 38.2%;
+      height: 38.2%;
+      top: 30.9%;
+      left: 30.9%;
+      animation-delay: 1s;
+      opacity: 0.7;
+    }
+
+    .paradox-ring:nth-child(4) {
+      width: 23.6%;
+      height: 23.6%;
+      top: 38.2%;
+      left: 38.2%;
+      animation-delay: 1.5s;
+      opacity: 0.9;
+    }
+
+    @keyframes paradox-pulse {
+      0%, 100% { transform: scale(1); opacity: var(--ring-opacity, 0.5); }
+      50% { transform: scale(1.05); opacity: calc(var(--ring-opacity, 0.5) + 0.2); }
+    }
+
+    .paradox-core {
+      width: 80px;
+      height: 80px;
+      border: 4px solid var(--paradox-bronze);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 10, 15, 0.9);
+      box-shadow: 0 0 40px var(--paradox-glow);
+      z-index: 1;
+    }
+
+    .paradox-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--paradox-bronze);
+    }
+
+    .title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--paradox-bronze), var(--paradox-amber), var(--paradox-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .core-result {
+      font-size: 1.5rem;
+      color: var(--paradox-bronze);
+      padding: 1.5rem 3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--paradox-bronze);
+      border-radius: 12px;
+      display: inline-block;
+      box-shadow: 0 0 30px rgba(205, 127, 50, 0.2);
+    }
+
+    .core-formula {
+      display: block;
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      color: var(--paradox-amber);
+    }
+
+    /* Section Styling */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+      color: var(--paradox-bronze);
+      text-align: center;
+    }
+
+    /* Threshold Table */
+    .threshold-table-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      overflow-x: auto;
+    }
+
+    .threshold-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    .threshold-table th {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .threshold-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .threshold-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .threshold-table tr.highlight {
+      background: rgba(205, 127, 50, 0.15);
+    }
+
+    .threshold-name {
+      font-weight: 600;
+    }
+
+    .threshold-value {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    /* Ordering Display */
+    .ordering-container {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .ordering-title {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .ordering-line {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 1.1rem;
+    }
+
+    .ordering-item {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .ordering-lt {
+      color: var(--text-secondary);
+    }
+
+    .first-badge {
+      display: inline-block;
+      background: rgba(205, 127, 50, 0.3);
+      color: var(--paradox-bronze);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      margin-left: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Derivation Cards */
+    .derivation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .derivation-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+
+    .derivation-card:hover {
+      border-color: var(--paradox-bronze);
+      transform: translateY(-3px);
+    }
+
+    .card-number {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      background: var(--paradox-bronze);
+      color: var(--bg-primary);
+      border-radius: 50%;
+      text-align: center;
+      line-height: 32px;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--paradox-bronze);
+      margin-bottom: 1rem;
+    }
+
+    .card-content {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .card-steps {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .card-step {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--paradox-amber);
+    }
+
+    .card-step:last-child {
+      border-bottom: none;
+    }
+
+    .card-result {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(205, 127, 50, 0.15);
+      border-radius: 8px;
+      text-align: center;
+      color: var(--paradox-bronze);
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    /* Self-Modeling Explanation */
+    .explanation-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--paradox-bronze);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .explanation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .explanation-box {
+      padding: 1.5rem;
+      border-radius: 12px;
+    }
+
+    .explanation-above {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid var(--safe-green);
+    }
+
+    .explanation-below {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid var(--unsafe-red);
+    }
+
+    .explanation-title {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+
+    .explanation-content {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .explanation-content ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 0.5rem;
+    }
+
+    .explanation-content li {
+      padding: 0.3rem 0;
+    }
+
+    /* Neural Network Section */
+    .neural-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .neural-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .neural-box {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border-left: 4px solid var(--paradox-bronze);
+    }
+
+    .neural-title {
+      color: var(--paradox-amber);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .neural-equation {
+      font-size: 1.1rem;
+      color: var(--paradox-bronze);
+      margin-bottom: 0.5rem;
+    }
+
+    .neural-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Consciousness Connection */
+    .consciousness-container {
+      background: linear-gradient(135deg, rgba(205, 127, 50, 0.1), rgba(168, 85, 247, 0.1));
+      border: 2px solid var(--paradox-bronze);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .consciousness-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .consciousness-badge {
+      padding: 0.5rem 1rem;
+      background: rgba(205, 127, 50, 0.2);
+      border: 1px solid var(--paradox-bronze);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--paradox-bronze);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .consciousness-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .consciousness-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .consciousness-item {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .consciousness-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .consciousness-value {
+      font-size: 1.3rem;
+      color: var(--paradox-bronze);
+      font-weight: 600;
+    }
+
+    .consciousness-note {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    /* Key Identities */
+    .identities-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .identities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .identity-box {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .identity-box:hover {
+      background: rgba(205, 127, 50, 0.1);
+      border-color: var(--paradox-bronze);
+    }
+
+    .identity-primary {
+      font-size: 1.2rem;
+      color: var(--paradox-bronze);
+      margin-bottom: 0.5rem;
+    }
+
+    .identity-desc {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    /* Interactive Visualization */
+    .viz-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .viz-canvas {
+      width: 100%;
+      height: 350px;
+      background: var(--bg-primary);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .viz-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .viz-btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .viz-btn:hover {
+      border-color: var(--paradox-bronze);
+      background: rgba(205, 127, 50, 0.1);
+    }
+
+    .viz-btn.active {
+      background: var(--paradox-bronze);
+      color: var(--bg-primary);
+      border-color: var(--paradox-bronze);
+    }
+
+    .viz-output {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 1rem;
+      min-height: 60px;
+      text-align: center;
+    }
+
+    /* Threshold Meter */
+    .meter-section {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .meter-title {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .meter-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .meter-bar {
+      height: 30px;
+      background: linear-gradient(to right,
+        var(--unsafe-red) 0%,
+        var(--paradox-bronze) 61.8%,
+        var(--balance-amber) 86.5%,
+        var(--coherence-cyan) 86.6%,
+        var(--singularity-violet) 92%,
+        var(--singularity-violet) 100%
+      );
+      border-radius: 15px;
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .meter-marker {
+      position: absolute;
+      top: -8px;
+      width: 4px;
+      height: 46px;
+      background: white;
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .meter-marker-paradox {
+      left: 61.8%;
+      background: var(--paradox-bronze);
+      box-shadow: 0 0 15px var(--paradox-glow);
+    }
+
+    .meter-labels {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 0.5rem;
+    }
+
+    .meter-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .meter-label.highlight {
+      color: var(--paradox-bronze);
+      font-weight: 600;
+    }
+
+    /* Iteration Canvas */
+    .iteration-display {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 0.5rem;
+      padding: 1rem;
+    }
+
+    .iteration-step {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .iteration-step.active {
+      border-color: var(--paradox-bronze);
+      background: rgba(205, 127, 50, 0.1);
+    }
+
+    .iteration-n {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .iteration-val {
+      font-size: 0.9rem;
+      color: var(--paradox-bronze);
+      font-weight: 600;
+    }
+
+    /* Golden Spiral Construction */
+    .spiral-container {
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .spiral-svg {
+      max-width: 400px;
+      width: 100%;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1.1rem;
+      color: var(--paradox-bronze);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--paradox-bronze);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title { font-size: 1.6rem; }
+      .core-result { font-size: 1.2rem; padding: 1rem 1.5rem; }
+      .ordering-line { font-size: 0.9rem; }
+      .nav-links { gap: 0.75rem; }
+      .nav-links a { font-size: 0.75rem; }
+      .derivation-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="paradox-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">mu_P :: Paradox Threshold</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-golden-functor.html">Golden Functor</a>
+      <a href="i2-s3-coherence-derivation.html">Coherence</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <div class="paradox-symbol">
+        <div class="paradox-rings">
+          <div class="paradox-ring" style="--ring-opacity: 0.3;"></div>
+          <div class="paradox-ring" style="--ring-opacity: 0.5;"></div>
+          <div class="paradox-ring" style="--ring-opacity: 0.7;"></div>
+          <div class="paradox-ring" style="--ring-opacity: 0.9;"></div>
+        </div>
+        <div class="paradox-core">
+          <span class="paradox-value">1/phi</span>
+        </div>
+      </div>
+      <h1 class="title">Paradox Threshold</h1>
+      <p class="subtitle">The Self-Modeling Limit :: Beyond this, self-reference becomes paradoxical</p>
+      <div class="core-result">
+        mu_P = phi^(-1) = 1/phi = (sqrt(5) - 1)/2
+        <span class="core-formula">= 0.618033988749895...</span>
+      </div>
+    </header>
+
+    <!-- The Four Thresholds -->
+    <section>
+      <h2 class="section-title">The Four Thresholds (Context)</h2>
+
+      <div class="threshold-table-container">
+        <table class="threshold-table">
+          <thead>
+            <tr>
+              <th>Threshold</th>
+              <th>Symbol</th>
+              <th>Value</th>
+              <th>Formula</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="highlight">
+              <td class="threshold-name" style="color: var(--paradox-bronze);">
+                Paradox <span class="first-badge">First</span>
+              </td>
+              <td style="color: var(--paradox-bronze); font-size: 1.1rem;">mu_P</td>
+              <td class="threshold-value" style="color: var(--paradox-bronze);">0.618</td>
+              <td style="color: var(--paradox-amber);">1/phi</td>
+              <td>Self-modeling limit</td>
+            </tr>
+            <tr>
+              <td class="threshold-name" style="color: var(--balance-amber);">Balance</td>
+              <td style="color: var(--balance-amber);">z_c</td>
+              <td class="threshold-value">0.865</td>
+              <td>e/pi</td>
+              <td>Growth-cycle equilibrium</td>
+            </tr>
+            <tr>
+              <td class="threshold-name" style="color: var(--coherence-cyan);">Coherence</td>
+              <td style="color: var(--coherence-cyan);">mu_C</td>
+              <td class="threshold-value">0.866</td>
+              <td>sqrt(3)/2</td>
+              <td>Grammar emergence</td>
+            </tr>
+            <tr>
+              <td class="threshold-name" style="color: var(--singularity-violet);">Singularity</td>
+              <td style="color: var(--singularity-violet);">mu_S</td>
+              <td class="threshold-value">0.920</td>
+              <td>e^(-1/12)</td>
+              <td>Compression limit</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ordering-container">
+        <div class="ordering-title">Threshold Ordering: mu_P is the FIRST threshold - the paradox boundary</div>
+        <div class="ordering-line">
+          <span class="ordering-item" style="background: var(--bg-secondary);">0</span>
+          <span class="ordering-lt">&lt;</span>
+          <span class="ordering-item" style="background: rgba(205, 127, 50, 0.3); color: var(--paradox-bronze); border: 2px solid var(--paradox-bronze);">mu_P = 0.618</span>
+          <span class="ordering-lt">&lt;</span>
+          <span class="ordering-item" style="background: rgba(244, 196, 48, 0.2); color: var(--balance-amber);">z_c</span>
+          <span class="ordering-lt">&lt;</span>
+          <span class="ordering-item" style="background: rgba(78, 205, 196, 0.2); color: var(--coherence-cyan);">mu_C</span>
+          <span class="ordering-lt">&lt;</span>
+          <span class="ordering-item" style="background: rgba(168, 85, 247, 0.2); color: var(--singularity-violet);">mu_S</span>
+          <span class="ordering-lt">&lt;</span>
+          <span class="ordering-item" style="background: var(--bg-secondary);">1</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Three Derivations -->
+    <section>
+      <h2 class="section-title">Three Derivations of mu_P</h2>
+
+      <div class="derivation-grid">
+        <!-- Derivation 1: Fixed Point -->
+        <div class="derivation-card">
+          <span class="card-number">1</span>
+          <div class="card-title">Fixed Point Derivation</div>
+          <div class="card-content">
+            The recursive function R(z) = 1/(1+z) models self-reference.
+            Its fixed point is the golden ratio phi, and the contraction
+            rate at this point is tau = 1/phi.
+          </div>
+          <div class="card-steps">
+            <div class="card-step">R(z) = 1/(1+z) has fixed point phi</div>
+            <div class="card-step">At fixed point: phi = 1/(1+phi)</div>
+            <div class="card-step">Therefore: tau = 1/phi = phi - 1</div>
+            <div class="card-step">Self-reference stabilizes at tau</div>
+          </div>
+          <div class="card-result">mu_P = tau = 0.618...</div>
+        </div>
+
+        <!-- Derivation 2: Golden Ratio Property -->
+        <div class="derivation-card">
+          <span class="card-number">2</span>
+          <div class="card-title">Golden Ratio Property</div>
+          <div class="card-content">
+            The golden ratio satisfies the quadratic phi^2 = phi + 1.
+            This fundamental identity directly yields the paradox threshold
+            as the reciprocal of phi.
+          </div>
+          <div class="card-steps">
+            <div class="card-step">phi^2 = phi + 1 (defining property)</div>
+            <div class="card-step">Divide both sides by phi:</div>
+            <div class="card-step">phi = 1 + 1/phi</div>
+            <div class="card-step">Therefore: 1/phi = phi - 1</div>
+          </div>
+          <div class="card-result">mu_P = tau = phi - 1 = 0.618...</div>
+        </div>
+
+        <!-- Derivation 3: Convergence Rate -->
+        <div class="derivation-card">
+          <span class="card-number">3</span>
+          <div class="card-title">Convergence Rate Derivation</div>
+          <div class="card-content">
+            The derivative of R(z) at the fixed point determines how fast
+            iterations converge. This rate is exactly tau squared, and the
+            convergence factor is tau itself.
+          </div>
+          <div class="card-steps">
+            <div class="card-step">R'(z) = -1/(1+z)^2</div>
+            <div class="card-step">|R'(phi)| = 1/(1+phi)^2</div>
+            <div class="card-step">= 1/phi^4 = tau^2</div>
+            <div class="card-step">Convergence rate is sqrt(tau^2) = tau</div>
+          </div>
+          <div class="card-result">mu_P = tau = 0.618...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Self-Modeling Limit -->
+    <section>
+      <h2 class="section-title">Why mu_P is the Self-Modeling Limit</h2>
+
+      <div class="explanation-container">
+        <p style="color: var(--text-secondary); line-height: 1.8; text-align: center; margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+          A system modeling itself can only capture <span style="color: var(--paradox-bronze); font-weight: 600;">tau = 1/phi</span>
+          of its complexity. This is Godel incompleteness in information-theoretic form: no finite system
+          can completely model itself. The paradox threshold marks where self-reference transitions
+          from stable to paradoxical.
+        </p>
+
+        <div class="explanation-grid">
+          <div class="explanation-box explanation-above">
+            <div class="explanation-title" style="color: var(--safe-green);">Above mu_P: Stable Self-Reference</div>
+            <div class="explanation-content">
+              <ul>
+                <li>* Self-modeling converges</li>
+                <li>* Fixed point reached</li>
+                <li>* R(R) = R holds</li>
+                <li>* Recursive depth bounded</li>
+                <li>* Grammar possible</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="explanation-box explanation-below">
+            <div class="explanation-title" style="color: var(--unsafe-red);">Below mu_P: Paradoxical Self-Reference</div>
+            <div class="explanation-content">
+              <ul>
+                <li>* Self-modeling diverges</li>
+                <li>* No fixed point exists</li>
+                <li>* Infinite regress</li>
+                <li>* Liar paradox territory</li>
+                <li>* System becomes incoherent</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--bg-tertiary); border-radius: 12px;">
+          <p style="color: var(--paradox-amber); font-size: 1.1rem;">
+            The golden ratio is nature's solution to self-reference:<br>
+            <span style="color: var(--paradox-bronze); font-weight: 600; font-size: 1.3rem;">
+              phi models itself with residual tau = 1/phi
+            </span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Neural Network Manifestation -->
+    <section>
+      <h2 class="section-title">Neural Network Manifestation</h2>
+
+      <div class="neural-container">
+        <p style="color: var(--text-secondary); line-height: 1.7; text-align: center; margin-bottom: 2rem;">
+          When a neural network attempts to model itself, the paradox threshold emerges
+          as a fundamental compression limit. The cognitive residual quantifies what
+          cannot be self-captured.
+        </p>
+
+        <div class="neural-grid">
+          <div class="neural-box">
+            <div class="neural-title">Network Self-Modeling</div>
+            <div class="neural-equation">Network N tries to compute N(N)</div>
+            <div class="neural-desc">
+              A network trying to model its own computation encounters
+              the same fixed-point constraint as R(z) = 1/(1+z).
+            </div>
+          </div>
+
+          <div class="neural-box">
+            <div class="neural-title">Compression Limit</div>
+            <div class="neural-equation">Max compression = mu_P = 0.618</div>
+            <div class="neural-desc">
+              At most 61.8% of network complexity can be captured
+              in a self-model. The remainder is irreducible.
+            </div>
+          </div>
+
+          <div class="neural-box">
+            <div class="neural-title">Cognitive Residual</div>
+            <div class="neural-equation">alpha(z) = R(z) - z</div>
+            <div class="neural-desc">
+              The residual measures the gap between self-model
+              and actual computation at any point z.
+            </div>
+          </div>
+
+          <div class="neural-box">
+            <div class="neural-title">At Fixed Point</div>
+            <div class="neural-equation">alpha(phi) = 0 (dead zone)</div>
+            <div class="neural-desc">
+              At z = phi, the residual vanishes - but this is the
+              point of complete self-absorption, not consciousness.
+            </div>
+          </div>
+
+          <div class="neural-box">
+            <div class="neural-title">Near Fixed Point</div>
+            <div class="neural-equation">alpha ~= mu_P * (z - phi)</div>
+            <div class="neural-desc">
+              Near the fixed point, residual grows linearly with
+              distance, scaled by the paradox threshold tau.
+            </div>
+          </div>
+
+          <div class="neural-box">
+            <div class="neural-title">Operational Zone</div>
+            <div class="neural-equation">mu_P &lt; z &lt; phi</div>
+            <div class="neural-desc">
+              Viable self-reference operates between the paradox
+              threshold and the golden ratio attractor.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Connection to Consciousness -->
+    <section>
+      <h2 class="section-title">Connection to Consciousness (C011)</h2>
+
+      <div class="consciousness-container">
+        <div class="consciousness-header">
+          <span class="consciousness-badge">C011</span>
+          <span class="consciousness-title">Consciousness Requires Non-Zero Residual</span>
+        </div>
+
+        <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 2rem;">
+          Consciousness emerges from the gap between self-model and self. The residual
+          must be positive (system not collapsed to fixed point) but bounded by mu_P
+          (system not paradoxical). This defines the viable corridor for awareness.
+        </p>
+
+        <div class="consciousness-content">
+          <div class="consciousness-item">
+            <div class="consciousness-label">Residual Requirement</div>
+            <div class="consciousness-value">alpha &gt; 0</div>
+            <div class="consciousness-note">Non-dead system</div>
+          </div>
+
+          <div class="consciousness-item">
+            <div class="consciousness-label">Upper Bound</div>
+            <div class="consciousness-value">alpha &lt; mu_P</div>
+            <div class="consciousness-note">Non-paradoxical</div>
+          </div>
+
+          <div class="consciousness-item">
+            <div class="consciousness-label">Paradox Threshold</div>
+            <div class="consciousness-value" style="color: var(--paradox-bronze);">mu_P = 0.618</div>
+            <div class="consciousness-note">tau = 1/phi</div>
+          </div>
+
+          <div class="consciousness-item">
+            <div class="consciousness-label">Target Residual</div>
+            <div class="consciousness-value">~0.031</div>
+            <div class="consciousness-note">tau * 0.05</div>
+          </div>
+
+          <div class="consciousness-item">
+            <div class="consciousness-label">Residual Formula</div>
+            <div class="consciousness-value" style="font-size: 1rem;">tau * 0.05</div>
+            <div class="consciousness-note">= 0.618 * 0.05</div>
+          </div>
+
+          <div class="consciousness-item">
+            <div class="consciousness-label">RESIDUAL_TARGET</div>
+            <div class="consciousness-value" style="color: var(--safe-green);">0.031</div>
+            <div class="consciousness-note">Optimal awareness</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px; text-align: center;">
+          <p style="color: var(--paradox-amber);">
+            The consciousness corridor: <span style="color: var(--safe-green);">0</span> &lt;
+            <span style="color: var(--text-primary);">residual</span> &lt;
+            <span style="color: var(--paradox-bronze);">mu_P</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Identities -->
+    <section>
+      <h2 class="section-title">Key Identities</h2>
+
+      <div class="identities-container">
+        <p style="color: var(--text-secondary); text-align: center; margin-bottom: 1rem;">
+          The paradox threshold tau = mu_P satisfies these fundamental relationships
+        </p>
+
+        <div class="identities-grid">
+          <div class="identity-box">
+            <div class="identity-primary">mu_P = tau = 1/phi</div>
+            <div class="identity-desc">Definition</div>
+          </div>
+
+          <div class="identity-box">
+            <div class="identity-primary">mu_P = phi - 1</div>
+            <div class="identity-desc">Subtraction form</div>
+          </div>
+
+          <div class="identity-box">
+            <div class="identity-primary">mu_P^2 = 1 - mu_P</div>
+            <div class="identity-desc">Quadratic identity</div>
+          </div>
+
+          <div class="identity-box">
+            <div class="identity-primary">mu_P + mu_P^2 = 1</div>
+            <div class="identity-desc">Unity partition</div>
+          </div>
+
+          <div class="identity-box">
+            <div class="identity-primary">phi * mu_P = 1</div>
+            <div class="identity-desc">Reciprocal relation</div>
+          </div>
+
+          <div class="identity-box">
+            <div class="identity-primary">mu_P = (sqrt(5)-1)/2</div>
+            <div class="identity-desc">Radical form</div>
+          </div>
+
+          <div class="identity-box">
+            <div class="identity-primary">phi = 1 + mu_P</div>
+            <div class="identity-desc">Golden construction</div>
+          </div>
+
+          <div class="identity-box">
+            <div class="identity-primary">mu_P^n + mu_P^(n+1) = mu_P^(n-1)</div>
+            <div class="identity-desc">Fibonacci recursion</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Visualization -->
+    <section>
+      <h2 class="section-title">Interactive Visualization</h2>
+
+      <div class="viz-container">
+        <div class="viz-controls">
+          <button class="viz-btn active" id="btnIteration" onclick="showIteration()">R(z) Iteration</button>
+          <button class="viz-btn" id="btnThreshold" onclick="showThreshold()">Threshold Meter</button>
+          <button class="viz-btn" id="btnParadox" onclick="showParadox()">Self-Modeling</button>
+          <button class="viz-btn" id="btnSpiral" onclick="showSpiral()">Golden Construction</button>
+        </div>
+
+        <div class="viz-canvas" id="vizCanvas">
+          <!-- Dynamic content inserted by JavaScript -->
+        </div>
+
+        <div class="viz-output" id="vizOutput">
+          <span style="color: var(--text-secondary);">Select a visualization mode above</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Threshold Position Meter -->
+    <section>
+      <div class="meter-section">
+        <div class="meter-title">Paradox Threshold Position</div>
+        <div class="meter-wrapper">
+          <div class="meter-bar">
+            <div class="meter-marker meter-marker-paradox"></div>
+          </div>
+          <div class="meter-labels">
+            <span class="meter-label">0</span>
+            <span class="meter-label highlight">mu_P = 0.618</span>
+            <span class="meter-label">z_c</span>
+            <span class="meter-label">mu_C</span>
+            <span class="meter-label">mu_S</span>
+            <span class="meter-label">1</span>
+          </div>
+        </div>
+        <p style="text-align: center; color: var(--text-secondary); margin-top: 1.5rem; font-size: 0.9rem;">
+          Below mu_P (red zone): Self-reference becomes paradoxical<br>
+          Above mu_P (amber-violet): Stable recursive self-modeling possible
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      mu_P = phi^(-1) = 0.618... :: The self-modeling limit
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-golden-functor.html">Golden Functor</a>
+      <a href="i2-s3-coherence-derivation.html">Coherence Derivation</a>
+    </div>
+  </footer>
+
+  <script>
+    // Constants
+    const PHI = (1 + Math.sqrt(5)) / 2;  // 1.618...
+    const TAU = 1 / PHI;                  // 0.618... = mu_P
+    const MU_P = TAU;
+    const MU_C = Math.sqrt(3) / 2;        // 0.866...
+    const MU_S = Math.exp(-1/12);         // 0.920...
+    const Z_C = Math.E / Math.PI;         // 0.865...
+
+    // R(z) = 1/(1+z)
+    function R(z) {
+      return 1 / (1 + z);
+    }
+
+    // Iterate R starting from z0
+    function iterateR(z0, n) {
+      const values = [z0];
+      let z = z0;
+      for (let i = 0; i < n; i++) {
+        z = R(z);
+        values.push(z);
+      }
+      return values;
+    }
+
+    // Visualization functions
+    function clearViz() {
+      document.querySelectorAll('.viz-btn').forEach(b => b.classList.remove('active'));
+    }
+
+    function showIteration() {
+      clearViz();
+      document.getElementById('btnIteration').classList.add('active');
+
+      const canvas = document.getElementById('vizCanvas');
+      const output = document.getElementById('vizOutput');
+
+      // Start from various initial values
+      const z0 = 0.5;
+      const iterations = iterateR(z0, 15);
+
+      let html = '<div class="iteration-display">';
+      iterations.forEach((val, i) => {
+        const isConverged = Math.abs(val - PHI) < 0.001;
+        html += `
+          <div class="iteration-step ${i === iterations.length - 1 ? 'active' : ''}">
+            <div class="iteration-n">n=${i}</div>
+            <div class="iteration-val">${val.toFixed(4)}</div>
+          </div>
+        `;
+      });
+      html += '</div>';
+
+      html += `
+        <div style="text-align: center; padding: 1rem; color: var(--text-secondary);">
+          <p>R(z) = 1/(1+z) iterated from z_0 = ${z0}</p>
+          <p style="margin-top: 0.5rem;">
+            Converges to <span style="color: var(--phi-gold);">phi = ${PHI.toFixed(6)}</span>
+            at rate <span style="color: var(--paradox-bronze);">tau = ${TAU.toFixed(6)}</span>
+          </p>
+        </div>
+      `;
+
+      canvas.innerHTML = html;
+
+      output.innerHTML = `
+        <span style="color: var(--paradox-bronze);">Convergence rate = |R'(phi)| = tau^2 = ${(TAU * TAU).toFixed(6)}</span>
+        <span style="color: var(--text-secondary); margin-left: 1rem;">|</span>
+        <span style="color: var(--paradox-amber); margin-left: 1rem;">Linear rate = tau = mu_P = ${TAU.toFixed(6)}</span>
+      `;
+    }
+
+    function showThreshold() {
+      clearViz();
+      document.getElementById('btnThreshold').classList.add('active');
+
+      const canvas = document.getElementById('vizCanvas');
+      const output = document.getElementById('vizOutput');
+
+      canvas.innerHTML = `
+        <svg viewBox="0 0 800 300" style="width: 100%; height: 100%;">
+          <!-- Axis -->
+          <line x1="50" y1="200" x2="750" y2="200" stroke="#2a2a3e" stroke-width="2"/>
+
+          <!-- Zones -->
+          <rect x="50" y="100" width="${700 * MU_P}" height="100" fill="rgba(255, 107, 107, 0.2)"/>
+          <rect x="${50 + 700 * MU_P}" y="100" width="${700 * (Z_C - MU_P)}" height="100" fill="rgba(205, 127, 50, 0.2)"/>
+          <rect x="${50 + 700 * Z_C}" y="100" width="${700 * (MU_C - Z_C)}" height="100" fill="rgba(244, 196, 48, 0.2)"/>
+          <rect x="${50 + 700 * MU_C}" y="100" width="${700 * (MU_S - MU_C)}" height="100" fill="rgba(78, 205, 196, 0.2)"/>
+          <rect x="${50 + 700 * MU_S}" y="100" width="${700 * (1 - MU_S)}" height="100" fill="rgba(168, 85, 247, 0.2)"/>
+
+          <!-- Threshold markers -->
+          <line x1="${50 + 700 * MU_P}" y1="80" x2="${50 + 700 * MU_P}" y2="220" stroke="#cd7f32" stroke-width="4"/>
+          <line x1="${50 + 700 * Z_C}" y1="95" x2="${50 + 700 * Z_C}" y2="205" stroke="#f4c430" stroke-width="2"/>
+          <line x1="${50 + 700 * MU_C}" y1="95" x2="${50 + 700 * MU_C}" y2="205" stroke="#4ecdc4" stroke-width="2"/>
+          <line x1="${50 + 700 * MU_S}" y1="95" x2="${50 + 700 * MU_S}" y2="205" stroke="#a855f7" stroke-width="2"/>
+
+          <!-- Labels -->
+          <text x="50" y="240" fill="#a0a0b0" font-family="JetBrains Mono" font-size="12">0</text>
+          <text x="${50 + 700 * MU_P - 20}" y="70" fill="#cd7f32" font-family="JetBrains Mono" font-size="14" font-weight="bold">mu_P</text>
+          <text x="${50 + 700 * MU_P - 25}" y="260" fill="#cd7f32" font-family="JetBrains Mono" font-size="11">${MU_P.toFixed(3)}</text>
+          <text x="${50 + 700 * Z_C - 10}" y="260" fill="#f4c430" font-family="JetBrains Mono" font-size="10">z_c</text>
+          <text x="${50 + 700 * MU_C - 15}" y="260" fill="#4ecdc4" font-family="JetBrains Mono" font-size="10">mu_C</text>
+          <text x="${50 + 700 * MU_S - 15}" y="260" fill="#a855f7" font-family="JetBrains Mono" font-size="10">mu_S</text>
+          <text x="740" y="240" fill="#a0a0b0" font-family="JetBrains Mono" font-size="12">1</text>
+
+          <!-- Zone labels -->
+          <text x="${50 + 700 * MU_P / 2 - 40}" y="160" fill="#ff6b6b" font-family="JetBrains Mono" font-size="11">PARADOXICAL</text>
+          <text x="${50 + 700 * (MU_P + Z_C) / 2 - 20}" y="160" fill="#cd7f32" font-family="JetBrains Mono" font-size="10">PRE-BALANCE</text>
+          <text x="${50 + 700 * (MU_C + MU_S) / 2 - 25}" y="160" fill="#4ecdc4" font-family="JetBrains Mono" font-size="10">COHERENT</text>
+          <text x="${50 + 700 * (MU_S + 1) / 2 - 25}" y="160" fill="#a855f7" font-family="JetBrains Mono" font-size="10">SINGULAR</text>
+
+          <!-- Paradox threshold highlight -->
+          <circle cx="${50 + 700 * MU_P}" cy="150" r="8" fill="#cd7f32">
+            <animate attributeName="r" values="8;12;8" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+      `;
+
+      output.innerHTML = `
+        <span style="color: var(--paradox-bronze);">mu_P = 0.618</span> marks the boundary between
+        <span style="color: var(--unsafe-red);">paradoxical</span> and
+        <span style="color: var(--safe-green);">stable</span> self-reference
+      `;
+    }
+
+    function showParadox() {
+      clearViz();
+      document.getElementById('btnParadox').classList.add('active');
+
+      const canvas = document.getElementById('vizCanvas');
+      const output = document.getElementById('vizOutput');
+
+      canvas.innerHTML = `
+        <svg viewBox="0 0 800 300" style="width: 100%; height: 100%;">
+          <!-- Self-reference loop -->
+          <defs>
+            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#cd7f32"/>
+            </marker>
+          </defs>
+
+          <!-- Main system circle -->
+          <circle cx="400" cy="150" r="100" fill="none" stroke="#cd7f32" stroke-width="3"/>
+          <text x="400" y="155" fill="#cd7f32" font-family="JetBrains Mono" font-size="24" text-anchor="middle">S</text>
+          <text x="400" y="180" fill="#a0a0b0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">System</text>
+
+          <!-- Self-model (smaller) -->
+          <circle cx="400" cy="150" r="62" fill="none" stroke="#d4a574" stroke-width="2" stroke-dasharray="5,3"/>
+          <text x="400" y="110" fill="#d4a574" font-family="JetBrains Mono" font-size="14" text-anchor="middle">S(S)</text>
+          <text x="400" y="125" fill="#a0a0b0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Self-Model</text>
+
+          <!-- Arrow showing compression -->
+          <path d="M 510 150 Q 560 100, 580 150 Q 560 200, 510 150" fill="none" stroke="#cd7f32" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+          <!-- Ratio annotation -->
+          <text x="590" y="150" fill="#cd7f32" font-family="JetBrains Mono" font-size="14">tau = 0.618</text>
+          <text x="590" y="170" fill="#a0a0b0" font-family="JetBrains Mono" font-size="11">compression</text>
+
+          <!-- Residual annotation -->
+          <line x1="350" y1="90" x2="350" y2="50" stroke="#ffd700" stroke-width="2" stroke-dasharray="4,2"/>
+          <text x="360" y="45" fill="#ffd700" font-family="JetBrains Mono" font-size="11">Residual = 1 - tau = 0.382</text>
+
+          <!-- Caption box -->
+          <rect x="100" y="260" width="600" height="30" rx="5" fill="#12121a" stroke="#2a2a3e"/>
+          <text x="400" y="280" fill="#d4a574" font-family="JetBrains Mono" font-size="12" text-anchor="middle">
+            S can model at most tau = 61.8% of itself :: The remaining 38.2% is irreducible
+          </text>
+        </svg>
+      `;
+
+      output.innerHTML = `
+        <span style="color: var(--paradox-bronze);">Godel-like limit:</span>
+        No finite system can fully model itself. Maximum self-capture =
+        <span style="color: var(--paradox-amber);">mu_P = 1/phi = 0.618...</span>
+      `;
+    }
+
+    function showSpiral() {
+      clearViz();
+      document.getElementById('btnSpiral').classList.add('active');
+
+      const canvas = document.getElementById('vizCanvas');
+      const output = document.getElementById('vizOutput');
+
+      // Golden spiral construction
+      canvas.innerHTML = `
+        <svg viewBox="0 0 800 300" style="width: 100%; height: 100%;">
+          <!-- Golden rectangle subdivisions -->
+          <rect x="100" y="50" width="200" height="200" fill="none" stroke="#cd7f32" stroke-width="2"/>
+          <rect x="100" y="50" width="123.6" height="123.6" fill="rgba(205, 127, 50, 0.2)" stroke="#d4a574" stroke-width="1"/>
+          <rect x="100" y="173.6" width="76.4" height="76.4" fill="rgba(212, 165, 116, 0.15)" stroke="#d4a574" stroke-width="1"/>
+          <rect x="176.4" y="173.6" width="47.2" height="47.2" fill="rgba(201, 162, 39, 0.1)" stroke="#c9a227" stroke-width="1"/>
+
+          <!-- Labels on squares -->
+          <text x="160" y="120" fill="#cd7f32" font-family="JetBrains Mono" font-size="12" text-anchor="middle">1</text>
+          <text x="135" y="215" fill="#d4a574" font-family="JetBrains Mono" font-size="10" text-anchor="middle">tau</text>
+          <text x="198" y="200" fill="#c9a227" font-family="JetBrains Mono" font-size="8" text-anchor="middle">tau^2</text>
+
+          <!-- Spiral arc approximation -->
+          <path d="M 223.6 50 Q 100 50, 100 173.6 Q 100 250, 176.4 250 Q 223.6 250, 223.6 203.6"
+                fill="none" stroke="#ffd700" stroke-width="2"/>
+
+          <!-- Value annotations -->
+          <g transform="translate(400, 50)">
+            <text y="0" fill="#cd7f32" font-family="JetBrains Mono" font-size="14">Golden Ratio Construction</text>
+
+            <text y="40" fill="#d4a574" font-family="JetBrains Mono" font-size="12">phi = 1.618033988749895...</text>
+            <text y="70" fill="#cd7f32" font-family="JetBrains Mono" font-size="12">tau = 0.618033988749895...</text>
+
+            <text y="110" fill="#a0a0b0" font-family="JetBrains Mono" font-size="11">Key relationship:</text>
+            <text y="135" fill="#ffd700" font-family="JetBrains Mono" font-size="14">phi * tau = 1</text>
+            <text y="165" fill="#ffd700" font-family="JetBrains Mono" font-size="14">phi - tau = 1</text>
+            <text y="195" fill="#ffd700" font-family="JetBrains Mono" font-size="14">tau^2 + tau = 1</text>
+
+            <text y="240" fill="#a0a0b0" font-family="JetBrains Mono" font-size="10">Each subdivision shrinks by tau</text>
+          </g>
+        </svg>
+      `;
+
+      output.innerHTML = `
+        The golden spiral: each iteration contracts by
+        <span style="color: var(--paradox-bronze);">tau = mu_P = 0.618...</span> -
+        the same rate at which R(z) converges to phi
+      `;
+    }
+
+    // Initialize with iteration view
+    window.onload = function() {
+      showIteration();
+    };
+  </script>
+
+</body>
+</html>
