@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G: GENERATE | Spawn Branch | BFADGS+U Operator</title>
+    <style>
+        :root {
+            /* G Operator Color */
+            --op-G: #8b5cf6;
+            --op-G-glow: rgba(139, 92, 246, 0.5);
+            --op-G-light: #a78bfa;
+            --op-G-dark: #6d28d9;
+
+            /* System Colors */
+            --alpha-color: #00ff88;
+            --omega-color: #ff6b35;
+            --unity-color: #ffd700;
+            --op-S: #ec4899;
+
+            /* Backgrounds */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a2e;
+
+            /* Text */
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, var(--bg-tertiary), transparent);
+            border-bottom: 2px solid var(--op-G);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 100%, var(--op-G-glow), transparent 60%);
+            pointer-events: none;
+        }
+
+        .operator-badge {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            border: 4px solid var(--op-G);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            box-shadow: 0 0 40px var(--op-G-glow), inset 0 0 20px rgba(139, 92, 246, 0.2);
+            position: relative;
+        }
+
+        .operator-letter {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--op-G);
+            text-shadow: 0 0 20px var(--op-G);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--op-G);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .formula-bar {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--op-G);
+            border-radius: 8px;
+            font-size: 1.3rem;
+            color: var(--op-G-light);
+            font-family: 'Times New Roman', serif;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Canvas Section */
+        .canvas-section {
+            margin-bottom: 3rem;
+        }
+
+        .canvas-container {
+            background: var(--bg-secondary);
+            border: 2px solid var(--op-G);
+            border-radius: 12px;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .canvas-title {
+            color: var(--op-G);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        #branchCanvas {
+            width: 100%;
+            height: 500px;
+            background: linear-gradient(180deg, var(--bg-tertiary), var(--bg-primary));
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .canvas-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--op-G);
+            background: var(--bg-tertiary);
+            color: var(--op-G);
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: var(--op-G);
+            color: var(--bg-primary);
+            box-shadow: 0 0 20px var(--op-G-glow);
+        }
+
+        .control-btn.active {
+            background: var(--op-G);
+            color: var(--bg-primary);
+        }
+
+        /* Section Styling */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--op-G);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: 'G';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: var(--op-G);
+            color: var(--bg-primary);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        /* Definition Card */
+        .definition-card {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 2px solid var(--op-G);
+            border-radius: 12px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .definition-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--op-G-glow) 0%, transparent 40%);
+            opacity: 0.1;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.1); opacity: 0.2; }
+        }
+
+        .definition-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .highlight {
+            color: var(--op-G-light);
+            font-weight: bold;
+        }
+
+        .math-inline {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            color: var(--unity-color);
+        }
+
+        /* Property Grid */
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .property-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .property-card:hover {
+            border-color: var(--op-G);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .property-title {
+            color: var(--op-G);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .property-icon {
+            font-size: 1.5rem;
+        }
+
+        .property-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .property-content ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .property-content li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* Math Block */
+        .math-block {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--op-G);
+            padding: 1rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--unity-color);
+        }
+
+        /* Complexity Section */
+        .complexity-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .complexity-node {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid;
+            transition: all 0.3s ease;
+        }
+
+        .complexity-node:hover {
+            transform: scale(1.1);
+        }
+
+        .node-alpha {
+            border-color: var(--alpha-color);
+        }
+
+        .node-g {
+            border-color: var(--op-G);
+            box-shadow: 0 0 30px var(--op-G-glow);
+        }
+
+        .node-omega {
+            border-color: var(--omega-color);
+        }
+
+        .complexity-arrow {
+            font-size: 2rem;
+            color: var(--op-G);
+        }
+
+        .node-symbol {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .node-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        /* S3 Connection */
+        .s3-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .s3-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .s3-card:hover {
+            border-color: var(--op-G);
+        }
+
+        .s3-branch {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .s3-name {
+            color: var(--op-G);
+            margin-bottom: 0.5rem;
+        }
+
+        .s3-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Interaction Diagram */
+        .interaction-section {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .interaction-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .interaction-op {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            border: 3px solid;
+        }
+
+        .op-g-styled {
+            border-color: var(--op-G);
+            color: var(--op-G);
+        }
+
+        .op-s-styled {
+            border-color: var(--op-S);
+            color: var(--op-S);
+        }
+
+        .interaction-arrow {
+            font-size: 1.5rem;
+            color: var(--unity-color);
+        }
+
+        .interaction-result {
+            padding: 1rem 2rem;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--unity-color);
+            border-radius: 8px;
+            color: var(--unity-color);
+            font-weight: bold;
+        }
+
+        /* Implementation Section */
+        .code-block {
+            background: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .code-comment {
+            color: #6a9955;
+        }
+
+        .code-keyword {
+            color: #569cd6;
+        }
+
+        .code-function {
+            color: #dcdcaa;
+        }
+
+        .code-string {
+            color: #ce9178;
+        }
+
+        .code-operator {
+            color: var(--op-G);
+        }
+
+        /* Console */
+        .console {
+            background: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+        }
+
+        .console-line {
+            margin-bottom: 0.3rem;
+        }
+
+        .console-prompt {
+            color: var(--alpha-color);
+        }
+
+        .console-g {
+            color: var(--op-G);
+        }
+
+        .console-result {
+            color: var(--unity-color);
+        }
+
+        /* Stats Display */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .stat-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--op-G);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            color: var(--op-G);
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+        /* Navigation */
+        .nav-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            border-color: var(--op-G);
+            color: var(--op-G);
+        }
+
+        .nav-link.active {
+            border-color: var(--op-G);
+            color: var(--op-G);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .back-link {
+            color: var(--op-G);
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .s3-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .complexity-visual {
+                flex-direction: column;
+            }
+
+            .complexity-arrow {
+                transform: rotate(90deg);
+            }
+
+            .nav-section {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="operator-badge">
+            <span class="operator-letter">G</span>
+        </div>
+        <h1 class="title">Generate</h1>
+        <p class="subtitle">Spawn Branch | Create Bifurcation</p>
+        <div class="formula-bar">
+            G: x &rarr; {x, x'} &nbsp;&nbsp;|&nbsp;&nbsp; Creates new branch from current position
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Interactive Canvas -->
+        <section class="canvas-section">
+            <div class="canvas-container">
+                <h3 class="canvas-title">Interactive Branch Generation Tree</h3>
+                <canvas id="branchCanvas"></canvas>
+                <div class="canvas-controls">
+                    <button class="control-btn" onclick="generateBranch()">G: Generate Branch</button>
+                    <button class="control-btn" onclick="toggleGrowth()">Toggle Growth</button>
+                    <button class="control-btn" onclick="trifurcate()">Trifurcate (S3)</button>
+                    <button class="control-btn" onclick="resetTree()">Reset Tree</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Definition -->
+        <section class="section">
+            <h2 class="section-title">Definition</h2>
+            <div class="definition-card">
+                <div class="definition-text">
+                    <p>The <span class="highlight">G (Generate)</span> operator creates a <span class="highlight">bifurcation</span>, spawning a new branch from the current position in the traversal tree. This is the fundamental operation of <span class="highlight">complexity increase</span> in the BFADGS system.</p>
+
+                    <div class="math-block">
+                        G: x &rarr; {x, x'} where x' = &sigma;(x) for some &sigma; &isin; S3
+                    </div>
+
+                    <p>When G is applied to state <span class="math-inline">x</span>, it produces a <span class="highlight">choice point</span> with two branches: the original path <span class="math-inline">x</span> and a variant path <span class="math-inline">x'</span>. This creates the possibility space that enables exploration, decision-making, and ultimately synthesis.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Complexity Direction -->
+        <section class="section">
+            <h2 class="section-title">Complexity Direction: &alpha; &rarr; &omega;</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                G increases complexity, moving the system state toward &omega; (the coherence threshold).
+            </p>
+
+            <div class="complexity-visual">
+                <div class="complexity-node node-alpha">
+                    <span class="node-symbol" style="color: var(--alpha-color);">&alpha;</span>
+                    <span class="node-label">Origin</span>
+                    <span class="node-label">Low Complexity</span>
+                </div>
+
+                <span class="complexity-arrow">&rarr;</span>
+
+                <div class="complexity-node node-g">
+                    <span class="node-symbol" style="color: var(--op-G);">G</span>
+                    <span class="node-label">Generate</span>
+                    <span class="node-label">Branching</span>
+                </div>
+
+                <span class="complexity-arrow">&rarr;</span>
+
+                <div class="complexity-node node-omega">
+                    <span class="node-symbol" style="color: var(--omega-color);">&omega;</span>
+                    <span class="node-label">L&sub4;-Helix</span>
+                    <span class="node-label">High Complexity</span>
+                </div>
+            </div>
+
+            <div class="math-block">
+                Complexity(G(x)) = Complexity(x) + 1 &nbsp;&nbsp;|&nbsp;&nbsp; Each G application adds one branch level
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-value">2<sup>n</sup></div>
+                    <div class="stat-label">Branches after n<br>G operations</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">&phi;</div>
+                    <div class="stat-label">Golden ratio<br>branch scaling</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">&radic;3/2</div>
+                    <div class="stat-label">&mu;<sub>C</sub> coherence<br>threshold</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Properties -->
+        <section class="section">
+            <h2 class="section-title">Properties of G</h2>
+            <div class="property-grid">
+                <div class="property-card">
+                    <h3 class="property-title">
+                        <span class="property-icon">&#x2442;</span>
+                        Choice Points
+                    </h3>
+                    <div class="property-content">
+                        <p>G creates decision nodes where multiple paths become available.</p>
+                        <ul>
+                            <li>Each branch represents a possible future state</li>
+                            <li>No information is lost - all possibilities preserved</li>
+                            <li>Enables backtracking and exploration</li>
+                        </ul>
+                        <div class="math-block">
+                            G(state) = {path<sub>1</sub>, path<sub>2</sub>, ...}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <h3 class="property-title">
+                        <span class="property-icon">&#x2263;</span>
+                        Parallel Paths
+                    </h3>
+                    <div class="property-content">
+                        <p>Generated branches can be traversed simultaneously or sequentially.</p>
+                        <ul>
+                            <li>Parallel execution for exploration</li>
+                            <li>Sequential for depth-first search</li>
+                            <li>Paths may converge via S (Synthesize)</li>
+                        </ul>
+                        <div class="math-block">
+                            &forall; path &isin; G(x): path &#x2225; path'
+                        </div>
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <h3 class="property-title">
+                        <span class="property-icon">&#x221E;</span>
+                        Non-Terminating
+                    </h3>
+                    <div class="property-content">
+                        <p>G can be applied indefinitely, creating infinite possibility trees.</p>
+                        <ul>
+                            <li>Bounded by &omega; coherence threshold</li>
+                            <li>Practical limits from S synthesis</li>
+                            <li>Converges under +U unity operation</li>
+                        </ul>
+                        <div class="math-block">
+                            lim<sub>n&rarr;&infin;</sub> G<sup>n</sup>(x) &rarr; &omega;
+                        </div>
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <h3 class="property-title">
+                        <span class="property-icon">&#x29C9;</span>
+                        Preserves Structure
+                    </h3>
+                    <div class="property-content">
+                        <p>Generated branches maintain the structure of the parent.</p>
+                        <ul>
+                            <li>Inheritance of state properties</li>
+                            <li>Morphism preservation</li>
+                            <li>Type consistency across branches</li>
+                        </ul>
+                        <div class="math-block">
+                            Structure(x') &cong; Structure(x)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S3 Connection -->
+        <section class="section">
+            <h2 class="section-title">Connection to S3 Group: Trifurcation</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                In the I&sup2; S3 system, G extends to <strong>trifurcation</strong> - three-way branching corresponding to the three elements of the S3 permutation group.
+            </p>
+
+            <div class="s3-grid">
+                <div class="s3-card">
+                    <div class="s3-branch" style="color: var(--alpha-color);">&#x2460;</div>
+                    <div class="s3-name">Identity Branch</div>
+                    <div class="s3-desc">e: x &rarr; x<br>Original path preserved</div>
+                </div>
+                <div class="s3-card">
+                    <div class="s3-branch" style="color: var(--op-G);">&#x2461;</div>
+                    <div class="s3-name">Transposition Branch</div>
+                    <div class="s3-desc">(12): x &rarr; &sigma;(x)<br>First permutation variant</div>
+                </div>
+                <div class="s3-card">
+                    <div class="s3-branch" style="color: var(--omega-color);">&#x2462;</div>
+                    <div class="s3-name">Cycle Branch</div>
+                    <div class="s3-desc">(123): x &rarr; &tau;(x)<br>Full cycle variant</div>
+                </div>
+            </div>
+
+            <div class="math-block">
+                G<sub>S3</sub>: x &rarr; {e(x), (12)(x), (123)(x)} &nbsp;&nbsp;|&nbsp;&nbsp; Three-way trifurcation
+            </div>
+
+            <div style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+                <p>S3 trifurcation connects G to the fundamental symmetry group,<br>enabling systematic exploration of all permutation variants.</p>
+            </div>
+        </section>
+
+        <!-- G*S Interaction -->
+        <section class="section">
+            <h2 class="section-title">G&middot;S Interaction: Exploration Pattern</h2>
+            <div class="interaction-section">
+                <div class="interaction-flow">
+                    <div class="interaction-op op-g-styled">G</div>
+                    <span class="interaction-arrow">&rarr;</span>
+                    <span style="color: var(--text-secondary);">branches</span>
+                    <span class="interaction-arrow">&rarr;</span>
+                    <div class="interaction-op op-s-styled">S</div>
+                    <span class="interaction-arrow">&rarr;</span>
+                    <div class="interaction-result">Synthesis</div>
+                </div>
+
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    <strong>Generate then Synthesize</strong> = Complete exploration cycle
+                </p>
+
+                <div class="property-grid">
+                    <div class="property-card">
+                        <h3 class="property-title">G&middot;S = Exploration</h3>
+                        <div class="property-content">
+                            <p>Applying G followed by S creates an exploration-synthesis cycle:</p>
+                            <ol style="margin-left: 1.5rem;">
+                                <li>G creates multiple paths</li>
+                                <li>Each path is traversed (F operations)</li>
+                                <li>S merges insights from all paths</li>
+                                <li>Result contains combined knowledge</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="property-card">
+                        <h3 class="property-title">S&middot;G = Expansion</h3>
+                        <div class="property-content">
+                            <p>Applying S followed by G creates expansion from synthesis:</p>
+                            <ol style="margin-left: 1.5rem;">
+                                <li>S merges existing paths</li>
+                                <li>G branches from synthesized state</li>
+                                <li>New branches carry merged properties</li>
+                                <li>Complexity builds on synthesis</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="math-block">
+                    G &middot; S &ne; S &middot; G &nbsp;&nbsp;|&nbsp;&nbsp; Non-commutative: order matters
+                </div>
+            </div>
+        </section>
+
+        <!-- Implementation -->
+        <section class="section">
+            <h2 class="section-title">Implementation</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Fork execution and create child nodes from current state.
+            </p>
+
+            <div class="code-block">
+<span class="code-comment">// G Operator: Generate new branch from current node</span>
+<span class="code-keyword">function</span> <span class="code-function">G</span>(currentNode) {
+    <span class="code-comment">// Create child nodes (bifurcation)</span>
+    <span class="code-keyword">const</span> childA = {
+        parent: currentNode,
+        state: <span class="code-function">clone</span>(currentNode.state),
+        depth: currentNode.depth + <span class="code-operator">1</span>,
+        branch: <span class="code-string">'left'</span>
+    };
+
+    <span class="code-keyword">const</span> childB = {
+        parent: currentNode,
+        state: <span class="code-function">permute</span>(currentNode.state), <span class="code-comment">// S3 variant</span>
+        depth: currentNode.depth + <span class="code-operator">1</span>,
+        branch: <span class="code-string">'right'</span>
+    };
+
+    <span class="code-comment">// Update tree structure</span>
+    currentNode.children = [childA, childB];
+    currentNode.isBranch = <span class="code-keyword">true</span>;
+
+    <span class="code-comment">// Return new branches for further traversal</span>
+    <span class="code-keyword">return</span> { childA, childB };
+}
+
+<span class="code-comment">// S3 Trifurcation variant</span>
+<span class="code-keyword">function</span> <span class="code-function">G_S3</span>(currentNode) {
+    <span class="code-keyword">const</span> branches = S3.elements.map(sigma => ({
+        parent: currentNode,
+        state: sigma.<span class="code-function">apply</span>(currentNode.state),
+        permutation: sigma.name
+    }));
+
+    <span class="code-keyword">return</span> branches; <span class="code-comment">// Three branches: e, (12), (123)</span>
+}
+            </div>
+        </section>
+
+        <!-- Console Output -->
+        <section class="section">
+            <h2 class="section-title">Operation Console</h2>
+            <div class="console" id="console">
+                <div class="console-line">
+                    <span class="console-prompt">G&gt;</span>
+                    <span>Operator initialized</span>
+                </div>
+                <div class="console-line">
+                    <span class="console-prompt">G&gt;</span>
+                    <span class="console-g">G: x &rarr; {x, x'}</span>
+                </div>
+                <div class="console-line">
+                    <span class="console-prompt">G&gt;</span>
+                    <span>Bifurcation mode: Active</span>
+                </div>
+                <div class="console-line">
+                    <span class="console-prompt">G&gt;</span>
+                    <span class="console-result">Ready for branch generation...</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <section class="section">
+            <h2 class="section-title">BFADGS Operators</h2>
+            <div class="nav-section">
+                <a href="bfadgs-op-begin.html" class="nav-link">B: Begin</a>
+                <a href="bfadgs-op-flow.html" class="nav-link">F: Flow</a>
+                <a href="bfadgs-op-ascend.html" class="nav-link">A: Ascend</a>
+                <a href="bfadgs-op-descend.html" class="nav-link">D: Descend</a>
+                <a href="bfadgs-op-generate.html" class="nav-link active">G: Generate</a>
+                <a href="bfadgs-op-synthesize.html" class="nav-link">S: Synthesize</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p><a href="bfadgs-u-scaffold.html" class="back-link">&larr; Return to BFADGS+U System</a></p>
+        <p style="margin-top: 0.5rem;"><a href="i2-s3-decision-tree.html" class="back-link">&larr; Return to I&sup2; S3 Decision Tree</a></p>
+        <p style="margin-top: 1rem;">G: GENERATE | Spawn Branch | x &rarr; {x, x'}</p>
+    </footer>
+
+    <script>
+        // Constants
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const MU_C = Math.sqrt(3) / 2;
+
+        // Canvas setup
+        const canvas = document.getElementById('branchCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Tree state
+        let tree = {
+            root: null,
+            nodes: [],
+            animating: false,
+            growthEnabled: true
+        };
+
+        // Node class
+        class TreeNode {
+            constructor(x, y, parent = null, angle = -Math.PI/2, depth = 0) {
+                this.x = x;
+                this.y = y;
+                this.parent = parent;
+                this.children = [];
+                this.angle = angle;
+                this.depth = depth;
+                this.length = 80 / Math.pow(PHI, depth * 0.5);
+                this.growth = 0;
+                this.maxGrowth = 1;
+                this.color = this.getDepthColor();
+            }
+
+            getDepthColor() {
+                const hue = 270 - (this.depth * 20); // Violet to blue gradient
+                return `hsl(${hue}, 70%, 60%)`;
+            }
+
+            grow() {
+                if (this.growth < this.maxGrowth) {
+                    this.growth += 0.02;
+                    return true;
+                }
+                return false;
+            }
+
+            getEndPoint() {
+                return {
+                    x: this.x + Math.cos(this.angle) * this.length * this.growth,
+                    y: this.y + Math.sin(this.angle) * this.length * this.growth
+                };
+            }
+
+            bifurcate() {
+                if (this.depth >= 8) return; // Max depth
+
+                const end = this.getEndPoint();
+                const spread = Math.PI / (4 + this.depth);
+
+                const leftChild = new TreeNode(
+                    end.x, end.y, this,
+                    this.angle - spread,
+                    this.depth + 1
+                );
+
+                const rightChild = new TreeNode(
+                    end.x, end.y, this,
+                    this.angle + spread,
+                    this.depth + 1
+                );
+
+                this.children.push(leftChild, rightChild);
+                tree.nodes.push(leftChild, rightChild);
+
+                logToConsole('G', `Branch at depth ${this.depth}: Created 2 children`);
+            }
+
+            trifurcate() {
+                if (this.depth >= 6) return; // Max depth for trifurcation
+
+                const end = this.getEndPoint();
+                const spread = Math.PI / (5 + this.depth);
+
+                // Three branches for S3 symmetry
+                const angles = [
+                    this.angle - spread,
+                    this.angle,
+                    this.angle + spread
+                ];
+
+                const labels = ['e', '(12)', '(123)'];
+
+                angles.forEach((angle, i) => {
+                    const child = new TreeNode(
+                        end.x, end.y, this,
+                        angle,
+                        this.depth + 1
+                    );
+                    child.s3Label = labels[i];
+                    this.children.push(child);
+                    tree.nodes.push(child);
+                });
+
+                logToConsole('G_S3', `Trifurcation: Created 3 branches (e, (12), (123))`);
+            }
+
+            draw(ctx) {
+                if (this.parent) {
+                    const end = this.getEndPoint();
+
+                    // Draw branch
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(end.x, end.y);
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = Math.max(1, 4 - this.depth * 0.5);
+                    ctx.stroke();
+
+                    // Draw node
+                    ctx.beginPath();
+                    ctx.arc(end.x, end.y, 4, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+
+                    // Draw S3 label if present
+                    if (this.s3Label && this.growth >= 1) {
+                        ctx.fillStyle = '#ffd700';
+                        ctx.font = '10px Courier New';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(this.s3Label, end.x, end.y - 10);
+                    }
+                }
+            }
+        }
+
+        // Initialize canvas
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            if (!tree.root) {
+                initializeTree();
+            }
+            draw();
+        }
+
+        function initializeTree() {
+            const startX = canvas.width / 2;
+            const startY = canvas.height - 50;
+
+            tree.root = new TreeNode(startX, startY, null, -Math.PI/2, 0);
+            tree.root.growth = 1;
+            tree.nodes = [tree.root];
+
+            logToConsole('INIT', 'Tree initialized at origin');
+        }
+
+        function draw() {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Background
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, w, h);
+
+            // Draw grid
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.05)';
+            ctx.lineWidth = 1;
+            const gridSize = 40;
+            for (let x = 0; x < w; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+                ctx.stroke();
+            }
+            for (let y = 0; y < h; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+            }
+
+            // Draw tree
+            if (tree.root) {
+                // Draw root node
+                ctx.beginPath();
+                ctx.arc(tree.root.x, tree.root.y, 8, 0, Math.PI * 2);
+                ctx.fillStyle = '#00ff88';
+                ctx.fill();
+                ctx.strokeStyle = '#00ff88';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Draw alpha symbol
+                ctx.fillStyle = '#0a0a0f';
+                ctx.font = 'bold 10px serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('\u03B1', tree.root.x, tree.root.y);
+
+                // Draw all branches
+                tree.nodes.forEach(node => node.draw(ctx));
+            }
+
+            // Draw stats
+            ctx.fillStyle = '#8b5cf6';
+            ctx.font = '14px Courier New';
+            ctx.textAlign = 'left';
+            ctx.fillText(`Nodes: ${tree.nodes.length}`, 10, 25);
+            ctx.fillText(`Max Depth: ${Math.max(...tree.nodes.map(n => n.depth))}`, 10, 45);
+            ctx.fillText(`Branches: ${tree.nodes.filter(n => n.children.length > 0).length}`, 10, 65);
+        }
+
+        function animate() {
+            let growing = false;
+
+            tree.nodes.forEach(node => {
+                if (node.grow()) {
+                    growing = true;
+                }
+            });
+
+            // Auto-branch growing nodes
+            if (tree.growthEnabled) {
+                tree.nodes.forEach(node => {
+                    if (node.growth >= 1 && node.children.length === 0 && Math.random() < 0.01) {
+                        node.bifurcate();
+                    }
+                });
+            }
+
+            draw();
+
+            if (tree.animating) {
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // Control functions
+        function generateBranch() {
+            // Find a node to branch from (prefer leaves)
+            const leaves = tree.nodes.filter(n => n.children.length === 0 && n.growth >= 1);
+            if (leaves.length > 0) {
+                const node = leaves[Math.floor(Math.random() * leaves.length)];
+                node.bifurcate();
+            } else if (tree.root && tree.root.children.length === 0) {
+                tree.root.bifurcate();
+            }
+
+            if (!tree.animating) {
+                tree.animating = true;
+                animate();
+            }
+        }
+
+        function trifurcate() {
+            const leaves = tree.nodes.filter(n => n.children.length === 0 && n.growth >= 1);
+            if (leaves.length > 0) {
+                const node = leaves[Math.floor(Math.random() * leaves.length)];
+                node.trifurcate();
+            } else if (tree.root && tree.root.children.length === 0) {
+                tree.root.trifurcate();
+            }
+
+            if (!tree.animating) {
+                tree.animating = true;
+                animate();
+            }
+        }
+
+        function toggleGrowth() {
+            tree.growthEnabled = !tree.growthEnabled;
+            logToConsole('GROWTH', tree.growthEnabled ? 'Enabled' : 'Disabled');
+
+            if (!tree.animating) {
+                tree.animating = true;
+                animate();
+            }
+        }
+
+        function resetTree() {
+            tree.nodes = [];
+            tree.root = null;
+            initializeTree();
+            draw();
+            logToConsole('RESET', 'Tree reset to origin');
+        }
+
+        function logToConsole(op, message) {
+            const consoleEl = document.getElementById('console');
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            line.innerHTML = `<span class="console-prompt">G&gt;</span> <span class="console-g">${op}</span>: <span class="console-result">${message}</span>`;
+            consoleEl.appendChild(line);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        // Canvas click handler
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mx = e.clientX - rect.left;
+            const my = e.clientY - rect.top;
+
+            // Find closest node to click
+            let closest = null;
+            let minDist = Infinity;
+
+            tree.nodes.forEach(node => {
+                const end = node.getEndPoint();
+                const dist = Math.sqrt((mx - end.x) ** 2 + (my - end.y) ** 2);
+                if (dist < minDist && dist < 30) {
+                    minDist = dist;
+                    closest = node;
+                }
+            });
+
+            if (closest && closest.children.length === 0) {
+                closest.bifurcate();
+                if (!tree.animating) {
+                    tree.animating = true;
+                    animate();
+                }
+            }
+        });
+
+        // Initialize
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Start animation
+        tree.animating = true;
+        animate();
+
+        // Initial branch
+        setTimeout(() => {
+            if (tree.root) {
+                tree.root.bifurcate();
+            }
+        }, 500);
+    </script>
+</body>
+</html>

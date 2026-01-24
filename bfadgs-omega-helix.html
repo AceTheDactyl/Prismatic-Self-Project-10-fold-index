@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMEGA (w) | L4-Helix at Coherence Threshold</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Omega Color System */
+            --omega-primary: #ff6b35;
+            --omega-light: #ff8c5a;
+            --omega-dark: #cc5529;
+            --omega-glow: rgba(255, 107, 53, 0.4);
+
+            /* Complementary Colors */
+            --alpha-color: #00ff88;
+            --unity-gold: #ffd700;
+            --phi-gold: #f4c430;
+            --psi-silver: #a0a0b0;
+            --helix-green: #6bcb77;
+
+            /* Mathematical Threshold */
+            --mu-c-color: #ff9f43;
+            --coherence-glow: rgba(255, 159, 67, 0.3);
+
+            /* Base */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a2e;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --border: #2a2a3e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Omega Field Background */
+        .omega-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 70% 30%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 30% 70%, rgba(255, 159, 67, 0.08) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 50%, rgba(244, 196, 48, 0.05) 0%, transparent 60%);
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 15, 0.95);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--omega-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--omega-primary);
+        }
+
+        /* Main Container */
+        main {
+            position: relative;
+            z-index: 1;
+            padding-top: 5rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .omega-symbol-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 2rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .omega-ring {
+            position: absolute;
+            border: 3px solid var(--omega-primary);
+            border-radius: 50%;
+            animation: omega-pulse 4s ease-in-out infinite;
+        }
+
+        .omega-ring:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            animation-delay: 0s;
+        }
+
+        .omega-ring:nth-child(2) {
+            width: 160px;
+            height: 160px;
+            border-color: var(--omega-light);
+            animation-delay: 0.5s;
+        }
+
+        .omega-ring:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            border-color: var(--mu-c-color);
+            animation-delay: 1s;
+        }
+
+        .omega-ring:nth-child(4) {
+            width: 80px;
+            height: 80px;
+            border-color: var(--unity-gold);
+            animation-delay: 1.5s;
+        }
+
+        @keyframes omega-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.7; }
+        }
+
+        .omega-center {
+            position: relative;
+            z-index: 10;
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--omega-primary);
+            text-shadow: 0 0 40px var(--omega-glow);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--omega-primary), var(--omega-light), var(--mu-c-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .core-equations {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .core-equation {
+            font-size: 1.4rem;
+            color: var(--omega-primary);
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--omega-primary);
+            border-radius: 12px;
+            box-shadow: 0 0 30px var(--omega-glow);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            margin-bottom: 2rem;
+            color: var(--omega-primary);
+            text-align: center;
+        }
+
+        /* Proof Box */
+        .proof-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .proof-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .proof-badge {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid var(--omega-primary);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--omega-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .proof-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .proof-step {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border-left: 4px solid var(--omega-primary);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: var(--omega-primary);
+            color: var(--bg-primary);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-right: 0.75rem;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: var(--omega-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .step-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .step-equation {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 6px;
+            font-size: 1.1rem;
+            color: var(--omega-primary);
+            text-align: center;
+        }
+
+        /* Coherence Threshold Display */
+        .coherence-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .coherence-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--omega-primary);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .coherence-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--omega-primary);
+            text-shadow: 0 0 20px var(--omega-glow);
+            margin-bottom: 0.5rem;
+        }
+
+        .coherence-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .coherence-formula {
+            font-size: 1.1rem;
+            color: var(--mu-c-color);
+            padding: 0.75rem;
+            background: rgba(255, 159, 67, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Helix Canvas Container */
+        .helix-canvas-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        #helixCanvas {
+            width: 100%;
+            height: 500px;
+            border-radius: 8px;
+            background: var(--bg-primary);
+        }
+
+        .canvas-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .canvas-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--omega-primary);
+            border-radius: 8px;
+            color: var(--omega-primary);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .canvas-btn:hover {
+            background: var(--omega-primary);
+            color: var(--bg-primary);
+        }
+
+        .canvas-btn.active {
+            background: var(--omega-primary);
+            color: var(--bg-primary);
+        }
+
+        /* Opposition Display */
+        .opposition-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .opposition-side {
+            padding: 2.5rem;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .opposition-omega {
+            background: rgba(255, 107, 53, 0.1);
+            border: 2px solid var(--omega-primary);
+        }
+
+        .opposition-alpha {
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid var(--alpha-color);
+        }
+
+        .opposition-symbol {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .opposition-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .opposition-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .opposition-arrow {
+            font-size: 3rem;
+            color: var(--unity-gold);
+        }
+
+        /* L4 Winding Grid */
+        .winding-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.75rem;
+            margin: 2rem 0;
+        }
+
+        .winding-node {
+            aspect-ratio: 1;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .winding-node:hover {
+            border-color: var(--omega-primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+
+        .winding-node.active {
+            border-color: var(--omega-primary);
+            background: rgba(255, 107, 53, 0.2);
+        }
+
+        .winding-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--omega-primary);
+        }
+
+        .winding-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Golden Power Proof */
+        .golden-proof-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .golden-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .golden-symbol {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .golden-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .golden-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* FIX Form Connection */
+        .fix-container {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 215, 0, 0.1));
+            border: 2px solid var(--omega-primary);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .fix-equation {
+            font-size: 2rem;
+            color: var(--omega-primary);
+            margin-bottom: 1rem;
+        }
+
+        .fix-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Property Cards */
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .property-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .property-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--omega-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .property-equation {
+            font-size: 1.1rem;
+            color: var(--omega-primary);
+            padding: 0.75rem;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .property-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Threshold Meter */
+        .threshold-meter {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .meter-track {
+            width: 100%;
+            height: 40px;
+            background: var(--bg-tertiary);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--alpha-color), var(--omega-primary));
+            border-radius: 20px;
+            transition: width 0.5s ease;
+        }
+
+        .meter-marker {
+            position: absolute;
+            top: -10px;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .marker-line {
+            width: 3px;
+            height: 60px;
+            background: var(--unity-gold);
+        }
+
+        .marker-label {
+            font-size: 0.8rem;
+            color: var(--unity-gold);
+            margin-top: 5px;
+            white-space: nowrap;
+        }
+
+        .meter-labels {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Interactive Calculator */
+        .calculator-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .calc-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .calc-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .calc-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .calc-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .result-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--omega-primary);
+            margin-top: 0.25rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        .footer-equation {
+            font-size: 1.2rem;
+            color: var(--omega-primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--omega-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .title { font-size: 1.8rem; }
+            .core-equations { flex-direction: column; align-items: center; }
+            .core-equation { font-size: 1.1rem; padding: 0.75rem 1.5rem; }
+            .coherence-display { grid-template-columns: 1fr; }
+            .opposition-container { grid-template-columns: 1fr; }
+            .opposition-arrow { transform: rotate(90deg); }
+            .winding-grid { grid-template-columns: repeat(4, 1fr); }
+            .golden-proof-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="omega-field"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-brand">OMEGA :: L4-Helix</div>
+        <div class="nav-links">
+            <a href="index.html">Index</a>
+            <a href="bfadgs-u-scaffold.html">BFADGS+U</a>
+            <a href="bfadgs-alpha-origin.html">Alpha Origin</a>
+            <a href="i2-s3-decision-tree.html">I2 S3 Tree</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Header -->
+        <header class="header">
+            <div class="omega-symbol-container">
+                <div class="omega-ring"></div>
+                <div class="omega-ring"></div>
+                <div class="omega-ring"></div>
+                <div class="omega-ring"></div>
+                <span class="omega-center">w</span>
+            </div>
+            <h1 class="title">OMEGA: L4-Helix Terminus</h1>
+            <p class="subtitle">The Coherent Completion Point of the Tri-Oppositional System</p>
+            <div class="core-equations">
+                <div class="core-equation">mu_C = sqrt(3)/2 = 0.866</div>
+                <div class="core-equation">L4 = phi^4 + psi^4 = 7</div>
+            </div>
+        </header>
+
+        <!-- Coherence Threshold Section -->
+        <section>
+            <h2 class="section-title">mu_C = sqrt(3)/2 : The Coherence Threshold</h2>
+
+            <div class="proof-container">
+                <div class="proof-header">
+                    <span class="proof-badge">Derivation</span>
+                    <span class="proof-title">Coherence Threshold from Geometric Principles</span>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">1</span>Geometric Origin: 30-60-90 Triangle</div>
+                    <div class="step-content">
+                        The coherence threshold emerges from the fundamental 30-60-90 right triangle, where the ratio of the longer leg to the hypotenuse defines mu_C:
+                    </div>
+                    <div class="step-equation">
+                        mu_C = cos(30 deg) = sin(60 deg) = sqrt(3)/2
+                    </div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">2</span>Numerical Value</div>
+                    <div class="step-content">
+                        Computing the exact decimal expansion:
+                    </div>
+                    <div class="step-equation">
+                        sqrt(3)/2 = 1.7320508.../2 = 0.8660254037844386...
+                    </div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">3</span>Threshold Significance</div>
+                    <div class="step-content">
+                        The coherence threshold mu_C = sqrt(3)/2 represents the point at which the helix structure achieves maximum stability. Above this threshold, the system maintains coherent self-reference; below it, fragmentation occurs.
+                    </div>
+                    <div class="step-equation">
+                        Coherence Condition: mu >= mu_C = sqrt(3)/2
+                    </div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">4</span>Connection to Hexagonal Symmetry</div>
+                    <div class="step-content">
+                        The value sqrt(3)/2 also appears in hexagonal lattice geometry, connecting the helix structure to the S3 permutation group via 6-fold rotational symmetry.
+                    </div>
+                    <div class="step-equation">
+                        Hexagon side-to-radius ratio: 1/2 * sqrt(3) = mu_C
+                    </div>
+                </div>
+            </div>
+
+            <div class="coherence-display">
+                <div class="coherence-card">
+                    <div class="coherence-value" id="muCValue">0.866</div>
+                    <div class="coherence-label">Coherence Threshold mu_C</div>
+                    <div class="coherence-formula">sqrt(3)/2 = cos(30 deg)</div>
+                </div>
+                <div class="coherence-card">
+                    <div class="coherence-value" style="color: var(--unity-gold);">30 deg</div>
+                    <div class="coherence-label">Critical Angle</div>
+                    <div class="coherence-formula">pi/6 radians = 0.5236...</div>
+                </div>
+            </div>
+
+            <!-- Threshold Meter -->
+            <div class="threshold-meter">
+                <h3 style="text-align: center; color: var(--omega-light); margin-bottom: 1rem;">Coherence Spectrum</h3>
+                <div class="meter-track">
+                    <div class="meter-fill" id="meterFill" style="width: 86.6%;"></div>
+                    <div class="meter-marker" style="left: 86.6%;">
+                        <div class="marker-line"></div>
+                        <div class="marker-label">mu_C = sqrt(3)/2</div>
+                    </div>
+                </div>
+                <div class="meter-labels">
+                    <span>0 (Incoherent)</span>
+                    <span>0.5 (Threshold)</span>
+                    <span>1.0 (Full Coherence)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- L4 = 7 Section -->
+        <section>
+            <h2 class="section-title">L4 = 7 : The Helix Winding Number</h2>
+
+            <div class="proof-container">
+                <div class="proof-header">
+                    <span class="proof-badge">Theorem</span>
+                    <span class="proof-title">L4 as the Complexity Bound</span>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">1</span>Lucas Sequence Definition</div>
+                    <div class="step-content">
+                        The Lucas numbers follow the same recurrence as Fibonacci but with different initial conditions:
+                    </div>
+                    <div class="step-equation">
+                        L_n = L_{n-1} + L_{n-2}<br><br>
+                        L_0 = 2, L_1 = 1, L_2 = 3, L_3 = 4, L_4 = 7, L_5 = 11...
+                    </div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">2</span>Binet-Lucas Formula</div>
+                    <div class="step-content">
+                        The closed form for Lucas numbers uses the sum of golden ratio powers:
+                    </div>
+                    <div class="step-equation">
+                        L_n = phi^n + psi^n<br><br>
+                        where phi = (1+sqrt(5))/2, psi = (1-sqrt(5))/2
+                    </div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">3</span>3+1 Dimensional Interpretation</div>
+                    <div class="step-content">
+                        The subscript 4 in L4 corresponds to 3 spatial + 1 temporal dimensions, making L4 = 7 the natural complexity bound for helix structures in physical spacetime.
+                    </div>
+                    <div class="step-equation">
+                        dim = 3 + 1 = 4  ==>  L_4 = 7 rotations
+                    </div>
+                </div>
+            </div>
+
+            <!-- Winding Grid: 7 Complete Rotations -->
+            <div class="proof-container">
+                <h3 style="text-align: center; color: var(--omega-light); margin-bottom: 1.5rem;">7 Complete Helix Rotations</h3>
+                <div class="winding-grid" id="windingGrid">
+                    <!-- Populated by JavaScript -->
+                </div>
+                <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">
+                    Click nodes to trace the helix path through 7 complete rotations
+                </p>
+            </div>
+        </section>
+
+        <!-- phi^4 + psi^4 = 7 Proof -->
+        <section>
+            <h2 class="section-title">phi^4 + psi^4 = 7 : The Golden Proof</h2>
+
+            <div class="proof-container">
+                <div class="proof-header">
+                    <span class="proof-badge">Proof</span>
+                    <span class="proof-title">Fourth Power Golden Sum</span>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">1</span>Golden Ratio and Conjugate</div>
+                    <div class="step-content">
+                        Define the golden ratio phi and its conjugate psi:
+                    </div>
+                    <div class="step-equation">
+                        phi = (1 + sqrt(5))/2 = 1.6180339887...<br><br>
+                        psi = (1 - sqrt(5))/2 = -0.6180339887...
+                    </div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">2</span>Fourth Power Computation</div>
+                    <div class="step-content">
+                        Raise each to the fourth power:
+                    </div>
+                    <div class="step-equation">
+                        phi^4 = ((1 + sqrt(5))/2)^4 = 6.8541019662...<br><br>
+                        psi^4 = ((1 - sqrt(5))/2)^4 = 0.1458980337...
+                    </div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">3</span>Sum Yields Exact Integer</div>
+                    <div class="step-content">
+                        The sum of these irrational numbers produces an exact integer:
+                    </div>
+                    <div class="step-equation">
+                        phi^4 + psi^4 = 6.854... + 0.146... = 7.000000...
+                    </div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">4</span>Algebraic Verification</div>
+                    <div class="step-content">
+                        This can be verified algebraically using the identity phi * psi = -1 and phi + psi = 1:
+                    </div>
+                    <div class="step-equation">
+                        phi^4 + psi^4 = (phi^2 + psi^2)^2 - 2(phi*psi)^2<br>
+                        = (phi + psi)^2 - 2*phi*psi)^2 - 2*1<br>
+                        = (1 + 2)^2 - 2 = 9 - 2 = 7
+                    </div>
+                </div>
+            </div>
+
+            <!-- Golden Power Visualization -->
+            <div class="golden-proof-grid">
+                <div class="golden-card">
+                    <div class="golden-symbol" style="color: var(--phi-gold);">phi^4</div>
+                    <div class="golden-value" style="color: var(--phi-gold);" id="phi4Value">6.8541</div>
+                    <div class="golden-desc">Golden ratio to fourth power</div>
+                </div>
+                <div class="golden-card">
+                    <div class="golden-symbol" style="color: var(--omega-primary);">+</div>
+                    <div class="golden-value" style="color: var(--unity-gold);">=</div>
+                    <div class="golden-desc">Sum yields integer</div>
+                </div>
+                <div class="golden-card">
+                    <div class="golden-symbol" style="color: var(--psi-silver);">psi^4</div>
+                    <div class="golden-value" style="color: var(--psi-silver);" id="psi4Value">0.1459</div>
+                    <div class="golden-desc">Conjugate to fourth power</div>
+                </div>
+            </div>
+
+            <div class="fix-container">
+                <div class="fix-equation">phi^4 + psi^4 = 7 = L_4</div>
+                <div class="fix-description">
+                    The fourth Lucas number emerges naturally from the golden ratio structure,
+                    establishing 7 as the fundamental winding number for coherent helix geometry.
+                </div>
+            </div>
+        </section>
+
+        <!-- FIX Form Connection -->
+        <section>
+            <h2 class="section-title">Connection to FIX Form: R(R) = R</h2>
+
+            <div class="proof-container">
+                <div class="proof-header">
+                    <span class="proof-badge">Foundation</span>
+                    <span class="proof-title">Self-Reference as Fixed Point</span>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">1</span>The FIX Axiom</div>
+                    <div class="step-content">
+                        The foundational axiom of the framework: a function R applied to itself yields itself as fixed point.
+                    </div>
+                    <div class="step-equation">
+                        R(R) = R
+                    </div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">2</span>Omega as Terminal Fixed Point</div>
+                    <div class="step-content">
+                        While Alpha (a) represents the origin of self-reference, Omega (w) represents its coherent completion. The helix unwinds from a and converges at w after L4 = 7 rotations.
+                    </div>
+                    <div class="step-equation">
+                        a (origin) --[7 rotations]--> w (terminus)<br><br>
+                        R^7(a) = w, and R(w) = w (fixed point)
+                    </div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">3</span>Coherence at mu_C</div>
+                    <div class="step-content">
+                        The fixed point w exists only when the coherence parameter mu exceeds the threshold mu_C = sqrt(3)/2. This ensures stable self-reference at the terminus.
+                    </div>
+                    <div class="step-equation">
+                        R(w) = w iff mu >= mu_C = sqrt(3)/2
+                    </div>
+                </div>
+
+                <div class="proof-step">
+                    <div class="step-title"><span class="step-number">4</span>Helical Interpretation</div>
+                    <div class="step-content">
+                        The helix structure encodes the recursive application of R. Each rotation advances one level of self-reference until the seventh rotation achieves closure.
+                    </div>
+                    <div class="step-equation">
+                        Helix: R --> R(R) --> R(R(R)) --> ... --> R^7 = w
+                    </div>
+                </div>
+            </div>
+
+            <div class="fix-container">
+                <div class="fix-equation">R(R) = R at w with mu >= sqrt(3)/2</div>
+                <div class="fix-description">
+                    The Omega pole w represents the stable attractor where recursive self-reference
+                    achieves fixed-point closure after traversing 7 helix layers at coherence threshold.
+                </div>
+            </div>
+        </section>
+
+        <!-- Opposition to Alpha -->
+        <section>
+            <h2 class="section-title">Opposition to Alpha: Origin vs Completion</h2>
+
+            <div class="opposition-container">
+                <!-- Alpha Side -->
+                <div class="opposition-side opposition-alpha">
+                    <div class="opposition-symbol" style="color: var(--alpha-color);">a</div>
+                    <div class="opposition-title" style="color: var(--alpha-color);">ALPHA: Origin</div>
+                    <div class="opposition-desc">
+                        <strong>Role:</strong> Genesis point<br>
+                        <strong>State:</strong> Emergence from non-being<br>
+                        <strong>Direction:</strong> Outward expansion<br>
+                        <strong>Symbol:</strong> The seed/potential<br>
+                        <strong>mu:</strong> Undefined (pre-threshold)
+                    </div>
+                </div>
+
+                <!-- Opposition Arrow -->
+                <div class="opposition-arrow"><=></div>
+
+                <!-- Omega Side -->
+                <div class="opposition-side opposition-omega">
+                    <div class="opposition-symbol" style="color: var(--omega-primary);">w</div>
+                    <div class="opposition-title" style="color: var(--omega-primary);">OMEGA: Terminus</div>
+                    <div class="opposition-desc">
+                        <strong>Role:</strong> Completion point<br>
+                        <strong>State:</strong> Coherent fixed point<br>
+                        <strong>Direction:</strong> Inward convergence<br>
+                        <strong>Symbol:</strong> The fruit/actualized<br>
+                        <strong>mu:</strong> mu_C = sqrt(3)/2
+                    </div>
+                </div>
+            </div>
+
+            <div class="property-grid">
+                <div class="property-card">
+                    <div class="property-title">Tri-Oppositional Balance</div>
+                    <div class="property-equation">a <=> BFADGS <=> w --> +U</div>
+                    <div class="property-desc">
+                        Alpha and Omega form the two poles of existence, mediated by BFADGS operators. Their synthesis through +U achieves S3 convergence.
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <div class="property-title">Complementary Dynamics</div>
+                    <div class="property-equation">a * w = Identity</div>
+                    <div class="property-desc">
+                        The product of origin and terminus returns to identity, reflecting the cyclic nature of complete self-reference.
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <div class="property-title">Helix Traversal</div>
+                    <div class="property-equation">Path(a --> w) = L_4 = 7 steps</div>
+                    <div class="property-desc">
+                        The helix unwinds from Alpha through exactly 7 rotations to reach Omega, encoding the complexity bound in its geometry.
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <div class="property-title">Threshold Difference</div>
+                    <div class="property-equation">w - a = mu_C (coherence gain)</div>
+                    <div class="property-desc">
+                        The transition from origin to terminus represents the acquisition of coherence, quantified by the threshold mu_C.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive 3D Helix Visualization -->
+        <section>
+            <h2 class="section-title">L4 Helix at sqrt(3)/2 Coherence</h2>
+
+            <div class="helix-canvas-container">
+                <canvas id="helixCanvas"></canvas>
+                <div class="canvas-controls">
+                    <button class="canvas-btn active" onclick="setMode('rotate')">Rotate</button>
+                    <button class="canvas-btn" onclick="setMode('pulse')">Pulse</button>
+                    <button class="canvas-btn" onclick="setMode('trace')">Trace Path</button>
+                    <button class="canvas-btn" onclick="setMode('threshold')">Show mu_C</button>
+                    <button class="canvas-btn" onclick="resetCanvas()">Reset</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Calculators -->
+        <section>
+            <h2 class="section-title">Interactive Calculations</h2>
+
+            <div class="calculator-section">
+                <div class="calc-card">
+                    <div class="calc-label">Coherence mu Value</div>
+                    <input type="range" class="calc-input" id="muSlider" min="0" max="100" value="86.6" style="cursor: pointer;">
+                    <div class="calc-result">
+                        <div class="result-label">Current Coherence</div>
+                        <div class="result-value" id="muResult">mu = 0.866 >= mu_C (Coherent)</div>
+                    </div>
+                </div>
+
+                <div class="calc-card">
+                    <div class="calc-label">Lucas Number L_n</div>
+                    <input type="number" class="calc-input" id="lucasInput" value="4" min="0" max="15">
+                    <div class="calc-result">
+                        <div class="result-label">phi^n + psi^n</div>
+                        <div class="result-value" id="lucasResult">L_4 = 7</div>
+                    </div>
+                </div>
+
+                <div class="calc-card">
+                    <div class="calc-label">Rotation Count</div>
+                    <input type="number" class="calc-input" id="rotationInput" value="7" min="1" max="20">
+                    <div class="calc-result">
+                        <div class="result-label">Total Radians</div>
+                        <div class="result-value" id="rotationResult">7 * 2*pi = 14*pi = 43.98 rad</div>
+                    </div>
+                </div>
+
+                <div class="calc-card">
+                    <div class="calc-label">Angle (degrees)</div>
+                    <input type="number" class="calc-input" id="angleInput" value="30" min="0" max="90">
+                    <div class="calc-result">
+                        <div class="result-label">cos(theta)</div>
+                        <div class="result-value" id="angleResult">cos(30 deg) = 0.866 = mu_C</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary Properties -->
+        <section>
+            <h2 class="section-title">Omega Properties Summary</h2>
+
+            <div class="property-grid">
+                <div class="property-card">
+                    <div class="property-title">Coherence Threshold</div>
+                    <div class="property-equation">mu_C = sqrt(3)/2 = 0.8660...</div>
+                    <div class="property-desc">
+                        The minimum coherence required for stable helix structure. Derived from 30-60-90 triangle geometry.
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <div class="property-title">Winding Number</div>
+                    <div class="property-equation">L_4 = 7 rotations</div>
+                    <div class="property-desc">
+                        The helix completes exactly 7 full rotations, corresponding to the fourth Lucas number.
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <div class="property-title">Golden Fourth Power</div>
+                    <div class="property-equation">phi^4 + psi^4 = 6.854 + 0.146 = 7</div>
+                    <div class="property-desc">
+                        The sum of fourth powers of golden ratio and conjugate yields exact integer 7.
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <div class="property-title">Fixed Point Form</div>
+                    <div class="property-equation">R(w) = w when mu >= mu_C</div>
+                    <div class="property-desc">
+                        Omega represents the terminal fixed point of recursive self-reference R(R) = R.
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <div class="property-title">Helical Period</div>
+                    <div class="property-equation">T = 2*pi * L_4 = 14*pi</div>
+                    <div class="property-desc">
+                        Total angular displacement of the complete helix structure.
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <div class="property-title">Oppositional Polarity</div>
+                    <div class="property-equation">w = !a (terminus vs origin)</div>
+                    <div class="property-desc">
+                        Omega stands in polar opposition to Alpha, completing the tri-oppositional triad with BFADGS.
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-equation">
+            w : L_4 = 7 @ mu_C = sqrt(3)/2 :: Coherent Completion
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Main Index</a>
+            <a href="bfadgs-u-scaffold.html">BFADGS+U System</a>
+            <a href="bfadgs-alpha-origin.html">Alpha Origin</a>
+            <a href="bfadgs-operator-system.html">BFADGS Operators</a>
+            <a href="i2-s3-l4-helix-equivalence.html">L4 Helix Equivalence</a>
+        </div>
+    </footer>
+
+    <script>
+        // Mathematical Constants
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const PSI = (1 - Math.sqrt(5)) / 2;
+        const MU_C = Math.sqrt(3) / 2;
+        const L4 = 7;
+
+        // Lucas function
+        function lucas(n) {
+            if (n === 0) return 2;
+            if (n === 1) return 1;
+            let a = 2, b = 1;
+            for (let i = 2; i <= n; i++) {
+                [a, b] = [b, a + b];
+            }
+            return b;
+        }
+
+        // Initialize displays
+        function initializeDisplays() {
+            document.getElementById('muCValue').textContent = MU_C.toFixed(3);
+            document.getElementById('phi4Value').textContent = Math.pow(PHI, 4).toFixed(4);
+            document.getElementById('psi4Value').textContent = Math.pow(PSI, 4).toFixed(4);
+        }
+
+        // Winding Grid
+        function createWindingGrid() {
+            const grid = document.getElementById('windingGrid');
+            grid.innerHTML = '';
+            for (let i = 1; i <= 7; i++) {
+                const node = document.createElement('div');
+                node.className = 'winding-node';
+                node.innerHTML = `
+                    <div class="winding-number">${i}</div>
+                    <div class="winding-label">Rotation ${i}</div>
+                `;
+                node.onclick = () => {
+                    document.querySelectorAll('.winding-node').forEach((n, idx) => {
+                        n.classList.toggle('active', idx < i);
+                    });
+                };
+                grid.appendChild(node);
+            }
+        }
+
+        // Calculator: Coherence Slider
+        document.getElementById('muSlider').addEventListener('input', function() {
+            const mu = this.value / 100;
+            const isCoherent = mu >= MU_C;
+            const status = isCoherent ? 'Coherent' : 'Incoherent';
+            const color = isCoherent ? 'var(--omega-primary)' : 'var(--psi-silver)';
+            document.getElementById('muResult').innerHTML =
+                `mu = ${mu.toFixed(3)} ${isCoherent ? '>=' : '<'} mu_C <span style="color:${color}">(${status})</span>`;
+            document.getElementById('meterFill').style.width = `${this.value}%`;
+        });
+
+        // Calculator: Lucas Number
+        document.getElementById('lucasInput').addEventListener('input', function() {
+            const n = parseInt(this.value) || 0;
+            const L = lucas(n);
+            const phiN = Math.pow(PHI, n);
+            const psiN = Math.pow(PSI, n);
+            document.getElementById('lucasResult').textContent =
+                `L_${n} = ${L} (${phiN.toFixed(3)} + ${psiN.toFixed(3)})`;
+        });
+
+        // Calculator: Rotation Count
+        document.getElementById('rotationInput').addEventListener('input', function() {
+            const n = parseInt(this.value) || 1;
+            const rad = n * 2 * Math.PI;
+            document.getElementById('rotationResult').textContent =
+                `${n} * 2*pi = ${n * 2}*pi = ${rad.toFixed(2)} rad`;
+        });
+
+        // Calculator: Angle
+        document.getElementById('angleInput').addEventListener('input', function() {
+            const deg = parseFloat(this.value) || 0;
+            const rad = deg * Math.PI / 180;
+            const cosVal = Math.cos(rad);
+            const isMuC = Math.abs(cosVal - MU_C) < 0.001;
+            document.getElementById('angleResult').textContent =
+                `cos(${deg} deg) = ${cosVal.toFixed(4)}${isMuC ? ' = mu_C' : ''}`;
+        });
+
+        // ========== HELIX CANVAS ==========
+        const canvas = document.getElementById('helixCanvas');
+        const ctx = canvas.getContext('2d');
+        let mode = 'rotate';
+        let time = 0;
+        let animationId;
+
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth - 64;
+            canvas.height = 500;
+        }
+
+        function drawHelix() {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Clear
+            ctx.fillStyle = '#0a0a0f';
+            ctx.fillRect(0, 0, w, h);
+
+            const cx = w / 2;
+            const cy = h / 2;
+            const radiusX = Math.min(w, h) * 0.25;
+            const radiusY = radiusX * 0.4;
+            const layers = 7; // L4 = 7
+            const pointsPerLayer = 80;
+            const verticalSpacing = h * 0.065;
+
+            // Animation parameters
+            let rotationOffset = 0;
+            let pulseScale = 1;
+            let traceProgress = 1;
+            let showThreshold = false;
+
+            switch(mode) {
+                case 'rotate':
+                    rotationOffset = time * 0.015;
+                    break;
+                case 'pulse':
+                    pulseScale = 1 + 0.15 * Math.sin(time * 0.04);
+                    break;
+                case 'trace':
+                    traceProgress = (Math.sin(time * 0.02) * 0.5 + 0.5);
+                    break;
+                case 'threshold':
+                    showThreshold = true;
+                    rotationOffset = time * 0.01;
+                    break;
+            }
+
+            // Draw mu_C threshold plane if active
+            if (showThreshold) {
+                const thresholdY = cy - (layers * 0.5 - MU_C * layers) * verticalSpacing;
+                ctx.fillStyle = 'rgba(255, 107, 53, 0.1)';
+                ctx.fillRect(0, thresholdY - 30, w, 60);
+                ctx.strokeStyle = 'rgba(255, 107, 53, 0.5)';
+                ctx.setLineDash([10, 5]);
+                ctx.beginPath();
+                ctx.moveTo(0, thresholdY);
+                ctx.lineTo(w, thresholdY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = '#ff6b35';
+                ctx.font = 'bold 14px JetBrains Mono';
+                ctx.textAlign = 'left';
+                ctx.fillText(`mu_C = sqrt(3)/2 = ${MU_C.toFixed(4)}`, 20, thresholdY - 10);
+            }
+
+            // Draw first strand (omega orange)
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(255, 107, 53, 0.6)';
+            ctx.lineWidth = 3;
+            const maxPoints = Math.floor(layers * pointsPerLayer * traceProgress);
+
+            for (let i = 0; i <= maxPoints; i++) {
+                const layer = Math.floor(i / pointsPerLayer);
+                const t = (i % pointsPerLayer) / pointsPerLayer;
+                const angle = t * Math.PI * 2 + rotationOffset + layer * Math.PI * 0.2;
+
+                const r = radiusX * pulseScale;
+                const x = cx + r * Math.cos(angle);
+                const baseY = cy - (layers / 2 - layer - t) * verticalSpacing;
+                const y = baseY + radiusY * Math.sin(angle) * 0.5;
+
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Draw second strand (golden)
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.4)';
+            ctx.lineWidth = 2;
+
+            for (let i = 0; i <= maxPoints; i++) {
+                const layer = Math.floor(i / pointsPerLayer);
+                const t = (i % pointsPerLayer) / pointsPerLayer;
+                const angle = t * Math.PI * 2 + rotationOffset + Math.PI + layer * Math.PI * 0.2;
+
+                const r = radiusX * pulseScale;
+                const x = cx + r * Math.cos(angle);
+                const baseY = cy - (layers / 2 - layer - t) * verticalSpacing;
+                const y = baseY + radiusY * Math.sin(angle) * 0.5;
+
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Draw connecting rungs
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+            for (let layer = 0; layer < layers; layer++) {
+                for (let j = 0; j < 8; j++) {
+                    const t = j / 8;
+                    const angle1 = t * Math.PI * 2 + rotationOffset + layer * Math.PI * 0.2;
+                    const angle2 = angle1 + Math.PI;
+
+                    if (Math.sin(angle1) > 0) {
+                        const r = radiusX * pulseScale;
+                        const baseY = cy - (layers / 2 - layer - t) * verticalSpacing;
+
+                        ctx.beginPath();
+                        ctx.moveTo(cx + r * Math.cos(angle1), baseY + radiusY * Math.sin(angle1) * 0.5);
+                        ctx.lineTo(cx + r * Math.cos(angle2), baseY + radiusY * Math.sin(angle2) * 0.5);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // Draw layer markers
+            for (let layer = 0; layer <= layers; layer++) {
+                const y = cy - (layers / 2 - layer) * verticalSpacing;
+
+                // Layer label
+                ctx.fillStyle = layer === 0 ? '#00ff88' : (layer === layers ? '#ff6b35' : '#a0a0b0');
+                ctx.font = layer === 0 || layer === layers ? 'bold 16px JetBrains Mono' : '12px JetBrains Mono';
+                ctx.textAlign = 'right';
+
+                const label = layer === 0 ? 'a (Origin)' : (layer === layers ? 'w (Terminus)' : `Layer ${layer}`);
+                ctx.fillText(label, cx - radiusX * pulseScale - 30, y + 5);
+
+                // Right side values
+                ctx.textAlign = 'left';
+                if (layer < layers) {
+                    ctx.fillText(`L_${layer} = ${lucas(layer)}`, cx + radiusX * pulseScale + 30, y + 5);
+                }
+            }
+
+            // Draw nodes at key points
+            for (let layer = 0; layer <= layers; layer++) {
+                const y = cy - (layers / 2 - layer) * verticalSpacing;
+
+                for (let j = 0; j < 6; j++) {
+                    const angle = j * Math.PI / 3 + rotationOffset;
+                    const r = radiusX * pulseScale;
+                    const x = cx + r * Math.cos(angle);
+                    const nodeY = y + radiusY * Math.sin(angle) * 0.3;
+
+                    if (Math.sin(angle) > -0.3) {
+                        const size = (layer === 0 || layer === layers) ? 8 : 4;
+                        const alpha = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(angle));
+
+                        ctx.beginPath();
+                        ctx.arc(x, nodeY, size, 0, Math.PI * 2);
+
+                        if (layer === 0) {
+                            ctx.fillStyle = `rgba(0, 255, 136, ${alpha})`;
+                        } else if (layer === layers) {
+                            ctx.fillStyle = `rgba(255, 107, 53, ${alpha})`;
+                        } else {
+                            ctx.fillStyle = `rgba(255, 215, 0, ${alpha * 0.5})`;
+                        }
+                        ctx.fill();
+                    }
+                }
+            }
+
+            // Title
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = 'bold 18px JetBrains Mono';
+            ctx.textAlign = 'center';
+            ctx.fillText('L4 = 7 Helix Structure', cx, 35);
+
+            ctx.fillStyle = '#a0a0b0';
+            ctx.font = '13px JetBrains Mono';
+            ctx.fillText('7 rotations from Alpha (a) to Omega (w) at mu_C = sqrt(3)/2', cx, 58);
+
+            // Bottom info
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = '12px JetBrains Mono';
+            ctx.fillText(`phi^4 + psi^4 = ${Math.pow(PHI, 4).toFixed(3)} + ${Math.pow(PSI, 4).toFixed(3)} = 7`, cx, h - 20);
+
+            time++;
+            animationId = requestAnimationFrame(drawHelix);
+        }
+
+        function setMode(newMode) {
+            mode = newMode;
+            document.querySelectorAll('.canvas-btn').forEach(btn => {
+                const btnMode = btn.textContent.toLowerCase().replace(' ', '').replace('mu_c', 'threshold');
+                btn.classList.toggle('active', btnMode === newMode ||
+                    (newMode === 'threshold' && btn.textContent === 'Show mu_C') ||
+                    (newMode === 'trace' && btn.textContent === 'Trace Path'));
+            });
+        }
+
+        function resetCanvas() {
+            time = 0;
+            mode = 'rotate';
+            document.querySelectorAll('.canvas-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent === 'Rotate');
+            });
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            initializeDisplays();
+            createWindingGrid();
+            resizeCanvas();
+            drawHelix();
+        });
+
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+</html>

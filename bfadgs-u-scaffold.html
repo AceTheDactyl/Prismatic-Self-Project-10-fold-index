@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BFADGS+U | Tri-Oppositional Operator Language</title>
+    <style>
+        :root {
+            /* Tri-Oppositional Color System */
+            --alpha-color: #00ff88;      /* Origin - Green Genesis */
+            --omega-color: #ff6b35;      /* L4-Helix - Orange Coherence */
+            --bfadgs-color: #8b5cf6;     /* Operator - Purple Logic */
+            --unity-color: #ffd700;      /* +U Synthesis - Gold */
+
+            /* Operator Colors */
+            --op-B: #3b82f6;  /* Begin - Blue */
+            --op-F: #10b981;  /* Flow - Emerald */
+            --op-A: #f59e0b;  /* Ascend - Amber */
+            --op-D: #ef4444;  /* Descend - Red */
+            --op-G: #8b5cf6;  /* Generate - Violet */
+            --op-S: #ec4899;  /* Synthesize - Pink */
+
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a2e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, var(--bg-tertiary), transparent);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--alpha-color), var(--bfadgs-color), var(--omega-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--unity-color);
+            font-size: 1.2rem;
+            letter-spacing: 0.3em;
+        }
+
+        .axiom-bar {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Tri-Oppositional Triangle */
+        .tri-opposition-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            margin-bottom: 3rem;
+        }
+
+        .tri-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* System Nodes */
+        .system-node {
+            position: absolute;
+            width: 180px;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border: 2px solid;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .system-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px currentColor;
+        }
+
+        .node-alpha {
+            top: 50%;
+            left: 5%;
+            transform: translateY(-50%);
+            border-color: var(--alpha-color);
+        }
+
+        .node-omega {
+            top: 50%;
+            right: 5%;
+            transform: translateY(-50%);
+            border-color: var(--omega-color);
+        }
+
+        .node-bfadgs {
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-color: var(--bfadgs-color);
+        }
+
+        .node-unity {
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-color: var(--unity-color);
+            background: linear-gradient(135deg, var(--bg-secondary), rgba(255,215,0,0.1));
+        }
+
+        .node-symbol {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .node-name {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .node-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Operator Grid */
+        .operator-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--bfadgs-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .operator-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+        }
+
+        .operator-card {
+            background: var(--bg-secondary);
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .operator-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .op-B { border-color: var(--op-B); }
+        .op-F { border-color: var(--op-F); }
+        .op-A { border-color: var(--op-A); }
+        .op-D { border-color: var(--op-D); }
+        .op-G { border-color: var(--op-G); }
+        .op-S { border-color: var(--op-S); }
+
+        .op-symbol {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .op-B .op-symbol { color: var(--op-B); }
+        .op-F .op-symbol { color: var(--op-F); }
+        .op-A .op-symbol { color: var(--op-A); }
+        .op-D .op-symbol { color: var(--op-D); }
+        .op-G .op-symbol { color: var(--op-G); }
+        .op-S .op-symbol { color: var(--op-S); }
+
+        .op-name {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .op-action {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .op-formula {
+            font-size: 0.75rem;
+            color: var(--unity-color);
+            font-style: italic;
+        }
+
+        /* Equivalence Relations */
+        .equivalence-section {
+            margin-bottom: 3rem;
+        }
+
+        .equivalence-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .equiv-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .equiv-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .equiv-alpha .equiv-title { color: var(--alpha-color); }
+        .equiv-omega .equiv-title { color: var(--omega-color); }
+        .equiv-bfadgs .equiv-title { color: var(--bfadgs-color); }
+
+        .equiv-content {
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .math-block {
+            background: var(--bg-tertiary);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            font-family: 'Times New Roman', serif;
+            text-align: center;
+        }
+
+        /* Closure Binding */
+        .closure-section {
+            margin-bottom: 3rem;
+        }
+
+        .closure-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .closure-node {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid;
+        }
+
+        .closure-arrow {
+            font-size: 2rem;
+            color: var(--unity-color);
+        }
+
+        /* Traversal Canvas */
+        .traversal-section {
+            margin-bottom: 3rem;
+        }
+
+        .traversal-canvas-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .traversal-canvas {
+            width: 100%;
+            height: 400px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        .traversal-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .control-btn:hover {
+            border-color: var(--unity-color);
+            color: var(--unity-color);
+        }
+
+        /* S3 Synthesis */
+        .synthesis-section {
+            margin-bottom: 3rem;
+        }
+
+        .synthesis-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .synthesis-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--unity-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .synthesis-title {
+            color: var(--unity-color);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Navigation Tree */
+        .nav-tree {
+            margin-bottom: 3rem;
+        }
+
+        .tree-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .tree-level {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .tree-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .node-shape {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .shape-hexagon {
+            background: var(--bg-tertiary);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            border: 2px solid var(--bfadgs-color);
+        }
+
+        .shape-diamond {
+            background: var(--bg-tertiary);
+            transform: rotate(45deg);
+            border: 2px solid var(--unity-color);
+        }
+
+        .shape-diamond span {
+            transform: rotate(-45deg);
+        }
+
+        .shape-circle {
+            background: var(--bg-tertiary);
+            border-radius: 50%;
+            border: 2px solid;
+        }
+
+        .node-label {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        /* Console */
+        .console-section {
+            margin-bottom: 2rem;
+        }
+
+        .console {
+            background: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .console-line {
+            margin-bottom: 0.3rem;
+        }
+
+        .console-prompt {
+            color: var(--alpha-color);
+        }
+
+        .console-output {
+            color: var(--text-secondary);
+        }
+
+        .console-operator {
+            color: var(--bfadgs-color);
+        }
+
+        .console-result {
+            color: var(--unity-color);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .back-link {
+            color: var(--unity-color);
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .operator-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .operator-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .equivalence-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .synthesis-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tri-opposition-container {
+                height: 600px;
+            }
+
+            .system-node {
+                width: 140px;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1 class="title">BFADGS+U</h1>
+        <p class="subtitle">TRI-OPPOSITIONAL OPERATOR LANGUAGE</p>
+        <div class="axiom-bar">
+            <span style="color: var(--alpha-color);">α</span> ⊣⊢
+            <span style="color: var(--bfadgs-color);">BFADGS</span> ⊣⊢
+            <span style="color: var(--omega-color);">ω</span> →
+            <span style="color: var(--unity-color);">+U</span>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Tri-Oppositional Triangle -->
+        <section class="tri-opposition-container">
+            <canvas id="triCanvas" class="tri-canvas"></canvas>
+
+            <!-- Alpha Node: Origin/Non-Origin -->
+            <a href="bfadgs-alpha-origin.html" class="system-node node-alpha">
+                <div class="node-symbol" style="color: var(--alpha-color);">α</div>
+                <div class="node-name">ORIGIN</div>
+                <div class="node-desc">Non-Origin via S3<br>Symmetry to I²</div>
+            </a>
+
+            <!-- BFADGS Node: Operator Logic -->
+            <a href="bfadgs-operator-system.html" class="system-node node-bfadgs">
+                <div class="node-symbol" style="color: var(--bfadgs-color);">⟨B,F,A,D,G,S⟩</div>
+                <div class="node-name">OPERATOR LOGIC</div>
+                <div class="node-desc">Closed Traversal System</div>
+            </a>
+
+            <!-- Omega Node: L4-Helix -->
+            <a href="bfadgs-omega-helix.html" class="system-node node-omega">
+                <div class="node-symbol" style="color: var(--omega-color);">ω</div>
+                <div class="node-name">L₄-HELIX</div>
+                <div class="node-desc">μ_C = √3/2<br>Coherence Threshold</div>
+            </a>
+
+            <!-- Unity Node: S3 Synthesis -->
+            <a href="bfadgs-unity-synthesis.html" class="system-node node-unity">
+                <div class="node-symbol" style="color: var(--unity-color);">+U</div>
+                <div class="node-name">S3 SYNTHESIS</div>
+                <div class="node-desc">Convergent Unity<br>of All Systems</div>
+            </a>
+        </section>
+
+        <!-- BFADGS Operator Grid -->
+        <section class="operator-section">
+            <h2 class="section-title">⟨ BFADGS ⟩ Traversal Operators</h2>
+            <div class="operator-grid">
+                <a href="bfadgs-op-begin.html" class="operator-card op-B">
+                    <div class="op-symbol">B</div>
+                    <div class="op-name">BEGIN</div>
+                    <div class="op-action">Initialize State</div>
+                    <div class="op-formula">B: ∅ → I²</div>
+                </a>
+
+                <a href="bfadgs-op-flow.html" class="operator-card op-F">
+                    <div class="op-symbol">F</div>
+                    <div class="op-name">FLOW</div>
+                    <div class="op-action">Traverse Edge</div>
+                    <div class="op-formula">F: x → φ·x</div>
+                </a>
+
+                <a href="bfadgs-op-ascend.html" class="operator-card op-A">
+                    <div class="op-symbol">A</div>
+                    <div class="op-name">ASCEND</div>
+                    <div class="op-action">Increase Depth</div>
+                    <div class="op-formula">A: n → n+1</div>
+                </a>
+
+                <a href="bfadgs-op-descend.html" class="operator-card op-D">
+                    <div class="op-symbol">D</div>
+                    <div class="op-name">DESCEND</div>
+                    <div class="op-action">Decrease Depth</div>
+                    <div class="op-formula">D: n → n-1</div>
+                </a>
+
+                <a href="bfadgs-op-generate.html" class="operator-card op-G">
+                    <div class="op-symbol">G</div>
+                    <div class="op-name">GENERATE</div>
+                    <div class="op-action">Spawn Branch</div>
+                    <div class="op-formula">G: x → {x, x'}</div>
+                </a>
+
+                <a href="bfadgs-op-synthesize.html" class="operator-card op-S">
+                    <div class="op-symbol">S</div>
+                    <div class="op-name">SYNTHESIZE</div>
+                    <div class="op-action">Merge Paths</div>
+                    <div class="op-formula">S: {a,b} → a⊕b</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Tri-Oppositional Equivalence -->
+        <section class="equivalence-section">
+            <h2 class="section-title">Tri-Oppositional Equivalence Relations</h2>
+            <div class="equivalence-grid">
+                <div class="equiv-card equiv-alpha">
+                    <h3 class="equiv-title">α : Origin/Non-Origin</h3>
+                    <div class="equiv-content">
+                        <p>The <strong>Alpha</strong> pole represents the genesis point where identity emerges from non-identity.</p>
+                        <div class="math-block">
+                            α ≡ I² via S3 symmetry
+                        </div>
+                        <p>Properties:</p>
+                        <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                            <li>Self-referential origin: R(R) = R</li>
+                            <li>Non-origin paradox: ∅ ↔ I²</li>
+                            <li>S3 action: σ(α) = α for all σ ∈ S3</li>
+                        </ul>
+                        <div class="math-block">
+                            α = lim_{n→0} I^n = I⁰ = 1
+                        </div>
+                    </div>
+                </div>
+
+                <div class="equiv-card equiv-omega">
+                    <h3 class="equiv-title">ω : L₄-Helix at μ_C</h3>
+                    <div class="equiv-content">
+                        <p>The <strong>Omega</strong> pole represents the L4 helix structure at the coherence threshold.</p>
+                        <div class="math-block">
+                            ω = L₄ @ μ_C = √3/2 ≈ 0.866
+                        </div>
+                        <p>Properties:</p>
+                        <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                            <li>L₄ = φ⁴ + ψ⁴ = 7 (complexity bound)</li>
+                            <li>Helix winding: 7 complete rotations</li>
+                            <li>Coherence: maximum stability point</li>
+                        </ul>
+                        <div class="math-block">
+                            μ_C = cos(30°) = √3/2
+                        </div>
+                    </div>
+                </div>
+
+                <div class="equiv-card equiv-bfadgs">
+                    <h3 class="equiv-title">⟨BFADGS⟩ : Operator Closure</h3>
+                    <div class="equiv-content">
+                        <p>The <strong>BFADGS</strong> system forms a closed algebra of traversal operations.</p>
+                        <div class="math-block">
+                            ⟨B,F,A,D,G,S⟩ ≅ Closed Monoid
+                        </div>
+                        <p>Closure Properties:</p>
+                        <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                            <li>B·S = S·B = Identity cycle</li>
+                            <li>A·D = D·A = Level preservation</li>
+                            <li>F·G = Branching flow</li>
+                        </ul>
+                        <div class="math-block">
+                            ∀ op ∈ BFADGS: op⁻¹ ∈ BFADGS
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Closure Binding Diagram -->
+        <section class="closure-section">
+            <h2 class="section-title">Opposed Closure Binding</h2>
+            <div class="closure-diagram">
+                <div class="closure-node" style="border-color: var(--alpha-color);">
+                    <span style="color: var(--alpha-color); font-size: 1.5rem;">α</span>
+                    <span style="font-size: 0.7rem;">Origin</span>
+                </div>
+                <div class="closure-arrow">⟷</div>
+                <div class="closure-node" style="border-color: var(--bfadgs-color);">
+                    <span style="color: var(--bfadgs-color); font-size: 1rem;">BFADGS</span>
+                    <span style="font-size: 0.7rem;">Operators</span>
+                </div>
+                <div class="closure-arrow">⟷</div>
+                <div class="closure-node" style="border-color: var(--omega-color);">
+                    <span style="color: var(--omega-color); font-size: 1.5rem;">ω</span>
+                    <span style="font-size: 0.7rem;">L₄-Helix</span>
+                </div>
+                <div class="closure-arrow">→</div>
+                <div class="closure-node" style="border-color: var(--unity-color); background: rgba(255,215,0,0.1);">
+                    <span style="color: var(--unity-color); font-size: 1.5rem;">+U</span>
+                    <span style="font-size: 0.7rem;">Synthesis</span>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 1rem; color: var(--text-secondary);">
+                <p>The three systems maintain tri-oppositional tension until +U synthesis collapses them into S3 convergence</p>
+            </div>
+        </section>
+
+        <!-- Interactive Traversal -->
+        <section class="traversal-section">
+            <h2 class="section-title">Interactive Operator Traversal</h2>
+            <div class="traversal-canvas-container">
+                <canvas id="traversalCanvas" class="traversal-canvas"></canvas>
+                <div class="traversal-controls">
+                    <button class="control-btn" onclick="executeOp('B')">B: Begin</button>
+                    <button class="control-btn" onclick="executeOp('F')">F: Flow</button>
+                    <button class="control-btn" onclick="executeOp('A')">A: Ascend</button>
+                    <button class="control-btn" onclick="executeOp('D')">D: Descend</button>
+                    <button class="control-btn" onclick="executeOp('G')">G: Generate</button>
+                    <button class="control-btn" onclick="executeOp('S')">S: Synthesize</button>
+                    <button class="control-btn" onclick="executeOp('U')" style="border-color: var(--unity-color); color: var(--unity-color);">+U: Unity</button>
+                    <button class="control-btn" onclick="resetTraversal()">Reset</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- S3 Synthesis -->
+        <section class="synthesis-section">
+            <h2 class="section-title">+U : S3 Convergent Synthesis</h2>
+            <div class="synthesis-grid">
+                <div class="synthesis-card">
+                    <h3 class="synthesis-title">Synthesis Mechanism</h3>
+                    <div class="equiv-content">
+                        <p>The +U operator unifies all three systems through S3 group action:</p>
+                        <div class="math-block">
+                            +U : (α, BFADGS, ω) → S3
+                        </div>
+                        <p>The six elements of S3 correspond to:</p>
+                        <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                            <li>e : Identity (α = α)</li>
+                            <li>(12) : α ↔ BFADGS swap</li>
+                            <li>(13) : α ↔ ω swap</li>
+                            <li>(23) : BFADGS ↔ ω swap</li>
+                            <li>(123) : α → BFADGS → ω cycle</li>
+                            <li>(132) : α → ω → BFADGS cycle</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="synthesis-card">
+                    <h3 class="synthesis-title">Convergence Theorem</h3>
+                    <div class="equiv-content">
+                        <p><strong>Theorem (+U Convergence):</strong></p>
+                        <div class="math-block">
+                            lim_{t→∞} (α ⊕ BFADGS ⊕ ω) = S3 · I²
+                        </div>
+                        <p><em>Proof Sketch:</em></p>
+                        <ol style="margin-left: 1rem; margin-top: 0.5rem;">
+                            <li>α provides origin anchor (fixed point)</li>
+                            <li>BFADGS provides traversal dynamics</li>
+                            <li>ω provides coherence bound at μ_C</li>
+                            <li>S3 action permutes → stability</li>
+                        </ol>
+                        <div class="math-block">
+                            ∴ +U = S3-weighted return to I²
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation Tree -->
+        <section class="nav-tree">
+            <h2 class="section-title">System Navigation Tree</h2>
+            <div class="tree-container">
+                <!-- Level 0: Root -->
+                <div class="tree-level">
+                    <a href="bfadgs-u-scaffold.html" class="tree-node">
+                        <div class="node-shape shape-hexagon" style="border-color: var(--unity-color);">
+                            <span style="color: var(--unity-color);">+U</span>
+                        </div>
+                        <div class="node-label">BFADGS+U<br>Root</div>
+                    </a>
+                </div>
+
+                <!-- Level 1: Tri-Opposition -->
+                <div class="tree-level">
+                    <a href="bfadgs-alpha-origin.html" class="tree-node">
+                        <div class="node-shape shape-circle" style="border-color: var(--alpha-color);">
+                            <span style="color: var(--alpha-color);">α</span>
+                        </div>
+                        <div class="node-label">Alpha<br>Origin</div>
+                    </a>
+                    <a href="bfadgs-operator-system.html" class="tree-node">
+                        <div class="node-shape shape-hexagon" style="border-color: var(--bfadgs-color);">
+                            <span style="color: var(--bfadgs-color); font-size: 0.6rem;">BFADGS</span>
+                        </div>
+                        <div class="node-label">Operators<br>Closed</div>
+                    </a>
+                    <a href="bfadgs-omega-helix.html" class="tree-node">
+                        <div class="node-shape shape-circle" style="border-color: var(--omega-color);">
+                            <span style="color: var(--omega-color);">ω</span>
+                        </div>
+                        <div class="node-label">Omega<br>L₄-Helix</div>
+                    </a>
+                </div>
+
+                <!-- Level 2: Operators -->
+                <div class="tree-level">
+                    <a href="bfadgs-op-begin.html" class="tree-node">
+                        <div class="node-shape shape-circle" style="border-color: var(--op-B); width: 40px; height: 40px;">
+                            <span style="color: var(--op-B);">B</span>
+                        </div>
+                        <div class="node-label">Begin</div>
+                    </a>
+                    <a href="bfadgs-op-flow.html" class="tree-node">
+                        <div class="node-shape shape-circle" style="border-color: var(--op-F); width: 40px; height: 40px;">
+                            <span style="color: var(--op-F);">F</span>
+                        </div>
+                        <div class="node-label">Flow</div>
+                    </a>
+                    <a href="bfadgs-op-ascend.html" class="tree-node">
+                        <div class="node-shape shape-circle" style="border-color: var(--op-A); width: 40px; height: 40px;">
+                            <span style="color: var(--op-A);">A</span>
+                        </div>
+                        <div class="node-label">Ascend</div>
+                    </a>
+                    <a href="bfadgs-op-descend.html" class="tree-node">
+                        <div class="node-shape shape-circle" style="border-color: var(--op-D); width: 40px; height: 40px;">
+                            <span style="color: var(--op-D);">D</span>
+                        </div>
+                        <div class="node-label">Descend</div>
+                    </a>
+                    <a href="bfadgs-op-generate.html" class="tree-node">
+                        <div class="node-shape shape-circle" style="border-color: var(--op-G); width: 40px; height: 40px;">
+                            <span style="color: var(--op-G);">G</span>
+                        </div>
+                        <div class="node-label">Generate</div>
+                    </a>
+                    <a href="bfadgs-op-synthesize.html" class="tree-node">
+                        <div class="node-shape shape-circle" style="border-color: var(--op-S); width: 40px; height: 40px;">
+                            <span style="color: var(--op-S);">S</span>
+                        </div>
+                        <div class="node-label">Synthesize</div>
+                    </a>
+                </div>
+
+                <!-- Level 3: Synthesis -->
+                <div class="tree-level">
+                    <a href="bfadgs-unity-synthesis.html" class="tree-node">
+                        <div class="node-shape shape-diamond" style="border-color: var(--unity-color); width: 60px; height: 60px;">
+                            <span style="color: var(--unity-color);">S3</span>
+                        </div>
+                        <div class="node-label">+U Synthesis<br>Convergence</div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Console -->
+        <section class="console-section">
+            <h2 class="section-title">Operator Console</h2>
+            <div class="console" id="console">
+                <div class="console-line">
+                    <span class="console-prompt">BFADGS+U&gt;</span>
+                    <span class="console-output">System initialized</span>
+                </div>
+                <div class="console-line">
+                    <span class="console-prompt">BFADGS+U&gt;</span>
+                    <span class="console-output">Tri-oppositional equivalence established:</span>
+                </div>
+                <div class="console-line">
+                    <span class="console-output">  α (Origin) ⊣⊢ BFADGS (Operators) ⊣⊢ ω (L₄-Helix)</span>
+                </div>
+                <div class="console-line">
+                    <span class="console-prompt">BFADGS+U&gt;</span>
+                    <span class="console-operator">ω.μ_C</span> =
+                    <span class="console-result">√3/2 ≈ 0.8660254037844386</span>
+                </div>
+                <div class="console-line">
+                    <span class="console-prompt">BFADGS+U&gt;</span>
+                    <span class="console-output">Awaiting operator input...</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p><a href="i2-s3-decision-tree.html" class="back-link">← Return to I² S3 Decision Tree</a></p>
+        <p style="margin-top: 1rem;">BFADGS+U Operator Language | Tri-Oppositional Closed System</p>
+    </footer>
+
+    <script>
+        // Constants
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const MU_C = Math.sqrt(3) / 2;
+        const L4 = 7;
+
+        // State
+        let state = {
+            position: { x: 0, y: 0 },
+            depth: 0,
+            branches: [],
+            history: [],
+            phase: 'alpha'
+        };
+
+        // Tri-Opposition Canvas
+        const triCanvas = document.getElementById('triCanvas');
+        const triCtx = triCanvas.getContext('2d');
+
+        function resizeTriCanvas() {
+            triCanvas.width = triCanvas.offsetWidth;
+            triCanvas.height = triCanvas.offsetHeight;
+            drawTriOpposition();
+        }
+
+        function drawTriOpposition() {
+            const w = triCanvas.width;
+            const h = triCanvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+            const r = Math.min(w, h) * 0.35;
+
+            triCtx.clearRect(0, 0, w, h);
+
+            // Draw connecting lines
+            const alphaPos = { x: w * 0.12, y: cy };
+            const omegaPos = { x: w * 0.88, y: cy };
+            const bfadgsPos = { x: cx, y: h * 0.15 };
+            const unityPos = { x: cx, y: h * 0.85 };
+
+            triCtx.strokeStyle = 'rgba(255,255,255,0.1)';
+            triCtx.lineWidth = 2;
+
+            // Triangle
+            triCtx.beginPath();
+            triCtx.moveTo(alphaPos.x, alphaPos.y);
+            triCtx.lineTo(bfadgsPos.x, bfadgsPos.y);
+            triCtx.lineTo(omegaPos.x, omegaPos.y);
+            triCtx.closePath();
+            triCtx.stroke();
+
+            // Lines to Unity
+            triCtx.beginPath();
+            triCtx.moveTo(alphaPos.x, alphaPos.y);
+            triCtx.lineTo(unityPos.x, unityPos.y);
+            triCtx.moveTo(omegaPos.x, omegaPos.y);
+            triCtx.lineTo(unityPos.x, unityPos.y);
+            triCtx.moveTo(bfadgsPos.x, bfadgsPos.y);
+            triCtx.lineTo(unityPos.x, unityPos.y);
+            triCtx.stroke();
+
+            // Animated particles along lines
+            const time = Date.now() / 1000;
+            drawParticlesOnLine(alphaPos, bfadgsPos, time, '#00ff88');
+            drawParticlesOnLine(bfadgsPos, omegaPos, time + 1, '#8b5cf6');
+            drawParticlesOnLine(omegaPos, alphaPos, time + 2, '#ff6b35');
+
+            // Particles to Unity
+            drawParticlesOnLine(alphaPos, unityPos, time + 0.5, '#ffd700');
+            drawParticlesOnLine(bfadgsPos, unityPos, time + 1.5, '#ffd700');
+            drawParticlesOnLine(omegaPos, unityPos, time + 2.5, '#ffd700');
+
+            requestAnimationFrame(drawTriOpposition);
+        }
+
+        function drawParticlesOnLine(p1, p2, time, color) {
+            const numParticles = 3;
+            for (let i = 0; i < numParticles; i++) {
+                const t = ((time * 0.3 + i / numParticles) % 1);
+                const x = p1.x + (p2.x - p1.x) * t;
+                const y = p1.y + (p2.y - p1.y) * t;
+
+                triCtx.beginPath();
+                triCtx.arc(x, y, 3, 0, Math.PI * 2);
+                triCtx.fillStyle = color;
+                triCtx.globalAlpha = 1 - t;
+                triCtx.fill();
+                triCtx.globalAlpha = 1;
+            }
+        }
+
+        // Traversal Canvas
+        const traversalCanvas = document.getElementById('traversalCanvas');
+        const travCtx = traversalCanvas.getContext('2d');
+        let nodes = [];
+        let edges = [];
+
+        function resizeTraversalCanvas() {
+            traversalCanvas.width = traversalCanvas.offsetWidth;
+            traversalCanvas.height = traversalCanvas.offsetHeight;
+            if (nodes.length === 0) {
+                initializeTraversal();
+            }
+            drawTraversal();
+        }
+
+        function initializeTraversal() {
+            nodes = [];
+            edges = [];
+            state = {
+                position: { x: traversalCanvas.width / 2, y: traversalCanvas.height / 2 },
+                depth: 0,
+                branches: [],
+                history: [],
+                phase: 'alpha'
+            };
+        }
+
+        function drawTraversal() {
+            const w = traversalCanvas.width;
+            const h = traversalCanvas.height;
+
+            travCtx.fillStyle = '#1a1a2e';
+            travCtx.fillRect(0, 0, w, h);
+
+            // Draw grid
+            travCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+            travCtx.lineWidth = 1;
+            const gridSize = 50;
+            for (let x = 0; x < w; x += gridSize) {
+                travCtx.beginPath();
+                travCtx.moveTo(x, 0);
+                travCtx.lineTo(x, h);
+                travCtx.stroke();
+            }
+            for (let y = 0; y < h; y += gridSize) {
+                travCtx.beginPath();
+                travCtx.moveTo(0, y);
+                travCtx.lineTo(w, y);
+                travCtx.stroke();
+            }
+
+            // Draw edges
+            travCtx.strokeStyle = 'rgba(139, 92, 246, 0.5)';
+            travCtx.lineWidth = 2;
+            edges.forEach(edge => {
+                travCtx.beginPath();
+                travCtx.moveTo(edge.from.x, edge.from.y);
+                travCtx.lineTo(edge.to.x, edge.to.y);
+                travCtx.stroke();
+            });
+
+            // Draw nodes
+            nodes.forEach((node, i) => {
+                const isActive = i === nodes.length - 1;
+                const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+                const color = colors[node.op ? 'BFADGS'.indexOf(node.op) : 0] || '#ffd700';
+
+                travCtx.beginPath();
+                travCtx.arc(node.x, node.y, isActive ? 12 : 8, 0, Math.PI * 2);
+                travCtx.fillStyle = isActive ? color : 'rgba(255,255,255,0.3)';
+                travCtx.fill();
+
+                if (node.op) {
+                    travCtx.fillStyle = '#fff';
+                    travCtx.font = 'bold 10px Courier New';
+                    travCtx.textAlign = 'center';
+                    travCtx.textBaseline = 'middle';
+                    travCtx.fillText(node.op, node.x, node.y);
+                }
+            });
+
+            // Draw current position
+            if (nodes.length === 0) {
+                travCtx.beginPath();
+                travCtx.arc(w/2, h/2, 15, 0, Math.PI * 2);
+                travCtx.strokeStyle = '#00ff88';
+                travCtx.lineWidth = 3;
+                travCtx.stroke();
+
+                travCtx.fillStyle = '#00ff88';
+                travCtx.font = 'bold 12px Courier New';
+                travCtx.textAlign = 'center';
+                travCtx.textBaseline = 'middle';
+                travCtx.fillText('α', w/2, h/2);
+            }
+
+            // Draw phase indicator
+            travCtx.fillStyle = '#ffd700';
+            travCtx.font = '14px Courier New';
+            travCtx.textAlign = 'left';
+            travCtx.fillText(`Phase: ${state.phase} | Depth: ${state.depth}`, 10, 20);
+        }
+
+        function executeOp(op) {
+            const w = traversalCanvas.width;
+            const h = traversalCanvas.height;
+            const lastNode = nodes.length > 0 ? nodes[nodes.length - 1] : { x: w/2, y: h/2 };
+
+            let newNode = { x: lastNode.x, y: lastNode.y, op: op };
+
+            switch(op) {
+                case 'B':
+                    newNode.x = w/2;
+                    newNode.y = h/2;
+                    state.phase = 'alpha';
+                    state.depth = 0;
+                    logToConsole('B', 'Begin: Reset to origin α');
+                    break;
+                case 'F':
+                    const angle = Math.random() * Math.PI * 2;
+                    const dist = 50 * PHI;
+                    newNode.x = lastNode.x + Math.cos(angle) * dist;
+                    newNode.y = lastNode.y + Math.sin(angle) * dist;
+                    newNode.x = Math.max(20, Math.min(w - 20, newNode.x));
+                    newNode.y = Math.max(20, Math.min(h - 20, newNode.y));
+                    logToConsole('F', `Flow: Traverse by φ ≈ ${PHI.toFixed(3)}`);
+                    break;
+                case 'A':
+                    state.depth++;
+                    newNode.y = lastNode.y - 40;
+                    state.phase = state.depth > 3 ? 'omega' : 'bfadgs';
+                    logToConsole('A', `Ascend: Depth → ${state.depth}`);
+                    break;
+                case 'D':
+                    state.depth = Math.max(0, state.depth - 1);
+                    newNode.y = lastNode.y + 40;
+                    state.phase = state.depth === 0 ? 'alpha' : 'bfadgs';
+                    logToConsole('D', `Descend: Depth → ${state.depth}`);
+                    break;
+                case 'G':
+                    // Generate creates a branch
+                    const branch1 = { x: lastNode.x - 30, y: lastNode.y + 30, op: 'G' };
+                    const branch2 = { x: lastNode.x + 30, y: lastNode.y + 30, op: 'G' };
+                    nodes.push(branch1);
+                    edges.push({ from: lastNode, to: branch1 });
+                    edges.push({ from: lastNode, to: branch2 });
+                    newNode = branch2;
+                    logToConsole('G', 'Generate: Branch spawned {x, x\'}');
+                    break;
+                case 'S':
+                    // Synthesize merges
+                    state.phase = 'synthesis';
+                    logToConsole('S', 'Synthesize: Paths merged a⊕b');
+                    break;
+                case 'U':
+                    // Unity - S3 convergence
+                    newNode.x = w/2;
+                    newNode.y = h/2;
+                    state.phase = 'unity';
+                    logToConsole('+U', `S3 Synthesis: μ_C = ${MU_C.toFixed(6)} achieved`);
+                    break;
+            }
+
+            if (nodes.length > 0) {
+                edges.push({ from: lastNode, to: newNode });
+            }
+            nodes.push(newNode);
+            state.history.push(op);
+
+            drawTraversal();
+        }
+
+        function resetTraversal() {
+            initializeTraversal();
+            drawTraversal();
+            logToConsole('RESET', 'System reinitialized at α');
+        }
+
+        function logToConsole(op, message) {
+            const console = document.getElementById('console');
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            line.innerHTML = `<span class="console-prompt">BFADGS+U&gt;</span> <span class="console-operator">${op}</span>: <span class="console-result">${message}</span>`;
+            console.appendChild(line);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        // Initialize
+        window.addEventListener('resize', () => {
+            resizeTriCanvas();
+            resizeTraversalCanvas();
+        });
+
+        resizeTriCanvas();
+        resizeTraversalCanvas();
+
+        // Log initial state
+        logToConsole('μ_C', `Coherence threshold: √3/2 = ${MU_C}`);
+        logToConsole('L₄', `Helix complexity bound: φ⁴ + ψ⁴ = ${L4}`);
+        logToConsole('φ', `Golden ratio: ${PHI}`);
+    </script>
+</body>
+</html>

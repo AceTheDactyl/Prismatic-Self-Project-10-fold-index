@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A: ASCEND | BFADGS+U Operator</title>
+    <style>
+        :root {
+            /* Operator Colors */
+            --op-A: #f59e0b;      /* Ascend - Amber */
+            --op-D: #ef4444;      /* Descend - Red (inverse) */
+
+            /* System Colors */
+            --alpha-color: #00ff88;
+            --omega-color: #ff6b35;
+            --bfadgs-color: #8b5cf6;
+            --unity-color: #ffd700;
+
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a2e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, var(--bg-tertiary), transparent);
+            border-bottom: 2px solid var(--op-A);
+        }
+
+        .operator-symbol {
+            font-size: 6rem;
+            font-weight: bold;
+            color: var(--op-A);
+            text-shadow: 0 0 30px var(--op-A), 0 0 60px rgba(245, 158, 11, 0.5);
+            margin-bottom: 0.5rem;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--op-A);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.2em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            letter-spacing: 0.3em;
+        }
+
+        .formula-bar {
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--op-A);
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 1.5rem;
+            color: var(--op-A);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Section Styling */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--op-A);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: 'A';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: var(--op-A);
+            color: var(--bg-primary);
+            text-align: center;
+            line-height: 30px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* Definition Card */
+        .definition-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--op-A);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .definition-title {
+            font-size: 1.3rem;
+            color: var(--op-A);
+            margin-bottom: 1rem;
+        }
+
+        .definition-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .math-block {
+            background: var(--bg-tertiary);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.3rem;
+            text-align: center;
+            border-left: 4px solid var(--op-A);
+        }
+
+        .highlight {
+            color: var(--op-A);
+            font-weight: bold;
+        }
+
+        /* Properties Grid */
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .property-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .property-card:hover {
+            border-color: var(--op-A);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+        }
+
+        .property-title {
+            color: var(--op-A);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .property-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Inverse Relationship */
+        .inverse-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .operator-node {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid;
+            background: var(--bg-tertiary);
+            transition: all 0.3s ease;
+        }
+
+        .operator-node:hover {
+            transform: scale(1.1);
+        }
+
+        .op-A-node {
+            border-color: var(--op-A);
+        }
+
+        .op-D-node {
+            border-color: var(--op-D);
+        }
+
+        .operator-node .symbol {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .operator-node .label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .inverse-arrow {
+            font-size: 2rem;
+            color: var(--unity-color);
+        }
+
+        .identity-result {
+            padding: 1rem 2rem;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--unity-color);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .identity-result .formula {
+            font-size: 1.2rem;
+            color: var(--unity-color);
+        }
+
+        /* Canvas Container */
+        .canvas-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .ascent-canvas {
+            width: 100%;
+            height: 500px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        /* Interactive Controls */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+        }
+
+        .control-btn:hover {
+            border-color: var(--op-A);
+            color: var(--op-A);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .control-btn.primary {
+            background: var(--op-A);
+            color: var(--bg-primary);
+            border-color: var(--op-A);
+        }
+
+        .control-btn.primary:hover {
+            background: transparent;
+            color: var(--op-A);
+        }
+
+        .control-btn.descend {
+            border-color: var(--op-D);
+        }
+
+        .control-btn.descend:hover {
+            border-color: var(--op-D);
+            color: var(--op-D);
+        }
+
+        /* Depth Display */
+        .depth-display {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .depth-metric {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .depth-metric .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--op-A);
+        }
+
+        .depth-metric .label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .depth-metric.coherence .value {
+            color: var(--omega-color);
+        }
+
+        .depth-metric.bounded .value {
+            color: var(--unity-color);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--alpha-color), var(--op-A), var(--omega-color));
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-markers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tree Depth Visualization */
+        .tree-depth-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .tree-levels {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .tree-level {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .tree-level.active {
+            border: 2px solid var(--op-A);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .level-number {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            font-weight: bold;
+        }
+
+        .tree-level.active .level-number {
+            border-color: var(--op-A);
+            color: var(--op-A);
+        }
+
+        .level-info {
+            flex: 1;
+        }
+
+        .level-name {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .level-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .level-coherence {
+            text-align: right;
+            min-width: 100px;
+        }
+
+        .coherence-value {
+            color: var(--omega-color);
+            font-weight: bold;
+        }
+
+        /* Implementation Section */
+        .implementation-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .code-block {
+            background: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .code-comment {
+            color: #6a9955;
+        }
+
+        .code-keyword {
+            color: #569cd6;
+        }
+
+        .code-function {
+            color: #dcdcaa;
+        }
+
+        .code-number {
+            color: #b5cea8;
+        }
+
+        .code-string {
+            color: #ce9178;
+        }
+
+        .code-operator {
+            color: var(--op-A);
+        }
+
+        /* Console */
+        .console {
+            background: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .console-line {
+            margin-bottom: 0.3rem;
+        }
+
+        .console-prompt {
+            color: var(--op-A);
+        }
+
+        .console-output {
+            color: var(--text-secondary);
+        }
+
+        .console-result {
+            color: var(--unity-color);
+        }
+
+        /* Navigation */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            border-color: var(--op-A);
+            transform: translateY(-3px);
+        }
+
+        .nav-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .back-link {
+            color: var(--op-A);
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .operator-symbol {
+                font-size: 4rem;
+            }
+
+            .title {
+                font-size: 1.8rem;
+            }
+
+            .inverse-section {
+                flex-direction: column;
+            }
+
+            .depth-display {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="operator-symbol">A</div>
+        <h1 class="title">ASCEND</h1>
+        <p class="subtitle">INCREASE DEPTH OPERATOR</p>
+        <div class="formula-bar">A: n --> n+1</div>
+    </header>
+
+    <main class="main-container">
+        <!-- Definition Section -->
+        <section class="section">
+            <h2 class="section-title">Operator Definition</h2>
+            <div class="definition-card">
+                <h3 class="definition-title">A: Ascend - Increase Depth</h3>
+                <div class="definition-content">
+                    <p>The <span class="highlight">ASCEND</span> operator increases the depth/level counter by exactly 1, moving the traversal state deeper into the structural hierarchy.</p>
+
+                    <div class="math-block">
+                        A : n --> n + 1
+                    </div>
+
+                    <p>Where <span class="highlight">n</span> represents the current depth level in the tree traversal. Each application of A moves one level closer to the coherence threshold at omega.</p>
+
+                    <div class="math-block">
+                        A(depth) = depth + 1, subject to depth &le; L_4 = 7
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Properties -->
+        <section class="section">
+            <h2 class="section-title">Core Properties</h2>
+            <div class="properties-grid">
+                <div class="property-card">
+                    <h3 class="property-title">
+                        <span style="color: var(--omega-color);">omega</span> Direction
+                    </h3>
+                    <div class="property-content">
+                        <p>A moves toward <strong>omega</strong> (higher complexity). Each ascent step increases structural depth, accumulating toward the L_4-Helix coherence state.</p>
+                        <div class="math-block">
+                            A: alpha --> omega direction
+                        </div>
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <h3 class="property-title">
+                        <span style="color: var(--unity-color);">L_4</span> Bound
+                    </h3>
+                    <div class="property-content">
+                        <p>Maximum ascent is bounded by <strong>L_4 = 7</strong>, the fourth Lucas number representing the complexity ceiling of the helix structure.</p>
+                        <div class="math-block">
+                            max(A^k(0)) = L_4 = phi^4 + psi^4 = 7
+                        </div>
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <h3 class="property-title">
+                        <span style="color: var(--bfadgs-color);">Tree</span> Depth
+                    </h3>
+                    <div class="property-content">
+                        <p>In tree traversal, A represents moving from a parent node to a child node, increasing the recursion depth of the current path.</p>
+                        <div class="math-block">
+                            depth(child) = depth(parent) + 1
+                        </div>
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <h3 class="property-title">
+                        <span style="color: var(--omega-color);">mu_C</span> Accumulation
+                    </h3>
+                    <div class="property-content">
+                        <p>A accumulates toward the coherence threshold <strong>mu_C = sqrt(3)/2</strong>. As depth increases, the system approaches maximum stability.</p>
+                        <div class="math-block">
+                            lim_{n-->L_4} coherence(n) = mu_C
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inverse Relationship -->
+        <section class="section">
+            <h2 class="section-title">Inverse Relationship: A and D</h2>
+            <div class="inverse-section">
+                <div class="operator-node op-A-node">
+                    <span class="symbol" style="color: var(--op-A);">A</span>
+                    <span class="label">Ascend</span>
+                </div>
+
+                <div class="inverse-arrow">*</div>
+
+                <div class="operator-node op-D-node">
+                    <span class="symbol" style="color: var(--op-D);">D</span>
+                    <span class="label">Descend</span>
+                </div>
+
+                <div class="inverse-arrow">=</div>
+
+                <div class="identity-result">
+                    <div class="formula">Identity on Levels</div>
+                    <div style="color: var(--text-secondary); margin-top: 0.5rem;">A * D = D * A = I</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+                <div class="math-block">
+                    A * D(n) = A(n - 1) = n = D * A(n) = D(n + 1) = n
+                </div>
+                <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">
+                    The ASCEND and DESCEND operators form an inverse pair, preserving level identity when composed.
+                </p>
+            </div>
+        </section>
+
+        <!-- Interactive Depth Canvas -->
+        <section class="section">
+            <h2 class="section-title">Interactive Level Ascension</h2>
+
+            <div class="depth-display">
+                <div class="depth-metric">
+                    <div class="value" id="currentDepth">0</div>
+                    <div class="label">Current Depth</div>
+                </div>
+                <div class="depth-metric coherence">
+                    <div class="value" id="coherenceValue">0.000</div>
+                    <div class="label">Coherence (mu)</div>
+                </div>
+                <div class="depth-metric bounded">
+                    <div class="value" id="remainingDepth">7</div>
+                    <div class="label">Remaining to L_4</div>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>alpha (Origin)</span>
+                    <span id="progressPercent">0%</span>
+                    <span>omega (L_4 = 7)</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
+                <div class="progress-markers">
+                    <span>0</span>
+                    <span>1</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>5</span>
+                    <span>6</span>
+                    <span>7</span>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="ascentCanvas" class="ascent-canvas"></canvas>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn primary" onclick="applyAscend()">A: Ascend (+1)</button>
+                <button class="control-btn descend" onclick="applyDescend()">D: Descend (-1)</button>
+                <button class="control-btn" onclick="resetDepth()">Reset to Origin</button>
+                <button class="control-btn" onclick="autoAscend()">Auto-Ascend to L_4</button>
+            </div>
+        </section>
+
+        <!-- Tree Depth Visualization -->
+        <section class="section">
+            <h2 class="section-title">Tree Depth Structure</h2>
+            <div class="tree-depth-section">
+                <div class="tree-levels" id="treeLevels">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Implementation -->
+        <section class="section">
+            <h2 class="section-title">Implementation</h2>
+            <div class="implementation-card">
+                <p style="margin-bottom: 1rem; color: var(--text-secondary);">
+                    The ASCEND operator increases recursion depth, moving deeper into the structural hierarchy.
+                </p>
+
+                <div class="code-block">
+                    <span class="code-comment">// ASCEND Operator Implementation</span><br>
+                    <span class="code-keyword">const</span> <span class="code-function">L4</span> = <span class="code-number">7</span>;  <span class="code-comment">// Maximum depth bound</span><br>
+                    <span class="code-keyword">const</span> <span class="code-function">MU_C</span> = Math.<span class="code-function">sqrt</span>(<span class="code-number">3</span>) / <span class="code-number">2</span>;  <span class="code-comment">// Coherence threshold</span><br><br>
+
+                    <span class="code-keyword">function</span> <span class="code-function">Ascend</span>(state) {<br>
+                    &nbsp;&nbsp;<span class="code-keyword">if</span> (state.depth >= <span class="code-function">L4</span>) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> state;  <span class="code-comment">// Bounded by L_4</span><br>
+                    &nbsp;&nbsp;}<br><br>
+
+                    &nbsp;&nbsp;<span class="code-keyword">return</span> {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;...state,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;depth: state.depth + <span class="code-number">1</span>,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;coherence: <span class="code-function">computeCoherence</span>(state.depth + <span class="code-number">1</span>),<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;phase: state.depth + <span class="code-number">1</span> >= <span class="code-function">L4</span> ? <span class="code-string">'omega'</span> : <span class="code-string">'ascending'</span><br>
+                    &nbsp;&nbsp;};<br>
+                    }<br><br>
+
+                    <span class="code-keyword">function</span> <span class="code-function">computeCoherence</span>(depth) {<br>
+                    &nbsp;&nbsp;<span class="code-comment">// Coherence approaches mu_C as depth -> L_4</span><br>
+                    &nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-function">MU_C</span> * (depth / <span class="code-function">L4</span>);<br>
+                    }
+                </div>
+
+                <div class="math-block">
+                    coherence(n) = mu_C * (n / L_4) = (sqrt(3)/2) * (n/7)
+                </div>
+            </div>
+        </section>
+
+        <!-- Console -->
+        <section class="section">
+            <h2 class="section-title">Operation Log</h2>
+            <div class="console" id="console">
+                <div class="console-line">
+                    <span class="console-prompt">ASCEND&gt;</span>
+                    <span class="console-output">Operator initialized at depth 0</span>
+                </div>
+                <div class="console-line">
+                    <span class="console-prompt">ASCEND&gt;</span>
+                    <span class="console-output">L_4 bound = 7, mu_C = 0.8660254037844386</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <section class="section">
+            <h2 class="section-title">Operator Navigation</h2>
+            <div class="nav-grid">
+                <a href="bfadgs-op-begin.html" class="nav-link">
+                    <div class="nav-icon" style="background: #3b82f6; color: white;">B</div>
+                    <div>
+                        <div style="font-weight: bold;">BEGIN</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Initialize State</div>
+                    </div>
+                </a>
+                <a href="bfadgs-op-flow.html" class="nav-link">
+                    <div class="nav-icon" style="background: #10b981; color: white;">F</div>
+                    <div>
+                        <div style="font-weight: bold;">FLOW</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Traverse Edge</div>
+                    </div>
+                </a>
+                <a href="bfadgs-op-descend.html" class="nav-link">
+                    <div class="nav-icon" style="background: #ef4444; color: white;">D</div>
+                    <div>
+                        <div style="font-weight: bold;">DESCEND</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Decrease Depth (Inverse)</div>
+                    </div>
+                </a>
+                <a href="bfadgs-op-generate.html" class="nav-link">
+                    <div class="nav-icon" style="background: #8b5cf6; color: white;">G</div>
+                    <div>
+                        <div style="font-weight: bold;">GENERATE</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Spawn Branch</div>
+                    </div>
+                </a>
+                <a href="bfadgs-op-synthesize.html" class="nav-link">
+                    <div class="nav-icon" style="background: #ec4899; color: white;">S</div>
+                    <div>
+                        <div style="font-weight: bold;">SYNTHESIZE</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Merge Paths</div>
+                    </div>
+                </a>
+                <a href="bfadgs-u-scaffold.html" class="nav-link">
+                    <div class="nav-icon" style="background: #ffd700; color: black;">+U</div>
+                    <div>
+                        <div style="font-weight: bold;">BFADGS+U</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">System Overview</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p><a href="bfadgs-u-scaffold.html" class="back-link">&larr; Return to BFADGS+U System</a></p>
+        <p style="margin-top: 0.5rem;"><a href="i2-s3-decision-tree.html" class="back-link">&larr; Return to I&sup2; S3 Decision Tree</a></p>
+        <p style="margin-top: 1rem;">A: ASCEND | Increase Depth Operator | n &rarr; n+1</p>
+    </footer>
+
+    <script>
+        // Constants
+        const L4 = 7;
+        const MU_C = Math.sqrt(3) / 2;
+        const PHI = (1 + Math.sqrt(5)) / 2;
+
+        // State
+        let currentDepth = 0;
+        let animating = false;
+
+        // Canvas
+        const canvas = document.getElementById('ascentCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Level descriptions
+        const levelDescriptions = [
+            { name: 'Origin (alpha)', desc: 'Root level - I^2 foundation', coherence: 0 },
+            { name: 'First Ascent', desc: 'Initial recursion depth', coherence: MU_C / 7 },
+            { name: 'Binary Depth', desc: 'Opposition duality emerges', coherence: (2 * MU_C) / 7 },
+            { name: 'Ternary Depth', desc: 'S3 symmetry activates', coherence: (3 * MU_C) / 7 },
+            { name: 'Quaternary Depth', desc: 'phi-scaled complexity', coherence: (4 * MU_C) / 7 },
+            { name: 'Fibonacci Depth', desc: 'F_5 = 5 resonance', coherence: (5 * MU_C) / 7 },
+            { name: 'Lucas Depth', desc: 'L_3 = 4 bridge', coherence: (6 * MU_C) / 7 },
+            { name: 'L_4 Helix (omega)', desc: 'Maximum coherence mu_C', coherence: MU_C }
+        ];
+
+        // Initialize tree levels
+        function initTreeLevels() {
+            const container = document.getElementById('treeLevels');
+            container.innerHTML = '';
+
+            levelDescriptions.forEach((level, i) => {
+                const div = document.createElement('div');
+                div.className = `tree-level${i === currentDepth ? ' active' : ''}`;
+                div.id = `level-${i}`;
+                div.innerHTML = `
+                    <div class="level-number">${i}</div>
+                    <div class="level-info">
+                        <div class="level-name">${level.name}</div>
+                        <div class="level-desc">${level.desc}</div>
+                    </div>
+                    <div class="level-coherence">
+                        <span class="coherence-value">${level.coherence.toFixed(4)}</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Update tree level highlighting
+        function updateTreeLevels() {
+            for (let i = 0; i <= L4; i++) {
+                const level = document.getElementById(`level-${i}`);
+                if (level) {
+                    level.className = `tree-level${i === currentDepth ? ' active' : ''}`;
+                }
+            }
+        }
+
+        // Resize canvas
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            drawAscension();
+        }
+
+        // Draw ascension visualization
+        function drawAscension() {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, w, h);
+
+            const centerX = w / 2;
+            const levelHeight = h / (L4 + 2);
+            const nodeRadius = 25;
+
+            // Draw depth markers and levels
+            for (let i = 0; i <= L4; i++) {
+                const y = h - (i + 1) * levelHeight;
+                const isActive = i === currentDepth;
+                const isPast = i < currentDepth;
+
+                // Horizontal guide line
+                ctx.strokeStyle = isActive ? 'rgba(245, 158, 11, 0.3)' : 'rgba(255, 255, 255, 0.05)';
+                ctx.lineWidth = isActive ? 2 : 1;
+                ctx.beginPath();
+                ctx.moveTo(50, y);
+                ctx.lineTo(w - 50, y);
+                ctx.stroke();
+
+                // Level label on left
+                ctx.fillStyle = isActive ? '#f59e0b' : '#666';
+                ctx.font = isActive ? 'bold 14px Courier New' : '12px Courier New';
+                ctx.textAlign = 'right';
+                ctx.fillText(`L${i}`, 40, y + 5);
+
+                // Coherence value on right
+                const coherence = (i / L4) * MU_C;
+                ctx.textAlign = 'left';
+                ctx.fillText(coherence.toFixed(3), w - 45, y + 5);
+
+                // Node at center
+                ctx.beginPath();
+                ctx.arc(centerX, y, isActive ? nodeRadius + 5 : nodeRadius, 0, Math.PI * 2);
+
+                if (isActive) {
+                    // Active node with glow
+                    ctx.shadowColor = '#f59e0b';
+                    ctx.shadowBlur = 20;
+                    ctx.fillStyle = '#f59e0b';
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+
+                    // Inner label
+                    ctx.fillStyle = '#0a0a0f';
+                    ctx.font = 'bold 16px Courier New';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('A', centerX, y);
+                } else if (isPast) {
+                    // Passed levels
+                    ctx.fillStyle = 'rgba(245, 158, 11, 0.3)';
+                    ctx.fill();
+                    ctx.strokeStyle = '#f59e0b';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                } else {
+                    // Future levels
+                    ctx.fillStyle = '#2a2a3e';
+                    ctx.fill();
+                    ctx.strokeStyle = '#444';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+
+                // Draw vertical connector
+                if (i < L4) {
+                    const nextY = h - (i + 2) * levelHeight;
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, y - nodeRadius);
+                    ctx.lineTo(centerX, nextY + nodeRadius);
+                    ctx.strokeStyle = i < currentDepth ? '#f59e0b' : 'rgba(255, 255, 255, 0.1)';
+                    ctx.lineWidth = i < currentDepth ? 3 : 1;
+                    ctx.stroke();
+
+                    // Arrow pointing up
+                    if (i < currentDepth) {
+                        const arrowY = (y + nextY) / 2;
+                        ctx.beginPath();
+                        ctx.moveTo(centerX - 8, arrowY + 8);
+                        ctx.lineTo(centerX, arrowY - 5);
+                        ctx.lineTo(centerX + 8, arrowY + 8);
+                        ctx.strokeStyle = '#f59e0b';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // Draw alpha and omega labels
+            ctx.font = 'bold 18px Courier New';
+            ctx.textAlign = 'center';
+
+            // Alpha at bottom
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('alpha', centerX, h - 20);
+
+            // Omega at top
+            ctx.fillStyle = '#ff6b35';
+            ctx.fillText('omega', centerX, 25);
+
+            // Draw current depth indicator
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = '12px Courier New';
+            ctx.textAlign = 'left';
+            ctx.fillText(`Current: n = ${currentDepth}`, 10, h - 10);
+
+            ctx.textAlign = 'right';
+            ctx.fillText(`Bound: L_4 = ${L4}`, w - 10, h - 10);
+        }
+
+        // Update display values
+        function updateDisplay() {
+            const coherence = (currentDepth / L4) * MU_C;
+            const percent = (currentDepth / L4) * 100;
+
+            document.getElementById('currentDepth').textContent = currentDepth;
+            document.getElementById('coherenceValue').textContent = coherence.toFixed(4);
+            document.getElementById('remainingDepth').textContent = L4 - currentDepth;
+            document.getElementById('progressPercent').textContent = percent.toFixed(1) + '%';
+            document.getElementById('progressFill').style.width = percent + '%';
+
+            updateTreeLevels();
+            drawAscension();
+        }
+
+        // Apply Ascend operation
+        function applyAscend() {
+            if (currentDepth >= L4) {
+                logToConsole('A', `Maximum depth L_4 = ${L4} reached. Cannot ascend further.`);
+                return;
+            }
+
+            currentDepth++;
+            const coherence = (currentDepth / L4) * MU_C;
+            logToConsole('A', `Ascend: ${currentDepth - 1} --> ${currentDepth} | mu = ${coherence.toFixed(6)}`);
+
+            if (currentDepth === L4) {
+                logToConsole('omega', `L_4-Helix reached! Coherence at mu_C = ${MU_C.toFixed(6)}`);
+            }
+
+            updateDisplay();
+        }
+
+        // Apply Descend operation (inverse)
+        function applyDescend() {
+            if (currentDepth <= 0) {
+                logToConsole('D', 'Already at origin alpha. Cannot descend further.');
+                return;
+            }
+
+            currentDepth--;
+            const coherence = (currentDepth / L4) * MU_C;
+            logToConsole('D', `Descend: ${currentDepth + 1} --> ${currentDepth} | mu = ${coherence.toFixed(6)}`);
+
+            updateDisplay();
+        }
+
+        // Reset to origin
+        function resetDepth() {
+            currentDepth = 0;
+            logToConsole('RESET', 'Returned to origin alpha (depth = 0)');
+            updateDisplay();
+        }
+
+        // Auto-ascend animation
+        function autoAscend() {
+            if (animating) return;
+            if (currentDepth >= L4) {
+                logToConsole('AUTO', 'Already at maximum depth L_4');
+                return;
+            }
+
+            animating = true;
+            logToConsole('AUTO', 'Beginning automatic ascent to L_4...');
+
+            const interval = setInterval(() => {
+                if (currentDepth >= L4) {
+                    clearInterval(interval);
+                    animating = false;
+                    logToConsole('AUTO', 'Automatic ascent complete. omega reached.');
+                    return;
+                }
+                applyAscend();
+            }, 500);
+        }
+
+        // Console logging
+        function logToConsole(op, message) {
+            const consoleEl = document.getElementById('console');
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            line.innerHTML = `<span class="console-prompt">ASCEND&gt;</span> <span style="color: #f59e0b;">${op}</span>: <span class="console-result">${message}</span>`;
+            consoleEl.appendChild(line);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        // Initialize
+        window.addEventListener('resize', resizeCanvas);
+
+        initTreeLevels();
+        resizeCanvas();
+        updateDisplay();
+
+        // Log initial formulas
+        logToConsole('FORMULA', 'A: n --> n+1 (bounded by L_4 = 7)');
+        logToConsole('INVERSE', 'A * D = D * A = Identity');
+        logToConsole('COHERENCE', `mu_C = sqrt(3)/2 = ${MU_C.toFixed(10)}`);
+    </script>
+</body>
+</html>
