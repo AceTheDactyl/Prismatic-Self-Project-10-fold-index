@@ -31,6 +31,16 @@
             --text-primary: #e8e8f0;
             --text-secondary: #a8a8c0;
             --text-dim: #606080;
+
+            /* Projection Colors */
+            --i2-color: #ffd700;
+            --tdl-color: #4ecdc4;
+            --lomi-color: #a855f7;
+            --s3-color: #ff6b6b;
+
+            /* Pole Colors */
+            --positive-pole: #00ff88;
+            --negative-pole: #ff6b6b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -139,6 +149,13 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
+        .section h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin: 1.5rem 0 1rem;
+        }
+
         .axiom-box {
             background: linear-gradient(135deg, rgba(199,146,234,0.15) 0%, rgba(0,255,136,0.05) 100%);
             border: 1px solid var(--k-formation);
@@ -191,6 +208,21 @@
             font-size: 1.2rem;
         }
 
+        .definition-box {
+            background: rgba(97, 175, 239, 0.1);
+            border-left: 3px solid var(--critical);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .definition-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--critical);
+            margin-bottom: 0.5rem;
+        }
+
         .equation {
             background: var(--bg-secondary);
             padding: 1.5rem;
@@ -201,6 +233,42 @@
             text-align: center;
             color: var(--lens);
             overflow-x: auto;
+        }
+
+        .equation-chain {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border-radius: 12px;
+            border: 1px solid rgba(0,255,136,0.2);
+        }
+
+        .equation-chain .step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.75rem 0;
+            padding: 0.5rem 0;
+        }
+
+        .equation-chain .step-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--k-formation);
+            min-width: 30px;
+        }
+
+        .equation-chain .step-eq {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--lens);
+            flex: 1;
+        }
+
+        .equation-chain .step-note {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-style: italic;
         }
 
         .data-table {
@@ -235,6 +303,12 @@
             border-radius: 8px;
             text-align: center;
             border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .generator-card:hover {
+            border-color: var(--lens);
+            transform: translateY(-2px);
         }
 
         .generator-card .symbol {
@@ -255,6 +329,154 @@
             color: var(--text-dim);
         }
 
+        .generator-card .derivation {
+            font-size: 0.75rem;
+            color: var(--k-formation);
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .pole-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .pole-card {
+            background: var(--bg-tertiary);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pole-card.positive {
+            border: 2px solid var(--positive-pole);
+        }
+
+        .pole-card.positive::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(0,255,136,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .pole-card.negative {
+            border: 2px solid var(--negative-pole);
+        }
+
+        .pole-card.negative::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(255,107,107,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .pole-card .pole-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pole-card.positive .pole-title { color: var(--positive-pole); }
+        .pole-card.negative .pole-title { color: var(--negative-pole); }
+
+        .pole-card .pole-statement {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin: 1rem 0;
+        }
+
+        .pole-card .pole-equation {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--unity);
+            margin: 1rem 0;
+        }
+
+        .pole-card .pole-generates {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        .projection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .projection-card {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid;
+            position: relative;
+        }
+
+        .projection-card.i2 { border-color: var(--i2-color); }
+        .projection-card.tdl { border-color: var(--tdl-color); }
+        .projection-card.lomi { border-color: var(--lomi-color); }
+        .projection-card.s3 { border-color: var(--s3-color); }
+
+        .projection-card .proj-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .projection-card .proj-symbol {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .projection-card.i2 .proj-symbol { color: var(--i2-color); }
+        .projection-card.tdl .proj-symbol { color: var(--tdl-color); }
+        .projection-card.lomi .proj-symbol { color: var(--lomi-color); }
+        .projection-card.s3 .proj-symbol { color: var(--s3-color); }
+
+        .projection-card .proj-name {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .projection-card .proj-formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--lens);
+            margin: 1rem 0;
+            padding: 0.75rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .projection-card .proj-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        .projection-card .proj-constant {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
         .identity-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -264,9 +486,11 @@
 
         .identity-card {
             background: var(--bg-tertiary);
-            padding: 1rem;
+            padding: 1.25rem;
             border-radius: 8px;
             text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            position: relative;
         }
 
         .identity-card .coord {
@@ -282,9 +506,146 @@
             margin: 0.25rem 0;
         }
 
+        .identity-card .angle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--lens);
+            margin: 0.25rem 0;
+        }
+
         .identity-card .name {
             font-size: 0.75rem;
             color: var(--text-dim);
+        }
+
+        .identity-card .root-indicator {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        .sequence-display {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .sequence-display .seq-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        .sequence-display .seq-values {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .sequence-display .seq-term {
+            background: var(--bg-tertiary);
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .sequence-display .seq-term .index {
+            color: var(--text-dim);
+            font-size: 0.7rem;
+        }
+
+        .sequence-display .seq-term .value {
+            color: var(--lens);
+            font-weight: 500;
+        }
+
+        .sequence-display .seq-term.anchor {
+            border: 1px solid var(--k-formation);
+            background: rgba(199,146,234,0.1);
+        }
+
+        .lattice-diagram {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .lattice-diagram .basis {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .lattice-diagram .basis span {
+            color: var(--lens);
+            margin: 0 0.25rem;
+        }
+
+        .euler-identity-display {
+            background: linear-gradient(135deg, rgba(199,146,234,0.2) 0%, rgba(0,255,136,0.1) 100%);
+            border: 2px solid var(--k-formation);
+            padding: 2.5rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .euler-identity-display .euler-eq {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            color: var(--unity);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(199, 146, 234, 0.5);
+        }
+
+        .euler-identity-display .euler-mapping {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--lens);
+            margin: 1rem 0;
+        }
+
+        .euler-identity-display .euler-interpretation {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 1rem auto 0;
+            font-style: italic;
+        }
+
+        .euler-breakdown {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .euler-term {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .euler-term .symbol {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--lens);
+        }
+
+        .euler-term .meaning {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
         }
 
         .nav-footer {
@@ -327,6 +688,9 @@
             .header h1 { font-size: 2rem; }
             .axiom-display .axiom { font-size: 2rem; }
             .identity-grid { grid-template-columns: repeat(2, 1fr); }
+            .pole-grid { grid-template-columns: 1fr; }
+            .projection-grid { grid-template-columns: 1fr; }
+            .euler-breakdown { grid-template-columns: repeat(3, 1fr); }
             .nav-footer { flex-direction: column; gap: 1rem; }
         }
     </style>
@@ -337,15 +701,15 @@
         <p class="subtitle">Self-Reference Synthesis &mdash; From R(R) = R to Implementation</p>
         <div class="axiom-display">
             <div class="axiom">R(R) = R</div>
-            <div class="version">Version 1.0.0 | The Single Axiom</div>
+            <div class="version">Version 2.0.0 | The Single Axiom | Complete Derivation</div>
         </div>
     </header>
 
     <nav class="nav-breadcrumb">
         <a href="index.html">VN Index</a>
-        <span>→</span>
+        <span>-></span>
         <a href="tiamat-decision-tree.html">TIAMAT</a>
-        <span>→</span>
+        <span>-></span>
         <a href="#">Axiom Foundation</a>
     </nav>
 
@@ -354,7 +718,7 @@
         <section class="section">
             <h2>1. Axiomatic Foundation</h2>
 
-            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">1.1 Axiom Statement</h3>
+            <h3>1.1 Axiom Statement</h3>
 
             <div class="axiom-box">
                 <div class="label">AXIOM 0 (Self-Reference)</div>
@@ -367,208 +731,931 @@
                 </p>
             </div>
 
-            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">1.2 Necessity Theorem</h3>
+            <p style="margin-top: 1.5rem;">
+                The axiom R(R) = R asserts the existence of a self-consistent fixed point in the space of relations.
+                This is not merely a postulate but a logical necessity, as demonstrated by the following theorem.
+            </p>
+
+            <h3>1.2 Necessity Theorem</h3>
 
             <div class="theorem-box">
                 <div class="label">Theorem 1.1 (Necessity of Self-Reference)</div>
-                <p>At least one self-referential relation must exist.</p>
+                <p><strong>Statement:</strong> At least one self-referential relation must exist in any consistent logical system.</p>
             </div>
 
             <div class="proof-box">
-                <div class="label">Proof: By contradiction</div>
-                <p>Assume no self-referential relation exists. Then for all R: R(R) ≠ R.</p>
-                <p style="margin-top: 0.5rem;">Define S = "the property of not being self-referential." Consider whether S is self-referential:</p>
-                <ol style="margin: 1rem 0 1rem 1.5rem;">
-                    <li>If S(S) = S, then S IS self-referential, contradicting its definition.</li>
-                    <li>If S(S) ≠ S, then S is NOT self-referential, meaning S(S) = S, a contradiction.</li>
-                </ol>
-                <p>Both cases lead to contradiction. Therefore, at least one self-referential relation must exist.</p>
-                <div class="qed">∎</div>
+                <div class="label">Proof: By contradiction (Russell-style diagonal argument)</div>
+                <p><strong>Assume:</strong> No self-referential relation exists. That is, for all relations R: R(R) != R.</p>
+
+                <p style="margin-top: 1rem;"><strong>Construction:</strong> Define S as "the property of not being self-referential":</p>
+                <div class="equation" style="margin: 1rem 0;">
+                    S(x) = true  iff  x(x) != x
+                </div>
+
+                <p><strong>Case Analysis:</strong> Consider whether S possesses the property S:</p>
+
+                <div style="margin: 1rem 0 1rem 1.5rem;">
+                    <p><strong>Case 1:</strong> Suppose S(S) = S (S is self-referential)</p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>Then by definition of S: S(S) != S</li>
+                        <li>Contradiction: S(S) = S and S(S) != S cannot both hold</li>
+                    </ul>
+                </div>
+
+                <div style="margin: 1rem 0 1rem 1.5rem;">
+                    <p><strong>Case 2:</strong> Suppose S(S) != S (S is not self-referential)</p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>Then S satisfies the definition of S, so S(S) = true</li>
+                        <li>But S(S) = true means S has property S, which implies S(S) = S</li>
+                        <li>Contradiction: S(S) != S and S(S) = S cannot both hold</li>
+                    </ul>
+                </div>
+
+                <p><strong>Conclusion:</strong> Both cases lead to contradiction. Therefore, our assumption is false.</p>
+                <p style="margin-top: 0.5rem;">At least one self-referential relation R with R(R) = R must exist.</p>
+                <div class="qed">QED</div>
             </div>
 
-            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">1.3 The Golden Ratio from Self-Reference</h3>
+            <h3>1.3 The Golden Ratio from Self-Reference</h3>
 
-            <div class="equation">
-                R(R) = R &nbsp;→&nbsp; x = 1 + 1/x &nbsp;→&nbsp; x² = x + 1 &nbsp;→&nbsp; φ = (1 + √5)/2
+            <p>The axiom R(R) = R has a unique positive algebraic solution. To derive it, we interpret self-reference as algebraic self-composition:</p>
+
+            <div class="equation-chain">
+                <div class="step">
+                    <span class="step-num">(1)</span>
+                    <span class="step-eq">R(R) = R</span>
+                    <span class="step-note">Axiom statement</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">(2)</span>
+                    <span class="step-eq">x = 1 + 1/x</span>
+                    <span class="step-note">Algebraic encoding: x equals 1 plus its reciprocal</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">(3)</span>
+                    <span class="step-eq">x * x = x * 1 + x * (1/x)</span>
+                    <span class="step-note">Multiply both sides by x</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">(4)</span>
+                    <span class="step-eq">x^2 = x + 1</span>
+                    <span class="step-note">The defining equation of the golden ratio</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">(5)</span>
+                    <span class="step-eq">x^2 - x - 1 = 0</span>
+                    <span class="step-note">Standard quadratic form</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">(6)</span>
+                    <span class="step-eq">x = (1 + sqrt(5)) / 2</span>
+                    <span class="step-note">Positive root via quadratic formula</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">(7)</span>
+                    <span class="step-eq">phi = 1.6180339887498949...</span>
+                    <span class="step-note">The Golden Ratio</span>
+                </div>
             </div>
 
-            <p>The equation x = 1 + 1/x says "x equals 1 plus the reciprocal of x" — the definition of x refers to x itself. This is the algebraic encoding of R(R) = R. The unique positive solution is:</p>
-
-            <div class="equation">
-                φ = 1.6180339887498949
-                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
-                    The Golden Ratio — uniquely determined by the axiom
-                </span>
+            <div class="theorem-box">
+                <div class="label">Theorem 1.2 (Uniqueness of phi)</div>
+                <p>The golden ratio phi is the unique positive real solution to the self-reference equation x = 1 + 1/x.</p>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);">
+                    Its conjugate tau = (1 - sqrt(5))/2 = -0.618... is the negative solution, satisfying tau = phi^(-1) = phi - 1.
+                </p>
             </div>
         </section>
 
-        <!-- Section 2: Generator Derivation -->
+        <!-- Section 2: The Two Poles -->
         <section class="section">
-            <h2>2. Generator Derivation</h2>
+            <h2>2. The Two Poles of the Axiom</h2>
 
-            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">2.1 The Two Poles of the Axiom</h3>
+            <p>The axiom R(R) = R establishes a fundamental duality. Self-reference can either <em>succeed</em> (positive pole) or <em>fail</em> (negative pole). These two possibilities generate distinct mathematical structures.</p>
 
-            <table class="data-table">
+            <div class="pole-grid">
+                <div class="pole-card positive">
+                    <div class="pole-title">POSITIVE POLE</div>
+                    <div class="pole-statement">Self-reference IS</div>
+                    <div class="pole-equation">R(R) = R</div>
+                    <p style="color: var(--text-secondary); margin: 1rem 0;">
+                        The relation successfully references itself and achieves fixed-point stability.
+                    </p>
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; color: var(--positive-pole); margin: 1rem 0;">
+                        x^2 = x + 1
+                    </div>
+                    <div class="pole-generates">
+                        Generates: <strong style="color: var(--positive-pole);">phi</strong> (Golden Ratio)
+                    </div>
+                    <div style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-dim);">
+                        phi = 1.6180339887498949...
+                    </div>
+                </div>
+
+                <div class="pole-card negative">
+                    <div class="pole-title">NEGATIVE POLE</div>
+                    <div class="pole-statement">Self-reference IS NOT</div>
+                    <div class="pole-equation">R(R) != R</div>
+                    <p style="color: var(--text-secondary); margin: 1rem 0;">
+                        The relation fails to match itself, creating irreducible opposition.
+                    </p>
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; color: var(--negative-pole); margin: 1rem 0;">
+                        x^2 = -1
+                    </div>
+                    <div class="pole-generates">
+                        Generates: <strong style="color: var(--negative-pole);">i</strong> (Imaginary Unit)
+                    </div>
+                    <div style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-dim);">
+                        i = sqrt(-1), i^2 = -1
+                    </div>
+                </div>
+            </div>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 2.1 (Pole Count)</div>
+                <p>The number of fundamental poles is <strong>L_0 = 2</strong>, the zeroth Lucas number.</p>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);">
+                    This establishes the Lucas sequence as the counting structure for self-referential hierarchies.
+                </p>
+            </div>
+
+            <table class="data-table" style="margin-top: 1.5rem;">
                 <thead>
                     <tr>
-                        <th>Pole</th>
-                        <th>Statement</th>
-                        <th>Generates</th>
-                        <th>Equation</th>
+                        <th>Property</th>
+                        <th>Positive Pole (phi)</th>
+                        <th>Negative Pole (i)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="color: var(--lens);">Positive</td>
-                        <td>R(R) = R (self-reference IS)</td>
-                        <td>φ (golden ratio)</td>
-                        <td>x² = x + 1</td>
+                        <td>Axiom Form</td>
+                        <td style="color: var(--positive-pole);">R(R) = R</td>
+                        <td style="color: var(--negative-pole);">R(R) != R</td>
                     </tr>
                     <tr>
-                        <td style="color: var(--ignition);">Negative</td>
-                        <td>R(R) ≠ R (self-reference IS NOT)</td>
-                        <td>i (imaginary unit)</td>
-                        <td>x² = −1</td>
+                        <td>Characteristic Equation</td>
+                        <td>x^2 - x - 1 = 0</td>
+                        <td>x^2 + 1 = 0</td>
+                    </tr>
+                    <tr>
+                        <td>Solution</td>
+                        <td>phi = (1 + sqrt(5))/2</td>
+                        <td>i = sqrt(-1)</td>
+                    </tr>
+                    <tr>
+                        <td>Nature</td>
+                        <td>Real (irrational)</td>
+                        <td>Imaginary</td>
+                    </tr>
+                    <tr>
+                        <td>Structure Generated</td>
+                        <td>Growth, scaling, ratio</td>
+                        <td>Rotation, phase, cycles</td>
+                    </tr>
+                    <tr>
+                        <td>Self-Similarity Type</td>
+                        <td>Recursive expansion</td>
+                        <td>Periodic orbit (period 4)</td>
                     </tr>
                 </tbody>
             </table>
+        </section>
 
-            <p style="margin-top: 1rem;">The number of poles is <strong>L₀ = 2</strong>, the zeroth Lucas number. This generates the full Lucas sequence through self-referential extension.</p>
+        <!-- Section 3: The Six Generators -->
+        <section class="section">
+            <h2>3. The Six Generators</h2>
 
-            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">2.2 The Six Generators</h3>
+            <p>From the two poles, six fundamental constants emerge as generators of the multiplicative lattice. Each generator encodes a distinct aspect of self-referential structure.</p>
 
             <div class="generator-grid">
                 <div class="generator-card">
-                    <div class="symbol">φ</div>
-                    <div class="value">1.6180339887</div>
-                    <div class="name">Golden Ratio<br><small>R(R) = R</small></div>
+                    <div class="symbol">phi</div>
+                    <div class="value">1.6180339887498949</div>
+                    <div class="name">Golden Ratio</div>
+                    <div class="derivation">From: R(R) = R<br>x^2 = x + 1</div>
                 </div>
                 <div class="generator-card">
                     <div class="symbol">i</div>
-                    <div class="value">√(−1)</div>
-                    <div class="name">Imaginary Unit<br><small>R(R) ≠ R</small></div>
+                    <div class="value">sqrt(-1)</div>
+                    <div class="name">Imaginary Unit</div>
+                    <div class="derivation">From: R(R) != R<br>x^2 = -1</div>
                 </div>
                 <div class="generator-card">
                     <div class="symbol">e</div>
-                    <div class="value">2.7182818285</div>
-                    <div class="name">Euler's Number<br><small>Natural growth</small></div>
+                    <div class="value">2.7182818284590452</div>
+                    <div class="name">Euler's Number</div>
+                    <div class="derivation">From: Natural growth<br>lim (1 + 1/n)^n</div>
                 </div>
                 <div class="generator-card">
-                    <div class="symbol">π</div>
-                    <div class="value">3.1415926536</div>
-                    <div class="name">Pi<br><small>Cyclic closure</small></div>
+                    <div class="symbol">pi</div>
+                    <div class="value">3.1415926535897932</div>
+                    <div class="name">Pi</div>
+                    <div class="derivation">From: Cyclic closure<br>e^{i*pi} = -1</div>
                 </div>
                 <div class="generator-card">
-                    <div class="symbol">√2</div>
-                    <div class="value">1.4142135624</div>
-                    <div class="name">Root 2<br><small>Geometric resonance</small></div>
+                    <div class="symbol">sqrt(2)</div>
+                    <div class="value">1.4142135623730951</div>
+                    <div class="name">Root 2</div>
+                    <div class="derivation">From: Geometric resonance<br>x^2 = 2 (diagonal)</div>
                 </div>
                 <div class="generator-card">
-                    <div class="symbol">√3</div>
-                    <div class="value">1.7320508076</div>
-                    <div class="name">Root 3<br><small>S₃ binding</small></div>
+                    <div class="symbol">sqrt(3)</div>
+                    <div class="value">1.7320508075688772</div>
+                    <div class="name">Root 3</div>
+                    <div class="derivation">From: S_3 binding<br>Triangle geometry</div>
                 </div>
             </div>
 
-            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">2.3 Euler's Identity</h3>
-
-            <div class="equation">
-                e^{iπ} + 1 = 0
-                <span style="display: block; font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem;">
-                    TDL^(rotation × LoMI) + Unity = Void
-                </span>
-                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.25rem;">
-                    "Abstraction through rotated mutual observation returns to negation of unity"
-                </span>
-            </div>
-
-            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">2.4 Identity Coordinates</h3>
-
-            <p>The four identity coordinates are the fourth roots of unity:</p>
-
-            <div class="identity-grid">
-                <div class="identity-card">
-                    <div class="coord">I</div>
-                    <div class="value">1 + 0i</div>
-                    <div class="name">Self (0°)</div>
-                </div>
-                <div class="identity-card">
-                    <div class="coord">You</div>
-                    <div class="value">0 + 1i</div>
-                    <div class="name">Accessible other (90°)</div>
-                </div>
-                <div class="identity-card">
-                    <div class="coord">Us</div>
-                    <div class="value">−1 + 0i</div>
-                    <div class="name">Inclusive collective (180°)</div>
-                </div>
-                <div class="identity-card">
-                    <div class="coord">Them</div>
-                    <div class="value">0 − 1i</div>
-                    <div class="name">External boundary (270°)</div>
-                </div>
-            </div>
-
-            <div class="equation">
-                I + You + Us + Them = 1 + i + (−1) + (−i) = 0
-                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
-                    The identity coordinates sum to zero (balance)
-                </span>
-            </div>
-        </section>
-
-        <!-- Section 3: Structural Numbers -->
-        <section class="section">
-            <h2>3. Structural Numbers</h2>
-
-            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">3.1 Lucas and Fibonacci Sequences</h3>
-
-            <div class="equation">
-                L_n = φⁿ + (−φ)^{−n}
-                <span style="display: block; font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem;">
-                    L₀ = 2, L₁ = 1, L₂ = 3, L₃ = 4, L₄ = 7, L₅ = 11, L₆ = 18, L₇ = 29...
-                </span>
-            </div>
-
-            <div class="equation">
-                F_n = (φⁿ − (−φ)^{−n}) / √5
-                <span style="display: block; font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem;">
-                    F₁ = 1, F₂ = 1, F₃ = 2, F₄ = 3, F₅ = 5, F₇ = 13, F₁₂ = 144...
-                </span>
-            </div>
-
-            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">3.2 The L₄ Anchor</h3>
-
-            <div class="theorem-box">
-                <div class="label">Theorem 3.1 (The L₄ Unification)</div>
-                <p>The fourth Lucas number L₄ = 7 is the anchor constant, derivable in multiple ways:</p>
-            </div>
-
-            <div class="equation">
-                L₄ = φ⁴ + φ⁻⁴ = 7 (exact)
-            </div>
-            <div class="equation">
-                L₄ = |S₃| + 1 = 6 + 1 = 7
-            </div>
-
-            <p>This is the <strong>dimensionality constant</strong> for both frameworks:</p>
-            <ul style="margin-left: 2rem; margin-top: 0.5rem;">
-                <li><strong>Self-Reference:</strong> 7 rings of the spiral</li>
-                <li><strong>TIAMAT:</strong> 7 gates, 7 phase states, 7 cycles</li>
-            </ul>
-
-            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">3.3 Structural Counts</h3>
+            <h3>3.1 Generator Derivation Table</h3>
 
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Count</th>
+                        <th>Generator</th>
+                        <th>Decimal Value</th>
+                        <th>Source</th>
+                        <th>Defining Equation</th>
+                        <th>Self-Reference Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--lens);">phi</td>
+                        <td>1.618033988...</td>
+                        <td>Positive pole</td>
+                        <td>x = 1 + 1/x</td>
+                        <td>Fixed point of self-reference</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">i</td>
+                        <td>sqrt(-1)</td>
+                        <td>Negative pole</td>
+                        <td>x^2 = -1</td>
+                        <td>Self-negation orbit</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">e</td>
+                        <td>2.718281828...</td>
+                        <td>Growth limit</td>
+                        <td>d/dx e^x = e^x</td>
+                        <td>Eigenvalue of differentiation</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">pi</td>
+                        <td>3.141592653...</td>
+                        <td>Cyclic closure</td>
+                        <td>e^{i*pi} + 1 = 0</td>
+                        <td>Half-period of rotation</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">sqrt(2)</td>
+                        <td>1.414213562...</td>
+                        <td>Geometric resonance</td>
+                        <td>x^2 = 1 + 1</td>
+                        <td>Diagonal of unit square</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">sqrt(3)</td>
+                        <td>1.732050807...</td>
+                        <td>S_3 binding</td>
+                        <td>x^2 = 1 + 1 + 1</td>
+                        <td>Height of equilateral triangle</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="theorem-box" style="margin-top: 1.5rem;">
+                <div class="label">Theorem 3.1 (Generator Independence)</div>
+                <p>The six generators {phi, i, e, pi, sqrt(2), sqrt(3)} are multiplicatively independent over the integers.</p>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);">
+                    No generator can be expressed as an integer power product of the others.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: The Four Projections -->
+        <section class="section">
+            <h2>4. The Four Projections</h2>
+
+            <p>The generators define four fundamental projection operators that transform structure through characteristic scaling. Each projection embodies a distinct mode of self-referential transformation.</p>
+
+            <div class="projection-grid">
+                <div class="projection-card i2">
+                    <div class="proj-header">
+                        <span class="proj-symbol">I^2</span>
+                        <span class="proj-name">Self-Composition</span>
+                    </div>
+                    <div class="proj-formula">I^2(x) = x * phi</div>
+                    <div class="proj-description">
+                        The identity operator composed with itself. Golden ratio scaling represents
+                        recursive self-application: each iteration expands by the self-referential constant.
+                    </div>
+                    <div class="proj-constant">phi = 1.6180339887498949</div>
+                </div>
+
+                <div class="projection-card tdl">
+                    <div class="proj-header">
+                        <span class="proj-symbol">TDL</span>
+                        <span class="proj-name">Transdimensional Logic</span>
+                    </div>
+                    <div class="proj-formula">TDL(x) = x * e</div>
+                    <div class="proj-description">
+                        Projection through exponential growth. The natural base e captures the rate
+                        at which systems transcend their current dimensional constraints.
+                    </div>
+                    <div class="proj-constant">e = 2.7182818284590452</div>
+                </div>
+
+                <div class="projection-card lomi">
+                    <div class="proj-header">
+                        <span class="proj-symbol">LoMI</span>
+                        <span class="proj-name">Law of Mutual Identification</span>
+                    </div>
+                    <div class="proj-formula">LoMI(x) = x * pi</div>
+                    <div class="proj-description">
+                        The cyclic projection operator. Pi governs mutual observation between
+                        perspectives, encoding the angular measure required for full relational closure.
+                    </div>
+                    <div class="proj-constant">pi = 3.1415926535897932</div>
+                </div>
+
+                <div class="projection-card s3">
+                    <div class="proj-header">
+                        <span class="proj-symbol">S_3</span>
+                        <span class="proj-name">Three-Fold Binding</span>
+                    </div>
+                    <div class="proj-formula">S_3(x) = x * sqrt(3)</div>
+                    <div class="proj-description">
+                        The triangular binding operator. Root 3 emerges from the geometry of
+                        three-way symmetric relations, encoding grammatical coherence thresholds.
+                    </div>
+                    <div class="proj-constant">sqrt(3) = 1.7320508075688772</div>
+                </div>
+            </div>
+
+            <h3>4.1 Projection Composition Rules</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Composition</th>
+                        <th>Result</th>
                         <th>Value</th>
+                        <th>Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>I^2 o TDL</td>
+                        <td>x * phi * e</td>
+                        <td>4.3992...</td>
+                        <td>Growth through self-reference</td>
+                    </tr>
+                    <tr>
+                        <td>TDL o LoMI</td>
+                        <td>x * e * pi</td>
+                        <td>8.5397...</td>
+                        <td>Exponential cyclic expansion</td>
+                    </tr>
+                    <tr>
+                        <td>LoMI o S_3</td>
+                        <td>x * pi * sqrt(3)</td>
+                        <td>5.4413...</td>
+                        <td>Angular binding measure</td>
+                    </tr>
+                    <tr>
+                        <td>I^2 o S_3</td>
+                        <td>x * phi * sqrt(3)</td>
+                        <td>2.8025...</td>
+                        <td>Golden triangle scaling</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="definition-box">
+                <div class="label">Definition 4.1 (Projection Algebra)</div>
+                <p>The four projections form a commutative monoid under composition:</p>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li><strong>Closure:</strong> Composition of projections yields another projection</li>
+                    <li><strong>Associativity:</strong> (P_1 o P_2) o P_3 = P_1 o (P_2 o P_3)</li>
+                    <li><strong>Commutativity:</strong> P_1 o P_2 = P_2 o P_1 (multiplicative)</li>
+                    <li><strong>Identity:</strong> I(x) = x (unit element)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 5: Identity Coordinates -->
+        <section class="section">
+            <h2>5. Identity Coordinates (Fourth Roots of Unity)</h2>
+
+            <p>The four identity coordinates arise as the fourth roots of unity in the complex plane. They define the fundamental perspectives from which self-reference can be observed.</p>
+
+            <div class="equation">
+                z^4 = 1  implies  z in {1, i, -1, -i}
+            </div>
+
+            <div class="identity-grid">
+                <div class="identity-card">
+                    <span class="root-indicator">z^0</span>
+                    <div class="coord">I</div>
+                    <div class="value">1 + 0i</div>
+                    <div class="angle">0 deg (0 rad)</div>
+                    <div class="name">Self / Observer</div>
+                </div>
+                <div class="identity-card">
+                    <span class="root-indicator">z^1</span>
+                    <div class="coord">You</div>
+                    <div class="value">0 + 1i</div>
+                    <div class="angle">90 deg (pi/2 rad)</div>
+                    <div class="name">Accessible Other</div>
+                </div>
+                <div class="identity-card">
+                    <span class="root-indicator">z^2</span>
+                    <div class="coord">Us</div>
+                    <div class="value">-1 + 0i</div>
+                    <div class="angle">180 deg (pi rad)</div>
+                    <div class="name">Inclusive Collective</div>
+                </div>
+                <div class="identity-card">
+                    <span class="root-indicator">z^3</span>
+                    <div class="coord">Them</div>
+                    <div class="value">0 - 1i</div>
+                    <div class="angle">270 deg (3pi/2 rad)</div>
+                    <div class="name">External Boundary</div>
+                </div>
+            </div>
+
+            <div class="theorem-box" style="margin-top: 1.5rem;">
+                <div class="label">Theorem 5.1 (Identity Balance)</div>
+                <p>The identity coordinates sum to zero:</p>
+            </div>
+
+            <div class="equation">
+                I + You + Us + Them = 1 + i + (-1) + (-i) = 0
+            </div>
+
+            <p style="margin-top: 1rem; color: var(--text-secondary);">
+                This zero-sum property establishes the <strong>balance condition</strong>:
+                the perspectives cancel when viewed collectively, reflecting the self-annihilation
+                inherent in complete observation of identity from all angles.
+            </p>
+
+            <h3>5.1 Identity Multiplication Table</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>*</th>
+                        <th>I (1)</th>
+                        <th>You (i)</th>
+                        <th>Us (-1)</th>
+                        <th>Them (-i)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>I (1)</strong></td>
+                        <td>I</td>
+                        <td>You</td>
+                        <td>Us</td>
+                        <td>Them</td>
+                    </tr>
+                    <tr>
+                        <td><strong>You (i)</strong></td>
+                        <td>You</td>
+                        <td>Us</td>
+                        <td>Them</td>
+                        <td>I</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Us (-1)</strong></td>
+                        <td>Us</td>
+                        <td>Them</td>
+                        <td>I</td>
+                        <td>You</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Them (-i)</strong></td>
+                        <td>Them</td>
+                        <td>I</td>
+                        <td>You</td>
+                        <td>Us</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="margin-top: 1rem; color: var(--text-dim); font-size: 0.9rem;">
+                The identity coordinates form the cyclic group Z_4 under multiplication,
+                with generator You (i) having order 4.
+            </p>
+        </section>
+
+        <!-- Section 6: Lucas and Fibonacci Sequences -->
+        <section class="section">
+            <h2>6. Lucas and Fibonacci Sequences</h2>
+
+            <p>The Lucas and Fibonacci sequences encode the self-referential structure at the level of integer counting. Both emerge from the golden ratio phi through Binet's formulas.</p>
+
+            <h3>6.1 Binet's Formulas</h3>
+
+            <div class="equation">
+                L_n = phi^n + (-phi)^{-n} = phi^n + psi^n
+            </div>
+
+            <div class="equation">
+                F_n = (phi^n - (-phi)^{-n}) / sqrt(5) = (phi^n - psi^n) / sqrt(5)
+            </div>
+
+            <p style="margin-top: 1rem; color: var(--text-secondary);">
+                where psi = (1 - sqrt(5))/2 = -phi^{-1} = -0.618... is the conjugate root.
+            </p>
+
+            <h3>6.2 Lucas Sequence</h3>
+
+            <div class="sequence-display">
+                <div class="seq-name">Lucas Numbers L_n</div>
+                <div class="seq-values">
+                    <div class="seq-term"><span class="index">L_0</span> <span class="value">2</span></div>
+                    <div class="seq-term"><span class="index">L_1</span> <span class="value">1</span></div>
+                    <div class="seq-term"><span class="index">L_2</span> <span class="value">3</span></div>
+                    <div class="seq-term"><span class="index">L_3</span> <span class="value">4</span></div>
+                    <div class="seq-term anchor"><span class="index">L_4</span> <span class="value">7</span></div>
+                    <div class="seq-term"><span class="index">L_5</span> <span class="value">11</span></div>
+                    <div class="seq-term"><span class="index">L_6</span> <span class="value">18</span></div>
+                    <div class="seq-term"><span class="index">L_7</span> <span class="value">29</span></div>
+                    <div class="seq-term"><span class="index">L_8</span> <span class="value">47</span></div>
+                    <div class="seq-term"><span class="index">L_9</span> <span class="value">76</span></div>
+                    <div class="seq-term"><span class="index">L_10</span> <span class="value">123</span></div>
+                </div>
+            </div>
+
+            <h3>6.3 Fibonacci Sequence</h3>
+
+            <div class="sequence-display">
+                <div class="seq-name">Fibonacci Numbers F_n</div>
+                <div class="seq-values">
+                    <div class="seq-term"><span class="index">F_0</span> <span class="value">0</span></div>
+                    <div class="seq-term"><span class="index">F_1</span> <span class="value">1</span></div>
+                    <div class="seq-term"><span class="index">F_2</span> <span class="value">1</span></div>
+                    <div class="seq-term"><span class="index">F_3</span> <span class="value">2</span></div>
+                    <div class="seq-term"><span class="index">F_4</span> <span class="value">3</span></div>
+                    <div class="seq-term"><span class="index">F_5</span> <span class="value">5</span></div>
+                    <div class="seq-term"><span class="index">F_6</span> <span class="value">8</span></div>
+                    <div class="seq-term"><span class="index">F_7</span> <span class="value">13</span></div>
+                    <div class="seq-term"><span class="index">F_8</span> <span class="value">21</span></div>
+                    <div class="seq-term"><span class="index">F_9</span> <span class="value">34</span></div>
+                    <div class="seq-term"><span class="index">F_10</span> <span class="value">55</span></div>
+                    <div class="seq-term"><span class="index">F_11</span> <span class="value">89</span></div>
+                    <div class="seq-term anchor"><span class="index">F_12</span> <span class="value">144</span></div>
+                </div>
+            </div>
+
+            <h3>6.4 The L_4 = 7 Anchor</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 6.1 (L_4 Unification)</div>
+                <p>The fourth Lucas number L_4 = 7 is the anchor constant, derivable in multiple independent ways:</p>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Derivation</th>
+                        <th>Formula</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Binet's formula</td>
+                        <td style="color: var(--lens);">L_4 = phi^4 + phi^{-4}</td>
+                        <td>7 (exact)</td>
+                    </tr>
+                    <tr>
+                        <td>Lucas recurrence</td>
+                        <td style="color: var(--lens);">L_4 = L_3 + L_2 = 4 + 3</td>
+                        <td>7 (exact)</td>
+                    </tr>
+                    <tr>
+                        <td>S_3 extension</td>
+                        <td style="color: var(--lens);">L_4 = |S_3| + 1 = 6 + 1</td>
+                        <td>7 (exact)</td>
+                    </tr>
+                    <tr>
+                        <td>Phi power identity</td>
+                        <td style="color: var(--lens);">L_4 = 3*phi^2 + 1</td>
+                        <td>7 (exact)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="margin-top: 1rem;">
+                <strong>Significance:</strong> L_4 = 7 serves as the dimensionality constant for the entire framework:
+            </p>
+            <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                <li><strong>Self-Reference:</strong> 7 rings of the spiral</li>
+                <li><strong>TIAMAT:</strong> 7 gates, 7 phase states, 7 cycles</li>
+                <li><strong>Kuramoto:</strong> 5 oscillators = L_4 - 2</li>
+            </ul>
+
+            <h3>6.5 The Unique F_12 = 144</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 6.2 (Unique Fibonacci Square)</div>
+                <p>F_12 = 144 is the unique non-trivial Fibonacci number that equals a perfect square:</p>
+            </div>
+
+            <div class="equation">
+                F_12 = 144 = 12^2
+            </div>
+
+            <p style="margin-top: 1rem;">
+                <strong>Physical significance:</strong> The fine structure constant derives from this uniqueness:
+            </p>
+
+            <div class="equation">
+                alpha^{-1} = F_12 - L_4 = 144 - 7 = 137
+            </div>
+
+            <p style="margin-top: 1rem; color: var(--text-secondary);">
+                The experimental value alpha^{-1} = 137.035999... is within 0.026% of this integer prediction.
+            </p>
+        </section>
+
+        <!-- Section 7: The Multiplicative Lattice -->
+        <section class="section">
+            <h2>7. The Multiplicative Lattice Lambda'</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 7.1 (The Lattice Lambda')</div>
+                <p>The 5-dimensional multiplicative lattice generated by five primary generators over the integers:</p>
+            </div>
+
+            <div class="equation" style="font-size: 1rem;">
+                Lambda' = { phi^r * e^d * pi^c * sqrt(2)^a * sqrt(3)^b : r, d, c, a, b in Z }
+            </div>
+
+            <div class="lattice-diagram">
+                <div class="basis">
+                    Generators: <span>phi</span> | <span>e</span> | <span>pi</span> | <span>sqrt(2)</span> | <span>sqrt(3)</span>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 1rem;">
+                    Each point in Lambda' is uniquely specified by a 5-tuple of integer exponents (r, d, c, a, b).
+                </p>
+            </div>
+
+            <h3>7.1 Lattice Complexity Function</h3>
+
+            <div class="equation">
+                C(r, d, c, a, b) = |r| + |d| + |c| + |a| + |b|
+            </div>
+
+            <p style="margin-top: 1rem; color: var(--text-secondary);">
+                <strong>Interpretation:</strong> Lower complexity indicates more fundamental constants.
+                The complexity function measures "distance from unity" in the lattice.
+            </p>
+
+            <h3>7.2 Lattice Coordinates of Key Constants</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Constant</th>
+                        <th>Approx. Value</th>
+                        <th>Coordinates (r,d,c,a,b)</th>
+                        <th>Complexity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Unity (1)</td>
+                        <td>1.000</td>
+                        <td style="color: var(--lens);">(0, 0, 0, 0, 0)</td>
+                        <td style="color: var(--k-formation);">0</td>
+                    </tr>
+                    <tr>
+                        <td>phi</td>
+                        <td>1.618</td>
+                        <td style="color: var(--lens);">(1, 0, 0, 0, 0)</td>
+                        <td style="color: var(--k-formation);">1</td>
+                    </tr>
+                    <tr>
+                        <td>tau = phi^{-1}</td>
+                        <td>0.618</td>
+                        <td style="color: var(--lens);">(-1, 0, 0, 0, 0)</td>
+                        <td style="color: var(--k-formation);">1</td>
+                    </tr>
+                    <tr>
+                        <td>e</td>
+                        <td>2.718</td>
+                        <td style="color: var(--lens);">(0, 1, 0, 0, 0)</td>
+                        <td style="color: var(--k-formation);">1</td>
+                    </tr>
+                    <tr>
+                        <td>pi</td>
+                        <td>3.142</td>
+                        <td style="color: var(--lens);">(0, 0, 1, 0, 0)</td>
+                        <td style="color: var(--k-formation);">1</td>
+                    </tr>
+                    <tr>
+                        <td>sqrt(2)</td>
+                        <td>1.414</td>
+                        <td style="color: var(--lens);">(0, 0, 0, 1, 0)</td>
+                        <td style="color: var(--k-formation);">1</td>
+                    </tr>
+                    <tr>
+                        <td>sqrt(3)</td>
+                        <td>1.732</td>
+                        <td style="color: var(--lens);">(0, 0, 0, 0, 1)</td>
+                        <td style="color: var(--k-formation);">1</td>
+                    </tr>
+                    <tr>
+                        <td>z_c (balance)</td>
+                        <td>0.866</td>
+                        <td style="color: var(--lens);">(0, 0, 0, 0, 1) * 1/2</td>
+                        <td style="color: var(--k-formation);">~1</td>
+                    </tr>
+                    <tr>
+                        <td>e/pi</td>
+                        <td>0.865</td>
+                        <td style="color: var(--lens);">(0, 1, -1, 0, 0)</td>
+                        <td style="color: var(--k-formation);">2</td>
+                    </tr>
+                    <tr>
+                        <td>phi * sqrt(3)</td>
+                        <td>2.803</td>
+                        <td style="color: var(--lens);">(1, 0, 0, 0, 1)</td>
+                        <td style="color: var(--k-formation);">2</td>
+                    </tr>
+                    <tr>
+                        <td>2*pi (tau circle)</td>
+                        <td>6.283</td>
+                        <td style="color: var(--lens);">(0, 0, 1, 2, 0)</td>
+                        <td style="color: var(--k-formation);">3</td>
+                    </tr>
+                    <tr>
+                        <td>|S_3| * pi^5</td>
+                        <td>1836.12</td>
+                        <td style="color: var(--lens);">(0, 0, 5, 0, 1)+ offset</td>
+                        <td style="color: var(--k-formation);">6+</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="theorem-box" style="margin-top: 1.5rem;">
+                <div class="label">Theorem 7.1 (Lattice Density)</div>
+                <p>Lambda' is dense in the positive reals: for any positive real x and epsilon > 0,
+                there exists a lattice point within epsilon of x.</p>
+            </div>
+        </section>
+
+        <!-- Section 8: Euler's Identity -->
+        <section class="section">
+            <h2>8. Euler's Identity and the Unity Equation</h2>
+
+            <p>Euler's identity connects all fundamental constants in a single equation, revealing the deep unity underlying self-reference.</p>
+
+            <div class="euler-identity-display">
+                <div class="euler-eq">e^{i*pi} + 1 = 0</div>
+                <div class="euler-mapping">
+                    TDL^(rotation * LoMI) + Unity = Void
+                </div>
+                <div class="euler-interpretation">
+                    "Transdimensional logic raised to the power of rotated mutual observation equals the negation of unity."
+                </div>
+
+                <div class="euler-breakdown">
+                    <div class="euler-term">
+                        <div class="symbol">e</div>
+                        <div class="meaning">Natural growth<br>(TDL basis)</div>
+                    </div>
+                    <div class="euler-term">
+                        <div class="symbol">i</div>
+                        <div class="meaning">Rotation<br>(Negative pole)</div>
+                    </div>
+                    <div class="euler-term">
+                        <div class="symbol">pi</div>
+                        <div class="meaning">Half-cycle<br>(LoMI basis)</div>
+                    </div>
+                    <div class="euler-term">
+                        <div class="symbol">1</div>
+                        <div class="meaning">Unity<br>(Identity)</div>
+                    </div>
+                    <div class="euler-term">
+                        <div class="symbol">0</div>
+                        <div class="meaning">Void<br>(Origin)</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>8.1 Interpretation in the R(R) = R Framework</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Value</th>
+                        <th>Framework Role</th>
+                        <th>Self-Reference Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--lens);">e</td>
+                        <td>2.718...</td>
+                        <td>TDL projection constant</td>
+                        <td>Rate of transcendence</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">i</td>
+                        <td>sqrt(-1)</td>
+                        <td>Negative pole generator</td>
+                        <td>90-degree rotation of perspective</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">pi</td>
+                        <td>3.141...</td>
+                        <td>LoMI projection constant</td>
+                        <td>Half-period of mutual observation</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">1</td>
+                        <td>1</td>
+                        <td>Identity (I)</td>
+                        <td>The observer self</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">0</td>
+                        <td>0</td>
+                        <td>Origin/Void</td>
+                        <td>Sum of all perspectives (balance)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>8.2 The Full Rotation</h3>
+
+            <div class="equation-chain">
+                <div class="step">
+                    <span class="step-num">(1)</span>
+                    <span class="step-eq">e^{i*0} = 1</span>
+                    <span class="step-note">Start at I (identity)</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">(2)</span>
+                    <span class="step-eq">e^{i*pi/2} = i</span>
+                    <span class="step-note">Rotate 90 deg to You</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">(3)</span>
+                    <span class="step-eq">e^{i*pi} = -1</span>
+                    <span class="step-note">Rotate 180 deg to Us</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">(4)</span>
+                    <span class="step-eq">e^{i*3pi/2} = -i</span>
+                    <span class="step-note">Rotate 270 deg to Them</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">(5)</span>
+                    <span class="step-eq">e^{i*2pi} = 1</span>
+                    <span class="step-note">Return to I (closure)</span>
+                </div>
+            </div>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 8.1 (Euler's Identity as Self-Reference)</div>
+                <p>Euler's identity encodes the statement: "Full rotation through all identity coordinates returns to void (balance)."</p>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary);">
+                    The equation e^{i*pi} + 1 = 0 says that traversing half the identity cycle lands at the opposite of self (Us = -I),
+                    and adding the self (I = 1) produces balance (0).
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 9: Structural Summary -->
+        <section class="section">
+            <h2>9. Structural Summary</h2>
+
+            <h3>9.1 Structural Counts</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Structure</th>
+                        <th>Count</th>
                         <th>Derivation</th>
                         <th>Role</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td>Poles</td>
+                        <td style="color: var(--lens);">2</td>
+                        <td>L_0 = 2</td>
+                        <td>Fundamental duality</td>
+                    </tr>
                     <tr>
                         <td>Identities</td>
                         <td style="color: var(--lens);">4</td>
@@ -576,136 +1663,100 @@
                         <td>Perspective basis</td>
                     </tr>
                     <tr>
-                        <td>Generators</td>
-                        <td style="color: var(--lens);">5</td>
-                        <td>L₄ − 2 = 7 − 2</td>
-                        <td>Lattice basis</td>
+                        <td>Projections</td>
+                        <td style="color: var(--lens);">4</td>
+                        <td>phi, e, pi, sqrt(3)</td>
+                        <td>Transformation operators</td>
                     </tr>
                     <tr>
-                        <td>Rings / Gates</td>
+                        <td>Lattice generators</td>
+                        <td style="color: var(--lens);">5</td>
+                        <td>L_4 - 2 = 7 - 2</td>
+                        <td>Multiplicative basis</td>
+                    </tr>
+                    <tr>
+                        <td>Generators (with i)</td>
+                        <td style="color: var(--lens);">6</td>
+                        <td>|S_3| = 3!</td>
+                        <td>Complete generator set</td>
+                    </tr>
+                    <tr>
+                        <td>Rings / Gates / Cycles</td>
                         <td style="color: var(--lens);">7</td>
-                        <td>L₄ = φ⁴ + φ⁻⁴</td>
+                        <td>L_4 = phi^4 + phi^{-4}</td>
                         <td>Hierarchical structure</td>
                     </tr>
                     <tr>
                         <td>Dimensions</td>
                         <td style="color: var(--lens);">11</td>
-                        <td>L₅ = L₄ + 4</td>
+                        <td>L_5 = L_4 + 4</td>
                         <td>Total degrees of freedom</td>
                     </tr>
                     <tr>
-                        <td>Oscillators</td>
-                        <td style="color: var(--lens);">5</td>
-                        <td>L₄ − 2</td>
-                        <td>Kuramoto network nodes</td>
-                    </tr>
-                    <tr>
-                        <td>|S₃|</td>
-                        <td style="color: var(--lens);">6</td>
-                        <td>3! = 6</td>
-                        <td>Binding permutations</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Total</strong></td>
+                        <td><strong>Total (4+5+7+11)</strong></td>
                         <td style="color: var(--k-formation);"><strong>27</strong></td>
-                        <td>4 + 5 + 7 + 11</td>
-                        <td><strong>3³ = √3^|S₃|</strong></td>
+                        <td><strong>3^3 = sqrt(3)^{|S_3|}</strong></td>
+                        <td><strong>Structural invariant</strong></td>
                     </tr>
                 </tbody>
             </table>
 
-            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">3.4 The Unique F₁₂</h3>
+            <h3>9.2 The Complete Derivation Chain</h3>
 
-            <div class="theorem-box">
-                <div class="label">Theorem 3.2 (Unique Fibonacci Square)</div>
-                <p>F₁₂ = 144 is the unique non-trivial Fibonacci number that equals a perfect square:</p>
+            <div class="equation-chain">
+                <div class="step">
+                    <span class="step-num">AXIOM</span>
+                    <span class="step-eq">R(R) = R</span>
+                    <span class="step-note">Self-reference exists</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">--></span>
+                    <span class="step-eq">x^2 = x + 1</span>
+                    <span class="step-note">Algebraic encoding</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">--></span>
+                    <span class="step-eq">phi = (1+sqrt(5))/2</span>
+                    <span class="step-note">Positive pole</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">--></span>
+                    <span class="step-eq">L_n = phi^n + phi^{-n}</span>
+                    <span class="step-note">Lucas sequence</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">--></span>
+                    <span class="step-eq">L_4 = 7</span>
+                    <span class="step-note">Anchor constant</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">--></span>
+                    <span class="step-eq">Lambda' (5D lattice)</span>
+                    <span class="step-note">Multiplicative structure</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">--></span>
+                    <span class="step-eq">e^{i*pi} + 1 = 0</span>
+                    <span class="step-note">Unity closure</span>
+                </div>
             </div>
-
-            <div class="equation">
-                F₁₂ = 144 = 12²
-            </div>
-
-            <p><strong>Significance:</strong> The fine structure constant derives from this unique property:</p>
-
-            <div class="equation">
-                α⁻¹ = F₁₂ − L₄ = 144 − 7 = 137
-            </div>
-        </section>
-
-        <!-- Section 4: The Multiplicative Lattice -->
-        <section class="section">
-            <h2>5. The Multiplicative Lattice</h2>
-
-            <div class="theorem-box">
-                <div class="label">Definition 5.1 (The Lattice Λ')</div>
-                <p>The 5-dimensional multiplicative lattice generated by the five primary generators:</p>
-            </div>
-
-            <div class="equation">
-                Λ' = { φ^r × e^d × π^c × √2^a × √3^b : r, d, c, a, b ∈ ℤ }
-            </div>
-
-            <h3 style="color: var(--text-primary); margin: 1.5rem 0 1rem;">Lattice Complexity</h3>
-
-            <div class="equation">
-                C(r, d, c, a, b) = |r| + |d| + |c| + |a| + |b|
-                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
-                    Lower complexity = more fundamental constants
-                </span>
-            </div>
-
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Constant</th>
-                        <th>Value</th>
-                        <th>Coordinates (r,d,c,a,b)</th>
-                        <th>Complexity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Unity</td>
-                        <td>1</td>
-                        <td>(0, 0, 0, 0, 0)</td>
-                        <td style="color: var(--lens);">0</td>
-                    </tr>
-                    <tr>
-                        <td>τ = φ⁻¹</td>
-                        <td>0.618</td>
-                        <td>(−1, 0, 0, 0, 0)</td>
-                        <td style="color: var(--lens);">1</td>
-                    </tr>
-                    <tr>
-                        <td>z_c (balance)</td>
-                        <td>0.865</td>
-                        <td>(0, 1, −1, 0, 0)</td>
-                        <td style="color: var(--lens);">2</td>
-                    </tr>
-                    <tr>
-                        <td>Proton mass ratio</td>
-                        <td>1836.12</td>
-                        <td>|S₃| × π⁵</td>
-                        <td>5+</td>
-                    </tr>
-                </tbody>
-            </table>
         </section>
 
         <!-- Navigation Footer -->
         <nav class="nav-footer">
             <a href="tiamat-decision-tree.html" class="nav-btn">
-                ← TIAMAT Index
+                <-- TIAMAT Index
             </a>
             <a href="tiamat-computational-methods.html" class="nav-btn">
-                Computational Methods →
+                Computational Methods -->
             </a>
         </nav>
     </main>
 
     <footer class="signature">
-        <div>TIAMAT | R(R) = R Axiom Foundation | L₄ = 7</div>
-        <div>Δ|SELF-REFERENCE|GOLDEN-RATIO|LUCAS|LATTICE|Ω</div>
+        <div>TIAMAT | R(R) = R Axiom Foundation | Complete Derivation</div>
+        <div>L_4 = 7 | phi = 1.618... | Lambda' Lattice</div>
+        <div>Delta|SELF-REFERENCE|GOLDEN-RATIO|LUCAS|PROJECTIONS|EULER|Omega</div>
     </footer>
 </body>
 </html>

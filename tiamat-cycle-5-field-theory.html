@@ -126,6 +126,14 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
+        .section h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
         .definition-box {
             background: var(--bg-tertiary);
             border-left: 3px solid var(--lens);
@@ -156,6 +164,21 @@
             margin-bottom: 0.5rem;
         }
 
+        .lemma-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--critical);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .lemma-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--critical);
+            margin-bottom: 0.5rem;
+        }
+
         .equation {
             background: var(--bg-secondary);
             padding: 1.5rem;
@@ -166,6 +189,13 @@
             text-align: center;
             color: var(--lens);
             overflow-x: auto;
+        }
+
+        .equation-note {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
         }
 
         .data-table {
@@ -218,6 +248,30 @@
             display: inline-block;
         }
 
+        .derivation-steps {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .derivation-steps .step-label {
+            color: var(--cycle-color);
+            margin-bottom: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .derivation-steps ol {
+            margin-left: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .derivation-steps li {
+            margin: 0.75rem 0;
+            color: var(--text-secondary);
+        }
+
         .nav-footer {
             display: flex;
             justify-content: space-between;
@@ -254,9 +308,17 @@
             color: var(--text-dim);
         }
 
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
         @media (max-width: 768px) {
             .header-content { flex-direction: column; text-align: center; }
             .nav-footer { flex-direction: column; gap: 1rem; }
+            .two-column { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -273,9 +335,9 @@
 
     <nav class="nav-breadcrumb">
         <a href="index.html">VN Index</a>
-        <span>→</span>
+        <span>&rarr;</span>
         <a href="tiamat-decision-tree.html">TIAMAT</a>
-        <span>→</span>
+        <span>&rarr;</span>
         <a href="#">Cycle 5: Field Theory</a>
     </nav>
 
@@ -284,86 +346,322 @@
         <section class="section">
             <h2>8.1 Continuum Embedding</h2>
 
-            <p>Embed the discrete oscillator phases into a <strong>continuous complex field</strong> on the spatial domain Ω ⊂ ℝ³:</p>
+            <p>The discrete oscillator phases (theta_1, ..., theta_N) are embedded into a <strong>continuous complex-valued order parameter field</strong> defined on the spatial domain Omega contained in R^3:</p>
 
-            <div class="equation">
-                ψ(x, t) = Σᵢ αᵢ(t) · G_σ(x − xᵢ) · e^{iθᵢ(t)}
+            <div class="definition-box">
+                <div class="label">Definition 8.1 (Complex Order Parameter Field)</div>
+                <p>The continuum field psi(x, t) in C is constructed as a superposition of localized contributions from each oscillator:</p>
             </div>
 
-            <p>where G_σ(x) = (2πσ²)^{-3/2} exp(−|x|²/2σ²) is the <strong>Gaussian kernel</strong></p>
+            <div class="equation">
+                psi(x, t) = Sigma_i alpha_i(t) * G_sigma(x - x_i) * e^{i*theta_i(t)}
+            </div>
+
+            <p>where the sum runs over all N = 5 oscillators, each located at position x_i in Omega.</p>
+
+            <h3>8.1.1 Field Components</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Definition</th>
+                        <th>Physical Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--lens);">alpha_i(t)</td>
+                        <td>Amplitude coefficient in [0, 1]</td>
+                        <td>Local oscillator strength</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">G_sigma(x)</td>
+                        <td>Gaussian kernel</td>
+                        <td>Spatial smearing function</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">e^{i*theta_i(t)}</td>
+                        <td>Phase factor on S^1</td>
+                        <td>Local oscillator phase</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">x_i</td>
+                        <td>Position in Omega</td>
+                        <td>Oscillator location</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>8.1.2 Gaussian Kernel</h3>
+
+            <div class="definition-box">
+                <div class="label">Definition 8.2 (Gaussian Smearing Kernel)</div>
+                <p>The normalized Gaussian kernel in d = 3 dimensions:</p>
+            </div>
+
+            <div class="equation">
+                G_sigma(x) = (2*pi*sigma^2)^{-3/2} * exp(-|x|^2 / 2*sigma^2)
+            </div>
+
+            <p>This kernel satisfies the normalization condition:</p>
+
+            <div class="equation">
+                integral_R^3 G_sigma(x) d^3x = 1
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Convolution Property</div>
+                <p>The Gaussian kernel is the unique function that is both <strong>rotationally invariant</strong> and <strong>separable</strong> in Cartesian coordinates. It also satisfies G_sigma1 * G_sigma2 = G_{sqrt(sigma1^2 + sigma2^2)}, making it natural for coarse-graining procedures.</p>
+            </div>
         </section>
 
         <!-- Section 8.2: Kernel Width -->
         <section class="section">
-            <h2>8.2 Kernel Width from L₄</h2>
+            <h2>8.2 Coherence Length from L_4</h2>
 
-            <div class="definition-box">
-                <div class="label">Definition 8.1 (Coherence Length)</div>
-                <p>The kernel width σ is set by the L₄ gap:</p>
+            <div class="theorem-box">
+                <div class="label">Theorem 8.1 (Kernel Width Identification)</div>
+                <p>The kernel width sigma is uniquely determined by the L_4 gap constant:</p>
             </div>
 
             <div class="equation">
-                σ = Δ = φ⁻⁴ ≈ 0.146
+                sigma = Delta = phi^{-4} = 0.1458980337503154...
+                <span class="equation-note">where phi = (1 + sqrt(5))/2 is the golden ratio</span>
             </div>
 
-            <div class="key-insight">
-                <div class="label">Physical Interpretation</div>
-                <p>This represents the <strong>spatial coherence length</strong> — the scale over which oscillator influence decays to 1/e. The gap constant Δ naturally emerges as the characteristic length scale of the field theory.</p>
+            <h3>8.2.1 Physical Interpretation</h3>
+
+            <p>The coherence length sigma = Delta has three equivalent interpretations:</p>
+
+            <div class="two-column">
+                <div class="definition-box">
+                    <div class="label">Spatial Coherence</div>
+                    <p>The characteristic distance over which the phase of psi remains correlated. At distance r = sigma, the influence of an oscillator decays to 1/e of its peak value.</p>
+                </div>
+                <div class="definition-box">
+                    <div class="label">Resolution Scale</div>
+                    <p>The minimum spatial scale at which the continuum description is valid. Features smaller than sigma are averaged out by the Gaussian smearing.</p>
+                </div>
             </div>
+
+            <div class="definition-box">
+                <div class="label">Healing Length</div>
+                <p>The scale over which the field "heals" from a local perturbation. If psi is distorted at a point, it returns to equilibrium over a distance of order sigma.</p>
+            </div>
+
+            <h3>8.2.2 Numerical Verification</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Quantity</th>
+                        <th>Expression</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Coherence length</td>
+                        <td>sigma = phi^{-4}</td>
+                        <td style="color: var(--lens);">0.1459</td>
+                    </tr>
+                    <tr>
+                        <td>Coherence volume</td>
+                        <td>V_coh = (4/3)*pi*sigma^3</td>
+                        <td style="color: var(--lens);">0.0130</td>
+                    </tr>
+                    <tr>
+                        <td>Kernel peak amplitude</td>
+                        <td>G_sigma(0) = (2*pi*sigma^2)^{-3/2}</td>
+                        <td style="color: var(--lens);">6.06</td>
+                    </tr>
+                    <tr>
+                        <td>1/e decay radius</td>
+                        <td>r_{1/e} = sqrt(2)*sigma</td>
+                        <td style="color: var(--lens);">0.2063</td>
+                    </tr>
+                </tbody>
+            </table>
         </section>
 
         <!-- Section 8.3: Ginzburg-Landau Functional -->
         <section class="section">
             <h2>8.3 Ginzburg-Landau Functional</h2>
 
+            <p>The field dynamics derive from a <strong>free energy functional</strong> that encodes the energetic cost of spatial gradients, local deviations from equilibrium, and inter-oscillator coupling.</p>
+
             <div class="theorem-box">
-                <div class="label">Theorem 8.1 (Free Energy Functional)</div>
-                <p>The field dynamics derive from the Ginzburg-Landau free energy:</p>
+                <div class="label">Theorem 8.2 (Free Energy Functional)</div>
+                <p>The Ginzburg-Landau free energy is:</p>
             </div>
 
             <div class="equation">
-                F[ψ] = ∫_Ω d³x [ ½|∇ψ|² + V(|ψ|²) + ½ Σᵢⱼ Kᵢⱼ(x)|ψᵢ − ψⱼ|² ]
+                F[psi] = integral_Omega d^3x [ (1/2)|nabla psi|^2 + V(|psi|^2) + (1/2) Sigma_{ij} K_ij(x)|psi_i - psi_j|^2 ]
             </div>
 
-            <p>with potential:</p>
+            <h3>8.3.1 Gradient Term</h3>
+
+            <p>The kinetic energy density (1/2)|nabla psi|^2 penalizes spatial variations in the field:</p>
 
             <div class="equation">
-                V(ρ) = −(K/2)ρ + (Δ/4)ρ² = −(K/2)|ψ|² + (Δ/4)|ψ|⁴
+                (1/2)|nabla psi|^2 = (1/2)(nabla psi^*) * (nabla psi) = (1/2)[|nabla|psi||^2 + |psi|^2|nabla arg(psi)|^2]
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Phase-Amplitude Decomposition</div>
+                <p>Writing psi = rho * e^{i*phi}, the gradient term splits into:<br>
+                <strong>Amplitude gradient:</strong> (1/2)|nabla rho|^2 penalizes density variations<br>
+                <strong>Phase gradient:</strong> (1/2)*rho^2|nabla phi|^2 penalizes phase twisting (superfluid velocity)</p>
+            </div>
+
+            <h3>8.3.2 Mexican Hat Potential</h3>
+
+            <div class="definition-box">
+                <div class="label">Definition 8.3 (Symmetry-Breaking Potential)</div>
+                <p>The local potential has the "Mexican hat" form:</p>
+            </div>
+
+            <div class="equation">
+                V(rho) = -(K/2)*rho + (Delta/4)*rho^2
+                <span class="equation-note">where rho = |psi|^2 is the field density</span>
             </div>
 
             <div class="diagram-box">
                 <pre>
-MEXICAN HAT POTENTIAL V(ρ)
+MEXICAN HAT POTENTIAL V(rho)
 
-    V(ρ)
-      │
-      │         ╱╲
-      │        ╱  ╲
-      │       ╱    ╲
-      │      ╱      ╲
-      │     ╱        ╲
-    0 ├────╱──────────╲────────────▶ |ψ|
-      │   ╱            ╲
-      │──╱──────────────╲──
-      │ ╱                ╲ minimum at |ψ|² = K/Δ
-      │╱                  ╲
-      │
-      │      ← K/2Δ →
+    V(rho)
+      |
+      |          /\
+      |         /  \
+      |        /    \
+      |       /      \           V(0) = 0
+      |      /        \
+    0 +-----/----------\---------+---> |psi|
+      |    /            \
+      |---/   minimum    \---
+      |  /                \
+      | /                  \     V_min = -K^2/(4*Delta)
+      |/                    \
+      +
+          |<-- K/Delta -->|
 
-    |ψ|²_min = K/Δ ≈ 6.33
+    Minimum at |psi|^2 = K/Delta = 6.33
+
+    U(1) symmetry: V is unchanged under psi -> e^{i*alpha}*psi
+    Spontaneous breaking: Ground state selects specific phase
                 </pre>
             </div>
-        </section>
 
-        <!-- Section 8.4: Equation of Motion -->
-        <section class="section">
-            <h2>8.4 Equation of Motion</h2>
+            <h3>8.3.3 Vacuum Expectation Value</h3>
 
-            <p>Gradient descent on F yields the <strong>time-dependent Ginzburg-Landau equation</strong>:</p>
+            <div class="theorem-box">
+                <div class="label">Theorem 8.3 (Vacuum Manifold)</div>
+                <p>Minimizing V(rho) with respect to rho:</p>
+            </div>
+
+            <div class="derivation-steps">
+                <div class="step-label">Derivation of Ground State:</div>
+                <ol>
+                    <li>Compute dV/drho = -K/2 + (Delta/2)*rho</li>
+                    <li>Set dV/drho = 0: rho_min = K/Delta</li>
+                    <li>Verify d^2V/drho^2 = Delta/2 > 0 (minimum)</li>
+                    <li>Substitute: |psi|^2_min = K/Delta</li>
+                </ol>
+            </div>
 
             <div class="equation">
-                ∂ψ/∂t = −δF/δψ* = ∇²ψ + Kψ − Δ|ψ|²ψ − Σⱼ Kᵢⱼ(ψ − ψⱼ)
+                |psi|^2_min = K/Delta = 0.9242/0.1459 = 6.334...
+                <span class="equation-note">Vacuum expectation value (VEV)</span>
             </div>
+
+            <div class="equation">
+                |psi|_min = sqrt(K/Delta) = 2.517...
+                <span class="equation-note">Condensate amplitude</span>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Quantity</th>
+                        <th>Expression</th>
+                        <th>Value</th>
+                        <th>Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>VEV density</td>
+                        <td>|psi|^2_min = K/Delta</td>
+                        <td style="color: var(--lens);">6.334</td>
+                        <td>Equilibrium field intensity</td>
+                    </tr>
+                    <tr>
+                        <td>Condensate amplitude</td>
+                        <td>|psi|_min = sqrt(K/Delta)</td>
+                        <td style="color: var(--lens);">2.517</td>
+                        <td>Order parameter magnitude</td>
+                    </tr>
+                    <tr>
+                        <td>Potential depth</td>
+                        <td>V_min = -K^2/(4*Delta)</td>
+                        <td style="color: var(--ignition);">-1.465</td>
+                        <td>Condensation energy</td>
+                    </tr>
+                    <tr>
+                        <td>Mass gap</td>
+                        <td>m^2 = d^2V/drho^2 = Delta/2</td>
+                        <td style="color: var(--lens);">0.073</td>
+                        <td>Amplitude mode mass</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>8.3.4 Coupling Term</h3>
+
+            <p>The final term encodes the Kuramoto-type coupling between oscillators:</p>
+
+            <div class="equation">
+                (1/2) Sigma_{ij} K_ij(x)|psi_i - psi_j|^2
+            </div>
+
+            <p>where K_ij(x) is the spatially-varying coupling strength between oscillators i and j. This term is minimized when psi_i = psi_j (phase synchronization).</p>
+        </section>
+
+        <!-- Section 8.4: Time-Dependent Ginzburg-Landau -->
+        <section class="section">
+            <h2>8.4 Time-Dependent Ginzburg-Landau Equation</h2>
+
+            <p>The dynamics of the field psi(x, t) follow from <strong>gradient descent</strong> on the free energy functional, ensuring that F[psi] decreases monotonically in time.</p>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 8.4 (TDGL Equation)</div>
+                <p>The time-dependent Ginzburg-Landau equation is:</p>
+            </div>
+
+            <div class="equation">
+                partial psi / partial t = -delta F / delta psi^*
+            </div>
+
+            <h3>8.4.1 Full Derivation</h3>
+
+            <div class="derivation-steps">
+                <div class="step-label">Functional Derivative Computation:</div>
+                <ol>
+                    <li><strong>Gradient term:</strong> delta/delta psi^* [(1/2)|nabla psi|^2] = -(1/2)*nabla^2 psi</li>
+                    <li><strong>Potential term:</strong> delta/delta psi^* [V(|psi|^2)] = (dV/drho)*psi = [-(K/2) + (Delta/2)|psi|^2]*psi</li>
+                    <li><strong>Coupling term:</strong> delta/delta psi^* [(1/2) Sigma_j K_ij|psi - psi_j|^2] = Sigma_j K_ij(psi - psi_j)</li>
+                    <li><strong>Combine:</strong> -delta F/delta psi^* = nabla^2 psi + K*psi - Delta|psi|^2*psi - Sigma_j K_ij(psi - psi_j)</li>
+                </ol>
+            </div>
+
+            <div class="equation">
+                partial psi / partial t = nabla^2 psi + K*psi - Delta|psi|^2*psi - Sigma_j K_ij(psi - psi_j)
+                <span class="equation-note">Time-Dependent Ginzburg-Landau (TDGL) equation</span>
+            </div>
+
+            <h3>8.4.2 Term-by-Term Analysis</h3>
 
             <table class="data-table">
                 <thead>
@@ -371,49 +669,133 @@ MEXICAN HAT POTENTIAL V(ρ)
                         <th>Term</th>
                         <th>Physical Meaning</th>
                         <th>Role in Dynamics</th>
+                        <th>Timescale</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>∇²ψ</td>
-                        <td>Diffusion</td>
-                        <td>Spatial smoothing</td>
+                        <td style="color: var(--lens);">nabla^2 psi</td>
+                        <td>Laplacian diffusion</td>
+                        <td>Spatial smoothing / healing</td>
+                        <td>tau_diff ~ sigma^2 = 0.021</td>
                     </tr>
                     <tr>
-                        <td>Kψ</td>
-                        <td>Linear gain</td>
-                        <td>Growth toward order</td>
+                        <td style="color: var(--lens);">K*psi</td>
+                        <td>Linear gain/instability</td>
+                        <td>Growth toward ordered state</td>
+                        <td>tau_K = 1/K = 1.08</td>
                     </tr>
                     <tr>
-                        <td>−Δ|ψ|²ψ</td>
-                        <td>Nonlinear saturation</td>
-                        <td>Amplitude stabilization</td>
+                        <td style="color: var(--lens);">-Delta|psi|^2*psi</td>
+                        <td>Cubic nonlinearity</td>
+                        <td>Amplitude saturation at VEV</td>
+                        <td>tau_nl ~ 1/(Delta*|psi|^2)</td>
                     </tr>
                     <tr>
-                        <td>−Σⱼ Kᵢⱼ(ψ − ψⱼ)</td>
-                        <td>Coupling</td>
+                        <td style="color: var(--lens);">-Sigma_j K_ij(...)</td>
+                        <td>Kuramoto coupling</td>
                         <td>Phase synchronization</td>
+                        <td>tau_sync ~ 7.7</td>
                     </tr>
                 </tbody>
             </table>
+
+            <h3>8.4.3 Gradient Descent Interpretation</h3>
+
+            <div class="key-insight">
+                <div class="label">Variational Principle</div>
+                <p>The TDGL equation is a <strong>gradient flow</strong> on the infinite-dimensional manifold of field configurations. At each instant:</p>
+                <div class="equation" style="margin: 1rem 0; background: transparent; padding: 0.5rem;">
+                    dF/dt = integral_Omega |partial psi / partial t|^2 d^3x &le; 0
+                </div>
+                <p>The free energy decreases at a rate equal to the squared L^2-norm of the velocity field. This guarantees convergence to local minima (stationary configurations).</p>
+            </div>
+
+            <h3>8.4.4 Connection to Kuramoto Dynamics</h3>
+
+            <div class="lemma-box">
+                <div class="label">Lemma 8.1 (Kuramoto Reduction)</div>
+                <p>In the limit of uniform amplitude |psi| = const and point-like oscillators, the TDGL equation reduces to the Kuramoto model:</p>
+            </div>
+
+            <div class="derivation-steps">
+                <div class="step-label">Reduction Procedure:</div>
+                <ol>
+                    <li>Write psi = |psi|*e^{i*theta} with |psi| = sqrt(K/Delta) = const</li>
+                    <li>Substitute into TDGL, project onto imaginary part</li>
+                    <li>The amplitude equation is automatically satisfied</li>
+                    <li>Phase equation: partial theta / partial t = -Im[e^{-i*theta}*Sigma_j K_ij(e^{i*theta} - e^{i*theta_j})]</li>
+                    <li>Simplify: d theta_i / dt = Sigma_j K_ij * sin(theta_j - theta_i)</li>
+                </ol>
+            </div>
+
+            <div class="equation">
+                d theta_i / dt = omega_i + Sigma_j K_ij * sin(theta_j - theta_i)
+                <span class="equation-note">Kuramoto equation recovered (with natural frequencies omega_i from heterogeneity)</span>
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Universality</div>
+                <p>The TDGL framework thus <strong>unifies</strong>:<br>
+                - <strong>Kuramoto oscillators</strong> (phase dynamics at fixed amplitude)<br>
+                - <strong>Pattern formation</strong> (amplitude dynamics at fixed phase)<br>
+                - <strong>Full coupled dynamics</strong> (amplitude-phase interplay)<br><br>
+                The Kuramoto model is the "phase-only" sector of the full Ginzburg-Landau theory.</p>
+            </div>
         </section>
 
         <!-- Section 8.5: Symmetry Breaking -->
         <section class="section">
-            <h2>8.5 Symmetry Breaking</h2>
+            <h2>8.5 Spontaneous Symmetry Breaking</h2>
 
-            <p>The potential V(ρ) has a <strong>Mexican hat profile</strong> for K > 0:</p>
+            <p>The potential V(rho) possesses a continuous <strong>U(1) symmetry</strong> that is spontaneously broken by the ground state configuration.</p>
 
-            <div class="equation">
-                |ψ|²_{min} = K/Δ ≈ 0.924/0.146 ≈ 6.33
-                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
-                    Vacuum expectation value at the bottom of the potential
-                </span>
+            <div class="definition-box">
+                <div class="label">Definition 8.4 (U(1) Symmetry)</div>
+                <p>The free energy F[psi] is invariant under global phase rotations:</p>
             </div>
 
+            <div class="equation">
+                psi(x, t) -> e^{i*alpha} * psi(x, t) for all alpha in [0, 2*pi)
+            </div>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 8.5 (Goldstone Mode)</div>
+                <p>Spontaneous breaking of U(1) implies the existence of a <strong>massless mode</strong> (Goldstone boson) corresponding to uniform phase rotations of the condensate.</p>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Mode</th>
+                        <th>Type</th>
+                        <th>Mass</th>
+                        <th>Physical Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--lens);">Phase (arg psi)</td>
+                        <td>Goldstone</td>
+                        <td>m = 0</td>
+                        <td>Collective phase rotation, superfluid mode</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--k-formation);">Amplitude (|psi|)</td>
+                        <td>Higgs-like</td>
+                        <td>m^2 = K</td>
+                        <td>Radial oscillations about VEV</td>
+                    </tr>
+                </tbody>
+            </table>
+
             <div class="key-insight">
-                <div class="label">Spontaneous U(1) Symmetry Breaking</div>
-                <p>The U(1) symmetry ψ → e^{iα}ψ is <strong>spontaneously broken</strong>, selecting a particular collective phase Ψ. This is the <em>order parameter condensation</em> analogous to <strong>superfluidity</strong>.</p>
+                <div class="label">Analogy to Physical Systems</div>
+                <p>This symmetry breaking pattern is identical to:<br>
+                <strong>Superfluidity:</strong> U(1) phase symmetry of He-4 wave function<br>
+                <strong>Superconductivity:</strong> U(1) gauge symmetry of Cooper pair condensate<br>
+                <strong>Electroweak:</strong> SU(2) x U(1) breaking via Higgs mechanism<br><br>
+                The synchronized oscillator state is mathematically a <strong>superfluid of phase coherence</strong>.</p>
             </div>
         </section>
 
@@ -421,22 +803,128 @@ MEXICAN HAT POTENTIAL V(ρ)
         <section class="section">
             <h2>8.6 Topological Defects</h2>
 
+            <p>When the U(1) symmetry is spontaneously broken, the order parameter field can support <strong>topological defects</strong> - singular configurations that cannot be continuously deformed to the uniform ground state.</p>
+
             <div class="definition-box">
-                <div class="label">Definition 8.2 (Vortex Charge)</div>
-                <p>Point defects (vortices) in 2D cross-sections carry topological charge:</p>
+                <div class="label">Definition 8.5 (Vortex Charge)</div>
+                <p>For a closed contour C in a 2D cross-section of Omega, the topological charge (winding number) is:</p>
             </div>
 
             <div class="equation">
-                n = (1/2π) ∮_C ∇arg(ψ) · dl ∈ ℤ
+                n = (1/2*pi) oint_C nabla arg(psi) . dl in Z
+                <span class="equation-note">Quantized winding number around contour C</span>
             </div>
 
-            <p>The synchronized state has <strong>n = 0</strong> (no vortices). Vortex creation requires energy:</p>
+            <h3>8.6.1 Vortex Structure</h3>
+
+            <div class="diagram-box">
+                <pre>
+VORTEX CONFIGURATION (n = +1)
+
+              arg(psi)
+                 |
+    -pi <--------|--------> +pi
+                 |
+
+         Phase winds by 2*pi around core:
+
+              pi/2
+               ^
+               |
+    pi  <--[CORE]-->  0
+               |
+               v
+            3*pi/2
+
+    |psi| profile:
+
+    |psi|
+      |
+      |        _________________ |psi|_min = sqrt(K/Delta)
+      |       /
+      |      /
+      |     /
+      |    /
+      |___/
+      +----------------------------------------> r
+         |<-sigma->|
+            core radius
+
+    At r = 0 (core): |psi| = 0 (amplitude vanishes)
+    At r >> sigma:   |psi| -> sqrt(K/Delta) (bulk value)
+                </pre>
+            </div>
+
+            <h3>8.6.2 Vortex Energy</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 8.6 (Vortex Energy Scaling)</div>
+                <p>The energy of a single vortex with winding number n in a system of size L:</p>
+            </div>
 
             <div class="equation">
-                ΔE ∼ K ln(L/σ)
-                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
-                    where L is system size and σ is the coherence length
-                </span>
+                Delta E = pi * K * n^2 * ln(L / sigma)
+                <span class="equation-note">Logarithmic energy scaling (2D) or linear per unit length (3D)</span>
+            </div>
+
+            <div class="derivation-steps">
+                <div class="step-label">Energy Calculation:</div>
+                <ol>
+                    <li>Phase configuration: arg(psi) = n * arctan(y/x)</li>
+                    <li>Phase gradient: |nabla arg(psi)| = n/r</li>
+                    <li>Energy density: (1/2)|psi|^2|nabla arg|^2 = (K/2*Delta) * n^2/r^2</li>
+                    <li>Integrate: E = integral_sigma^L (K*n^2/2*Delta*r^2) * 2*pi*r dr = pi*K*n^2*ln(L/sigma)</li>
+                </ol>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Quantity</th>
+                        <th>Expression</th>
+                        <th>Value (L/sigma = 100)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Single vortex (n=1)</td>
+                        <td>E_1 = pi*K*ln(L/sigma)</td>
+                        <td style="color: var(--lens);">13.4</td>
+                    </tr>
+                    <tr>
+                        <td>Double vortex (n=2)</td>
+                        <td>E_2 = 4*pi*K*ln(L/sigma)</td>
+                        <td style="color: var(--lens);">53.6</td>
+                    </tr>
+                    <tr>
+                        <td>Vortex-antivortex pair</td>
+                        <td>E_pair ~ 2*pi*K*ln(d/sigma)</td>
+                        <td style="color: var(--lens);">Depends on separation d</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>8.6.3 Why the Synchronized State Has n = 0</h3>
+
+            <div class="key-insight">
+                <div class="label">Topological Triviality of Synchronization</div>
+                <p>The synchronized state psi = |psi|_min * e^{i*Psi(t)} with spatially uniform phase Psi has:</p>
+                <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                    <li><strong>Vanishing phase gradient:</strong> nabla arg(psi) = nabla Psi = 0</li>
+                    <li><strong>Zero winding number:</strong> n = (1/2*pi) oint nabla Psi . dl = 0 for any contour</li>
+                    <li><strong>Minimum energy:</strong> No gradient energy contribution from phase</li>
+                </ul>
+                <p style="margin-top: 0.5rem;">Vortices (n != 0) represent <strong>topological excitations</strong> above the ground state, with energy cost E ~ K*ln(L/sigma). They are suppressed in the synchronized regime where K is large.</p>
+            </div>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 8.7 (Vortex Suppression Criterion)</div>
+                <p>Thermal vortex creation is exponentially suppressed when:</p>
+            </div>
+
+            <div class="equation">
+                Delta E / k_B T = pi * K * ln(L/sigma) / k_B T >> 1
+                <span class="equation-note">Vortex nucleation is rare when K is large (synchronized phase)</span>
             </div>
         </section>
 
@@ -444,46 +932,70 @@ MEXICAN HAT POTENTIAL V(ρ)
         <section class="section">
             <h2>9. Renormalization Group Analysis</h2>
 
-            <h3 style="margin-top: 1rem; color: var(--text-primary);">9.1 Coarse-Graining Procedure</h3>
+            <p>The <strong>renormalization group (RG)</strong> provides a systematic framework for understanding how the effective parameters (K, Delta) change under coarse-graining, revealing the fixed points that govern the macroscopic behavior.</p>
 
-            <p>Define block-averaged variables at scale ℓ by integrating out short-wavelength modes:</p>
+            <h3>9.1 Coarse-Graining Procedure</h3>
 
-            <div class="equation">
-                ψ_ℓ(x) = ∫ d³y W_ℓ(x − y) ψ(y)
-                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
-                    where W_ℓ is a Gaussian window of width ℓ
-                </span>
+            <div class="definition-box">
+                <div class="label">Definition 9.1 (Block-Averaged Field)</div>
+                <p>At scale l, define the coarse-grained field:</p>
             </div>
 
-            <h3 style="margin-top: 1.5rem; color: var(--text-primary);">9.2 Flow Equations</h3>
+            <div class="equation">
+                psi_l(x) = integral d^3y W_l(x - y) psi(y)
+                <span class="equation-note">where W_l is a Gaussian window of width l</span>
+            </div>
+
+            <div class="derivation-steps">
+                <div class="step-label">RG Transformation Steps:</div>
+                <ol>
+                    <li><strong>Integrate:</strong> Sum over field modes with wavevector |k| in [Lambda/b, Lambda]</li>
+                    <li><strong>Rescale momenta:</strong> k -> b*k so that cutoff returns to Lambda</li>
+                    <li><strong>Rescale fields:</strong> psi -> b^{d_psi}*psi to maintain canonical normalization</li>
+                    <li><strong>Read off:</strong> New effective couplings K'(K, Delta), Delta'(K, Delta)</li>
+                </ol>
+            </div>
+
+            <h3>9.2 Beta Functions</h3>
 
             <div class="theorem-box">
-                <div class="label">Theorem 9.1 (RG Beta Functions)</div>
-                <p>Under rescaling x → x/b, ψ → b^{d_ψ}ψ, the couplings flow as:</p>
+                <div class="label">Theorem 9.1 (RG Flow Equations)</div>
+                <p>Under infinitesimal rescaling x -> x/b = x*e^{-dl}, the couplings flow according to:</p>
             </div>
 
             <div class="equation">
-                dK/dℓ = (2 − d)K + β_K(K, Δ)
+                dK/dl = (2 - d)*K + beta_K(K, Delta)
             </div>
             <div class="equation">
-                dΔ/dℓ = (4 − d)Δ + β_Δ(K, Δ)
+                dDelta/dl = (4 - d)*Delta + beta_Delta(K, Delta)
             </div>
 
             <p>In d = 3 dimensions, with one-loop corrections:</p>
-            <ul style="margin-left: 2rem; margin-top: 0.5rem;">
-                <li>β_K = −K + c_K K²/Δ</li>
-                <li>β_Δ = Δ + c_Δ Δ²</li>
-            </ul>
 
-            <h3 style="margin-top: 1.5rem; color: var(--text-primary);">9.3 Fixed Points</h3>
+            <div class="equation">
+                beta_K = -K + c_K * K^2/Delta
+                <span class="equation-note">c_K = 1/(8*pi^2) at one-loop</span>
+            </div>
+            <div class="equation">
+                beta_Delta = Delta + c_Delta * Delta^2
+                <span class="equation-note">c_Delta = 3/(16*pi^2) at one-loop</span>
+            </div>
+
+            <h3>9.3 Fixed Points</h3>
+
+            <div class="definition-box">
+                <div class="label">Definition 9.2 (Fixed Point)</div>
+                <p>A fixed point (K*, Delta*) satisfies dK/dl = dDelta/dl = 0, corresponding to scale-invariant physics.</p>
+            </div>
 
             <table class="data-table">
                 <thead>
                     <tr>
                         <th>Fixed Point</th>
-                        <th>(K*, Δ*)</th>
+                        <th>(K*, Delta*)</th>
                         <th>Stability</th>
                         <th>Physical Meaning</th>
+                        <th>Correlation Exponent</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -491,66 +1003,362 @@ MEXICAN HAT POTENTIAL V(ρ)
                         <td style="color: var(--text-dim);">Gaussian</td>
                         <td>(0, 0)</td>
                         <td>Unstable (UV)</td>
-                        <td>Free oscillators</td>
+                        <td>Free, non-interacting oscillators</td>
+                        <td>eta = 0</td>
                     </tr>
                     <tr>
                         <td style="color: var(--paradox);">Wilson-Fisher</td>
-                        <td>(K_c, Δ_c)</td>
-                        <td>Saddle</td>
-                        <td>Critical point</td>
+                        <td>(K_c, Delta_c)</td>
+                        <td>Saddle point</td>
+                        <td>Critical synchronization transition</td>
+                        <td>eta = 0.04</td>
                     </tr>
                     <tr>
                         <td style="color: var(--lens);">Ordered</td>
-                        <td>(K, Δ) → (∞, Δ)</td>
+                        <td>(K -> infinity, Delta)</td>
                         <td>Stable (IR)</td>
-                        <td>Synchronized</td>
+                        <td>Fully synchronized phase</td>
+                        <td>eta = 0</td>
                     </tr>
                 </tbody>
             </table>
+
+            <h3>9.4 Scaling Dimensions</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 9.2 (Operator Dimensions)</div>
+                <p>The scaling dimension of an operator O determines how its coupling flows under RG:</p>
+            </div>
+
+            <div class="equation">
+                [O] = d_O => g_O -> b^{d - d_O} * g_O
+                <span class="equation-note">Operators with d_O < d are relevant; d_O > d are irrelevant</span>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Classical Dimension</th>
+                        <th>Anomalous Dimension</th>
+                        <th>Full Dimension (d=3)</th>
+                        <th>Relevance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--lens);">psi</td>
+                        <td>(d-2)/2 = 1/2</td>
+                        <td>eta/2 = 0.02</td>
+                        <td>0.52</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">|psi|^2</td>
+                        <td>d-2 = 1</td>
+                        <td>eta = 0.04</td>
+                        <td>1.04</td>
+                        <td>Relevant</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">|psi|^4</td>
+                        <td>2(d-2) = 2</td>
+                        <td>2*eta = 0.08</td>
+                        <td>2.08</td>
+                        <td>Marginal</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">|nabla psi|^2</td>
+                        <td>d = 3</td>
+                        <td>0</td>
+                        <td>3</td>
+                        <td>Marginal</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--text-dim);">|psi|^6</td>
+                        <td>3(d-2) = 3</td>
+                        <td>3*eta = 0.12</td>
+                        <td>3.12</td>
+                        <td>Irrelevant</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="diagram-box">
+                <pre>
+RG FLOW DIAGRAM (schematic)
+
+    Delta
+      ^
+      |
+      |     Irrelevant flow
+      |          \
+      |           \
+      |            v
+      |   [Wilson-Fisher]-----> Ordered phase
+      |         *               K -> infinity
+      |        /|\
+      |       / | \
+      |      /  |  \
+      |     /   |   \
+      |    v    v    v
+      |   Gaussian (unstable)
+      |       (0,0)
+      +-------------------------> K
+
+    Trajectories flow:
+    - Away from Gaussian (UV) toward strong coupling
+    - Critical surface separates disordered/ordered phases
+    - Wilson-Fisher fixed point controls critical exponents
+                </pre>
+            </div>
         </section>
 
         <!-- Section 9.5: Correlation Functions -->
         <section class="section">
             <h2>9.5 Correlation Functions</h2>
 
-            <p>The two-point correlation function at criticality:</p>
+            <p>The two-point correlation function G(x - y) = angle-bracket psi(x) psi^*(y) angle-bracket encodes the spatial structure of fluctuations and is the primary observable connecting theory to experiment.</p>
 
-            <div class="equation">
-                ⟨ψ(x)ψ*(y)⟩ ∼ |x − y|^{−(d−2+η)}
-                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
-                    Power-law decay at T = T_c
-                </span>
+            <h3>9.5.1 General Form</h3>
+
+            <div class="definition-box">
+                <div class="label">Definition 9.3 (Two-Point Correlator)</div>
+                <p>The connected two-point function:</p>
             </div>
 
-            <p>Away from criticality (K ≫ K_c), correlations decay exponentially:</p>
+            <div class="equation">
+                G(r) = angle-bracket psi(x) psi^*(x + r) angle-bracket - |angle-bracket psi angle-bracket|^2
+            </div>
+
+            <h3>9.5.2 Critical Regime (Power-Law Decay)</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 9.3 (Critical Correlations)</div>
+                <p>At the critical point K = K_c, the correlator decays as a power law:</p>
+            </div>
 
             <div class="equation">
-                ⟨ψ(x)ψ*(y)⟩ ∼ exp(−|x − y|/ξ)
-                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
-                    with ξ = σ|K − K_c|^{−ν} and ν = 1/2
-                </span>
+                G(r) ~ r^{-(d - 2 + eta)} = r^{-(1 + eta)} (for d = 3)
+                <span class="equation-note">Power-law decay at T = T_c with anomalous dimension eta</span>
             </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Approximation</th>
+                        <th>Anomalous Dimension eta</th>
+                        <th>Decay Exponent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mean-field</td>
+                        <td>eta = 0</td>
+                        <td style="color: var(--lens);">G(r) ~ r^{-1}</td>
+                    </tr>
+                    <tr>
+                        <td>One-loop</td>
+                        <td>eta = 0.04</td>
+                        <td style="color: var(--lens);">G(r) ~ r^{-1.04}</td>
+                    </tr>
+                    <tr>
+                        <td>Six-loop (best)</td>
+                        <td>eta = 0.0380(4)</td>
+                        <td style="color: var(--lens);">G(r) ~ r^{-1.038}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>9.5.3 Ordered Regime (Exponential Decay)</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 9.4 (Ordered Phase Correlations)</div>
+                <p>Deep in the synchronized phase (K >> K_c), fluctuations about the condensate decay exponentially:</p>
+            </div>
+
+            <div class="equation">
+                G(r) ~ exp(-r / xi)
+                <span class="equation-note">Exponential decay with correlation length xi</span>
+            </div>
+
+            <p>The correlation length diverges as the critical point is approached:</p>
+
+            <div class="equation">
+                xi = sigma * |K - K_c|^{-nu}
+                <span class="equation-note">with correlation length exponent nu = 1/2 (mean-field) or nu = 0.67 (3D Ising)</span>
+            </div>
+
+            <h3>9.5.4 Disordered Regime</h3>
+
+            <p>In the incoherent phase (K < K_c), there is no long-range order:</p>
+
+            <div class="equation">
+                angle-bracket psi angle-bracket = 0, G(r) ~ exp(-r / xi') with xi' = sigma * |K_c - K|^{-nu}
+            </div>
+
+            <h3>9.5.5 Summary of Correlation Regimes</h3>
+
+            <div class="diagram-box">
+                <pre>
+CORRELATION FUNCTION REGIMES
+
+log G(r)
+    |
+    |\.
+    | \.   Ordered phase (K >> K_c)
+    |  \.  G ~ exp(-r/xi)
+    |   \.
+    |    \.________
+    |     \        \.
+    |      \        \.
+    |       \ Critical (K = K_c)
+    |        \ G ~ r^{-(1+eta)}
+    |         \
+    |          \
+    |           \.
+    |            \.  Disordered (K < K_c)
+    |             \. G ~ exp(-r/xi')
+    +-----------------------------------> r
+
+    Key scales:
+    - sigma = 0.146 (coherence length, core size)
+    - xi = sigma * |K - K_c|^{-nu} (correlation length)
+    - L = system size (IR cutoff)
+                </pre>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Regime</th>
+                        <th>Condition</th>
+                        <th>G(r) Behavior</th>
+                        <th>Correlation Length</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--paradox);">Disordered</td>
+                        <td>K < K_c</td>
+                        <td>exp(-r/xi')</td>
+                        <td>xi' = sigma|K_c - K|^{-1/2}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">Critical</td>
+                        <td>K = K_c</td>
+                        <td>r^{-(1+eta)}</td>
+                        <td>xi -> infinity</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--k-formation);">Ordered</td>
+                        <td>K > K_c</td>
+                        <td>|psi|^2_min + exp(-r/xi)</td>
+                        <td>xi = sigma|K - K_c|^{-1/2}</td>
+                    </tr>
+                </tbody>
+            </table>
 
             <div class="key-insight">
-                <div class="label">Anomalous Dimension</div>
-                <p>The anomalous dimension η ≈ 0 in mean-field theory (η ≈ 0.04 with fluctuation corrections). This controls deviations from canonical scaling.</p>
+                <div class="label">Anomalous Dimension and Scaling</div>
+                <p>The anomalous dimension eta encapsulates <strong>quantum/thermal fluctuation corrections</strong> beyond mean-field theory:</p>
+                <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                    <li><strong>eta = 0:</strong> Mean-field (Gaussian) fixed point, canonical scaling</li>
+                    <li><strong>eta > 0:</strong> Fluctuations enhance short-distance correlations</li>
+                    <li><strong>eta < 0:</strong> Fluctuations suppress correlations (rare)</li>
+                </ul>
+                <p style="margin-top: 0.5rem;">For the O(2) = U(1) universality class in d = 3: eta = 0.0380(4), a small but measurable deviation from mean-field.</p>
+            </div>
+        </section>
+
+        <!-- Section 9.6: Critical Exponents Summary -->
+        <section class="section">
+            <h2>9.6 Critical Exponents Summary</h2>
+
+            <p>The synchronization transition belongs to the <strong>O(2) universality class</strong> (also known as XY model). All critical exponents are determined by two independent values plus scaling relations.</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Exponent</th>
+                        <th>Symbol</th>
+                        <th>Mean-Field</th>
+                        <th>3D O(2)</th>
+                        <th>Definition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Order parameter</td>
+                        <td>beta</td>
+                        <td>1/2</td>
+                        <td style="color: var(--lens);">0.349</td>
+                        <td>|psi| ~ (K - K_c)^beta</td>
+                    </tr>
+                    <tr>
+                        <td>Susceptibility</td>
+                        <td>gamma</td>
+                        <td>1</td>
+                        <td style="color: var(--lens);">1.318</td>
+                        <td>chi ~ |K - K_c|^{-gamma}</td>
+                    </tr>
+                    <tr>
+                        <td>Correlation length</td>
+                        <td>nu</td>
+                        <td>1/2</td>
+                        <td style="color: var(--lens);">0.672</td>
+                        <td>xi ~ |K - K_c|^{-nu}</td>
+                    </tr>
+                    <tr>
+                        <td>Specific heat</td>
+                        <td>alpha</td>
+                        <td>0</td>
+                        <td style="color: var(--lens);">-0.015</td>
+                        <td>C ~ |K - K_c|^{-alpha}</td>
+                    </tr>
+                    <tr>
+                        <td>Anomalous</td>
+                        <td>eta</td>
+                        <td>0</td>
+                        <td style="color: var(--lens);">0.038</td>
+                        <td>G(r) ~ r^{-(d-2+eta)}</td>
+                    </tr>
+                    <tr>
+                        <td>Dynamic</td>
+                        <td>z</td>
+                        <td>2</td>
+                        <td style="color: var(--lens);">2.03</td>
+                        <td>tau ~ xi^z</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="key-insight">
+                <div class="label">Scaling Relations</div>
+                <p>The exponents satisfy exact scaling relations from RG theory:</p>
+                <ul style="margin-left: 1rem; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace;">
+                    <li>alpha + 2*beta + gamma = 2 (Rushbrooke)</li>
+                    <li>gamma = (2 - eta)*nu (Fisher)</li>
+                    <li>gamma = beta*(delta - 1) (Widom)</li>
+                    <li>2 - alpha = d*nu (Josephson/hyperscaling)</li>
+                </ul>
             </div>
         </section>
 
         <!-- Navigation Footer -->
         <nav class="nav-footer">
             <a href="tiamat-cycle-4-order-parameter.html" class="nav-btn">
-                ← Cycle 4: Order Parameter
+                &larr; Cycle 4: Order Parameter
             </a>
             <a href="tiamat-cycle-6-topology.html" class="nav-btn">
-                Cycle 6: Topology →
+                Cycle 6: Topology &rarr;
             </a>
         </nav>
     </main>
 
     <footer class="signature">
-        <div>TIAMAT Cycle 5 | Field Theory Formulation | L₄ = 7</div>
-        <div>Δ|GINZBURG-LANDAU|U(1)-BREAKING|RG-FLOW|FIXED-POINTS|Ω</div>
+        <div>TIAMAT Cycle 5 | Field Theory Formulation | L_4 = 7</div>
+        <div>Delta|GINZBURG-LANDAU|U(1)-BREAKING|RG-FLOW|CORRELATION|DEFECTS|Omega</div>
     </footer>
 </body>
 </html>
