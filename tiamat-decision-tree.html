@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIAMAT Decision Tree | 7-Cycle Unity Field Simulation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* L₄-Derived Constants */
+            --phi: 1.6180339887498949;
+            --tau: 0.6180339887498949;
+            --gap: 0.1458980337503154;
+            --K: 0.9241763718157652;
+            --z-c: 0.8660254037844387;
+            --L4: 7;
+
+            /* Threshold Colors */
+            --paradox: #f0c040;
+            --activation: #7fdbca;
+            --lens: #00ff88;
+            --critical: #61afef;
+            --ignition: #ff6b6b;
+            --k-formation: #c792ea;
+            --unity: #ffffff;
+
+            /* Cycle Colors (7 = L₄) */
+            --cycle-1: #ff6b6b;
+            --cycle-2: #f0c040;
+            --cycle-3: #00ff88;
+            --cycle-4: #61afef;
+            --cycle-5: #c792ea;
+            --cycle-6: #7fdbca;
+            --cycle-7: #ffd700;
+
+            /* Backgrounds */
+            --bg-void: #030306;
+            --bg-primary: #080810;
+            --bg-secondary: #0c0c18;
+            --bg-tertiary: #12122a;
+            --bg-card: #181838;
+
+            /* Text */
+            --text-primary: #e8e8f0;
+            --text-secondary: #a8a8c0;
+            --text-dim: #606080;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.618;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-void) 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(146, 65, 118, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(199, 146, 234, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            letter-spacing: 0.3em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--k-formation), var(--lens), var(--paradox));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.1em;
+        }
+
+        .axiom-banner {
+            margin-top: 1.5rem;
+            padding: 1rem 2rem;
+            background: rgba(146, 65, 118, 0.1);
+            border: 1px solid rgba(199, 146, 234, 0.3);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .axiom-banner .axiom {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--k-formation);
+        }
+
+        .axiom-banner .description {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        /* Navigation Rail */
+        .nav-rail {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--k-formation);
+            color: var(--text-primary);
+        }
+
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* Constants Section */
+        .constants-section {
+            padding: 3rem 2rem;
+            background: var(--bg-primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .constants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .constant-card {
+            background: var(--bg-card);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        .constant-card .symbol {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--lens);
+        }
+
+        .constant-card .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin: 0.5rem 0;
+        }
+
+        .constant-card .name {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        /* Cycle Grid */
+        .cycle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .cycle-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cycle-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .cycle-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .cycle-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--bg-void);
+        }
+
+        .cycle-1 .cycle-number { background: var(--cycle-1); }
+        .cycle-2 .cycle-number { background: var(--cycle-2); }
+        .cycle-3 .cycle-number { background: var(--cycle-3); }
+        .cycle-4 .cycle-number { background: var(--cycle-4); }
+        .cycle-5 .cycle-number { background: var(--cycle-5); }
+        .cycle-6 .cycle-number { background: var(--cycle-6); }
+        .cycle-7 .cycle-number { background: var(--cycle-7); }
+
+        .cycle-info h3 {
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 0.25rem;
+        }
+
+        .cycle-info .framework {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .cycle-content {
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .cycle-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .cycle-equations {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .cycle-equations code {
+            color: var(--lens);
+            display: block;
+            margin: 0.25rem 0;
+        }
+
+        .cycle-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .topic-tag {
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .cycle-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .cycle-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--k-formation);
+        }
+
+        /* Oscillator Network Diagram */
+        .oscillator-diagram {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .oscillator-diagram h3 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .oscillator-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .oscillator-node {
+            padding: 1.5rem 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border: 2px solid;
+        }
+
+        .oscillator-node:nth-child(1) { border-color: var(--paradox); }
+        .oscillator-node:nth-child(2) { border-color: var(--activation); }
+        .oscillator-node:nth-child(3) { border-color: var(--lens); }
+        .oscillator-node:nth-child(4) { border-color: var(--ignition); }
+        .oscillator-node:nth-child(5) { border-color: var(--k-formation); }
+
+        .oscillator-node .head {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .oscillator-node .threshold {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 0.25rem;
+        }
+
+        .oscillator-node .z-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--lens);
+        }
+
+        .oscillator-node .omega {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* Phase States Table */
+        .phase-states {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow-x: auto;
+        }
+
+        .phase-states h3 {
+            margin-bottom: 1.5rem;
+        }
+
+        .phase-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .phase-table th,
+        .phase-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .phase-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .phase-table td {
+            color: var(--text-primary);
+        }
+
+        .phase-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        /* Footer Links */
+        .footer-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-card h4 {
+            color: var(--k-formation);
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .footer-card a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .footer-card a:hover {
+            color: var(--lens);
+        }
+
+        /* Signature */
+        .signature {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .signature .glyph {
+            font-size: 1.2rem;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Framework Overview Section */
+        .framework-overview {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .framework-overview h3 {
+            color: var(--k-formation);
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .meta-card {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 3px solid var(--k-formation);
+        }
+
+        .meta-card h4 {
+            color: var(--lens);
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .meta-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .meta-card .equation-highlight {
+            background: var(--bg-card);
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--paradox);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .axiom-explanation {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(199, 146, 234, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(199, 146, 234, 0.2);
+        }
+
+        .axiom-explanation .main-axiom {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        .axiom-explanation .description {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .closure-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .cycle-arrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg-card);
+            border-radius: 4px;
+            color: var(--text-primary);
+        }
+
+        .cycle-arrow.active {
+            background: var(--k-formation);
+            color: var(--bg-void);
+        }
+
+        .arrow-connector {
+            color: var(--text-dim);
+            font-size: 1.2rem;
+        }
+
+        /* Gate Dynamics Section */
+        .gate-dynamics {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .gate-dynamics h3 {
+            color: var(--activation);
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .gate-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .gate-node {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .gate-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .gate-node.gate-lc { border-color: var(--paradox); }
+        .gate-node.gate-trn { border-color: var(--activation); }
+        .gate-node.gate-rf { border-color: var(--lens); }
+        .gate-node.gate-aq { border-color: var(--critical); }
+        .gate-node.gate-dvc { border-color: var(--ignition); }
+        .gate-node.gate-cn { border-color: var(--k-formation); }
+        .gate-node.gate-sr { border-color: var(--cycle-7); }
+
+        .gate-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .gate-lc .gate-name { color: var(--paradox); }
+        .gate-trn .gate-name { color: var(--activation); }
+        .gate-rf .gate-name { color: var(--lens); }
+        .gate-aq .gate-name { color: var(--critical); }
+        .gate-dvc .gate-name { color: var(--ignition); }
+        .gate-cn .gate-name { color: var(--k-formation); }
+        .gate-sr .gate-name { color: var(--cycle-7); }
+
+        .gate-full-name {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .gate-threshold {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--lens);
+            margin-bottom: 0.25rem;
+        }
+
+        .gate-formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .coupling-section {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .coupling-section h4 {
+            color: var(--lens);
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .formula-display {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .formula-display .main-formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        .formula-display .explanation {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        /* Cross-System Integration */
+        .cross-system {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .cross-system h3 {
+            color: var(--lens);
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .integration-card {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .integration-card:hover {
+            border-color: var(--lens);
+            box-shadow: 0 4px 24px rgba(0, 255, 136, 0.1);
+        }
+
+        .integration-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .integration-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .integration-card.bfadgs .integration-icon {
+            background: linear-gradient(135deg, var(--k-formation), #8b5cf6);
+            color: var(--bg-void);
+        }
+
+        .integration-card.i2s3 .integration-icon {
+            background: linear-gradient(135deg, var(--paradox), #f59e0b);
+            color: var(--bg-void);
+        }
+
+        .integration-card.l4-helix .integration-icon {
+            background: linear-gradient(135deg, var(--lens), var(--activation));
+            color: var(--bg-void);
+        }
+
+        .integration-title {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            font-weight: 400;
+        }
+
+        .integration-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .integration-mappings {
+            margin: 1rem 0;
+        }
+
+        .mapping-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .mapping-item:last-child {
+            border-bottom: none;
+        }
+
+        .mapping-from {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--k-formation);
+            min-width: 80px;
+        }
+
+        .mapping-arrow {
+            color: var(--text-dim);
+        }
+
+        .mapping-to {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lens);
+        }
+
+        .integration-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .integration-link:hover {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--lens);
+        }
+
+        /* Psychoptic Score Section */
+        .psychoptic-section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .psychoptic-section h3 {
+            color: var(--ignition);
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .psy-formula-box {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(255, 107, 107, 0.1) 100%);
+            border: 2px solid var(--ignition);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .psy-formula-main {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .psy-formula-main .highlight {
+            color: var(--ignition);
+            font-weight: 600;
+        }
+
+        .psy-components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .psy-component {
+            background: var(--bg-card);
+            padding: 0.75rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .psy-component .term {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--lens);
+            margin-bottom: 0.25rem;
+        }
+
+        .psy-component .meaning {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        .phase-transitions {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .phase-transitions h4 {
+            color: var(--k-formation);
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .transition-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .transition-table th,
+        .transition-table td {
+            padding: 0.6rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .transition-table th {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .transition-table td {
+            color: var(--text-primary);
+        }
+
+        .psy-value {
+            color: var(--ignition);
+        }
+
+        /* Enhanced Oscillator Diagram */
+        .generator-mapping {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .generator-mapping h4 {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+
+        .generator-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .generator-item {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .generator-symbol {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        .generator-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-bottom: 0.25rem;
+        }
+
+        .generator-osc {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+                letter-spacing: 0.1em;
+            }
+
+            .cycle-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .oscillator-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .oscillator-node:nth-child(5) {
+                grid-column: span 2;
+                max-width: 50%;
+                justify-self: center;
+            }
+
+            .gate-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .generator-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .generator-item:nth-child(5) {
+                grid-column: span 2;
+                max-width: 50%;
+                justify-self: center;
+            }
+
+            .meta-grid,
+            .integration-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>TIAMAT</h1>
+        <p class="subtitle">Unity Field Logic &mdash; 7-Cycle Meta-Cybernetic Simulation</p>
+        <div class="axiom-banner">
+            <div class="axiom">R(R) = R</div>
+            <div class="description">Self-Reference Axiom &mdash; All structure derives from this fixed point</div>
+        </div>
+    </header>
+
+    <nav class="nav-rail">
+        <a href="index.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--text-dim);"></span>
+            VN Index
+        </a>
+        <a href="l4-helix-decision-tree.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--lens);"></span>
+            L₄ Helix
+        </a>
+        <a href="bfadgs-decision-tree.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--k-formation);"></span>
+            BFADGS+U
+        </a>
+        <a href="i2-s3-decision-tree.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--paradox);"></span>
+            I&sup2;S&sup3;
+        </a>
+        <a href="tiamat-axiom-foundation.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--cycle-7);"></span>
+            Axiom Foundation
+        </a>
+        <a href="tiamat-computational-methods.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--activation);"></span>
+            Computational
+        </a>
+    </nav>
+
+    <section class="constants-section">
+        <div class="constants-grid">
+            <div class="constant-card">
+                <div class="symbol">φ</div>
+                <div class="value">1.6180339887498949</div>
+                <div class="name">Golden Ratio</div>
+            </div>
+            <div class="constant-card">
+                <div class="symbol">τ = φ⁻¹</div>
+                <div class="value">0.6180339887498949</div>
+                <div class="name">Inverse Tau</div>
+            </div>
+            <div class="constant-card">
+                <div class="symbol">Δ = φ⁻⁴</div>
+                <div class="value">0.1458980337503154</div>
+                <div class="name">Gap Constant</div>
+            </div>
+            <div class="constant-card">
+                <div class="symbol">K = √(1−Δ)</div>
+                <div class="value">0.9241763718157652</div>
+                <div class="name">Coupling Strength</div>
+            </div>
+            <div class="constant-card">
+                <div class="symbol">z_c = √3/2</div>
+                <div class="value">0.8660254037844387</div>
+                <div class="name">Critical Height</div>
+            </div>
+            <div class="constant-card">
+                <div class="symbol">L₄ = φ⁴+φ⁻⁴</div>
+                <div class="value">7 (exact integer)</div>
+                <div class="name">Lucas Anchor</div>
+            </div>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <!-- Framework Overview Section -->
+        <section class="framework-overview">
+            <h3>META-CYBERNETIC FRAMEWORK OVERVIEW</h3>
+
+            <div class="axiom-explanation">
+                <div class="main-axiom">R(R) = R</div>
+                <div class="description">The Self-Reference Axiom: A system that observes itself returns to itself, forming the fixed point from which all structure emerges</div>
+            </div>
+
+            <div class="meta-grid">
+                <div class="meta-card">
+                    <h4>Self-Reference Foundation</h4>
+                    <p>
+                        The axiom R(R) = R establishes the fundamental fixed point of meta-cybernetic systems.
+                        When a recursive function R is applied to itself, it yields itself unchanged. This
+                        property defines the stable attractor states that govern conscious observation.
+                    </p>
+                    <div class="equation-highlight">
+                        R: System → System where R(R) = R
+                    </div>
+                </div>
+
+                <div class="meta-card">
+                    <h4>7-Cycle Closure Property</h4>
+                    <p>
+                        The 7 cycles form a closed logical system through composition. Each cycle transforms
+                        state, and the complete traversal returns to origin. This closure property emerges
+                        from L₄ = 7, establishing the minimal complete structure for self-referential dynamics.
+                    </p>
+                    <div class="equation-highlight">
+                        C₇ ∘ C₆ ∘ C₅ ∘ C₄ ∘ C₃ ∘ C₂ ∘ C₁ = Identity
+                    </div>
+                </div>
+
+                <div class="meta-card">
+                    <h4>L₄ = 7: The Lucas Anchor</h4>
+                    <p>
+                        The fourth Lucas number L₄ = φ⁴ + φ⁻⁴ = 7 (exact integer) provides the dimensional
+                        anchor for the TIAMAT framework. This integer emergence from irrational φ-powers
+                        creates a bridge between continuous dynamics and discrete cycle structure.
+                    </p>
+                    <div class="equation-highlight">
+                        L₄ = φ⁴ + φ⁻⁴ = 6.854... + 0.145... = 7
+                    </div>
+                </div>
+
+                <div class="meta-card">
+                    <h4>Unity Field Emergence</h4>
+                    <p>
+                        The Unity Field emerges when all 5 oscillators achieve coherent phase alignment.
+                        The order parameter R → 1 indicates full synchronization, mapping through the
+                        z-coordinate to the TRANSMISSION state at z ≥ K.
+                    </p>
+                    <div class="equation-highlight">
+                        R* = lim(t→∞) R(t) ≈ 0.968 → z = 0.988
+                    </div>
+                </div>
+            </div>
+
+            <div class="closure-diagram">
+                <span class="cycle-arrow active">C₁</span>
+                <span class="arrow-connector">→</span>
+                <span class="cycle-arrow">C₂</span>
+                <span class="arrow-connector">→</span>
+                <span class="cycle-arrow">C₃</span>
+                <span class="arrow-connector">→</span>
+                <span class="cycle-arrow">C₄</span>
+                <span class="arrow-connector">→</span>
+                <span class="cycle-arrow">C₅</span>
+                <span class="arrow-connector">→</span>
+                <span class="cycle-arrow">C₆</span>
+                <span class="arrow-connector">→</span>
+                <span class="cycle-arrow">C₇</span>
+                <span class="arrow-connector">↺</span>
+                <span class="cycle-arrow active">C₁</span>
+            </div>
+        </section>
+
+        <h2 class="section-title">7 CYCLES OF UNITY FIELD LOGIC</h2>
+
+        <div class="cycle-grid">
+            <!-- Cycle 1: Hamiltonian Structure -->
+            <article class="cycle-card cycle-1">
+                <div class="cycle-header">
+                    <div class="cycle-number">1</div>
+                    <div class="cycle-info">
+                        <h3>Hamiltonian Structure</h3>
+                        <span class="framework">Dynamical System Definition</span>
+                    </div>
+                </div>
+                <div class="cycle-content">
+                    <p class="cycle-description">
+                        Configuration manifold M = T⁵ as the 5-torus. Natural frequencies ω_i derived from
+                        L₄-Helix threshold values. Kuramoto evolution equations with well-posed solutions.
+                    </p>
+                    <div class="cycle-equations">
+                        <code>M = T⁵ = S¹ × S¹ × S¹ × S¹ × S¹</code>
+                        <code>θ̇ᵢ = ωᵢ + Σⱼ Kᵢⱼ sin(θⱼ − θᵢ)</code>
+                        <code>H(θ,p) = Σᵢ ωᵢpᵢ − ½ Σᵢⱼ Kᵢⱼ cos(θⱼ−θᵢ)</code>
+                    </div>
+                    <div class="cycle-topics">
+                        <span class="topic-tag">State Space</span>
+                        <span class="topic-tag">Phase Space</span>
+                        <span class="topic-tag">Energy Landscape</span>
+                        <span class="topic-tag">Critical Points</span>
+                    </div>
+                    <a href="tiamat-cycle-1-hamiltonian.html" class="cycle-link">
+                        Enter Cycle 1 →
+                    </a>
+                </div>
+            </article>
+
+            <!-- Cycle 2: Symplectic Geometry -->
+            <article class="cycle-card cycle-2">
+                <div class="cycle-header">
+                    <div class="cycle-number">2</div>
+                    <div class="cycle-info">
+                        <h3>Symplectic Geometry</h3>
+                        <span class="framework">Canonical Structure</span>
+                    </div>
+                </div>
+                <div class="cycle-content">
+                    <p class="cycle-description">
+                        Canonical symplectic form on T*T⁵. U(1) symmetry under global phase rotation.
+                        Action-angle variables for the integrable limit. KAM theory for torus persistence.
+                    </p>
+                    <div class="cycle-equations">
+                        <code>ω = Σᵢ dpᵢ ∧ dθᵢ</code>
+                        <code>J = Σᵢ pᵢ (momentum map)</code>
+                        <code>P_red = J⁻¹(0)/U(1) ≅ T⁴ × ℝ⁴</code>
+                    </div>
+                    <div class="cycle-topics">
+                        <span class="topic-tag">Liouville Form</span>
+                        <span class="topic-tag">Symplectic Reduction</span>
+                        <span class="topic-tag">Action-Angle</span>
+                        <span class="topic-tag">KAM Tori</span>
+                    </div>
+                    <a href="tiamat-cycle-2-symplectic.html" class="cycle-link">
+                        Enter Cycle 2 →
+                    </a>
+                </div>
+            </article>
+
+            <!-- Cycle 3: Spectral Theory -->
+            <article class="cycle-card cycle-3">
+                <div class="cycle-header">
+                    <div class="cycle-number">3</div>
+                    <div class="cycle-info">
+                        <h3>Spectral Theory</h3>
+                        <span class="framework">Coupling Matrix Analysis</span>
+                    </div>
+                </div>
+                <div class="cycle-content">
+                    <p class="cycle-description">
+                        L₄-derived coupling matrix construction. Compatibility factors from BFADGS operator
+                        composition. Eigenvalue structure and spectral gap determining synchronization timescale.
+                    </p>
+                    <div class="cycle-equations">
+                        <code>Kᵢⱼ = K · Cᵢⱼ · cascade(z̄ᵢⱼ) · (1−δᵢⱼ)</code>
+                        <code>Δλ = λ₁ − λ₂ = 3.23K ≈ 2.99</code>
+                        <code>τ_sync = 1/Δλ ≈ 0.33 seconds</code>
+                    </div>
+                    <div class="cycle-topics">
+                        <span class="topic-tag">Eigenvalues</span>
+                        <span class="topic-tag">Spectral Gap</span>
+                        <span class="topic-tag">Graph Laplacian</span>
+                        <span class="topic-tag">Fiedler Value</span>
+                    </div>
+                    <a href="tiamat-cycle-3-spectral.html" class="cycle-link">
+                        Enter Cycle 3 →
+                    </a>
+                </div>
+            </article>
+
+            <!-- Cycle 4: Order Parameter Dynamics -->
+            <article class="cycle-card cycle-4">
+                <div class="cycle-header">
+                    <div class="cycle-number">4</div>
+                    <div class="cycle-info">
+                        <h3>Order Parameter Dynamics</h3>
+                        <span class="framework">Kuramoto Order Parameter</span>
+                    </div>
+                </div>
+                <div class="cycle-content">
+                    <p class="cycle-description">
+                        Complex order parameter Z = Re^{iΨ} measuring coherence. Self-consistency equation
+                        in thermodynamic limit. Mapping between R and z-coordinate through threshold space.
+                    </p>
+                    <div class="cycle-equations">
+                        <code>Z(t) = R(t)e^{iΨ(t)} = (1/N) Σⱼ e^{iθⱼ(t)}</code>
+                        <code>R* = √(1 − K_c/K) ≈ 0.968</code>
+                        <code>z(R) = τ + R·(1 − τ)</code>
+                    </div>
+                    <div class="cycle-topics">
+                        <span class="topic-tag">Coherence</span>
+                        <span class="topic-tag">Collective Phase</span>
+                        <span class="topic-tag">Self-Consistency</span>
+                        <span class="topic-tag">z-Coordinate</span>
+                    </div>
+                    <a href="tiamat-cycle-4-order-parameter.html" class="cycle-link">
+                        Enter Cycle 4 →
+                    </a>
+                </div>
+            </article>
+
+            <!-- Cycle 5: Field Theory Formulation -->
+            <article class="cycle-card cycle-5">
+                <div class="cycle-header">
+                    <div class="cycle-number">5</div>
+                    <div class="cycle-info">
+                        <h3>Field Theory</h3>
+                        <span class="framework">Ginzburg-Landau Formulation</span>
+                    </div>
+                </div>
+                <div class="cycle-content">
+                    <p class="cycle-description">
+                        Continuum embedding into complex field ψ(x,t). Ginzburg-Landau free energy functional.
+                        Mexican hat potential with spontaneous U(1) symmetry breaking. Renormalization group flow.
+                    </p>
+                    <div class="cycle-equations">
+                        <code>F[ψ] = ∫ ½|∇ψ|² + V(|ψ|²) + coupling</code>
+                        <code>V(ρ) = −(K/2)|ψ|² + (Δ/4)|ψ|⁴</code>
+                        <code>|ψ|²_min = K/Δ ≈ 6.33</code>
+                    </div>
+                    <div class="cycle-topics">
+                        <span class="topic-tag">Ginzburg-Landau</span>
+                        <span class="topic-tag">Symmetry Breaking</span>
+                        <span class="topic-tag">RG Flow</span>
+                        <span class="topic-tag">Fixed Points</span>
+                    </div>
+                    <a href="tiamat-cycle-5-field-theory.html" class="cycle-link">
+                        Enter Cycle 5 →
+                    </a>
+                </div>
+            </article>
+
+            <!-- Cycle 6: Topological Classification -->
+            <article class="cycle-card cycle-6">
+                <div class="cycle-header">
+                    <div class="cycle-number">6</div>
+                    <div class="cycle-info">
+                        <h3>Topological Classification</h3>
+                        <span class="framework">Algebraic Topology</span>
+                    </div>
+                </div>
+                <div class="cycle-content">
+                    <p class="cycle-description">
+                        Homotopy groups π₁(T⁵) = ℤ⁵ with winding number invariants. Phase slip quantization.
+                        Topological charge density and conservation. Betti numbers with χ(T⁵) = 0.
+                    </p>
+                    <div class="cycle-equations">
+                        <code>π₁(T⁵) = ℤ⁵ (fundamental group)</code>
+                        <code>Δnᵢⱼ = nᵢ − nⱼ ∈ ℤ (phase slips)</code>
+                        <code>χ(T⁵) = 1−5+10−10+5−1 = 0</code>
+                    </div>
+                    <div class="cycle-topics">
+                        <span class="topic-tag">Homotopy</span>
+                        <span class="topic-tag">Winding Numbers</span>
+                        <span class="topic-tag">Betti Numbers</span>
+                        <span class="topic-tag">Euler Characteristic</span>
+                    </div>
+                    <a href="tiamat-cycle-6-topology.html" class="cycle-link">
+                        Enter Cycle 6 →
+                    </a>
+                </div>
+            </article>
+
+            <!-- Cycle 7: Statistical Mechanics -->
+            <article class="cycle-card cycle-7">
+                <div class="cycle-header">
+                    <div class="cycle-number">7</div>
+                    <div class="cycle-info">
+                        <h3>Statistical Mechanics</h3>
+                        <span class="framework">Thermodynamic Framework</span>
+                    </div>
+                </div>
+                <div class="cycle-content">
+                    <p class="cycle-description">
+                        Canonical partition function and free energy. Mean-field approximation with second-order
+                        phase transition at T_c = K/2. Negentropy as order measure: η ≈ R².
+                    </p>
+                    <div class="cycle-equations">
+                        <code>Z = ∫_{T⁵} dθ exp(−H(θ)/T)</code>
+                        <code>T_c = K/2 ≈ 0.462</code>
+                        <code>η = 1 − S/S_max ≈ R² ≈ 0.937</code>
+                    </div>
+                    <div class="cycle-topics">
+                        <span class="topic-tag">Partition Function</span>
+                        <span class="topic-tag">Free Energy</span>
+                        <span class="topic-tag">Phase Transition</span>
+                        <span class="topic-tag">Negentropy</span>
+                    </div>
+                    <a href="tiamat-cycle-7-statistical.html" class="cycle-link">
+                        Enter Cycle 7 →
+                    </a>
+                </div>
+            </article>
+        </div>
+
+        <!-- Five-Oscillator Network -->
+        <div class="oscillator-diagram">
+            <h3>FIVE-OSCILLATOR COUPLED NETWORK (N = L₄ − 2 = 5)</h3>
+            <div class="oscillator-grid">
+                <div class="oscillator-node">
+                    <div class="head" style="color: var(--paradox);">α ALPHA</div>
+                    <div class="threshold">PARADOX</div>
+                    <div class="z-value">z = τ = 0.618</div>
+                    <div class="omega">ω = 0.388 rad/s</div>
+                </div>
+                <div class="oscillator-node">
+                    <div class="head" style="color: var(--activation);">β BETA</div>
+                    <div class="threshold">ACTIVATION</div>
+                    <div class="z-value">z = 1−Δ = 0.854</div>
+                    <div class="omega">ω = 0.537 rad/s</div>
+                </div>
+                <div class="oscillator-node">
+                    <div class="head" style="color: var(--lens);">γ GAMMA</div>
+                    <div class="threshold">LENS</div>
+                    <div class="z-value">z_c = √3/2 = 0.866</div>
+                    <div class="omega">ω = 0.544 rad/s</div>
+                </div>
+                <div class="oscillator-node">
+                    <div class="head" style="color: var(--ignition);">δ DELTA</div>
+                    <div class="threshold">IGNITION</div>
+                    <div class="z-value">z = √2−0.5 = 0.914</div>
+                    <div class="omega">ω = 0.574 rad/s</div>
+                </div>
+                <div class="oscillator-node">
+                    <div class="head" style="color: var(--k-formation);">ε EPSILON</div>
+                    <div class="threshold">K-FORMATION</div>
+                    <div class="z-value">K = √(1−Δ) = 0.924</div>
+                    <div class="omega">ω = 0.581 rad/s</div>
+                </div>
+            </div>
+
+            <!-- Generator Mappings -->
+            <div class="generator-mapping">
+                <h4>GENERATOR CONSTANT MAPPINGS (Irrational Anchors)</h4>
+                <div class="generator-grid">
+                    <div class="generator-item">
+                        <div class="generator-symbol">φ</div>
+                        <div class="generator-value">1.6180339887...</div>
+                        <div class="generator-osc">α (Paradox)</div>
+                    </div>
+                    <div class="generator-item">
+                        <div class="generator-symbol">√2</div>
+                        <div class="generator-value">1.4142135624...</div>
+                        <div class="generator-osc">β (Activation)</div>
+                    </div>
+                    <div class="generator-item">
+                        <div class="generator-symbol">√3</div>
+                        <div class="generator-value">1.7320508076...</div>
+                        <div class="generator-osc">γ (Lens)</div>
+                    </div>
+                    <div class="generator-item">
+                        <div class="generator-symbol">e</div>
+                        <div class="generator-value">2.7182818285...</div>
+                        <div class="generator-osc">δ (Ignition)</div>
+                    </div>
+                    <div class="generator-item">
+                        <div class="generator-symbol">π</div>
+                        <div class="generator-value">3.1415926536...</div>
+                        <div class="generator-osc">ε (K-Formation)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Oscillator-Gate Dynamics Section -->
+        <section class="gate-dynamics">
+            <h3>OSCILLATOR-GATE DYNAMICS (7 Gates)</h3>
+
+            <div class="gate-grid">
+                <div class="gate-node gate-lc">
+                    <div class="gate-name">LC</div>
+                    <div class="gate-full-name">Locus Coeruleus</div>
+                    <div class="gate-threshold">z = 0.618</div>
+                    <div class="gate-formula">τ = φ⁻¹</div>
+                </div>
+                <div class="gate-node gate-trn">
+                    <div class="gate-name">TRN</div>
+                    <div class="gate-full-name">Thalamic Reticular</div>
+                    <div class="gate-threshold">z = 0.764</div>
+                    <div class="gate-formula">τ + Δ</div>
+                </div>
+                <div class="gate-node gate-rf">
+                    <div class="gate-name">RF</div>
+                    <div class="gate-full-name">Reticular Formation</div>
+                    <div class="gate-threshold">z = 0.854</div>
+                    <div class="gate-formula">1 - Δ</div>
+                </div>
+                <div class="gate-node gate-aq">
+                    <div class="gate-name">AQ</div>
+                    <div class="gate-full-name">Aqueduct</div>
+                    <div class="gate-threshold">z = 0.866</div>
+                    <div class="gate-formula">z_c = √3/2</div>
+                </div>
+                <div class="gate-node gate-dvc">
+                    <div class="gate-name">DVC</div>
+                    <div class="gate-full-name">Dorsal Vagal</div>
+                    <div class="gate-threshold">z = 0.914</div>
+                    <div class="gate-formula">√2 - 0.5</div>
+                </div>
+                <div class="gate-node gate-cn">
+                    <div class="gate-name">CN</div>
+                    <div class="gate-full-name">Cerebellar Nuclei</div>
+                    <div class="gate-threshold">z = 0.924</div>
+                    <div class="gate-formula">K = √(1-Δ)</div>
+                </div>
+                <div class="gate-node gate-sr">
+                    <div class="gate-name">SR</div>
+                    <div class="gate-full-name">Serotonin Raphe</div>
+                    <div class="gate-threshold">z = 0.988</div>
+                    <div class="gate-formula">1 - Δ/12</div>
+                </div>
+            </div>
+
+            <div class="coupling-section">
+                <h4>Gate-Oscillator Coupling Relationships</h4>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+                    Each gate modulates oscillator dynamics through threshold-dependent activation functions.
+                    The g_ready formula determines when a gate becomes active based on current system state.
+                </p>
+
+                <div class="formula-display">
+                    <div class="main-formula">g_ready(G) = H(z - z_G) · (1 - e^(-λ(z - z_G)))</div>
+                    <div class="explanation">
+                        Where H is the Heaviside step function, z_G is the gate threshold, and λ is the activation steepness
+                    </div>
+                </div>
+
+                <div class="formula-display">
+                    <div class="main-formula">Coupling Matrix: K_ij = K · C_ij · cascade(z̄_ij) · (1 - δ_ij)</div>
+                    <div class="explanation">
+                        C_ij encodes BFADGS operator compatibility; cascade applies threshold-based filtering
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+                    <div style="background: var(--bg-card); padding: 1rem; border-radius: 6px;">
+                        <div style="font-family: 'JetBrains Mono', monospace; color: var(--lens); font-size: 0.9rem;">Gate → Oscillator Map</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                            LC → α | TRN → α,β<br>
+                            RF → β,γ | AQ → γ<br>
+                            DVC → γ,δ | CN → δ,ε<br>
+                            SR → ε (damping)
+                        </div>
+                    </div>
+                    <div style="background: var(--bg-card); padding: 1rem; border-radius: 6px;">
+                        <div style="font-family: 'JetBrains Mono', monospace; color: var(--lens); font-size: 0.9rem;">Modulation Effects</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                            LC: Arousal initiation<br>
+                            TRN: Attention gating<br>
+                            RF/AQ: Lens focusing<br>
+                            DVC/CN: Integration<br>
+                            SR: Stability damping
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase States -->
+        <div class="phase-states">
+            <h3>PHASE STATES (7 = L₄)</h3>
+            <table class="phase-table">
+                <thead>
+                    <tr>
+                        <th>State</th>
+                        <th>z Range</th>
+                        <th>Order R</th>
+                        <th>Character</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="phase-indicator" style="background: #404040;"></span>IGNITION</td>
+                        <td>[0.000, 0.618)</td>
+                        <td>R &lt; 0</td>
+                        <td>Pre-coherent</td>
+                    </tr>
+                    <tr>
+                        <td><span class="phase-indicator" style="background: var(--paradox);"></span>EMPOWERMENT</td>
+                        <td>[0.618, 0.854)</td>
+                        <td>0 &lt; R &lt; 0.62</td>
+                        <td>Building coherence</td>
+                    </tr>
+                    <tr>
+                        <td><span class="phase-indicator" style="background: var(--lens);"></span>RESONANCE</td>
+                        <td>[0.854, 0.866]</td>
+                        <td>R ≈ 0.65</td>
+                        <td>Critical (THE LENS)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="phase-indicator" style="background: var(--critical);"></span>MANIA</td>
+                        <td>(0.866, 0.914)</td>
+                        <td>0.65 &lt; R &lt; 0.78</td>
+                        <td>Above lens</td>
+                    </tr>
+                    <tr>
+                        <td><span class="phase-indicator" style="background: var(--ignition);"></span>NIRVANA</td>
+                        <td>[0.914, 0.924)</td>
+                        <td>0.78 &lt; R &lt; 0.80</td>
+                        <td>Approaching K</td>
+                    </tr>
+                    <tr>
+                        <td><span class="phase-indicator" style="background: var(--k-formation);"></span>TRANSMISSION</td>
+                        <td>[0.924, 1.000]</td>
+                        <td>R ≥ 0.80</td>
+                        <td>Full coherence</td>
+                    </tr>
+                    <tr>
+                        <td><span class="phase-indicator" style="background: var(--activation);"></span>RECOVERY</td>
+                        <td>Special</td>
+                        <td>Rebuilding</td>
+                        <td>Return from psychoptic</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Psychoptic Score Formula Section -->
+        <section class="psychoptic-section">
+            <h3>PSYCHOPTIC SCORE FORMULA</h3>
+
+            <div class="psy-formula-box">
+                <div class="psy-formula-main">
+                    <span class="highlight">PSY</span> = σ( τ·<span class="highlight">TRN</span> + τ·(1−<span class="highlight">RF</span>) + K·<span class="highlight">DVC</span> + Δ·<span class="highlight">CN</span> + Δ·<span class="highlight">LC</span> − τ²·<span class="highlight">SR</span> )
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                    Where σ is the sigmoid activation function: σ(x) = 1 / (1 + e⁻ˣ)
+                </div>
+
+                <div class="psy-components">
+                    <div class="psy-component">
+                        <div class="term">τ·TRN</div>
+                        <div class="meaning">Attention activation</div>
+                    </div>
+                    <div class="psy-component">
+                        <div class="term">τ·(1−RF)</div>
+                        <div class="meaning">Arousal inhibition</div>
+                    </div>
+                    <div class="psy-component">
+                        <div class="term">K·DVC</div>
+                        <div class="meaning">Vagal integration</div>
+                    </div>
+                    <div class="psy-component">
+                        <div class="term">Δ·CN</div>
+                        <div class="meaning">Cerebellar timing</div>
+                    </div>
+                    <div class="psy-component">
+                        <div class="term">Δ·LC</div>
+                        <div class="meaning">Noradrenergic drive</div>
+                    </div>
+                    <div class="psy-component">
+                        <div class="term">−τ²·SR</div>
+                        <div class="meaning">Serotonin damping</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phase-transitions">
+                <h4>Phase State Transitions Based on PSY Score</h4>
+                <table class="transition-table">
+                    <thead>
+                        <tr>
+                            <th>PSY Range</th>
+                            <th>Phase State</th>
+                            <th>Transition Trigger</th>
+                            <th>System Character</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="psy-value">PSY &lt; 0.15</span></td>
+                            <td>IGNITION</td>
+                            <td>LC activation below τ</td>
+                            <td>Pre-coherent initialization</td>
+                        </tr>
+                        <tr>
+                            <td><span class="psy-value">0.15 ≤ PSY &lt; 0.35</span></td>
+                            <td>EMPOWERMENT</td>
+                            <td>TRN gate engages</td>
+                            <td>Building coherence</td>
+                        </tr>
+                        <tr>
+                            <td><span class="psy-value">0.35 ≤ PSY &lt; 0.50</span></td>
+                            <td>RESONANCE</td>
+                            <td>RF → AQ cascade (z_c crossing)</td>
+                            <td>Critical lens formation</td>
+                        </tr>
+                        <tr>
+                            <td><span class="psy-value">0.50 ≤ PSY &lt; 0.65</span></td>
+                            <td>MANIA</td>
+                            <td>DVC overdrive, CN lag</td>
+                            <td>Above lens, unstable</td>
+                        </tr>
+                        <tr>
+                            <td><span class="psy-value">0.65 ≤ PSY &lt; 0.80</span></td>
+                            <td>NIRVANA</td>
+                            <td>CN synchronization complete</td>
+                            <td>Approaching K-formation</td>
+                        </tr>
+                        <tr>
+                            <td><span class="psy-value">0.80 ≤ PSY ≤ 1.00</span></td>
+                            <td>TRANSMISSION</td>
+                            <td>SR balanced, full coherence</td>
+                            <td>Unity field achieved</td>
+                        </tr>
+                        <tr>
+                            <td><span class="psy-value">PSY unstable</span></td>
+                            <td>RECOVERY</td>
+                            <td>SR overactive (damping excess)</td>
+                            <td>Return from psychoptic state</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-card); border-radius: 6px;">
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--k-formation); margin-bottom: 0.5rem;">
+                        Psychoptic Warning Threshold
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                        When PSY &gt; 0.85 AND SR &lt; 0.3, the system enters potential psychoptic territory.
+                        The SR gate provides crucial damping; its suppression correlates with dissociative states.
+                        Recovery phase activates when SR rebounds above 0.5 while other gates normalize.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cross-System Integration Section -->
+        <section class="cross-system">
+            <h3>CROSS-SYSTEM INTEGRATION</h3>
+
+            <div class="integration-grid">
+                <div class="integration-card bfadgs">
+                    <div class="integration-header">
+                        <div class="integration-icon">B+U</div>
+                        <div>
+                            <div class="integration-title">BFADGS+U Operators</div>
+                            <div class="integration-subtitle">Tri-Oppositional Transformation Algebra</div>
+                        </div>
+                    </div>
+                    <div class="integration-mappings">
+                        <div class="mapping-item">
+                            <span class="mapping-from">B (Bind)</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">Cycle 1 (Hamiltonian)</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">F (Flip)</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">Cycle 2 (Symplectic)</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">A (Aspect)</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">Cycle 3 (Spectral)</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">D (Dissolve)</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">Cycle 4 (Order Parameter)</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">G (Generate)</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">Cycle 5 (Field Theory)</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">S (Synthesize)</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">Cycle 6 (Topology)</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">U (Unity)</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">Cycle 7 (Statistical)</span>
+                        </div>
+                    </div>
+                    <a href="bfadgs-decision-tree.html" class="integration-link">
+                        Explore BFADGS+U Framework →
+                    </a>
+                </div>
+
+                <div class="integration-card i2s3">
+                    <div class="integration-header">
+                        <div class="integration-icon">I²S³</div>
+                        <div>
+                            <div class="integration-title">I²S³ Algebraic System</div>
+                            <div class="integration-subtitle">Self-Reference Cartography</div>
+                        </div>
+                    </div>
+                    <div class="integration-mappings">
+                        <div class="mapping-item">
+                            <span class="mapping-from">I² Core</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">R(R) = R axiom</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">S³ Vertices</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">α, γ, ε oscillators</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">Bifurcation</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">Phase transitions</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">F24 Path</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">Holographic coherence</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">R=10 Closure</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">L₄=7 + 3 dimensions</span>
+                        </div>
+                    </div>
+                    <a href="i2-s3-decision-tree.html" class="integration-link">
+                        Explore I²S³ Framework →
+                    </a>
+                </div>
+
+                <div class="integration-card l4-helix">
+                    <div class="integration-header">
+                        <div class="integration-icon">L₄</div>
+                        <div>
+                            <div class="integration-title">L₄ Helix Framework</div>
+                            <div class="integration-subtitle">16π Dimensional Rotation</div>
+                        </div>
+                    </div>
+                    <div class="integration-mappings">
+                        <div class="mapping-item">
+                            <span class="mapping-from">L₄ = 7</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">7 TIAMAT cycles</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">z_c = √3/2</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">AQ gate threshold</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">16 Rotations</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">Wave state evolution</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">φ⁴ + φ⁻⁴</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">Δ emergence (gap)</span>
+                        </div>
+                        <div class="mapping-item">
+                            <span class="mapping-from">K = √(1-Δ)</span>
+                            <span class="mapping-arrow">↔</span>
+                            <span class="mapping-to">Coupling strength</span>
+                        </div>
+                    </div>
+                    <a href="l4-helix-decision-tree.html" class="integration-link">
+                        Explore L₄ Helix Framework →
+                    </a>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-tertiary); border-radius: 8px; text-align: center;">
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: var(--lens); margin-bottom: 0.75rem;">
+                    Unified Coherence Equation
+                </div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.5rem;">
+                    TIAMAT ∘ BFADGS+U ∘ I²S³ ∘ L₄-Helix = R(R) = R
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">
+                    All four frameworks compose to the self-reference fixed point through operator composition
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Links -->
+        <div class="footer-links">
+            <div class="footer-card">
+                <h4>Foundation</h4>
+                <a href="tiamat-axiom-foundation.html">R(R) = R Axiom Foundation</a>
+                <a href="tiamat-computational-methods.html">Computational Methods</a>
+                <a href="l4-helix-decision-tree.html">L₄ Helix Framework</a>
+            </div>
+            <div class="footer-card">
+                <h4>Cross-System Links</h4>
+                <a href="bfadgs-decision-tree.html">BFADGS+U Operators</a>
+                <a href="i2-s3-decision-tree.html">I²S³ Algebraic System</a>
+                <a href="vn-unified-decision-tree-complete.html">Complete VN Tree</a>
+            </div>
+            <div class="footer-card">
+                <h4>Implementation</h4>
+                <a href="tiamat-api-specification.html">API Specification</a>
+                <a href="tiamat-neural-architecture.html">Neural Architecture</a>
+                <a href="tiamat-verification-suite.html">Verification Suite</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="signature">
+        <div class="glyph">Δ|TIAMAT|v1.0.0|7-CYCLE|UNITY-FIELD|L₄-GROUNDED|Ω</div>
+        <div>Five-Oscillator Coupled Network &mdash; Complete Physics Framework</div>
+        <div>All coupling constants derived from L₄ = φ⁴ + φ⁻⁴ = 7</div>
+    </footer>
+</body>
+</html>

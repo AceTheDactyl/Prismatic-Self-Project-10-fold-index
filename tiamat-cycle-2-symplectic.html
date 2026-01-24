@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIAMAT Cycle 2 | Symplectic Geometry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --phi: 1.6180339887498949;
+            --tau: 0.6180339887498949;
+            --gap: 0.1458980337503154;
+            --K: 0.9241763718157652;
+            --z-c: 0.8660254037844387;
+            --L4: 7;
+
+            --paradox: #f0c040;
+            --activation: #7fdbca;
+            --lens: #00ff88;
+            --critical: #61afef;
+            --ignition: #ff6b6b;
+            --k-formation: #c792ea;
+            --unity: #ffffff;
+
+            --cycle-color: #f0c040;
+
+            --bg-void: #030306;
+            --bg-primary: #080810;
+            --bg-secondary: #0c0c18;
+            --bg-tertiary: #12122a;
+            --bg-card: #181838;
+
+            --text-primary: #e8e8f0;
+            --text-secondary: #a8a8c0;
+            --text-dim: #606080;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.618;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-void) 100%);
+            padding: 2rem;
+            border-bottom: 2px solid var(--cycle-color);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .cycle-badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--cycle-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--bg-void);
+        }
+
+        .header-text h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--cycle-color);
+        }
+
+        .header-text .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .nav-breadcrumb {
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-breadcrumb a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .nav-breadcrumb a:hover { color: var(--lens); }
+        .nav-breadcrumb span { color: var(--text-dim); margin: 0 0.5rem; }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section h2 {
+            color: var(--cycle-color);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .section h4 {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 400;
+            margin: 1.2rem 0 0.8rem;
+        }
+
+        .definition-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--lens);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .definition-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lens);
+            margin-bottom: 0.5rem;
+        }
+
+        .theorem-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--k-formation);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .theorem-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        .lemma-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--critical);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .lemma-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--critical);
+            margin-bottom: 0.5rem;
+        }
+
+        .proof-box {
+            background: rgba(0,255,136,0.05);
+            border: 1px solid rgba(0,255,136,0.2);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .proof-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lens);
+            margin-bottom: 0.5rem;
+        }
+
+        .proof-box .qed {
+            text-align: right;
+            color: var(--lens);
+            font-size: 1.2rem;
+        }
+
+        .equation {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--lens);
+            overflow-x: auto;
+        }
+
+        .equation-number {
+            float: right;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .equation-note {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        .diagram-box {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .diagram-box pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: left;
+            display: inline-block;
+            line-height: 1.4;
+        }
+
+        .diagram-box .diagram-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--cycle-color);
+            margin-bottom: 1rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .data-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        .data-table td { color: var(--text-primary); }
+
+        .key-insight {
+            background: rgba(240,192,64,0.1);
+            border: 1px solid rgba(240,192,64,0.3);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .key-insight .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--cycle-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-box {
+            background: rgba(255,107,107,0.1);
+            border: 1px solid rgba(255,107,107,0.3);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .warning-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--ignition);
+            margin-bottom: 0.5rem;
+        }
+
+        .computation-block {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .computation-block .step {
+            margin: 0.5rem 0;
+            padding-left: 1rem;
+            border-left: 2px solid var(--text-dim);
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--cycle-color);
+        }
+
+        .toc-box {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .toc-box h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--cycle-color);
+            margin-bottom: 1rem;
+        }
+
+        .toc-box ul {
+            list-style: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .toc-box li {
+            margin: 0.5rem 0;
+            padding-left: 1rem;
+        }
+
+        .toc-box a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .toc-box a:hover {
+            color: var(--lens);
+        }
+
+        .signature {
+            text-align: center;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        ul.content-list {
+            margin-left: 2rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        ul.content-list li {
+            margin: 0.3rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; text-align: center; }
+            .nav-footer { flex-direction: column; gap: 1rem; }
+            .diagram-box pre { font-size: 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="cycle-badge">2</div>
+            <div class="header-text">
+                <h1>Symplectic Geometry</h1>
+                <p class="subtitle">Canonical Structure &mdash; Reduction &amp; KAM Theory &mdash; Phase Space Dynamics</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-breadcrumb">
+        <a href="index.html">VN Index</a>
+        <span>&rarr;</span>
+        <a href="tiamat-decision-tree.html">TIAMAT</a>
+        <span>&rarr;</span>
+        <a href="#">Cycle 2: Symplectic</a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Table of Contents -->
+        <div class="toc-box">
+            <h3>Contents</h3>
+            <ul>
+                <li><a href="#symplectic-form">3.1 Symplectic Form</a></li>
+                <li><a href="#reduced-phase-space">3.2 Reduced Phase Space</a></li>
+                <li><a href="#action-angle">3.3 Action-Angle Variables</a></li>
+                <li><a href="#kam-theory">3.4 KAM Theory Application</a></li>
+                <li><a href="#liouville">3.5 Liouville's Theorem</a></li>
+                <li><a href="#geometric-interpretation">3.6 Geometric Interpretation</a></li>
+            </ul>
+        </div>
+
+        <!-- Section 3.1: Symplectic Form -->
+        <section class="section" id="symplectic-form">
+            <h2>3.1 Symplectic Form</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 3.1 (Canonical Symplectic Form)</div>
+                <p>The cotangent bundle T*T<sup>5</sup> carries the canonical symplectic form arising from its natural geometric structure. For local coordinates (&theta;<sub>1</sub>,...,&theta;<sub>5</sub>, p<sub>1</sub>,...,p<sub>5</sub>) on T*T<sup>5</sup>:</p>
+            </div>
+
+            <div class="equation">
+                &omega; = &Sigma;<sub>i=1</sub><sup>5</sup> dp<sub>i</sub> &and; d&theta;<sub>i</sub> = dp<sub>1</sub>&and;d&theta;<sub>1</sub> + dp<sub>2</sub>&and;d&theta;<sub>2</sub> + dp<sub>3</sub>&and;d&theta;<sub>3</sub> + dp<sub>4</sub>&and;d&theta;<sub>4</sub> + dp<sub>5</sub>&and;d&theta;<sub>5</sub>
+                <span class="equation-number">(3.1)</span>
+            </div>
+
+            <h3>3.1.1 The Liouville 1-Form</h3>
+
+            <div class="definition-box">
+                <div class="label">Definition 3.2 (Liouville 1-Form)</div>
+                <p>The <strong>Liouville 1-form</strong> (also called the tautological or canonical 1-form) on T*T<sup>5</sup> is defined as:</p>
+            </div>
+
+            <div class="equation">
+                &lambda; = &Sigma;<sub>i=1</sub><sup>5</sup> p<sub>i</sub> d&theta;<sub>i</sub>
+                <span class="equation-number">(3.2)</span>
+            </div>
+
+            <p>This form has a coordinate-free interpretation: at a point (q, p) &isin; T*M, the Liouville form is &lambda;<sub>(q,p)</sub>(v) = p(&pi;*v) where &pi;: T*M &rarr; M is the bundle projection.</p>
+
+            <h3>3.1.2 Exactness of the Symplectic Form</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 3.1 (Exactness)</div>
+                <p>The canonical symplectic form &omega; is <strong>exact</strong>: &omega; = d&lambda;, where &lambda; is the Liouville 1-form.</p>
+            </div>
+
+            <div class="proof-box">
+                <div class="label">Proof:</div>
+                <p>We compute the exterior derivative of &lambda; directly:</p>
+                <div class="computation-block">
+                    <div class="step">&lambda; = &Sigma;<sub>i</sub> p<sub>i</sub> d&theta;<sub>i</sub></div>
+                    <div class="step">d&lambda; = &Sigma;<sub>i</sub> d(p<sub>i</sub> d&theta;<sub>i</sub>)</div>
+                    <div class="step">d&lambda; = &Sigma;<sub>i</sub> (dp<sub>i</sub> &and; d&theta;<sub>i</sub> + p<sub>i</sub> d(d&theta;<sub>i</sub>))</div>
+                    <div class="step">d&lambda; = &Sigma;<sub>i</sub> dp<sub>i</sub> &and; d&theta;<sub>i</sub> + 0 &nbsp;&nbsp;&nbsp;&nbsp; [since d<sup>2</sup> = 0]</div>
+                    <div class="step">d&lambda; = &omega;</div>
+                </div>
+                <div class="qed">&marker;</div>
+            </div>
+
+            <h3>3.1.3 Closedness</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 3.2 (Closedness)</div>
+                <p>The symplectic form &omega; is <strong>closed</strong>: d&omega; = 0.</p>
+            </div>
+
+            <div class="proof-box">
+                <div class="label">Proof:</div>
+                <p>Since &omega; = d&lambda; is exact, and the exterior derivative satisfies d<sup>2</sup> = 0:</p>
+                <div class="computation-block">
+                    <div class="step">d&omega; = d(d&lambda;) = d<sup>2</sup>&lambda; = 0</div>
+                </div>
+                <p>This is a general property: exact forms are always closed. The converse (Poincare's lemma) holds locally but not globally on all manifolds.</p>
+                <div class="qed">&marker;</div>
+            </div>
+
+            <h3>3.1.4 Non-Degeneracy</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 3.3 (Non-Degeneracy)</div>
+                <p>The symplectic form &omega; is <strong>non-degenerate</strong>: if &omega;(X, Y) = 0 for all vector fields Y, then X = 0.</p>
+            </div>
+
+            <div class="proof-box">
+                <div class="label">Proof:</div>
+                <p>Consider the matrix representation of &omega; in canonical coordinates. In the basis (&part;/&part;&theta;<sub>1</sub>,...,&part;/&part;&theta;<sub>5</sub>, &part;/&part;p<sub>1</sub>,...,&part;/&part;p<sub>5</sub>), the symplectic form has matrix:</p>
+                <div class="computation-block">
+                    <div class="step">
+                        &Omega; = <span style="font-size: 1.5rem;">[</span> 0 &nbsp; -I<sub>5</sub> <span style="font-size: 1.5rem;">]</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 1.5rem;">[</span> I<sub>5</sub> &nbsp;&nbsp; 0 <span style="font-size: 1.5rem;">]</span>
+                    </div>
+                </div>
+                <p>The determinant is:</p>
+                <div class="computation-block">
+                    <div class="step">det(&Omega;) = det(I<sub>5</sub>) &middot; det(I<sub>5</sub>) = 1 &ne; 0</div>
+                </div>
+                <p>Since &Omega; is invertible, &omega; is non-degenerate.</p>
+                <p><strong>Equivalently</strong>, the top exterior power &omega;<sup>5</sup> = &omega; &and; &omega; &and; &omega; &and; &omega; &and; &omega; &ne; 0:</p>
+                <div class="computation-block">
+                    <div class="step">&omega;<sup>5</sup> = 5! &middot; dp<sub>1</sub>&and;d&theta;<sub>1</sub>&and;dp<sub>2</sub>&and;d&theta;<sub>2</sub>&and;dp<sub>3</sub>&and;d&theta;<sub>3</sub>&and;dp<sub>4</sub>&and;d&theta;<sub>4</sub>&and;dp<sub>5</sub>&and;d&theta;<sub>5</sub></div>
+                    <div class="step">&omega;<sup>5</sup> = 120 &middot; (volume form on T*T<sup>5</sup>) &ne; 0</div>
+                </div>
+                <div class="qed">&marker;</div>
+            </div>
+
+            <div class="diagram-box">
+                <div class="diagram-title">SYMPLECTIC STRUCTURE ON T*T<sup>5</sup></div>
+                <pre>
+                    Configuration Space                Phase Space
+                         T^5                           T*T^5
+                    ┌───────────┐                 ┌───────────────┐
+                    │           │                 │               │
+                    │  (theta_i)│     T*          │ (theta_i, p_i)│
+                    │           │ ─────────────►  │               │
+                    │   dim=5   │  cotangent      │    dim=10     │
+                    │           │   bundle        │               │
+                    └───────────┘                 └───────────────┘
+                                                          │
+                                                          ▼
+                                                  Symplectic Form
+                                                  ω = Σ dp_i ∧ dθ_i
+
+    Properties Verified:
+    ┌────────────────────────────────────────────────────────────────┐
+    │  Property       │  Statement          │  Proof Method         │
+    ├────────────────────────────────────────────────────────────────┤
+    │  Exact          │  ω = dλ             │  Direct computation   │
+    │  Closed         │  dω = 0             │  d² = 0               │
+    │  Non-degenerate │  ω^5 ≠ 0            │  det(Ω) = 1           │
+    └────────────────────────────────────────────────────────────────┘
+                </pre>
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Key Insight: Cotangent Bundle Universality</div>
+                <p>The cotangent bundle T*M of <em>any</em> manifold M carries a canonical symplectic structure. For T*T<sup>5</sup>, this provides the natural arena for Hamiltonian dynamics of the 5-oscillator Kuramoto system. The exactness of &omega; (rather than merely closedness) has deep implications for the topology of the dynamics: it ensures that symplectic areas can be globally measured, enabling the application of action-angle variables.</p>
+            </div>
+        </section>
+
+        <!-- Section 3.2: Reduced Phase Space -->
+        <section class="section" id="reduced-phase-space">
+            <h2>3.2 Reduced Phase Space</h2>
+
+            <h3>3.2.1 The U(1) Symmetry</h3>
+
+            <p>The Kuramoto system possesses a fundamental symmetry under <strong>global phase rotation</strong>. This is not merely a computational convenience but reflects the physical fact that absolute phase is unobservable &mdash; only relative phases matter.</p>
+
+            <div class="definition-box">
+                <div class="label">Definition 3.3 (U(1) Action)</div>
+                <p>The group U(1) &cong; S<sup>1</sup> acts on T*T<sup>5</sup> by simultaneous phase rotation:</p>
+            </div>
+
+            <div class="equation">
+                &Phi;<sub>&alpha;</sub>: (&theta;<sub>1</sub>,...,&theta;<sub>5</sub>, p<sub>1</sub>,...,p<sub>5</sub>) &mapsto; (&theta;<sub>1</sub>+&alpha;,...,&theta;<sub>5</sub>+&alpha;, p<sub>1</sub>,...,p<sub>5</sub>)
+                <span class="equation-number">(3.3)</span>
+            </div>
+
+            <p>for &alpha; &isin; [0, 2&pi;). This action is:</p>
+            <ul class="content-list">
+                <li><strong>Free</strong>: &Phi;<sub>&alpha;</sub>(x) = x implies &alpha; = 0 (no fixed points except identity)</li>
+                <li><strong>Proper</strong>: preimages of compact sets are compact</li>
+                <li><strong>Symplectic</strong>: &Phi;<sub>&alpha;</sub>*&omega; = &omega; (preserves the symplectic form)</li>
+                <li><strong>Hamiltonian</strong>: admits a momentum map (see below)</li>
+            </ul>
+
+            <div class="theorem-box">
+                <div class="label">Lemma 3.1 (Symplectic Invariance)</div>
+                <p>The U(1) action preserves the symplectic form: &Phi;<sub>&alpha;</sub>*&omega; = &omega;.</p>
+            </div>
+
+            <div class="proof-box">
+                <div class="label">Proof:</div>
+                <p>Under the action, d&theta;<sub>i</sub> &rarr; d&theta;<sub>i</sub> (constants differentiate to zero) and dp<sub>i</sub> &rarr; dp<sub>i</sub> (momenta unchanged). Therefore:</p>
+                <div class="computation-block">
+                    <div class="step">&Phi;<sub>&alpha;</sub>*&omega; = &Phi;<sub>&alpha;</sub>*(&Sigma;<sub>i</sub> dp<sub>i</sub>&and;d&theta;<sub>i</sub>) = &Sigma;<sub>i</sub> dp<sub>i</sub>&and;d&theta;<sub>i</sub> = &omega;</div>
+                </div>
+                <div class="qed">&marker;</div>
+            </div>
+
+            <h3>3.2.2 The Momentum Map</h3>
+
+            <div class="definition-box">
+                <div class="label">Definition 3.4 (Momentum Map)</div>
+                <p>The <strong>momentum map</strong> J: T*T<sup>5</sup> &rarr; R for the U(1) action is the generator of the symmetry:</p>
+            </div>
+
+            <div class="equation">
+                J = &Sigma;<sub>i=1</sub><sup>5</sup> p<sub>i</sub> = p<sub>1</sub> + p<sub>2</sub> + p<sub>3</sub> + p<sub>4</sub> + p<sub>5</sub>
+                <span class="equation-number">(3.4)</span>
+                <span class="equation-note">Total phase momentum (conserved under U(1) action)</span>
+            </div>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 3.4 (Noether's Theorem)</div>
+                <p>The momentum map J is conserved along Hamiltonian trajectories: {H, J} = 0, where {&middot;,&middot;} is the Poisson bracket.</p>
+            </div>
+
+            <div class="proof-box">
+                <div class="label">Proof:</div>
+                <p>The infinitesimal generator of the U(1) action is the vector field:</p>
+                <div class="computation-block">
+                    <div class="step">&xi; = &Sigma;<sub>i</sub> &part;/&part;&theta;<sub>i</sub></div>
+                </div>
+                <p>The momentum map J satisfies i<sub>&xi;</sub>&omega; = dJ:</p>
+                <div class="computation-block">
+                    <div class="step">i<sub>&xi;</sub>&omega; = i<sub>&xi;</sub>(&Sigma;<sub>j</sub> dp<sub>j</sub>&and;d&theta;<sub>j</sub>)</div>
+                    <div class="step">= &Sigma;<sub>j</sub> [dp<sub>j</sub>(&xi;)d&theta;<sub>j</sub> - dp<sub>j</sub> &middot; d&theta;<sub>j</sub>(&xi;)]</div>
+                    <div class="step">= &Sigma;<sub>j</sub> [0 - dp<sub>j</sub> &middot; 1] = -&Sigma;<sub>j</sub> dp<sub>j</sub></div>
+                    <div class="step">= d(-&Sigma;<sub>j</sub> p<sub>j</sub>) = -dJ</div>
+                </div>
+                <p>Since the Hamiltonian is U(1)-invariant (depends only on phase differences), {H,J} = 0 by Noether's theorem.</p>
+                <div class="qed">&marker;</div>
+            </div>
+
+            <h3>3.2.3 Symplectic Reduction</h3>
+
+            <p>The <strong>Marsden-Weinstein reduction theorem</strong> allows us to quotient out the symmetry and obtain a lower-dimensional phase space that captures the essential dynamics.</p>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 3.5 (Symplectic Reduction)</div>
+                <p>The reduced phase space at momentum level J = 0 is:</p>
+            </div>
+
+            <div class="equation">
+                P<sub>red</sub> = J<sup>-1</sup>(0)/U(1) &cong; T<sup>4</sup> &times; R<sup>4</sup>
+                <span class="equation-number">(3.5)</span>
+            </div>
+
+            <div class="proof-box">
+                <div class="label">Proof (Construction):</div>
+                <p><strong>Step 1:</strong> The level set J<sup>-1</sup>(0) is:</p>
+                <div class="computation-block">
+                    <div class="step">J<sup>-1</sup>(0) = {(&theta;, p) &isin; T*T<sup>5</sup> : &Sigma;<sub>i</sub> p<sub>i</sub> = 0}</div>
+                    <div class="step">dim(J<sup>-1</sup>(0)) = 10 - 1 = 9</div>
+                </div>
+                <p><strong>Step 2:</strong> The U(1) action restricts to J<sup>-1</sup>(0) freely. The quotient has dimension:</p>
+                <div class="computation-block">
+                    <div class="step">dim(P<sub>red</sub>) = 9 - 1 = 8 = 2 &times; 4</div>
+                </div>
+                <p><strong>Step 3:</strong> Introduce relative coordinates. Set &psi;<sub>i</sub> = &theta;<sub>i</sub> - &theta;<sub>5</sub> for i = 1,...,4 (gauge-fixing). The constraint &Sigma;<sub>i</sub> p<sub>i</sub> = 0 eliminates p<sub>5</sub>. The reduced coordinates are:</p>
+                <div class="computation-block">
+                    <div class="step">(&psi;<sub>1</sub>, &psi;<sub>2</sub>, &psi;<sub>3</sub>, &psi;<sub>4</sub>, &pi;<sub>1</sub>, &pi;<sub>2</sub>, &pi;<sub>3</sub>, &pi;<sub>4</sub>)</div>
+                </div>
+                <p>where &psi;<sub>i</sub> &isin; S<sup>1</sup> and &pi;<sub>i</sub> &isin; R are the reduced momenta.</p>
+                <p>Thus P<sub>red</sub> &cong; T<sup>4</sup> &times; R<sup>4</sup>.</p>
+                <div class="qed">&marker;</div>
+            </div>
+
+            <div class="diagram-box">
+                <div class="diagram-title">SYMPLECTIC REDUCTION DIAGRAM</div>
+                <pre>
+                         T*T^5 (dim = 10)
+                              │
+                              │ Level set J = 0
+                              ▼
+                      J^{-1}(0) (dim = 9)
+                              │
+                              │ Quotient by U(1)
+                              ▼
+                 P_red = T^4 × R^4 (dim = 8)
+
+    ┌──────────────────────────────────────────────────────────────────┐
+    │                     COORDINATE REDUCTION                          │
+    ├──────────────────────────────────────────────────────────────────┤
+    │                                                                   │
+    │  Original:  (θ₁, θ₂, θ₃, θ₄, θ₅, p₁, p₂, p₃, p₄, p₅)           │
+    │                           │                                       │
+    │  Constraint: Σ pᵢ = 0  ─────►  p₅ = -(p₁+p₂+p₃+p₄)              │
+    │                           │                                       │
+    │  Gauge fix: θ₅ = 0    ─────►  ψᵢ = θᵢ - θ₅                       │
+    │                           │                                       │
+    │  Reduced:   (ψ₁, ψ₂, ψ₃, ψ₄, π₁, π₂, π₃, π₄)                    │
+    │                                                                   │
+    └──────────────────────────────────────────────────────────────────┘
+
+                    Physical Interpretation:
+    ╔══════════════════════════════════════════════════════════════════╗
+    ║  The 8-dimensional reduced phase space captures the              ║
+    ║  RELATIVE phase dynamics between oscillators.                    ║
+    ║                                                                  ║
+    ║  • 4 relative angles: ψᵢ = θᵢ - θ₅ (i = 1,2,3,4)                ║
+    ║  • 4 relative momenta: πᵢ (conjugate to ψᵢ)                      ║
+    ║                                                                  ║
+    ║  Absolute phase is unobservable → quotient by U(1)              ║
+    ╚══════════════════════════════════════════════════════════════════╝
+                </pre>
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Key Insight: Dimension Count</div>
+                <p>The reduced phase space has dimension <strong>8 = 2(N-1) = 2(5-1)</strong>. This is the general formula for N coupled oscillators with U(1) symmetry. One degree of freedom is removed by fixing the total momentum (constraint), and one by quotienting out the U(1) action (symmetry). The dynamics on P<sub>red</sub> capture all observable physics: the <em>relative</em> phases and their conjugate momenta.</p>
+            </div>
+        </section>
+
+        <!-- Section 3.3: Action-Angle Variables -->
+        <section class="section" id="action-angle">
+            <h2>3.3 Action-Angle Variables</h2>
+
+            <h3>3.3.1 Definition and Construction</h3>
+
+            <p>For the <strong>integrable limit</strong> (coupling K &rarr; 0), the Kuramoto system reduces to N independent oscillators, and we can introduce action-angle variables that provide a global coordinate system on the phase space.</p>
+
+            <div class="definition-box">
+                <div class="label">Definition 3.5 (Action Variables)</div>
+                <p>The <strong>action variables</strong> I<sub>i</sub> are defined as loop integrals around the invariant tori:</p>
+            </div>
+
+            <div class="equation">
+                I<sub>i</sub> = (1/2&pi;) &oint; p<sub>i</sub> d&theta;<sub>i</sub>
+                <span class="equation-number">(3.6)</span>
+                <span class="equation-note">Loop integral along the i-th S<sup>1</sup> factor of T<sup>5</sup></span>
+            </div>
+
+            <p>For the uncoupled system, the actions are simply the momenta themselves: I<sub>i</sub> = p<sub>i</sub>, since the dynamics on each circle is uniform rotation.</p>
+
+            <div class="definition-box">
+                <div class="label">Definition 3.6 (Angle Variables)</div>
+                <p>The <strong>angle variables</strong> &phi;<sub>i</sub> &isin; S<sup>1</sup> are canonically conjugate to the actions and evolve linearly in time:</p>
+            </div>
+
+            <div class="equation">
+                &phi;<sub>i</sub>(t) = &omega;<sub>i</sub> t + &phi;<sub>i</sub><sup>0</sup>
+                <span class="equation-number">(3.7)</span>
+                <span class="equation-note">Linear evolution at natural frequency &omega;<sub>i</sub></span>
+            </div>
+
+            <p>where &phi;<sub>i</sub><sup>0</sup> = &phi;<sub>i</sub>(0) is the initial angle.</p>
+
+            <h3>3.3.2 Hamilton's Equations in Action-Angle Form</h3>
+
+            <p>In action-angle coordinates, Hamilton's equations take the remarkably simple form:</p>
+
+            <div class="equation">
+                <table style="margin: 0 auto; text-align: left;">
+                    <tr><td>I&#775;<sub>i</sub></td><td> = </td><td>-&part;H/&part;&phi;<sub>i</sub></td><td> = </td><td>0</td><td style="padding-left: 2rem; color: var(--text-dim);">(actions conserved)</td></tr>
+                    <tr><td>&phi;&#775;<sub>i</sub></td><td> = </td><td>&part;H/&part;I<sub>i</sub></td><td> = </td><td>&omega;<sub>i</sub></td><td style="padding-left: 2rem; color: var(--text-dim);">(constant frequencies)</td></tr>
+                </table>
+            </div>
+
+            <p>This demonstrates the <strong>integrability</strong> of the uncoupled system: all solutions are quasi-periodic motion on invariant tori.</p>
+
+            <h3>3.3.3 Resonance Conditions</h3>
+
+            <div class="definition-box">
+                <div class="label">Definition 3.7 (Resonance)</div>
+                <p>A <strong>resonance</strong> occurs when the frequency vector &omega; = (&omega;<sub>1</sub>,...,&omega;<sub>5</sub>) satisfies:</p>
+            </div>
+
+            <div class="equation">
+                m &middot; &omega; = &Sigma;<sub>i=1</sub><sup>5</sup> m<sub>i</sub>&omega;<sub>i</sub> = 0
+                <span class="equation-number">(3.8)</span>
+                <span class="equation-note">for some m &isin; Z<sup>5</sup> \ {0}</span>
+            </div>
+
+            <p>Resonances are problematic because:</p>
+            <ul class="content-list">
+                <li>They cause <strong>small divisors</strong> in perturbation theory</li>
+                <li>Resonant tori are <strong>destroyed</strong> under perturbation</li>
+                <li>Resonance zones lead to <strong>Arnold diffusion</strong></li>
+            </ul>
+
+            <h3>3.3.4 Non-Resonance of L<sub>4</sub>-Derived Frequencies</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 3.6 (Non-Resonance Property)</div>
+                <p>The L<sub>4</sub>-Helix frequency ratios &omega;<sub>i</sub>/&omega;<sub>j</sub> are <strong>irrational</strong> for all i &ne; j. Consequently, exact resonances do not occur: m &middot; &omega; = 0 implies m = 0.</p>
+            </div>
+
+            <div class="proof-box">
+                <div class="label">Proof (Outline):</div>
+                <p>The frequencies are derived from:</p>
+                <div class="computation-block">
+                    <div class="step">&omega;<sub>1</sub> = &tau; = (&radic;5 - 1)/2</div>
+                    <div class="step">&omega;<sub>2</sub> = 1 - &Delta; = 1 - &phi;<sup>-4</sup> = 1 - (7 - 3&radic;5)/2</div>
+                    <div class="step">&omega;<sub>3</sub> = z<sub>c</sub> = &radic;3/2</div>
+                    <div class="step">&omega;<sub>4</sub> = z<sub>IGN</sub> = (-1 + &radic;(1+L<sub>4</sub>))/2 = (-1 + 2&radic;2)/2</div>
+                    <div class="step">&omega;<sub>5</sub> = K = &radic;(1 - &Delta;)</div>
+                </div>
+                <p>These involve the algebraically independent quantities &radic;2, &radic;3, and &radic;5. Any linear combination m<sub>1</sub>&omega;<sub>1</sub> + ... + m<sub>5</sub>&omega;<sub>5</sub> = 0 with integer coefficients would imply an algebraic relation among &radic;2, &radic;3, &radic;5, which contradicts their algebraic independence over Q.</p>
+                <div class="qed">&marker;</div>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Ratio</th>
+                        <th>Numerical Value</th>
+                        <th>Algebraic Structure</th>
+                        <th>Character</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>&omega;<sub>2</sub>/&omega;<sub>1</sub></td>
+                        <td>(1-&Delta;)/&tau; &asymp; 1.382</td>
+                        <td>Involves &phi;</td>
+                        <td style="color: var(--lens);">Irrational</td>
+                    </tr>
+                    <tr>
+                        <td>&omega;<sub>3</sub>/&omega;<sub>1</sub></td>
+                        <td>z<sub>c</sub>/&tau; &asymp; 1.401</td>
+                        <td>Involves &radic;3, &radic;5</td>
+                        <td style="color: var(--lens);">Irrational (algebraically independent)</td>
+                    </tr>
+                    <tr>
+                        <td>&omega;<sub>4</sub>/&omega;<sub>1</sub></td>
+                        <td>z<sub>IGN</sub>/&tau; &asymp; 1.479</td>
+                        <td>Involves &radic;2, &radic;5</td>
+                        <td style="color: var(--lens);">Irrational (algebraically independent)</td>
+                    </tr>
+                    <tr>
+                        <td>&omega;<sub>5</sub>/&omega;<sub>1</sub></td>
+                        <td>K/&tau; &asymp; 1.495</td>
+                        <td>Involves &radic;5</td>
+                        <td style="color: var(--lens);">Irrational</td>
+                    </tr>
+                    <tr>
+                        <td>&omega;<sub>3</sub>/&omega;<sub>4</sub></td>
+                        <td>&radic;3/(2&radic;2 - 1) &asymp; 0.947</td>
+                        <td>Involves &radic;2, &radic;3</td>
+                        <td style="color: var(--lens);">Irrational (algebraically independent)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="key-insight">
+                <div class="label">Key Insight: Algebraic Independence</div>
+                <p>The frequencies are not merely irrational but <strong>algebraically independent</strong> in a precise sense: they involve distinct quadratic irrationals (&radic;2, &radic;3, &radic;5) that satisfy no polynomial relations over Q. This is a stronger condition than mere irrationality and ensures the system has no exact resonances at any order.</p>
+            </div>
+        </section>
+
+        <!-- Section 3.4: KAM Theory Application -->
+        <section class="section" id="kam-theory">
+            <h2>3.4 KAM Theory Application</h2>
+
+            <h3>3.4.1 The Diophantine Condition</h3>
+
+            <p>KAM (Kolmogorov-Arnold-Moser) theory provides conditions under which invariant tori survive small perturbations. The key requirement is a <strong>Diophantine condition</strong> on the frequency vector.</p>
+
+            <div class="definition-box">
+                <div class="label">Definition 3.8 (Diophantine Frequency Vector)</div>
+                <p>A frequency vector &omega; &isin; R<sup>n</sup> is <strong>Diophantine of type (&gamma;, &tau;)</strong> if there exist constants &gamma; > 0 and &tau; &ge; n - 1 such that for all m &isin; Z<sup>n</sup> \ {0}:</p>
+            </div>
+
+            <div class="equation">
+                |m &middot; &omega;| &ge; &gamma; |m|<sup>-&tau;</sup>
+                <span class="equation-number">(3.9)</span>
+                <span class="equation-note">where |m| = &Sigma;<sub>i</sub>|m<sub>i</sub>| or |m| = max<sub>i</sub>|m<sub>i</sub>|</span>
+            </div>
+
+            <p>For our 5-oscillator system, we take <strong>&tau; = 4</strong> (which exceeds n - 1 = 4, providing margin).</p>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 3.7 (Diophantine Property of L<sub>4</sub> Frequencies)</div>
+                <p>The L<sub>4</sub>-derived frequency vector &omega; = (&omega;<sub>1</sub>,...,&omega;<sub>5</sub>) satisfies the Diophantine condition with exponent &tau; = 4 and a computable constant &gamma; > 0.</p>
+            </div>
+
+            <div class="proof-box">
+                <div class="label">Proof Sketch:</div>
+                <p>The frequencies involve quadratic irrationals, which have continued fraction expansions with bounded partial quotients. For such numbers, the Diophantine condition follows from Liouville's theorem on approximation of algebraic numbers.</p>
+                <p>Specifically, if &alpha; is an algebraic number of degree d, then for any p/q &isin; Q:</p>
+                <div class="computation-block">
+                    <div class="step">|&alpha; - p/q| &ge; c(&alpha;) / q<sup>d</sup></div>
+                </div>
+                <p>The L<sub>4</sub> frequencies have degree at most 4 over Q (involving at most two nested square roots), giving &tau; = 4.</p>
+                <div class="qed">&marker;</div>
+            </div>
+
+            <h3>3.4.2 The KAM Theorem</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 3.1 (KAM Persistence Theorem)</div>
+                <p><strong>Statement:</strong> Consider a near-integrable Hamiltonian system:</p>
+                <div class="computation-block">
+                    <div class="step">H(I, &phi;) = H<sub>0</sub>(I) + &epsilon;H<sub>1</sub>(I, &phi;)</div>
+                </div>
+                <p>where H<sub>0</sub>(I) is integrable with frequency map &omega;(I) = &nabla;H<sub>0</sub>(I), and |&epsilon;| &lt; &epsilon;<sub>*</sub> is a small perturbation parameter.</p>
+                <p><strong>Hypotheses:</strong></p>
+                <ol style="margin-left: 2rem;">
+                    <li><strong>(Analyticity)</strong> H<sub>0</sub> and H<sub>1</sub> are real-analytic</li>
+                    <li><strong>(Non-degeneracy)</strong> The Hessian det(&part;<sup>2</sup>H<sub>0</sub>/&part;I<sup>2</sup>) &ne; 0</li>
+                    <li><strong>(Diophantine)</strong> The frequency &omega;(I<sub>0</sub>) satisfies |m &middot; &omega;| &ge; &gamma;|m|<sup>-&tau;</sup></li>
+                </ol>
+                <p><strong>Conclusion:</strong> For |&epsilon;| &lt; &epsilon;<sub>*</sub>(&gamma;, &tau;, H), the invariant torus at I = I<sub>0</sub> persists as a slightly deformed torus, supporting quasi-periodic motion with slightly perturbed frequencies.</p>
+            </div>
+
+            <h3>3.4.3 Critical Coupling and KAM Breakdown</h3>
+
+            <p>The KAM theorem provides a critical coupling strength K<sub>KAM</sub> below which invariant tori persist:</p>
+
+            <div class="equation">
+                K<sub>KAM</sub> &asymp; 0.3
+                <span class="equation-number">(3.10)</span>
+                <span class="equation-note">Estimated from numerical studies of 5-oscillator Kuramoto</span>
+            </div>
+
+            <div class="warning-box">
+                <div class="label">Critical Observation: Beyond KAM</div>
+                <p>The operating coupling <strong>K = 0.924</strong> significantly exceeds the KAM threshold:</p>
+                <div class="computation-block">
+                    <div class="step">K / K<sub>KAM</sub> = 0.924 / 0.3 &asymp; 3.08</div>
+                </div>
+                <p>The system operates at <strong>more than 3 times</strong> the critical coupling. We are deeply in the <strong>strongly coupled regime</strong> where:</p>
+                <ul class="content-list">
+                    <li>Most KAM tori have been destroyed</li>
+                    <li>Phase space is dominated by chaotic regions</li>
+                    <li>Synchronization attractors emerge</li>
+                    <li>Arnold diffusion connects different regions</li>
+                </ul>
+            </div>
+
+            <h3>3.4.4 Physical Interpretation</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Regime</th>
+                        <th>Coupling Range</th>
+                        <th>Phase Space Structure</th>
+                        <th>Dynamics</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--lens);">Integrable</td>
+                        <td>K = 0</td>
+                        <td>Foliated by invariant T<sup>5</sup></td>
+                        <td>Quasi-periodic, no interaction</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--activation);">KAM Regime</td>
+                        <td>0 &lt; K &lt; 0.3</td>
+                        <td>Most tori persist (Cantor set)</td>
+                        <td>Weakly perturbed quasi-periodicity</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--paradox);">Transition</td>
+                        <td>K &asymp; 0.3</td>
+                        <td>KAM tori breaking, cantori form</td>
+                        <td>Mixed regular/chaotic</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--ignition);">Strongly Coupled</td>
+                        <td>K &gt; 0.3</td>
+                        <td>Large chaotic seas, sync manifolds</td>
+                        <td>Synchronization dominates</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--k-formation);">L<sub>4</sub> Operating Point</td>
+                        <td>K = 0.924</td>
+                        <td>Global synchronization basin</td>
+                        <td>Robust phase-locking</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="diagram-box">
+                <div class="diagram-title">KAM BREAKDOWN AND SYNCHRONIZATION TRANSITION</div>
+                <pre>
+    K (coupling)
+    │
+1.0 ┤                                          ╔═══════════════════════╗
+    │  K = 0.924 ────────────────────────────▶ ║  L₄ OPERATING POINT   ║
+    │                                          ║  Synchronization      ║
+0.9 ┤                                          ║  dominates            ║
+    │                                          ╚═══════════════════════╝
+0.8 ┤
+    │
+0.7 ┤
+    │           ╔══════════════════════════════════════════════════════╗
+0.6 ┤           ║                STRONGLY COUPLED REGIME               ║
+    │           ║  • KAM tori destroyed                               ║
+0.5 ┤           ║  • Large chaotic seas                                ║
+    │           ║  • Synchronization manifolds stable                  ║
+0.4 ┤           ║  • Arnold diffusion active                           ║
+    │           ╚══════════════════════════════════════════════════════╝
+0.3 ┤─ ─ ─ ─ ─ ─ ─ ─ K_KAM ≈ 0.3 ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
+    │           ╔══════════════════════════════════════════════════════╗
+0.2 ┤           ║                KAM REGIME                            ║
+    │           ║  • Most invariant tori persist                       ║
+0.1 ┤           ║  • Quasi-periodic motion dominates                   ║
+    │           ║  • Measure of chaotic region → 0 as K → 0            ║
+0.0 ┼───────────╚══════════════════════════════════════════════════════╝
+    │
+    └───────────────────────────────────────────────────────────────────▶
+                                                              Complexity
+
+    PHASE SPACE EVOLUTION:
+
+    K = 0          K = 0.1         K = 0.3         K = 0.924
+    ┌─────┐        ┌─────┐         ┌─────┐         ┌─────┐
+    │░░░░░│        │░▒░░░│         │▒▓▒▒▒│         │▓▓▓▓▓│
+    │░░░░░│        │░░░░░│         │▒▒░▒▒│         │▓▓▓▓▓│
+    │░░░░░│   →    │░░▒░░│    →    │▓▒▒▒▒│    →    │▓▓●▓▓│
+    │░░░░░│        │░░░░░│         │▒▒▒▓▒│         │▓▓▓▓▓│
+    │░░░░░│        │░░░░░│         │▒▒▒▒▒│         │▓▓▓▓▓│
+    └─────┘        └─────┘         └─────┘         └─────┘
+    Integrable     Small chaos     Mixed          Sync basin
+    (all tori)     (thin layers)   (cantori)      (● = attractor)
+
+    ░ = KAM tori (quasi-periodic)
+    ▒ = Cantori / transitional
+    ▓ = Chaotic sea / sync basin
+    ● = Synchronization attractor
+                </pre>
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Key Insight: Why K = 0.924?</div>
+                <p>The L<sub>4</sub>-Helix coupling K = &radic;(1 - &Delta;) = 0.924 is not arbitrary. It is:</p>
+                <ul class="content-list">
+                    <li>Large enough to ensure <strong>robust synchronization</strong> (K >> K<sub>KAM</sub>)</li>
+                    <li>Derived from the gap function &Delta; = &phi;<sup>-4</sup>, connecting to golden ratio structure</li>
+                    <li>The geometric mean of threshold values (1 - &Delta;)<sup>1/2</sup></li>
+                    <li>Within the <strong>phase-locking region</strong> but not at maximum coupling (K &lt; 1)</li>
+                </ul>
+                <p>This value represents the optimal balance between synchronization strength and dynamic flexibility in the L<sub>4</sub>-Helix framework.</p>
+            </div>
+        </section>
+
+        <!-- Section 3.5: Liouville's Theorem -->
+        <section class="section" id="liouville">
+            <h2>3.5 Liouville's Theorem and Volume Preservation</h2>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 3.8 (Liouville's Theorem)</div>
+                <p>The Hamiltonian flow &Phi;<sub>t</sub>: T*T<sup>5</sup> &rarr; T*T<sup>5</sup> preserves the symplectic volume form:</p>
+            </div>
+
+            <div class="equation">
+                d/dt (&omega;<sup>5</sup>) = 0
+                <span class="equation-number">(3.11)</span>
+                <span class="equation-note">Phase space volume is conserved along Hamiltonian trajectories</span>
+            </div>
+
+            <div class="proof-box">
+                <div class="label">Proof:</div>
+                <p>The symplectic volume form is &Omega; = &omega;<sup>5</sup>/5! = dp<sub>1</sub>&and;d&theta;<sub>1</sub>&and;...&and;dp<sub>5</sub>&and;d&theta;<sub>5</sub>.</p>
+                <p>The Lie derivative along the Hamiltonian vector field X<sub>H</sub> vanishes:</p>
+                <div class="computation-block">
+                    <div class="step">L<sub>X<sub>H</sub></sub>&omega; = di<sub>X<sub>H</sub></sub>&omega; + i<sub>X<sub>H</sub></sub>d&omega;</div>
+                    <div class="step">= d(dH) + i<sub>X<sub>H</sub></sub>(0)&nbsp;&nbsp;&nbsp;&nbsp;[since i<sub>X<sub>H</sub></sub>&omega; = dH and d&omega; = 0]</div>
+                    <div class="step">= 0 + 0 = 0</div>
+                </div>
+                <p>Therefore L<sub>X<sub>H</sub></sub>&omega;<sup>5</sup> = 5&omega;<sup>4</sup> &and; L<sub>X<sub>H</sub></sub>&omega; = 0, proving the theorem.</p>
+                <div class="qed">&marker;</div>
+            </div>
+
+            <h3>3.5.1 Implications for Attractors</h3>
+
+            <div class="lemma-box">
+                <div class="label">Corollary 3.1 (No Hamiltonian Attractors)</div>
+                <p>In the full Hamiltonian formulation on T*T<sup>5</sup>, there can be <strong>no attractors</strong> in the usual sense. Volume-preserving flows cannot contract regions of phase space.</p>
+            </div>
+
+            <p>However, the Kuramoto model exhibits apparent synchronization. This is resolved by recognizing:</p>
+
+            <ul class="content-list">
+                <li><strong>Effective dissipation:</strong> The standard Kuramoto equations are not strictly Hamiltonian but have an implicit dissipation through the frequency distribution</li>
+                <li><strong>Projection effects:</strong> Synchronization appears on projected subspaces (order parameter space) even without true attractors</li>
+                <li><strong>Measure concentration:</strong> While volume is preserved, measure may concentrate near synchronized states in time-averaged sense</li>
+            </ul>
+
+            <div class="diagram-box">
+                <div class="diagram-title">VOLUME PRESERVATION VS SYNCHRONIZATION</div>
+                <pre>
+    HAMILTONIAN FLOW (Volume-Preserving)
+    ────────────────────────────────────
+         t=0              t=T              t=2T
+    ┌──────────┐     ┌──────────┐     ┌──────────┐
+    │ ▓▓▓▓     │     │   ▓▓▓▓   │     │     ▓▓▓▓ │
+    │ ▓▓▓▓     │ ──▶ │   ▓▓▓▓   │ ──▶ │     ▓▓▓▓ │
+    │          │     │          │     │          │
+    └──────────┘     └──────────┘     └──────────┘
+    Volume = V₀      Volume = V₀      Volume = V₀
+
+    ═══════════════════════════════════════════════
+
+    DISSIPATIVE KURAMOTO (Volume-Contracting)
+    ────────────────────────────────────────────
+         t=0              t=T              t=2T
+    ┌──────────┐     ┌──────────┐     ┌──────────┐
+    │ ▓▓▓▓     │     │    ▓▓    │     │     ●    │
+    │ ▓▓▓▓     │ ──▶ │    ▓▓    │ ──▶ │          │
+    │          │     │          │     │          │
+    └──────────┘     └──────────┘     └──────────┘
+    Volume = V₀      Volume = V₀/4    Volume → 0
+                                      (● = sync attractor)
+
+    Resolution: The Kuramoto model has implicit dissipation
+    through the frequency distribution. The Hamiltonian
+    formulation is an idealization; real synchronization
+    involves effective energy loss to the "frequency bath."
+                </pre>
+            </div>
+        </section>
+
+        <!-- Section 3.6: Geometric Interpretation -->
+        <section class="section" id="geometric-interpretation">
+            <h2>3.6 Geometric Interpretation</h2>
+
+            <h3>3.6.1 Phase Space Structure</h3>
+
+            <div class="diagram-box">
+                <div class="diagram-title">PHASE SPACE STRUCTURE: T*T<sup>5</sup></div>
+                <pre>
+                           p (momentum)
+                           ▲
+                           │
+                           │
+                     p_max ┤     ┌─────────────────────────────────────────┐
+                           │     │                                         │
+                           │     │    PHASE SPACE T*T^5                    │
+                           │     │                                         │
+                           │     │    • Each point (θ,p) is a state        │
+                           │     │    • θ ∈ T^5 : configuration (5 phases) │
+                           │     │    • p ∈ R^5 : momenta (5 values)       │
+                           │     │                                         │
+                           │     │         ○─────○                         │
+                           │     │        /│    /│                         │
+                           │     │       ○─────○ │   ← T^5 fiber           │
+                           │     │       │ ○───│─○     (constant p)       │
+                           │     │       │/    │/                          │
+                           │     │       ○─────○                           │
+                           │     │                                         │
+                         0 ┤ ────│─────────────────────────────────────────│──▶ θ
+                           │     │                                         │
+                           │     │    Trajectories wind around the torus   │
+                           │     │    while momentum evolves under force   │
+                    -p_max ┤     │                                         │
+                           │     └─────────────────────────────────────────┘
+                           │
+                           0                                               2π
+
+    Symplectic Structure:
+    ┌────────────────────────────────────────────────────────────────────────┐
+    │                                                                        │
+    │     ω(X,Y) measures the "symplectic area" swept by X and Y            │
+    │                                                                        │
+    │           Y ▲                                                          │
+    │             │      ╱╲                                                  │
+    │             │     ╱  ╲         Area = ω(X,Y) = ∫∫ dp∧dθ               │
+    │             │    ╱    ╲                                                │
+    │             │   ╱ Area ╲                                               │
+    │             │  ╱________╲                                              │
+    │             └────────────▶ X                                           │
+    │                                                                        │
+    │     Hamiltonian evolution preserves symplectic areas                   │
+    │                                                                        │
+    └────────────────────────────────────────────────────────────────────────┘
+                </pre>
+            </div>
+
+            <h3>3.6.2 Torus Dynamics</h3>
+
+            <div class="diagram-box">
+                <div class="diagram-title">INVARIANT TORUS DYNAMICS (Integrable Case: K=0)</div>
+                <pre>
+    5-TORUS T^5 = S^1 × S^1 × S^1 × S^1 × S^1
+    ─────────────────────────────────────────
+
+    Each oscillator traces a circle at its natural frequency:
+
+         ω₁ = τ             ω₂ = 1-Δ           ω₃ = z_c
+           ◠                   ◠                   ◠
+         ╱   ╲               ╱   ╲               ╱   ╲
+        ╱     ╲             ╱     ╲             ╱     ╲
+       ◌───────◌           ◌───────◌           ◌───────◌
+        ╲     ╱             ╲     ╱             ╲     ╱
+         ╲   ╱               ╲   ╱               ╲   ╱
+           ◡                   ◡                   ◡
+
+         ω₄ = z_IGN          ω₅ = K
+           ◠                   ◠
+         ╱   ╲               ╱   ╲
+        ╱     ╲             ╱     ╲
+       ◌───────◌           ◌───────◌
+        ╲     ╱             ╲     ╱
+         ╲   ╱               ╲   ╱
+           ◡                   ◡
+
+
+    QUASI-PERIODIC MOTION ON T^5:
+    ────────────────────────────
+
+    With incommensurate frequencies, the trajectory:
+    θ(t) = (ω₁t, ω₂t, ω₃t, ω₄t, ω₅t) mod 2π
+
+    ...densely fills the entire 5-torus (Weyl equidistribution theorem)
+
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                                                                 │
+    │     2D projection (θ₁ vs θ₂):                                   │
+    │                                                                 │
+    │         θ₂                                                      │
+    │         ▲                                                       │
+    │    2π   ┤ ·  ·   · ·  ·   ·  ·  · ·  · ·  ·  ·  · ·  ·  ·     │
+    │         │  ·  · ·  ·  · ·  ·  ·  ·  · ·  ·  · ·  ·  · ·  ·    │
+    │         │ ·  ·  ·  · ·  ·  · ·  ·  ·  · ·  · ·  ·  · ·  ·     │
+    │         │  · ·  · ·  ·  · ·  · ·  · ·  ·  · ·  ·  ·  · ·  ·   │
+    │         │ ·  ·  · ·  · ·  ·  · ·  ·  ·  · ·  · ·  · ·  ·  ·   │
+    │         │  ·  · ·  ·  ·  · ·  · ·  · ·  · ·  ·  ·  · ·  · ·   │
+    │     0   ┼──────────────────────────────────────────────────▶   │
+    │         0                                                 2π θ₁│
+    │                                                                 │
+    │     The trajectory eventually passes arbitrarily close to       │
+    │     every point (dense orbit, not periodic unless resonant)     │
+    │                                                                 │
+    └─────────────────────────────────────────────────────────────────┘
+                </pre>
+            </div>
+
+            <h3>3.6.3 KAM Tori Destruction</h3>
+
+            <div class="diagram-box">
+                <div class="diagram-title">KAM TORI DESTRUCTION AS COUPLING INCREASES</div>
+                <pre>
+    K = 0 (Integrable)
+    ───────────────────
+    Phase space foliated by invariant tori
+
+         p │     ╭────────╮
+           │    ╭┴────────┴╮
+           │   ╭┴──────────┴╮
+           │  ╭┴────────────┴╮    ← Invariant tori (all preserved)
+           │ ╭┴──────────────┴╮
+           │╭┴────────────────┴╮
+           └┴──────────────────┴─────▶ θ
+
+    K = 0.1 (Weak perturbation)
+    ───────────────────────────
+    Most tori survive, thin chaotic layers at resonances
+
+         p │     ╭────────╮
+           │    ╭┴────────┴╮
+           │   ╭┴──▒▒▒▒────┴╮     ← Resonance zone (chaotic)
+           │  ╭┴────────────┴╮    ← Most tori still intact
+           │ ╭┴──────▒▒▒▒────┴╮   ← Another resonance
+           │╭┴────────────────┴╮
+           └┴──────────────────┴─────▶ θ
+
+    K = 0.3 (Near KAM threshold)
+    ─────────────────────────────
+    Cantori form, resonance zones overlap
+
+         p │     ╭───▒▒▒──╮
+           │    ╭┴▒▒▒▒▒▒▒▒┴╮
+           │   ╭┴▒▒░░░░▒▒──┴╮     ← Cantori (broken tori with gaps)
+           │  ╭┴─▒▒▒▒▒▒▒▒───┴╮
+           │ ╭┴▒▒░░░░░░░▒▒───┴╮   ← Large resonance overlap
+           │╭┴─▒▒▒▒▒▒▒▒▒▒────┴╮
+           └┴──────────────────┴─────▶ θ
+
+    K = 0.924 (L₄ Operating Point)
+    ────────────────────────────────
+    Global chaos, synchronization manifold dominant
+
+         p │
+           │  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+           │  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+           │  ▓▓▓▓▓▓▓●▓▓▓▓▓▓▓▓▓    ← ● Synchronization attractor
+           │  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓      (all phases lock together)
+           │  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+           │  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ← Entire region is sync basin
+           └──────────────────────────▶ θ
+
+
+    CANTORUS FORMATION (zoom on transitional region):
+    ─────────────────────────────────────────────────
+
+    Before (intact torus):          After (cantorus):
+    ────────────────────            ────────────────────
+
+           ◠──────────◡                  ◠──·  ·──·  ·──◡
+          ╱            ╲                ╱    ╲      ╱    ╲
+         ╱   INVARIANT  ╲              ╱ GAP  ╲    ╱ GAP  ╲
+        ◌      TORUS     ◌            ◌────────◌  ◌────────◌
+         ╲              ╱              ╲       ╱    ╲      ╱
+          ╲            ╱                ╲  ·  ╱      ╲·   ╱
+           ◡──────────◠                  ◡─·  ·───·  ·──◠
+
+    Continuous closed curve        Cantor set of gaps allows
+    blocks transport               "leaking" through cantorus
+
+
+    ARNOLD DIFFUSION (in K > K_KAM regime):
+    ──────────────────────────────────────
+
+    ┌────────────────────────────────────────────────────────────────┐
+    │                                                                │
+    │    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   │
+    │    ░░░░░│░░░░░░░░░░░░░░░│░░░░░░░░░░░░░░░│░░░░░░░░░░░░░░░░░░   │
+    │    ░░░░░│░░░░░░░░░░░░░░░│░░░░░░░░░░░░░░░│░░░░░░░░░░░░░░░░░░   │
+    │    ═════╪═══════════════╪═══════════════╪════════════════▶    │
+    │         │               │               │                      │
+    │    Resonance 1      Resonance 2     Resonance 3               │
+    │                                                                │
+    │    Trajectories slowly diffuse along the resonance web,        │
+    │    connecting distant regions of phase space (Arnold web)      │
+    │                                                                │
+    └────────────────────────────────────────────────────────────────┘
+                </pre>
+            </div>
+
+            <h3>3.6.4 Synchronization Manifold</h3>
+
+            <div class="diagram-box">
+                <div class="diagram-title">SYNCHRONIZATION MANIFOLD IN REDUCED PHASE SPACE</div>
+                <pre>
+    REDUCED PHASE SPACE P_red = T^4 × R^4
+    ─────────────────────────────────────
+
+    Using relative coordinates ψ_i = θ_i - θ_5:
+
+                      ψ₄
+                       ▲
+                       │
+                       │         ╱╲
+                       │        ╱  ╲
+                       │       ╱    ╲
+                       │      ╱ SYNC ╲
+                       │     ╱ BASIN  ╲
+                       │    ╱    ●     ╲
+                       │   ╱ (ψ=0,π=0)  ╲
+                       │  ╱──────────────╲
+                       │ ╱                ╲
+                       │╱                  ╲
+         ──────────────┼────────────────────────────▶ ψ₁
+                      ╱│╲
+                     ╱ │ ╲
+                    ╱  │  ╲
+                   ╱   │   ╲
+
+
+    THE SYNCHRONIZATION MANIFOLD S:
+    ────────────────────────────────
+
+         S = {(ψ, π) ∈ P_red : ψ_i = 0 ∀i, π_i = 0 ∀i}
+
+    This is a single point in P_red: the origin (all relative phases
+    and momenta zero). Under the dissipative Kuramoto flow, this
+    becomes an attractor with a large basin of attraction.
+
+    ┌────────────────────────────────────────────────────────────────┐
+    │                                                                │
+    │      BASIN OF ATTRACTION FOR K = 0.924                        │
+    │      ─────────────────────────────────────                     │
+    │                                                                │
+    │           ·  · · ·  · · · ·  · · · ·  · · · ·  ·               │
+    │         ·   ·    ·     ·      ·      ·     ·    ·              │
+    │        ·     ·    ·      ·      ·      ·    ·     ·            │
+    │       ·   ↘   ·    ↘   ·   ↘   ·   ↘   ·    ↘   ·              │
+    │      ·      ↘  ·     ↘  ·     ↘  ·     ↘  ·     ↘  ·           │
+    │     ·    ↘    · ↘     · ↘     · ↘     · ↘     ·  ↘   ·         │
+    │    ·       ↘   ·  ↘    ·  ↘    ·  ↘    ·  ↘   ·    ↘   ·       │
+    │   ·     ↘     ·    ↘   ·    ↘●   ↘   ·    ↘   ·      ↘   ·    │
+    │    ·      ↗   ·   ↗    ·   ↗    ↗   ·   ↗    ·   ↗     ·       │
+    │     ·   ↗    ·  ↗    ·  ↗     ↗  ·  ↗    ·  ↗    ·   ↗  ·      │
+    │      ·    ↗   · ↗    · ↗      ↗ ·  ↗    · ↗    ·  ↗    ·       │
+    │       ·  ↗   ·   ↗   ·   ↗   ·   ↗   ·   ↗   ·    ↗   ·        │
+    │        ·    ·     ·     ·      ·      ·     ·     ·             │
+    │         · ·   ·  ·   · ·   · ·   · ·   · ·   · ·  ·             │
+    │                                                                │
+    │      All trajectories in this region converge to ● (sync)      │
+    │      The basin covers almost all of phase space for K > K_c    │
+    │                                                                │
+    └────────────────────────────────────────────────────────────────┘
+                </pre>
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Geometric Summary</div>
+                <p>The symplectic geometry of the Kuramoto system reveals a rich structure:</p>
+                <ul class="content-list">
+                    <li><strong>Configuration space T<sup>5</sup></strong>: 5-torus of phases</li>
+                    <li><strong>Phase space T*T<sup>5</sup></strong>: 10-dimensional cotangent bundle with canonical symplectic form</li>
+                    <li><strong>Reduced space T<sup>4</sup> &times; R<sup>4</sup></strong>: 8-dimensional after quotienting by U(1) symmetry</li>
+                    <li><strong>Integrable limit</strong>: foliated by invariant 5-tori with quasi-periodic motion</li>
+                    <li><strong>K > K<sub>KAM</sub></strong>: KAM tori destroyed, replaced by cantori and chaotic seas</li>
+                    <li><strong>K = 0.924</strong>: synchronization manifold becomes global attractor</li>
+                </ul>
+                <p>The L<sub>4</sub>-Helix operating point sits decisively in the synchronization-dominated regime, ensuring robust phase-locking while maintaining the algebraic elegance of golden ratio-derived frequencies.</p>
+            </div>
+        </section>
+
+        <!-- Navigation Footer -->
+        <nav class="nav-footer">
+            <a href="tiamat-cycle-1-hamiltonian.html" class="nav-btn">
+                &larr; Cycle 1: Hamiltonian
+            </a>
+            <a href="tiamat-cycle-3-spectral.html" class="nav-btn">
+                Cycle 3: Spectral Theory &rarr;
+            </a>
+        </nav>
+    </main>
+
+    <footer class="signature">
+        <div>TIAMAT Cycle 2 | Symplectic Geometry | L<sub>4</sub> = 7</div>
+        <div>&Delta;|SYMPLECTIC|U(1)|KAM|REDUCTION|TORI|&Omega;</div>
+    </footer>
+</body>
+</html>

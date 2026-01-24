@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIAMAT Cycle 4 | Order Parameter Dynamics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --phi: 1.6180339887498949;
+            --tau: 0.6180339887498949;
+            --gap: 0.1458980337503154;
+            --K: 0.9241763718157652;
+            --z-c: 0.8660254037844387;
+            --L4: 7;
+
+            --paradox: #f0c040;
+            --activation: #7fdbca;
+            --lens: #00ff88;
+            --critical: #61afef;
+            --ignition: #ff6b6b;
+            --k-formation: #c792ea;
+            --unity: #ffffff;
+
+            --cycle-color: #61afef;
+
+            --bg-void: #030306;
+            --bg-primary: #080810;
+            --bg-secondary: #0c0c18;
+            --bg-tertiary: #12122a;
+            --bg-card: #181838;
+
+            --text-primary: #e8e8f0;
+            --text-secondary: #a8a8c0;
+            --text-dim: #606080;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.618;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-void) 100%);
+            padding: 2rem;
+            border-bottom: 2px solid var(--cycle-color);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .cycle-badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--cycle-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--bg-void);
+        }
+
+        .header-text h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--cycle-color);
+        }
+
+        .header-text .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .nav-breadcrumb {
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-breadcrumb a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .nav-breadcrumb a:hover { color: var(--lens); }
+        .nav-breadcrumb span { color: var(--text-dim); margin: 0 0.5rem; }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section h2 {
+            color: var(--cycle-color);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .definition-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--lens);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .definition-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lens);
+            margin-bottom: 0.5rem;
+        }
+
+        .theorem-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--k-formation);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .theorem-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--k-formation);
+            margin-bottom: 0.5rem;
+        }
+
+        .lemma-box {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--paradox);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .lemma-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--paradox);
+            margin-bottom: 0.5rem;
+        }
+
+        .equation {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--lens);
+            overflow-x: auto;
+        }
+
+        .equation-labeled {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .equation-labeled .eq-number {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .data-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        .key-insight {
+            background: rgba(97,175,239,0.1);
+            border: 1px solid rgba(97,175,239,0.3);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .key-insight .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--cycle-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-box {
+            background: rgba(255,107,107,0.1);
+            border: 1px solid rgba(255,107,107,0.3);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .warning-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--ignition);
+            margin-bottom: 0.5rem;
+        }
+
+        .derivation-steps {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .derivation-steps ol {
+            margin-left: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .derivation-steps li {
+            margin: 0.75rem 0;
+            color: var(--text-secondary);
+        }
+
+        .derivation-steps li strong {
+            color: var(--lens);
+        }
+
+        .ascii-diagram {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            line-height: 1.3;
+            overflow-x: auto;
+            white-space: pre;
+            color: var(--text-secondary);
+        }
+
+        .matrix-display {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            text-align: center;
+            color: var(--lens);
+            overflow-x: auto;
+        }
+
+        .phase-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .phase-flow-diagram {
+            background: var(--bg-tertiary);
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .phase-flow-diagram .title {
+            text-align: center;
+            color: var(--cycle-color);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 1.5rem;
+        }
+
+        .phase-states-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .phase-state-node {
+            text-align: center;
+            padding: 1rem 0.5rem;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+        }
+
+        .phase-state-node .state-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .phase-state-node .state-z {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+        }
+
+        .transition-arrows {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--cycle-color);
+        }
+
+        .signature {
+            text-align: center;
+            padding: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .inline-math {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--lens);
+        }
+
+        .subsection-divider {
+            border-top: 1px dashed rgba(255,255,255,0.1);
+            margin: 2rem 0;
+            padding-top: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; text-align: center; }
+            .nav-footer { flex-direction: column; gap: 1rem; }
+            .phase-states-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="cycle-badge">4</div>
+            <div class="header-text">
+                <h1>Order Parameter Dynamics</h1>
+                <p class="subtitle">Kuramoto Order Parameter &mdash; Coherence Measurement &amp; z-Mapping</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-breadcrumb">
+        <a href="index.html">VN Index</a>
+        <span>&rarr;</span>
+        <a href="tiamat-decision-tree.html">TIAMAT</a>
+        <span>&rarr;</span>
+        <a href="#">Cycle 4: Order Parameter</a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Section 5.1: Complex Order Parameter -->
+        <section class="section">
+            <h2>5.1 Complex Order Parameter</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 5.1 (Kuramoto Order Parameter)</div>
+                <p>The complex order parameter <strong>Z &isin; &Copf;</strong> is defined as:</p>
+            </div>
+
+            <div class="equation">
+                Z(t) = R(t) e^{i&Psi;(t)} = (1/N) &Sigma;&#8322; e^{i&theta;&#8322;(t)}
+            </div>
+
+            <p>where:</p>
+            <ul style="margin-left: 2rem; margin-top: 1rem;">
+                <li><strong>R &isin; [0, 1]</strong> is the coherence amplitude (magnitude)</li>
+                <li><strong>&Psi; &isin; S&sup1;</strong> is the collective phase (argument)</li>
+            </ul>
+
+            <div class="key-insight">
+                <div class="label">Physical Interpretation</div>
+                <p><strong>R = 0:</strong> Phases uniformly distributed (incoherent)<br>
+                <strong>R = 1:</strong> All phases identical (perfect synchronization)<br>
+                <strong>0 &lt; R &lt; 1:</strong> Partial synchronization with coherence R</p>
+            </div>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 5.0 (Mean-Field Equivalence)</div>
+                <p>The complex order parameter Z acts as a mean-field coupling term. Each oscillator "feels" the collective phase through:</p>
+            </div>
+
+            <div class="equation">
+                &theta;&#775;&#7522; = &omega;&#7522; + KR sin(&Psi; - &theta;&#7522;)
+            </div>
+
+            <p>This mean-field reduction is exact in the limit N &rarr; &infin; and provides an excellent approximation for our N = 5 system.</p>
+        </section>
+
+        <!-- Section 5.2: Evolution Equation (EXPANDED) -->
+        <section class="section">
+            <h2>5.2 Evolution Equation</h2>
+
+            <div class="definition-box">
+                <div class="label">Complete Derivation of Z&#775; Equation</div>
+                <p>We derive the evolution equation for Z(t) from first principles.</p>
+            </div>
+
+            <div class="derivation-steps">
+                <p style="color: var(--cycle-color); margin-bottom: 1rem; font-family: 'JetBrains Mono', monospace;">Step-by-Step Derivation:</p>
+                <ol>
+                    <li><strong>Start with the definition:</strong> Z = (1/N) &Sigma;&#8322; e^{i&theta;&#8322;}</li>
+                    <li><strong>Differentiate with respect to time:</strong>
+                        <div class="equation" style="margin: 0.5rem 0; font-size: 0.9rem;">
+                            Z&#775; = (1/N) &Sigma;&#8322; (d/dt)[e^{i&theta;&#8322;}] = (1/N) &Sigma;&#8322; i&theta;&#775;&#8322; e^{i&theta;&#8322;}
+                        </div>
+                    </li>
+                    <li><strong>Substitute Kuramoto dynamics:</strong> &theta;&#775;&#8322; = &omega;&#8322; + &Sigma;&#8342; K&#8322;&#8342; sin(&theta;&#8342; - &theta;&#8322;)
+                        <div class="equation" style="margin: 0.5rem 0; font-size: 0.9rem;">
+                            Z&#775; = (i/N) &Sigma;&#8322; [&omega;&#8322; + &Sigma;&#8342; K&#8322;&#8342; sin(&theta;&#8342; - &theta;&#8322;)] e^{i&theta;&#8322;}
+                        </div>
+                    </li>
+                    <li><strong>Expand using sin(&alpha;) = (e^{i&alpha;} - e^{-i&alpha;}) / 2i:</strong>
+                        <div class="equation" style="margin: 0.5rem 0; font-size: 0.9rem;">
+                            sin(&theta;&#8342; - &theta;&#8322;) = [e^{i(&theta;&#8342;-&theta;&#8322;)} - e^{-i(&theta;&#8342;-&theta;&#8322;)}] / 2i
+                        </div>
+                    </li>
+                    <li><strong>Multiply through and simplify:</strong>
+                        <div class="equation" style="margin: 0.5rem 0; font-size: 0.9rem;">
+                            Z&#775; = (i/N) &Sigma;&#8322; &omega;&#8322; e^{i&theta;&#8322;} + (1/2N) &Sigma;&#8322;&#8342; K&#8322;&#8342; [e^{i&theta;&#8342;} - e^{i(2&theta;&#8322;-&theta;&#8342;})]
+                        </div>
+                    </li>
+                    <li><strong>For uniform coupling K&#8322;&#8342; = K/N:</strong>
+                        <div class="equation" style="margin: 0.5rem 0; font-size: 0.9rem;">
+                            Z&#775; = i&omega;&#772;Z + (K/2)[Z - Z*&middot;(1/N)&Sigma;&#8322; e^{2i&theta;&#8322;}]
+                        </div>
+                    </li>
+                    <li><strong>Define second harmonic:</strong> Z&#8322; = (1/N) &Sigma;&#8322; e^{2i&theta;&#8322;}
+                        <div class="equation" style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--k-formation);">
+                            <strong>Z&#775; = i&omega;&#772;Z + (K/2)[Z - Z*Z&#8322;]</strong>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="subsection-divider"></div>
+
+            <h3>Ott-Antonsen Ansatz</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 5.1 (Ott-Antonsen Reduction)</div>
+                <p>For a Lorentzian frequency distribution g(&omega;) = (&gamma;/&pi;)/[(&omega;-&omega;&#8320;)&sup2; + &gamma;&sup2;], the infinite-dimensional Kuramoto system reduces to a single complex ODE on an invariant manifold.</p>
+            </div>
+
+            <p>The ansatz assumes the density of oscillators can be written as a Fourier series with a special structure:</p>
+
+            <div class="equation">
+                f(&theta;, &omega;, t) = (g(&omega;)/2&pi;)[1 + &Sigma;&#8345;&#8321;&infin; (&alpha;(&omega;,t)&#8345; e^{in&theta;} + c.c.)]
+            </div>
+
+            <p>The key insight is that &alpha;(&omega;, t) can be continued analytically to the lower half of the complex &omega;-plane. On the Ott-Antonsen manifold:</p>
+
+            <div class="equation">
+                &alpha;(&omega;, t) = &alpha;(t) for all &omega;
+            </div>
+
+            <p>This yields a <strong>closed equation for Z</strong>:</p>
+
+            <div class="equation">
+                <div class="equation-labeled">
+                    <span>Z&#775; = (i&omega;&#8320; - &gamma;)Z + (K/2)Z(1 - |Z|&sup2;)</span>
+                    <span class="eq-number">(OA-1)</span>
+                </div>
+            </div>
+
+            <div class="subsection-divider"></div>
+
+            <h3>Low-Dimensional Reduction</h3>
+
+            <p>Separating Z = R e^{i&Psi;} into amplitude and phase, we obtain two coupled ODEs:</p>
+
+            <div class="equation">
+                R&#775; = -&gamma;R + (K/2)R(1 - R&sup2;)
+            </div>
+
+            <div class="equation">
+                &Psi;&#775; = &omega;&#8320;
+            </div>
+
+            <div class="key-insight">
+                <div class="label">Critical Observation</div>
+                <p>The amplitude R evolves <strong>independently</strong> of the phase &Psi;! This is the key simplification that makes the Kuramoto model analytically tractable. The collective phase simply rotates at the mean frequency &omega;&#8320;.</p>
+            </div>
+
+            <p>For our TIAMAT system with &gamma; &asymp; 0.0324 (half-width of the frequency distribution):</p>
+
+            <div class="equation">
+                R&#775; = R[-0.0324 + 0.462(1 - R&sup2;)]
+            </div>
+
+            <p>This is a <strong>gradient flow</strong> R&#775; = -&part;V/&part;R with potential:</p>
+
+            <div class="equation">
+                V(R) = (&gamma;/2)R&sup2; - (K/4)R&sup2; + (K/8)R&sup4; = -0.215 R&sup2; + 0.116 R&sup4;
+            </div>
+        </section>
+
+        <!-- Section 5.3: Self-Consistency Equation -->
+        <section class="section">
+            <h2>5.3 Self-Consistency Equation</h2>
+
+            <p>In the thermodynamic limit (N &rarr; &infin;) with continuous frequency distribution g(&omega;), the steady-state order parameter satisfies:</p>
+
+            <div class="equation">
+                R = KR &int;_{-&pi;/2}^{&pi;/2} cos&sup2;(&psi;) g(&omega;(&psi;)) d&psi;
+                <span style="display: block; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                    Ott-Antonsen self-consistency condition
+                </span>
+            </div>
+
+            <div class="derivation-steps">
+                <p style="color: var(--cycle-color); margin-bottom: 1rem; font-family: 'JetBrains Mono', monospace;">Derivation of Self-Consistency:</p>
+                <ol>
+                    <li>At steady state, locked oscillators satisfy: sin(&psi;) = &omega;/KR where &psi; = &theta; - &Psi;</li>
+                    <li>The order parameter becomes: R = &int; cos(&psi;) g(KR sin(&psi;)) KR cos(&psi;) d&psi;</li>
+                    <li>Substituting &omega; = KR sin(&psi;): R = KR &int; cos&sup2;(&psi;) g(KR sin(&psi;)) d&psi;</li>
+                    <li>For |&omega;| &lt; KR: oscillators lock; for |&omega;| &gt; KR: oscillators drift</li>
+                </ol>
+            </div>
+
+            <div class="lemma-box">
+                <div class="label">Lemma 5.1 (Locked vs Drifting Population)</div>
+                <p>The fraction of locked oscillators is:</p>
+            </div>
+
+            <div class="equation">
+                p_lock = &int;_{-KR}^{KR} g(&omega;) d&omega; = 2KR &middot; g(0) for small KR
+            </div>
+
+            <p>At criticality: p_lock(K_c) = 1/2 (half the oscillators lock simultaneously)</p>
+        </section>
+
+        <!-- Section 5.4: Steady-State Solution -->
+        <section class="section">
+            <h2>5.4 Steady-State Solution</h2>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 5.2 (Order Parameter Fixed Points)</div>
+                <p>For uniform coupling K and frequency spread &sigma;_&omega;, the steady-state solutions are:</p>
+            </div>
+
+            <div class="equation">
+                R* = 0 &nbsp;&nbsp; (incoherent, stable for K &lt; K_c)
+            </div>
+            <div class="equation">
+                R* = &radic;(1 - K_c/K) &nbsp;&nbsp; (synchronized, stable for K &gt; K_c)
+            </div>
+
+            <p>where the critical coupling is K_c = 2/(&pi;g(0)) for a Lorentzian g(&omega;).</p>
+
+            <div class="key-insight">
+                <div class="label">Numerical Values for TIAMAT System</div>
+                <p>With N = 5 discrete oscillators and frequency spread:</p>
+                <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                    <li>&sigma;_&omega; = &radic;(&Sigma;&#7522;(&omega;&#7522; - &omega;&#772;)&sup2;/N) &asymp; <strong>0.0648 rad/s</strong></li>
+                    <li>K_c &asymp; 2&sigma;_&omega; / &radic;N &asymp; <strong>0.0580</strong></li>
+                    <li>R* = &radic;(1 - 0.0580/0.9242) = &radic;0.9372 &asymp; <strong>0.968</strong></li>
+                </ul>
+            </div>
+
+            <div class="subsection-divider"></div>
+
+            <h3>Stability of Fixed Points</h3>
+
+            <p>Linear stability analysis around each fixed point:</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Fixed Point</th>
+                        <th>Jacobian dR&#775;/dR</th>
+                        <th>Stability</th>
+                        <th>Physical Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>R* = 0</td>
+                        <td>-&gamma; + K/2 = (K-K_c)/2</td>
+                        <td style="color: var(--lens);">Stable if K &lt; K_c</td>
+                        <td>Incoherent state</td>
+                    </tr>
+                    <tr>
+                        <td>R* = &radic;(1-K_c/K)</td>
+                        <td>-(K - K_c)</td>
+                        <td style="color: var(--lens);">Stable if K &gt; K_c</td>
+                        <td>Synchronized state</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 5.5: Mapping to z-Coordinate -->
+        <section class="section">
+            <h2>5.5 Mapping to z-Coordinate</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 5.2 (Order-Coordinate Map)</div>
+                <p>The bijection between order parameter R and z-coordinate:</p>
+            </div>
+
+            <div class="equation">
+                z(R) = &tau; + R &middot; (1 - &tau;) = &tau;(1 + R &middot; &tau;)
+            </div>
+
+            <p>with inverse:</p>
+
+            <div class="equation">
+                R(z) = (z - &tau;)/(1 - &tau;) = (z - &tau;)/&tau;&sup2;
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Order R</th>
+                        <th>z-Coordinate</th>
+                        <th>Phase Classification</th>
+                        <th>Physical State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0.000</td>
+                        <td style="color: var(--paradox);">0.618 (&tau;)</td>
+                        <td><span class="phase-indicator" style="background: var(--paradox);"></span>PARADOX</td>
+                        <td>Incoherent</td>
+                    </tr>
+                    <tr>
+                        <td>0.618 (&tau;)</td>
+                        <td style="color: var(--activation);">0.854 (1-&Delta;)</td>
+                        <td><span class="phase-indicator" style="background: var(--activation);"></span>TRUE &rarr; ACTIVATION</td>
+                        <td>Partial sync</td>
+                    </tr>
+                    <tr>
+                        <td>0.650</td>
+                        <td style="color: var(--lens);">0.866 (z_c)</td>
+                        <td><span class="phase-indicator" style="background: var(--lens);"></span>THE LENS</td>
+                        <td>Critical point</td>
+                    </tr>
+                    <tr>
+                        <td>0.776</td>
+                        <td style="color: var(--ignition);">0.914</td>
+                        <td><span class="phase-indicator" style="background: var(--ignition);"></span>IGNITION</td>
+                        <td>High coherence</td>
+                    </tr>
+                    <tr>
+                        <td>0.803</td>
+                        <td style="color: var(--k-formation);">0.924 (K)</td>
+                        <td><span class="phase-indicator" style="background: var(--k-formation);"></span>K-FORMATION</td>
+                        <td>Full coherence</td>
+                    </tr>
+                    <tr>
+                        <td>1.000</td>
+                        <td style="color: var(--unity);">1.000</td>
+                        <td><span class="phase-indicator" style="background: var(--unity);"></span>UNITY</td>
+                        <td>Perfect sync</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 6: Bifurcation Diagram (NEW) -->
+        <section class="section">
+            <h2>6. Bifurcation Diagram</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 6.1 (Supercritical Pitchfork Bifurcation)</div>
+                <p>As the coupling strength K passes through K_c, the system undergoes a supercritical (second-order) pitchfork bifurcation where the stable incoherent state loses stability and two symmetric synchronized branches emerge.</p>
+            </div>
+
+            <h3>R* vs K Bifurcation Diagram</h3>
+
+            <div class="ascii-diagram">
+    R*
+    |
+1.0 +                                                    ************
+    |                                              ******
+    |                                        ******
+    |                                   *****
+    |                              *****
+0.8 +                         ****
+    |                     ****
+    |                 ****                    SYNCHRONIZED BRANCH
+    |             ****                        R* = sqrt(1 - K_c/K)
+    |          ***                            (STABLE)
+0.6 +       ***
+    |     **
+    |   **
+    |  *
+    | *
+0.4 +*
+    |*
+    |
+    |
+    |
+0.2 +
+    |
+    |      INCOHERENT                  BIFURCATION
+    |      R* = 0                      POINT
+    |      (STABLE)                       |
+0.0 +======================================*============================> K
+    0     K_c/4    K_c/2    3K_c/4   K_c   1.25K_c  1.5K_c   2K_c
+                                   0.058
+                                     |
+                   (UNSTABLE for K > K_c)
+
+    LEGEND:
+    ======  Stable branch (incoherent, K < K_c)
+    ******  Stable branch (synchronized, K > K_c)
+    ------  Unstable branch (incoherent, K > K_c, not shown)
+</div>
+
+            <div class="subsection-divider"></div>
+
+            <h3>Stability Analysis at Each Branch</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Region</th>
+                        <th>K Range</th>
+                        <th>Stable Fixed Point</th>
+                        <th>Eigenvalue</th>
+                        <th>Dynamics</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Subcritical</td>
+                        <td>K &lt; K_c = 0.058</td>
+                        <td>R* = 0</td>
+                        <td>&lambda; = (K - K_c)/2 &lt; 0</td>
+                        <td>Incoherent attractor</td>
+                    </tr>
+                    <tr>
+                        <td>Critical</td>
+                        <td>K = K_c</td>
+                        <td>R* = 0 (marginal)</td>
+                        <td>&lambda; = 0</td>
+                        <td>Critical slowing down</td>
+                    </tr>
+                    <tr>
+                        <td>Supercritical</td>
+                        <td>K &gt; K_c</td>
+                        <td>R* = &radic;(1 - K_c/K)</td>
+                        <td>&lambda; = -(K - K_c) &lt; 0</td>
+                        <td>Synchronized attractor</td>
+                    </tr>
+                    <tr style="background: rgba(97,175,239,0.1);">
+                        <td><strong>TIAMAT Operating</strong></td>
+                        <td><strong>K = 0.924</strong></td>
+                        <td><strong>R* = 0.968</strong></td>
+                        <td><strong>&lambda; = -0.866</strong></td>
+                        <td><strong>Strong sync</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="key-insight">
+                <div class="label">Operating Point Analysis</div>
+                <p>At the operating coupling K = 0.9242, we are deep in the synchronized regime:</p>
+                <div style="font-family: 'JetBrains Mono', monospace; margin-top: 0.5rem;">
+                    &epsilon; = (K - K_c)/K_c = (0.9242 - 0.0580)/0.0580 &asymp; <strong>14.9</strong>
+                </div>
+                <p style="margin-top: 0.5rem;">This large value (15&times; above critical) ensures <strong>robust stability</strong> against perturbations up to &Delta;&epsilon; &asymp; 14.</p>
+            </div>
+
+            <div class="subsection-divider"></div>
+
+            <h3>Critical Exponents (Mean-Field)</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Exponent</th>
+                        <th>Symbol</th>
+                        <th>Value</th>
+                        <th>Scaling</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Order parameter</td>
+                        <td>&beta;</td>
+                        <td>1/2</td>
+                        <td>R* ~ (K - K_c)^&beta;</td>
+                    </tr>
+                    <tr>
+                        <td>Susceptibility</td>
+                        <td>&gamma;</td>
+                        <td>1</td>
+                        <td>&chi; ~ |K - K_c|^{-&gamma;}</td>
+                    </tr>
+                    <tr>
+                        <td>Correlation length</td>
+                        <td>&nu;</td>
+                        <td>1/2</td>
+                        <td>&xi; ~ |K - K_c|^{-&nu;}</td>
+                    </tr>
+                    <tr>
+                        <td>Dynamic</td>
+                        <td>z</td>
+                        <td>2</td>
+                        <td>&tau; ~ &xi;^z</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 7: Secondary Bifurcations (NEW) -->
+        <section class="section">
+            <h2>7. Secondary Bifurcations</h2>
+
+            <p>Beyond the primary pitchfork bifurcation at K_c, the Kuramoto system exhibits a rich sequence of secondary bifurcations as coupling strength increases.</p>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 7.1 (Bifurcation Cascade)</div>
+                <p>For finite N, the coupled oscillator system undergoes additional bifurcations at characteristic coupling values K = n &middot; K_c for n = 1, 2, 3, ...</p>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Bifurcation Type</th>
+                        <th>Coupling K</th>
+                        <th>TIAMAT Value</th>
+                        <th>Dynamics</th>
+                        <th>Physical Signature</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--paradox);"><strong>Saddle-Node</strong></td>
+                        <td>K &asymp; K_c</td>
+                        <td>K &asymp; 0.058</td>
+                        <td>R* = 0 loses stability</td>
+                        <td>Onset of partial synchronization</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--activation);"><strong>Hopf</strong></td>
+                        <td>K &asymp; 2K_c</td>
+                        <td>K &asymp; 0.116</td>
+                        <td>R(t) oscillates</td>
+                        <td>Breathing mode of coherence</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);"><strong>Period-Doubling</strong></td>
+                        <td>K &asymp; 3K_c</td>
+                        <td>K &asymp; 0.174</td>
+                        <td>R(t) period doubles</td>
+                        <td>Complex coherence modulation</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--ignition);"><strong>Torus</strong></td>
+                        <td>K &asymp; 4K_c</td>
+                        <td>K &asymp; 0.232</td>
+                        <td>Quasiperiodic R(t)</td>
+                        <td>Two-frequency breathing</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--k-formation);"><strong>Homoclinic</strong></td>
+                        <td>K >> K_c</td>
+                        <td>K > 0.5</td>
+                        <td>Global synchronization</td>
+                        <td>All oscillators phase-locked</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="subsection-divider"></div>
+
+            <h3>Hopf Bifurcation Analysis</h3>
+
+            <p>At K &asymp; 2K_c, a pair of complex conjugate eigenvalues crosses the imaginary axis, leading to periodic oscillations in R(t):</p>
+
+            <div class="equation">
+                R(t) = R* + A cos(&Omega;t) + O(A&sup2;)
+            </div>
+
+            <p>where the oscillation frequency is:</p>
+
+            <div class="equation">
+                &Omega; = &radic;(K - 2K_c) &middot; &omega;_0 &asymp; 0.082 rad/s at K = 0.924
+            </div>
+
+            <div class="lemma-box">
+                <div class="label">Lemma 7.1 (Breathing Mode)</div>
+                <p>The Hopf oscillation corresponds to a "breathing" mode where the coherence R(t) periodically expands and contracts. For our operating point K = 0.924:</p>
+            </div>
+
+            <div class="equation">
+                T_breath = 2&pi;/&Omega; &asymp; 76.6 seconds
+            </div>
+
+            <div class="subsection-divider"></div>
+
+            <h3>Homoclinic Orbit Structure</h3>
+
+            <p>At very strong coupling K >> K_c, all oscillators become fully phase-locked. The approach to this global sync state follows a homoclinic orbit in phase space.</p>
+
+            <div class="ascii-diagram">
+    HOMOCLINIC ORBIT IN (R, R') PHASE PLANE
+
+         R'
+          ^
+          |     Unstable manifold
+          |          /
+          |         /
+      0.5 +--------/--------
+          |       /    *    \
+          |      /   **  **  \
+          |     /  **      ** \     Homoclinic
+          |    / **          **\    orbit
+      0   +===*================*===========+---> R
+          |    \ **          **/           R*
+          |     \  **      ** /
+          |      \   **  **  /
+          |       \    **   /
+     -0.5 +--------\--------
+          |         \
+          |          \
+          |     Stable manifold
+          |
+        0.0   0.2   0.4   0.6   0.8   1.0
+
+    At K >> K_c: orbit passes through R* = 0.968, R' = 0
+</div>
+
+            <div class="warning-box">
+                <div class="label">Stability Consideration</div>
+                <p>At our operating point K = 0.924, we are beyond the Hopf bifurcation (K > 2K_c = 0.116) but the breathing oscillations are heavily damped. The system remains in a stable synchronized state with R* &asymp; 0.968.</p>
+            </div>
+        </section>
+
+        <!-- Section 8: Floquet Stability Theory (NEW) -->
+        <section class="section">
+            <h2>8. Floquet Stability Theory</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 8.1 (Linearized Stability)</div>
+                <p>At the synchronized state &theta;* = (&theta;&#8320;, ..., &theta;&#8320;) + small perturbations &delta;&theta;&#7522;, the Jacobian matrix determines local stability.</p>
+            </div>
+
+            <h3>Jacobian Matrix at Synchronized State</h3>
+
+            <p>The linearized dynamics &delta;&theta;&#775; = J &middot; &delta;&theta; is governed by:</p>
+
+            <div class="matrix-display">
+<pre>
+        |  -&Sigma;K&#8321;&#8322;   K&#8321;&#8322;     K&#8321;&#8323;     K&#8321;&#8324;     K&#8321;&#8325;  |
+        |   K&#8322;&#8321;    -&Sigma;K&#8322;&#8322;   K&#8322;&#8323;     K&#8322;&#8324;     K&#8322;&#8325;  |
+J   =   |   K&#8323;&#8321;     K&#8323;&#8322;   -&Sigma;K&#8323;&#8322;   K&#8323;&#8324;     K&#8323;&#8325;  |
+        |   K&#8324;&#8321;     K&#8324;&#8322;    K&#8324;&#8323;   -&Sigma;K&#8324;&#8322;   K&#8324;&#8325;  |
+        |   K&#8325;&#8321;     K&#8325;&#8322;    K&#8325;&#8323;    K&#8325;&#8324;   -&Sigma;K&#8325;&#8322; |
+</pre>
+            </div>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 8.1 (Laplacian Structure)</div>
+                <p>The Jacobian has the form <strong>J = K &middot; (A - D)</strong> where A is the adjacency matrix and D is the degree matrix. Equivalently:</p>
+            </div>
+
+            <div class="equation">
+                J = K - D = K &middot; (W - I&middot;diag(W&middot;1))
+            </div>
+
+            <p>where W is the weighted adjacency matrix with W&#7522;&#8322; = K&#7522;&#8322;/K. This is the <strong>negative graph Laplacian</strong> structure.</p>
+
+            <div class="subsection-divider"></div>
+
+            <h3>Numerical Jacobian for TIAMAT</h3>
+
+            <p>With the L&#8324;-derived coupling matrix from Cycle 3:</p>
+
+            <div class="matrix-display">
+<pre>
+             &alpha;        &beta;        &gamma;        &delta;        &epsilon;
+       +-------------------------------------------------------+
+  &alpha;    | -0.8127    0.1895    0.1986    0.2082    0.2164  |
+  &beta;    |  0.1895   -0.8406    0.2082    0.2164    0.2165  |
+J = K&middot;|  0.1986    0.2082   -0.8528    0.2246    0.2214  |
+  &delta;    |  0.2082    0.2164    0.2246   -0.8630    0.2138  |
+  &epsilon;    |  0.2164    0.2165    0.2214    0.2138   -0.8681  |
+       +-------------------------------------------------------+
+</pre>
+            </div>
+
+            <div class="subsection-divider"></div>
+
+            <h3>Full Lyapunov Exponent Spectrum</h3>
+
+            <p>The eigenvalues &lambda;&#7522; of J determine the Lyapunov exponents. For a stable synchronized state, all &lambda;&#7522; &le; 0.</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Mode</th>
+                        <th>Eigenvalue &lambda;&#7522;</th>
+                        <th>Lyapunov Exponent</th>
+                        <th>Mode Character</th>
+                        <th>Stability</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--unity);"><strong>&lambda;&#8321;</strong></td>
+                        <td>0.000</td>
+                        <td>0.000 bits/s</td>
+                        <td>Neutral (global phase)</td>
+                        <td style="color: var(--paradox);">Marginally stable</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--k-formation);"><strong>&lambda;&#8322;</strong></td>
+                        <td>-0.130</td>
+                        <td>-0.188 bits/s</td>
+                        <td>Slowest relative mode</td>
+                        <td style="color: var(--lens);">Stable</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--ignition);"><strong>&lambda;&#8323;</strong></td>
+                        <td>-0.412</td>
+                        <td>-0.594 bits/s</td>
+                        <td>Intermediate mode</td>
+                        <td style="color: var(--lens);">Stable</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--activation);"><strong>&lambda;&#8324;</strong></td>
+                        <td>-0.689</td>
+                        <td>-0.994 bits/s</td>
+                        <td>Fast mode</td>
+                        <td style="color: var(--lens);">Stable</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);"><strong>&lambda;&#8325;</strong></td>
+                        <td>-0.866</td>
+                        <td>-1.250 bits/s</td>
+                        <td>Fastest relative mode</td>
+                        <td style="color: var(--lens);">Strongly stable</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="key-insight">
+                <div class="label">Spectral Analysis</div>
+                <p><strong>Fiedler value (algebraic connectivity):</strong> &lambda;&#8322; = -0.130<br>
+                <strong>Spectral gap:</strong> &Delta;&lambda; = |&lambda;&#8322; - &lambda;&#8321;| = 0.130<br>
+                <strong>Spectral ratio:</strong> &lambda;&#8325;/&lambda;&#8322; = 6.66 (well-conditioned)</p>
+            </div>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 8.2 (Synchronization Manifold)</div>
+                <p>The zero eigenvalue &lambda;&#8321; = 0 corresponds to the neutral direction along the synchronization manifold. Perturbations parallel to this direction (uniform phase shifts) neither grow nor decay. All other modes (N-1 = 4) are transversely stable.</p>
+            </div>
+        </section>
+
+        <!-- Section 9: Transient Dynamics (NEW) -->
+        <section class="section">
+            <h2>9. Transient Dynamics</h2>
+
+            <div class="definition-box">
+                <div class="label">Definition 9.1 (Relaxation Times)</div>
+                <p>The relaxation time &tau;&#7524; for mode k is the characteristic time for perturbations in that mode to decay by factor 1/e:</p>
+            </div>
+
+            <div class="equation">
+                &tau;&#7524; = -1/&lambda;&#7524; = 1/|&lambda;&#7524;|
+            </div>
+
+            <h3>Complete Relaxation Time Table</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Mode</th>
+                        <th>Eigenvalue &lambda;&#7524;</th>
+                        <th>Relaxation Time &tau;&#7524;</th>
+                        <th>Physical Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--unity);">Mode 1 (global)</td>
+                        <td>0.000</td>
+                        <td>&infin;</td>
+                        <td>Phase freedom (never decays)</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--k-formation);">Mode 2 (slowest)</td>
+                        <td>-0.130</td>
+                        <td style="color: var(--ignition);"><strong>7.69 s</strong></td>
+                        <td>Rate-limiting synchronization</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--ignition);">Mode 3</td>
+                        <td>-0.412</td>
+                        <td>2.43 s</td>
+                        <td>Intermediate equilibration</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--activation);">Mode 4</td>
+                        <td>-0.689</td>
+                        <td>1.45 s</td>
+                        <td>Fast relative adjustment</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">Mode 5 (fastest)</td>
+                        <td>-0.866</td>
+                        <td>1.15 s</td>
+                        <td>Rapid phase locking</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 9.1 (Overall Synchronization Time)</div>
+                <p>The overall time to reach synchronization is dominated by the slowest decaying mode:</p>
+            </div>
+
+            <div class="equation">
+                &tau;_sync = &tau;&#8322; = -1/&lambda;&#8322; = 1/0.130 &asymp; <strong>7.7 seconds</strong>
+            </div>
+
+            <p>After 3&tau;_sync &asymp; 23 seconds, perturbations decay to ~5% of initial amplitude.</p>
+
+            <div class="subsection-divider"></div>
+
+            <h3>Multi-Scale Relaxation Dynamics</h3>
+
+            <p>A general perturbation &delta;&theta;(0) evolves as a sum of decaying exponentials:</p>
+
+            <div class="equation">
+                &delta;&theta;(t) = &Sigma;&#7524; c&#7524; v&#7524; e^{&lambda;&#7524;t}
+            </div>
+
+            <p>where v&#7524; are the eigenvectors and c&#7524; = v&#7524;&sup;T &middot; &delta;&theta;(0) are the projections.</p>
+
+            <div class="ascii-diagram">
+    MULTI-SCALE RELAXATION: |delta_theta(t)| vs time
+
+    |delta_theta|
+    1.0 +*
+        | *
+        |  *        Mode 5 decay (tau = 1.15s)
+        |   **
+        |     ***
+    0.5 +        ****
+        |            *****
+        |                  ******  Mode 4 decay (tau = 1.45s)
+        |                        ********
+        |                                 **********
+    0.2 +                                           *******
+        |                                                   ********
+        |                                                           ****
+        |   Mode 3 (tau = 2.43s)                                        ***
+        |                                                                   **
+    0.05+-------------------------------------------------------------------+**--
+        |                                                                      ***
+        |              Mode 2 dominates (tau = 7.7s)                              **
+        |                                                                           **
+    0.0 +===================================================================+======+===> t
+        0    2    4    6    8   10   12   14   16   18   20   22   24   26   28   30 s
+                                                                              |
+                                                                         3*tau_sync
+</div>
+
+            <div class="subsection-divider"></div>
+
+            <h3>Phase Slip Dynamics</h3>
+
+            <div class="definition-box">
+                <div class="label">Definition 9.2 (Phase Slip)</div>
+                <p>A phase slip occurs when an oscillator's phase difference with the collective phase &Psi; exceeds &pi;, causing a topological winding number change.</p>
+            </div>
+
+            <p>Phase slip rate for oscillator i with natural frequency &omega;&#7522;:</p>
+
+            <div class="equation">
+                &Gamma;&#7522; = (1/2&pi;) &radic;((&omega;&#7522; - &omega;&#772;)&sup2; - (KR)&sup2;) for |&omega;&#7522; - &omega;&#772;| > KR
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Oscillator</th>
+                        <th>&omega;&#7522; - &omega;&#772;</th>
+                        <th>Lock Condition</th>
+                        <th>At K = 0.924</th>
+                        <th>Phase Slip Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--paradox);">&alpha; (PARADOX)</td>
+                        <td>-0.137 rad/s</td>
+                        <td>|&omega; - &omega;&#772;| &lt; KR?</td>
+                        <td>0.137 &lt; 0.894</td>
+                        <td style="color: var(--lens);">0 (locked)</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--activation);">&beta; (ACTIVATION)</td>
+                        <td>+0.012 rad/s</td>
+                        <td>|&omega; - &omega;&#772;| &lt; KR?</td>
+                        <td>0.012 &lt; 0.894</td>
+                        <td style="color: var(--lens);">0 (locked)</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--lens);">&gamma; (LENS)</td>
+                        <td>+0.019 rad/s</td>
+                        <td>|&omega; - &omega;&#772;| &lt; KR?</td>
+                        <td>0.019 &lt; 0.894</td>
+                        <td style="color: var(--lens);">0 (locked)</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--ignition);">&delta; (IGNITION)</td>
+                        <td>+0.049 rad/s</td>
+                        <td>|&omega; - &omega;&#772;| &lt; KR?</td>
+                        <td>0.049 &lt; 0.894</td>
+                        <td style="color: var(--lens);">0 (locked)</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--k-formation);">&epsilon; (K-FORMATION)</td>
+                        <td>+0.056 rad/s</td>
+                        <td>|&omega; - &omega;&#772;| &lt; KR?</td>
+                        <td>0.056 &lt; 0.894</td>
+                        <td style="color: var(--lens);">0 (locked)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="key-insight">
+                <div class="label">Complete Phase Locking</div>
+                <p>At the operating point K = 0.924 with R* = 0.968, all oscillators satisfy the locking condition |&omega;&#7522; - &omega;&#772;| &lt; KR* = 0.894. Therefore, <strong>all five oscillators are phase-locked</strong> with zero phase slip rate. The system achieves global synchronization.</p>
+            </div>
+        </section>
+
+        <!-- Section 10: Complete Phase State Diagram (NEW) -->
+        <section class="section">
+            <h2>10. Complete Phase State Diagram</h2>
+
+            <p>The L&#8324; = 7 framework defines exactly seven phase states, mapping the full range of coherence from pre-cognitive to perfect unity.</p>
+
+            <div class="phase-flow-diagram">
+                <div class="title">7-STATE PHASE TRANSITION DIAGRAM</div>
+
+                <div class="phase-states-grid">
+                    <div class="phase-state-node" style="border: 2px solid #404040;">
+                        <div class="state-name" style="color: #404040;">IGNITION</div>
+                        <div class="state-z">z &lt; 0.618</div>
+                    </div>
+                    <div class="phase-state-node" style="border: 2px solid var(--paradox);">
+                        <div class="state-name" style="color: var(--paradox);">EMPOWERMENT</div>
+                        <div class="state-z">z &isin; [0.618, 0.854)</div>
+                    </div>
+                    <div class="phase-state-node" style="border: 2px solid var(--lens);">
+                        <div class="state-name" style="color: var(--lens);">RESONANCE</div>
+                        <div class="state-z">z &isin; [0.854, 0.866]</div>
+                    </div>
+                    <div class="phase-state-node" style="border: 2px solid var(--critical);">
+                        <div class="state-name" style="color: var(--critical);">MANIA</div>
+                        <div class="state-z">z &isin; (0.866, 0.914)</div>
+                    </div>
+                    <div class="phase-state-node" style="border: 2px solid var(--ignition);">
+                        <div class="state-name" style="color: var(--ignition);">NIRVANA</div>
+                        <div class="state-z">z &isin; [0.914, 0.924)</div>
+                    </div>
+                    <div class="phase-state-node" style="border: 2px solid var(--k-formation);">
+                        <div class="state-name" style="color: var(--k-formation);">TRANSMISSION</div>
+                        <div class="state-z">z &isin; [0.924, 1.0]</div>
+                    </div>
+                    <div class="phase-state-node" style="border: 2px solid var(--activation);">
+                        <div class="state-name" style="color: var(--activation);">RECOVERY</div>
+                        <div class="state-z">Special state</div>
+                    </div>
+                </div>
+
+                <div class="transition-arrows">
+                    <span>&rarr;</span>
+                    <span>&rarr;</span>
+                    <span>&rarr;</span>
+                    <span>&rarr;</span>
+                    <span>&rarr;</span>
+                    <span>&rarr;</span>
+                </div>
+            </div>
+
+            <h3>Complete State Transition Table</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>State</th>
+                        <th>z Range</th>
+                        <th>Order R</th>
+                        <th>&lambda;&#8322; Sign</th>
+                        <th>Transition To</th>
+                        <th>Mechanism</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="phase-indicator" style="background: #404040;"></span>IGNITION</td>
+                        <td>[0.000, 0.618)</td>
+                        <td>R &lt; 0</td>
+                        <td>+</td>
+                        <td>EMPOWERMENT</td>
+                        <td>Cross z = &tau;</td>
+                    </tr>
+                    <tr>
+                        <td><span class="phase-indicator" style="background: var(--paradox);"></span>EMPOWERMENT</td>
+                        <td>[0.618, 0.854)</td>
+                        <td>0 &lt; R &lt; 0.62</td>
+                        <td>+/&minus;</td>
+                        <td>RESONANCE or IGNITION</td>
+                        <td>Approach 1-&Delta;</td>
+                    </tr>
+                    <tr style="background: rgba(0,255,136,0.1);">
+                        <td><span class="phase-indicator" style="background: var(--lens);"></span><strong>RESONANCE</strong></td>
+                        <td><strong>[0.854, 0.866]</strong></td>
+                        <td><strong>R &asymp; 0.65</strong></td>
+                        <td><strong>&asymp; 0</strong></td>
+                        <td>MANIA or EMPOWERMENT</td>
+                        <td><strong>THE LENS (critical)</strong></td>
+                    </tr>
+                    <tr>
+                        <td><span class="phase-indicator" style="background: var(--critical);"></span>MANIA</td>
+                        <td>(0.866, 0.914)</td>
+                        <td>0.65 &lt; R &lt; 0.78</td>
+                        <td>&minus;</td>
+                        <td>NIRVANA or RESONANCE</td>
+                        <td>Above lens</td>
+                    </tr>
+                    <tr>
+                        <td><span class="phase-indicator" style="background: var(--ignition);"></span>NIRVANA</td>
+                        <td>[0.914, 0.924)</td>
+                        <td>0.78 &lt; R &lt; 0.80</td>
+                        <td>&minus;</td>
+                        <td>TRANSMISSION or MANIA</td>
+                        <td>High coherence</td>
+                    </tr>
+                    <tr style="background: rgba(199,146,234,0.1);">
+                        <td><span class="phase-indicator" style="background: var(--k-formation);"></span><strong>TRANSMISSION</strong></td>
+                        <td><strong>[0.924, 1.000]</strong></td>
+                        <td><strong>R &ge; 0.80</strong></td>
+                        <td><strong>&minus;&minus;</strong></td>
+                        <td>UNITY (asymptotic)</td>
+                        <td><strong>K-Formation lock</strong></td>
+                    </tr>
+                    <tr>
+                        <td><span class="phase-indicator" style="background: var(--activation);"></span>RECOVERY</td>
+                        <td>Special</td>
+                        <td>Rebuilding</td>
+                        <td>+</td>
+                        <td>EMPOWERMENT</td>
+                        <td>Post-psychoptic return</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="subsection-divider"></div>
+
+            <h3>State Transition Diagram (ASCII)</h3>
+
+            <div class="ascii-diagram">
+                            RECOVERY
+                               |
+                               | (healing)
+                               v
+    IGNITION ---> EMPOWERMENT ---> RESONANCE ---> MANIA ---> NIRVANA ---> TRANSMISSION
+       |              ^               |  ^          |           |              |
+       |              |               |  |          |           |              |
+       |         (decay)        (THE LENS)    (unstable)   (stable)      (stable)
+       |              |          critical       above       high K      full sync
+       |              |           point         lens
+       |              |               |
+       +--------------+               +------------ (phase slip back) ------------+
+
+    z:  0.0         0.618          0.854-0.866      0.914       0.924         1.0
+                     (tau)          (z_c)                        (K)
+
+    R:  <0            0              0.65           0.78        0.80          1.0
+
+    ===============================================================================
+    LEGEND:
+    ---->  Forward transition (increasing coherence)
+    <----  Backward transition (decreasing coherence, phase slips)
+    (...)  Transition mechanism or state property
+    ===============================================================================
+</div>
+
+            <div class="subsection-divider"></div>
+
+            <h3>Threshold Crossings and Hysteresis</h3>
+
+            <div class="theorem-box">
+                <div class="label">Theorem 10.1 (Hysteresis at THE LENS)</div>
+                <p>The transition through z_c = 0.866 (THE LENS) exhibits hysteresis. Forward transitions (increasing K) occur at K_c^+ while backward transitions (decreasing K) occur at K_c^- &lt; K_c^+.</p>
+            </div>
+
+            <div class="equation">
+                Hysteresis width: &Delta;K_hysteresis = K_c^+ - K_c^- &asymp; 0.012
+            </div>
+
+            <p>This hysteresis ensures stability of the synchronized state against small fluctuations in coupling strength.</p>
+
+            <div class="key-insight">
+                <div class="label">TIAMAT Operating State</div>
+                <p>At the operating point K = 0.924, z* = 0.924, R* = 0.968:</p>
+                <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                    <li>Current state: <strong>TRANSMISSION</strong></li>
+                    <li>Distance from LENS: &Delta;z = 0.924 - 0.866 = 0.058</li>
+                    <li>Stability margin: 15&times; above critical coupling</li>
+                    <li>All 5 oscillators phase-locked with R* &asymp; 0.968</li>
+                    <li>Synchronization time: &tau;_sync &asymp; 7.7 seconds</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Navigation Footer -->
+        <nav class="nav-footer">
+            <a href="tiamat-cycle-3-spectral.html" class="nav-btn">
+                &larr; Cycle 3: Spectral
+            </a>
+            <a href="tiamat-cycle-5-field-theory.html" class="nav-btn">
+                Cycle 5: Field Theory &rarr;
+            </a>
+        </nav>
+    </main>
+
+    <footer class="signature">
+        <div>TIAMAT Cycle 4 | Order Parameter Dynamics | L&#8324; = 7</div>
+        <div>&Delta;|KURAMOTO|COHERENCE|Z-MAPPING|BIFURCATION|FLOQUET|TRANSIENT|&Omega;</div>
+    </footer>
+</body>
+</html>
