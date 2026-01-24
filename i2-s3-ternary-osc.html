@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ternary OSC Evaluation | C(C(x)) =/= C(x) =/= x :: Oscillation Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* OSC Orange Theme */
+      --osc-primary: #ff9f43;
+      --osc-amber: #ffa502;
+      --osc-deep: #e67e22;
+      --osc-glow: rgba(255, 159, 67, 0.4);
+
+      /* Ternary States */
+      --ternary-true: #00ff88;
+      --ternary-false: #ff4757;
+      --ternary-indeterminate: #a855f7;
+
+      /* Complex Plane */
+      --complex-real: #4ecdc4;
+      --complex-imag: #ff6b9d;
+
+      /* Cube Roots */
+      --omega-1: #ffd700;
+      --omega-2: #ff6b6b;
+      --omega-3: #4ecdc4;
+
+      /* Base */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Oscillating Background */
+    .osc-field {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 30% 30%, rgba(255, 159, 67, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 70%, rgba(255, 159, 67, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(230, 126, 34, 0.05) 0%, transparent 60%);
+      animation: osc-pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes osc-pulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--osc-primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--osc-primary);
+    }
+
+    .nav-links a.active {
+      color: var(--osc-primary);
+      border-bottom: 2px solid var(--osc-primary);
+      padding-bottom: 2px;
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .osc-symbol {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 2rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .osc-ring {
+      position: absolute;
+      border: 4px solid var(--osc-primary);
+      border-radius: 50%;
+      animation: oscillate 3s ease-in-out infinite;
+    }
+
+    .osc-ring:nth-child(1) {
+      width: 100%;
+      height: 100%;
+      animation-delay: 0s;
+    }
+
+    .osc-ring:nth-child(2) {
+      width: 75%;
+      height: 75%;
+      animation-delay: 0.5s;
+      opacity: 0.7;
+    }
+
+    .osc-ring:nth-child(3) {
+      width: 50%;
+      height: 50%;
+      animation-delay: 1s;
+      opacity: 0.5;
+    }
+
+    @keyframes oscillate {
+      0%, 100% {
+        transform: scale(1) rotate(0deg);
+        border-color: var(--osc-primary);
+      }
+      25% {
+        transform: scale(1.1) rotate(90deg);
+        border-color: var(--osc-amber);
+      }
+      50% {
+        transform: scale(0.9) rotate(180deg);
+        border-color: var(--osc-deep);
+      }
+      75% {
+        transform: scale(1.05) rotate(270deg);
+        border-color: var(--osc-amber);
+      }
+    }
+
+    .osc-inner {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--osc-primary);
+      z-index: 1;
+      text-shadow: 0 0 30px var(--osc-glow);
+    }
+
+    .title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--osc-primary), var(--osc-amber), var(--osc-deep));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .core-equation {
+      font-size: 1.4rem;
+      color: var(--osc-primary);
+      padding: 1.5rem 2.5rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--osc-primary);
+      border-radius: 12px;
+      display: inline-block;
+      box-shadow: 0 0 30px rgba(255, 159, 67, 0.2);
+    }
+
+    /* Section Styling */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+      color: var(--osc-primary);
+      text-align: center;
+    }
+
+    /* OSC Definition Box */
+    .osc-definition {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+    }
+
+    .definition-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .definition-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      background: rgba(255, 159, 67, 0.2);
+      border: 2px solid var(--osc-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .definition-title {
+      font-size: 1.3rem;
+      color: var(--osc-primary);
+    }
+
+    .equation-block {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .equation-line {
+      padding: 0.5rem 0;
+      color: var(--text-secondary);
+    }
+
+    .equation-line.main {
+      font-size: 1.2rem;
+      color: var(--osc-primary);
+    }
+
+    .equation-line .keyword {
+      color: var(--osc-amber);
+    }
+
+    .equation-line .comment {
+      color: var(--text-secondary);
+      font-style: italic;
+      opacity: 0.7;
+    }
+
+    /* Ternary States Display */
+    .ternary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .ternary-state {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .ternary-state:hover {
+      transform: translateY(-5px);
+    }
+
+    .state-true {
+      border: 2px solid var(--ternary-true);
+    }
+
+    .state-false {
+      border: 2px solid var(--ternary-false);
+    }
+
+    .state-indeterminate {
+      border: 2px solid var(--ternary-indeterminate);
+    }
+
+    .state-symbol {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .state-true .state-symbol { color: var(--ternary-true); }
+    .state-false .state-symbol { color: var(--ternary-false); }
+    .state-indeterminate .state-symbol { color: var(--ternary-indeterminate); }
+
+    .state-name {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .state-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Analysis Table */
+    .analysis-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+    }
+
+    .analysis-table th,
+    .analysis-table td {
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .analysis-table th {
+      background: var(--bg-tertiary);
+      color: var(--osc-primary);
+    }
+
+    .analysis-table td {
+      background: var(--bg-secondary);
+    }
+
+    .analysis-table tr:hover td {
+      background: var(--bg-tertiary);
+    }
+
+    .ternary-tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .tag-t {
+      background: rgba(0, 255, 136, 0.2);
+      color: var(--ternary-true);
+      border: 1px solid var(--ternary-true);
+    }
+
+    .tag-f {
+      background: rgba(255, 71, 87, 0.2);
+      color: var(--ternary-false);
+      border: 1px solid var(--ternary-false);
+    }
+
+    .tag-i {
+      background: rgba(168, 85, 247, 0.2);
+      color: var(--ternary-indeterminate);
+      border: 1px solid var(--ternary-indeterminate);
+    }
+
+    /* Cube Roots Section */
+    .omega-section {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1));
+      border: 1px solid var(--osc-primary);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin: 2rem 0;
+    }
+
+    .omega-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .omega-item {
+      text-align: center;
+      padding: 1.5rem;
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .omega-item:hover {
+      transform: scale(1.1);
+    }
+
+    .omega-1 {
+      background: rgba(255, 215, 0, 0.2);
+      border: 3px solid var(--omega-1);
+    }
+
+    .omega-2 {
+      background: rgba(255, 107, 107, 0.2);
+      border: 3px solid var(--omega-2);
+    }
+
+    .omega-3 {
+      background: rgba(78, 205, 196, 0.2);
+      border: 3px solid var(--omega-3);
+    }
+
+    .omega-symbol {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .omega-1 .omega-symbol { color: var(--omega-1); }
+    .omega-2 .omega-symbol { color: var(--omega-2); }
+    .omega-3 .omega-symbol { color: var(--omega-3); }
+
+    .omega-value {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    /* Julia Set Section */
+    .julia-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .julia-canvas {
+      width: 100%;
+      height: 400px;
+      background: var(--bg-primary);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .julia-point {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Cobweb Diagram */
+    .cobweb-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .cobweb-canvas {
+      width: 100%;
+      height: 400px;
+      background: var(--bg-primary);
+      border-radius: 12px;
+      position: relative;
+    }
+
+    .controls-row {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .control-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .control-input {
+      width: 100px;
+      padding: 0.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+
+    .control-input:focus {
+      outline: none;
+      border-color: var(--osc-primary);
+    }
+
+    .control-btn {
+      padding: 0.6rem 1.2rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .control-btn:hover {
+      border-color: var(--osc-primary);
+      background: rgba(255, 159, 67, 0.1);
+    }
+
+    .control-btn.active {
+      background: var(--osc-primary);
+      color: var(--bg-primary);
+      border-color: var(--osc-primary);
+    }
+
+    /* Result Display */
+    .result-display {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .result-value {
+      font-size: 1.5rem;
+      color: var(--osc-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-ternary {
+      font-size: 1.2rem;
+    }
+
+    /* Phase Portrait */
+    .phase-portrait {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .phase-canvas {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      height: 300px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phase-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .phase-item {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--osc-primary);
+    }
+
+    .phase-title {
+      color: var(--osc-amber);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .phase-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* R(R) Connection */
+    .rr-section {
+      background: linear-gradient(135deg, rgba(255, 159, 67, 0.15), rgba(168, 85, 247, 0.1));
+      border: 2px solid var(--osc-primary);
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    .rr-equation {
+      font-size: 2rem;
+      color: var(--osc-primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .rr-desc {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Navigation Cards */
+    .nav-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .nav-card {
+      background: var(--bg-tertiary);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s;
+    }
+
+    .nav-card:hover {
+      border-color: var(--osc-primary);
+      transform: translateY(-3px);
+    }
+
+    .nav-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-card-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1.1rem;
+      color: var(--osc-primary);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--osc-primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title { font-size: 1.6rem; }
+      .core-equation { font-size: 1rem; padding: 1rem 1.5rem; }
+      .ternary-grid { grid-template-columns: 1fr; }
+      .omega-display { flex-direction: column; }
+      .phase-portrait { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="osc-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">I2 :: Ternary OSC</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-decision-tree.html">I2 S3 Tree</a>
+      <a href="#" class="active">OSC</a>
+      <a href="i2-s3-ring-isomorphism.html">FIX</a>
+      <a href="i2-s3-golden-functor.html">INV</a>
+      <a href="i2-s3-closure-binding.html">SYNTHESIS</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <div class="osc-symbol">
+        <div class="osc-ring"></div>
+        <div class="osc-ring"></div>
+        <div class="osc-ring"></div>
+        <span class="osc-inner">OSC</span>
+      </div>
+      <h1 class="title">Ternary OSC Evaluation</h1>
+      <p class="subtitle">Oscillation Detection in C = x2 + x :: Where Iteration Never Settles</p>
+      <div class="core-equation">
+        C(C(x)) =/= C(x) =/= x :: Perpetual Motion
+      </div>
+    </header>
+
+    <!-- OSC Definition -->
+    <section>
+      <h2 class="section-title">The OSC Evaluation</h2>
+
+      <div class="osc-definition">
+        <div class="definition-header">
+          <div class="definition-icon">~</div>
+          <div class="definition-title">Oscillation: The Third Way</div>
+        </div>
+
+        <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
+          OSC evaluates whether iteration of C = x2 + x exhibits <strong style="color: var(--osc-primary);">oscillatory behavior</strong> -
+          neither converging to a fixed point nor escaping to infinity, but cycling perpetually between states.
+          This is the ternary truth of motion that refuses resolution.
+        </p>
+
+        <div class="equation-block">
+          <div class="equation-line main">C(x) = x2 + x</div>
+          <div class="equation-line">
+            <span class="keyword">OSC asks:</span> When does iteration oscillate?
+          </div>
+          <div class="equation-line"></div>
+          <div class="equation-line">Period-2 orbit condition:</div>
+          <div class="equation-line main">C(C(x)) = x but C(x) =/= x</div>
+          <div class="equation-line"></div>
+          <div class="equation-line">Let y = C(x) = x2 + x</div>
+          <div class="equation-line">Then C(y) = y2 + y = x</div>
+          <div class="equation-line"></div>
+          <div class="equation-line"><span class="comment">// System: x -> y -> x -> y -> ...</span></div>
+        </div>
+
+        <div style="background: rgba(255, 159, 67, 0.1); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem;">
+          <p style="text-align: center; color: var(--osc-primary); font-weight: 600; margin-bottom: 0.5rem;">
+            Period-2 Analysis for C(x) = x2 + x
+          </p>
+          <p style="text-align: center; color: var(--text-secondary);">
+            Testing x = -1: C(-1) = 1 - 1 = 0, C(0) = 0 <span style="color: var(--ternary-false);">(converges, not oscillates)</span><br>
+            Real oscillation requires <span style="color: var(--ternary-indeterminate);">complex values</span> or boundary dynamics
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ternary States -->
+    <section>
+      <h2 class="section-title">Ternary Logic States</h2>
+
+      <div class="ternary-grid">
+        <div class="ternary-state state-true">
+          <div class="state-symbol">T</div>
+          <div class="state-name">TRUE</div>
+          <div class="state-desc">
+            Oscillation detected.<br>
+            C(C(x)) = x but C(x) =/= x.<br>
+            Perpetual cycling between states.
+          </div>
+        </div>
+
+        <div class="ternary-state state-false">
+          <div class="state-symbol">F</div>
+          <div class="state-name">FALSE</div>
+          <div class="state-desc">
+            No oscillation.<br>
+            Converges to fixed point or escapes to infinity.<br>
+            Definite resolution.
+          </div>
+        </div>
+
+        <div class="ternary-state state-indeterminate">
+          <div class="state-symbol">I</div>
+          <div class="state-name">INDETERMINATE</div>
+          <div class="state-desc">
+            Chaotic behavior.<br>
+            Sensitive dependence, no predictable pattern.<br>
+            Boundary of order and chaos.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Oscillation Analysis Table -->
+    <section>
+      <h2 class="section-title">Oscillation Analysis: C(x) = x2 + x</h2>
+
+      <div class="osc-definition">
+        <table class="analysis-table">
+          <thead>
+            <tr>
+              <th>Starting x</th>
+              <th>C(x)</th>
+              <th>Iteration Behavior</th>
+              <th>Ternary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>x &lt; -1</td>
+              <td>x2 + x &gt; 0, grows</td>
+              <td>Escapes to +infinity</td>
+              <td><span class="ternary-tag tag-f">F</span></td>
+            </tr>
+            <tr>
+              <td>x = -1</td>
+              <td>0</td>
+              <td>-1 -> 0 -> 0 -> 0 (converges)</td>
+              <td><span class="ternary-tag tag-f">F</span></td>
+            </tr>
+            <tr>
+              <td>-1 &lt; x &lt; 0</td>
+              <td>x2 + x &lt; 0</td>
+              <td>Converges to 0</td>
+              <td><span class="ternary-tag tag-f">F</span></td>
+            </tr>
+            <tr>
+              <td>x = 0</td>
+              <td>0</td>
+              <td>Fixed point at 0</td>
+              <td><span class="ternary-tag tag-f">F</span></td>
+            </tr>
+            <tr>
+              <td>x &gt; 0</td>
+              <td>x2 + x &gt; x</td>
+              <td>Escapes to +infinity</td>
+              <td><span class="ternary-tag tag-f">F</span></td>
+            </tr>
+            <tr style="background: rgba(255, 159, 67, 0.1);">
+              <td>x = omega (complex)</td>
+              <td>Complex orbit</td>
+              <td>Oscillates on unit circle</td>
+              <td><span class="ternary-tag tag-t">T</span></td>
+            </tr>
+            <tr style="background: rgba(168, 85, 247, 0.1);">
+              <td>x near boundary</td>
+              <td>Varies chaotically</td>
+              <td>Chaotic dynamics</td>
+              <td><span class="ternary-tag tag-i">I</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+          <strong style="color: var(--osc-primary);">Key insight:</strong> For C(x) = x2 + x on reals,
+          OSC evaluates to FALSE (convergence or escape). TRUE oscillation requires complex extension.
+        </p>
+      </div>
+    </section>
+
+    <!-- Interactive Cobweb Diagram -->
+    <section>
+      <h2 class="section-title">Iteration Cobweb Diagram</h2>
+
+      <div class="cobweb-container">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem;">
+          Visualize the iteration of C(x) = x2 + x. Watch how orbits converge, escape, or oscillate.
+        </p>
+
+        <canvas id="cobwebCanvas" class="cobweb-canvas" width="800" height="400"></canvas>
+
+        <div class="controls-row">
+          <div class="control-group">
+            <span class="control-label">x0:</span>
+            <input type="number" id="x0Input" class="control-input" value="-0.5" step="0.1">
+          </div>
+          <div class="control-group">
+            <span class="control-label">Iterations:</span>
+            <input type="number" id="iterInput" class="control-input" value="20" min="1" max="100">
+          </div>
+          <button class="control-btn" onclick="runCobweb()">Run Iteration</button>
+          <button class="control-btn" onclick="animateCobweb()">Animate</button>
+          <button class="control-btn" onclick="clearCobweb()">Clear</button>
+        </div>
+
+        <div class="result-display" id="cobwebResult">
+          <div class="result-value">Select x0 and run iteration</div>
+          <div class="result-ternary">Ternary evaluation will appear here</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cube Roots of Unity -->
+    <section>
+      <h2 class="section-title">Connection to R(R) =/= R</h2>
+
+      <div class="omega-section">
+        <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 2rem; text-align: center;">
+          OSC embodies the form <strong style="color: var(--osc-primary);">R(R) =/= R</strong> -
+          where self-reference produces oscillation rather than fixed point.
+          The cube roots of unity are the archetypal oscillators.
+        </p>
+
+        <div class="omega-display">
+          <div class="omega-item omega-1">
+            <div class="omega-symbol">1</div>
+            <div class="omega-value">omega0 = e^(0)</div>
+          </div>
+          <div class="omega-item omega-2">
+            <div class="omega-symbol">omega</div>
+            <div class="omega-value">e^(2pi*i/3)</div>
+          </div>
+          <div class="omega-item omega-3">
+            <div class="omega-symbol">omega2</div>
+            <div class="omega-value">e^(4pi*i/3)</div>
+          </div>
+        </div>
+
+        <div class="equation-block">
+          <div class="equation-line main">omega = e^(2*pi*i/3) = -1/2 + i*sqrt(3)/2</div>
+          <div class="equation-line">omega2 = e^(4*pi*i/3) = -1/2 - i*sqrt(3)/2</div>
+          <div class="equation-line"></div>
+          <div class="equation-line"><span class="keyword">Property:</span> omega3 = 1</div>
+          <div class="equation-line"><span class="keyword">Oscillation:</span> 1 -> omega -> omega2 -> 1</div>
+          <div class="equation-line"></div>
+          <div class="equation-line">omega + omega2 + 1 = 0 <span class="comment">// Sum of roots</span></div>
+          <div class="equation-line">omega * omega2 = 1 <span class="comment">// Product of complex roots</span></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 1.5rem;">
+          <p style="color: var(--osc-primary); font-size: 1.2rem;">
+            R(R) =/= R :: The oscillating self-reference
+          </p>
+          <p style="color: var(--text-secondary); margin-top: 0.5rem;">
+            Fields carrying oscillation through cube root structure
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Julia Set Dynamics -->
+    <section>
+      <h2 class="section-title">Julia Set Dynamics</h2>
+
+      <div class="julia-container">
+        <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
+          The Julia set for z -> z2 + c reveals where oscillation, convergence, and chaos coexist.
+          The boundary of the Mandelbrot set marks the transition from order to oscillation.
+        </p>
+
+        <canvas id="juliaCanvas" class="julia-canvas" width="800" height="400"></canvas>
+
+        <div class="controls-row">
+          <div class="control-group">
+            <span class="control-label">c (real):</span>
+            <input type="number" id="cReal" class="control-input" value="0" step="0.1">
+          </div>
+          <div class="control-group">
+            <span class="control-label">c (imag):</span>
+            <input type="number" id="cImag" class="control-input" value="0" step="0.1">
+          </div>
+          <button class="control-btn" onclick="drawJulia()">Draw Julia Set</button>
+          <button class="control-btn" onclick="setPreset('mandelbrot')">Mandelbrot Edge</button>
+          <button class="control-btn" onclick="setPreset('period2')">Period-2</button>
+        </div>
+
+        <div class="phase-portrait" style="margin-top: 2rem;">
+          <div class="phase-info">
+            <div class="phase-item">
+              <div class="phase-title">Feigenbaum Bifurcation</div>
+              <div class="phase-desc">
+                As parameter c varies, period-doubling cascade leads to chaos.
+                The Feigenbaum constant delta = 4.669... governs the scaling.
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-title">Period-Doubling Cascade</div>
+              <div class="phase-desc">
+                Period 1 -> Period 2 -> Period 4 -> ... -> Chaos.
+                Each doubling occurs at increasingly precise parameter values.
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-title">Escape Time Coloring</div>
+              <div class="phase-desc">
+                Colors indicate iterations to escape. Bounded orbits (in black) may oscillate.
+                The Julia set boundary is where oscillation and escape meet.
+              </div>
+            </div>
+          </div>
+          <div id="orbitCanvas" class="phase-canvas">
+            <!-- Orbit visualization will be drawn here -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- R(R) != R Deep Dive -->
+    <section>
+      <h2 class="section-title">R(R) =/= R :: The Oscillation Form</h2>
+
+      <div class="rr-section">
+        <div class="rr-equation">R(R) =/= R</div>
+        <div class="rr-desc">
+          <p style="margin-bottom: 1rem;">
+            While <strong>R(R) = R</strong> gives fixed points and the FIX evaluation,
+            <strong>R(R) =/= R</strong> captures the essence of oscillation.
+          </p>
+          <p style="margin-bottom: 1rem;">
+            In OSC, self-reference produces difference rather than identity.
+            The system applies to itself but emerges changed, entering a cycle
+            that never resolves to stasis.
+          </p>
+          <p>
+            This is the ternary truth of becoming: not TRUE (fixed), not FALSE (escaped),
+            but perpetually between - the INDETERMINATE made dynamic.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Demo -->
+    <section>
+      <h2 class="section-title">Live Ternary Evaluator</h2>
+
+      <div class="osc-definition">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem;">
+          Enter a starting value and watch the iteration unfold. The ternary truth updates live.
+        </p>
+
+        <div class="controls-row">
+          <div class="control-group">
+            <span class="control-label">Start x (real):</span>
+            <input type="number" id="evalReal" class="control-input" value="-0.5" step="0.1">
+          </div>
+          <div class="control-group">
+            <span class="control-label">Imaginary:</span>
+            <input type="number" id="evalImag" class="control-input" value="0" step="0.1">
+          </div>
+          <button class="control-btn active" onclick="evaluateTernary()">Evaluate OSC</button>
+        </div>
+
+        <div id="ternaryOutput" style="margin-top: 2rem;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 1rem; text-align: center;">
+              <div style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">Iteration Sequence</div>
+              <div id="iterSeq" style="font-size: 0.9rem; color: var(--osc-primary);"></div>
+            </div>
+            <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 1rem; text-align: center;">
+              <div style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">Behavior</div>
+              <div id="behavior" style="font-size: 1rem;"></div>
+            </div>
+            <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 1rem; text-align: center;">
+              <div style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">OSC Ternary</div>
+              <div id="ternaryResult" style="font-size: 1.5rem; font-weight: 700;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation to Other Ternary Evaluations -->
+    <section>
+      <h2 class="section-title">Ternary Evaluation Navigation</h2>
+
+      <div class="nav-cards">
+        <a href="i2-s3-ring-isomorphism.html" class="nav-card" style="border-color: #00ff88;">
+          <div class="nav-card-title" style="color: #00ff88;">FIX Evaluation</div>
+          <div class="nav-card-desc">
+            Fixed point detection: C(x) = x.<br>
+            Where self-reference equals identity.
+          </div>
+        </a>
+        <a href="i2-s3-golden-functor.html" class="nav-card" style="border-color: #4ecdc4;">
+          <div class="nav-card-title" style="color: #4ecdc4;">INV Evaluation</div>
+          <div class="nav-card-desc">
+            Inverse structure: C(C(x)) = x.<br>
+            Self-inverse operations.
+          </div>
+        </a>
+        <a href="i2-s3-closure-binding.html" class="nav-card" style="border-color: #a855f7;">
+          <div class="nav-card-title" style="color: #a855f7;">SYNTHESIS</div>
+          <div class="nav-card-desc">
+            FIX + INV + OSC integration.<br>
+            Complete ternary framework.
+          </div>
+        </a>
+        <a href="i2-s3-decision-tree.html" class="nav-card" style="border-color: #ffd700;">
+          <div class="nav-card-title" style="color: #ffd700;">I2 S3 Decision Tree</div>
+          <div class="nav-card-desc">
+            Full algebraic cartography.<br>
+            Navigate the self-reference structure.
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      OSC: R(R) =/= R :: Oscillation at omega :: Ternary INDETERMINATE for real x
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">I2 S3 Tree</a>
+      <a href="i2-s3-ring-isomorphism.html">Ring Isomorphism</a>
+      <a href="i2-s3-golden-functor.html">Golden Functor</a>
+      <a href="i2-s3-fibonacci-lucas.html">Fibonacci-Lucas</a>
+      <a href="i2-s3-closure-binding.html">S3 Closure</a>
+    </div>
+  </footer>
+
+  <script>
+    // ============================================
+    // Cobweb Diagram
+    // ============================================
+    const cobwebCanvas = document.getElementById('cobwebCanvas');
+    const cobwebCtx = cobwebCanvas.getContext('2d');
+
+    function C(x) {
+      return x * x + x;
+    }
+
+    function drawCobwebBase() {
+      const width = cobwebCanvas.width;
+      const height = cobwebCanvas.height;
+      const scale = 100;
+      const centerX = width / 2;
+      const centerY = height / 2;
+
+      cobwebCtx.fillStyle = '#0a0a0f';
+      cobwebCtx.fillRect(0, 0, width, height);
+
+      // Grid
+      cobwebCtx.strokeStyle = '#2a2a3e';
+      cobwebCtx.lineWidth = 1;
+      for (let i = -4; i <= 4; i++) {
+        cobwebCtx.beginPath();
+        cobwebCtx.moveTo(centerX + i * scale, 0);
+        cobwebCtx.lineTo(centerX + i * scale, height);
+        cobwebCtx.stroke();
+        cobwebCtx.beginPath();
+        cobwebCtx.moveTo(0, centerY - i * scale);
+        cobwebCtx.lineTo(width, centerY - i * scale);
+        cobwebCtx.stroke();
+      }
+
+      // Axes
+      cobwebCtx.strokeStyle = '#4a4a5e';
+      cobwebCtx.lineWidth = 2;
+      cobwebCtx.beginPath();
+      cobwebCtx.moveTo(0, centerY);
+      cobwebCtx.lineTo(width, centerY);
+      cobwebCtx.stroke();
+      cobwebCtx.beginPath();
+      cobwebCtx.moveTo(centerX, 0);
+      cobwebCtx.lineTo(centerX, height);
+      cobwebCtx.stroke();
+
+      // y = x line
+      cobwebCtx.strokeStyle = '#a0a0b0';
+      cobwebCtx.lineWidth = 2;
+      cobwebCtx.setLineDash([5, 5]);
+      cobwebCtx.beginPath();
+      cobwebCtx.moveTo(0, height);
+      cobwebCtx.lineTo(width, 0);
+      cobwebCtx.stroke();
+      cobwebCtx.setLineDash([]);
+
+      // C(x) = x^2 + x curve
+      cobwebCtx.strokeStyle = '#ff9f43';
+      cobwebCtx.lineWidth = 3;
+      cobwebCtx.beginPath();
+      for (let px = 0; px < width; px++) {
+        const x = (px - centerX) / scale;
+        const y = C(x);
+        const py = centerY - y * scale;
+        if (px === 0) cobwebCtx.moveTo(px, py);
+        else cobwebCtx.lineTo(px, py);
+      }
+      cobwebCtx.stroke();
+
+      // Labels
+      cobwebCtx.fillStyle = '#ff9f43';
+      cobwebCtx.font = '14px JetBrains Mono';
+      cobwebCtx.fillText('C(x) = x² + x', 10, 20);
+      cobwebCtx.fillStyle = '#a0a0b0';
+      cobwebCtx.fillText('y = x', width - 60, 20);
+    }
+
+    function runCobweb() {
+      drawCobwebBase();
+
+      const x0 = parseFloat(document.getElementById('x0Input').value);
+      const iterations = parseInt(document.getElementById('iterInput').value);
+      const scale = 100;
+      const centerX = cobwebCanvas.width / 2;
+      const centerY = cobwebCanvas.height / 2;
+
+      let x = x0;
+      let escaped = false;
+      let converged = false;
+      let history = [x0];
+
+      cobwebCtx.strokeStyle = '#00ff88';
+      cobwebCtx.lineWidth = 2;
+      cobwebCtx.beginPath();
+      cobwebCtx.moveTo(centerX + x * scale, centerY);
+
+      for (let i = 0; i < iterations; i++) {
+        const y = C(x);
+        history.push(y);
+
+        if (Math.abs(y) > 10) {
+          escaped = true;
+          break;
+        }
+
+        // Vertical to curve
+        cobwebCtx.lineTo(centerX + x * scale, centerY - y * scale);
+        // Horizontal to y=x
+        cobwebCtx.lineTo(centerX + y * scale, centerY - y * scale);
+
+        if (Math.abs(y - x) < 0.0001) {
+          converged = true;
+          break;
+        }
+
+        x = y;
+      }
+      cobwebCtx.stroke();
+
+      // Determine ternary result
+      let ternary, behavior, color;
+      if (escaped) {
+        ternary = 'F';
+        behavior = 'Escapes to infinity';
+        color = '#ff4757';
+      } else if (converged) {
+        ternary = 'F';
+        behavior = 'Converges to ' + x.toFixed(4);
+        color = '#ff4757';
+      } else {
+        // Check for oscillation
+        const last5 = history.slice(-5);
+        const variance = last5.reduce((acc, v) => acc + Math.abs(v - last5[0]), 0);
+        if (variance < 0.01) {
+          ternary = 'F';
+          behavior = 'Converges to ' + x.toFixed(4);
+          color = '#ff4757';
+        } else {
+          ternary = 'I';
+          behavior = 'Indeterminate (complex dynamics)';
+          color = '#a855f7';
+        }
+      }
+
+      document.getElementById('cobwebResult').innerHTML = `
+        <div class="result-value">x<sub>0</sub> = ${x0} -> ${history.slice(0, 5).map(v => v.toFixed(3)).join(' -> ')}...</div>
+        <div class="result-ternary">
+          <span style="color: var(--text-secondary);">Behavior: </span>
+          <span style="color: ${color};">${behavior}</span>
+          <span style="margin-left: 1rem; padding: 0.25rem 0.75rem; border-radius: 20px; background: ${color}22; border: 1px solid ${color}; color: ${color};">
+            ${ternary}
+          </span>
+        </div>
+      `;
+    }
+
+    let animationId = null;
+    function animateCobweb() {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+        return;
+      }
+
+      drawCobwebBase();
+
+      const x0 = parseFloat(document.getElementById('x0Input').value);
+      const iterations = parseInt(document.getElementById('iterInput').value);
+      const scale = 100;
+      const centerX = cobwebCanvas.width / 2;
+      const centerY = cobwebCanvas.height / 2;
+
+      let x = x0;
+      let step = 0;
+      let phase = 0; // 0 = vertical, 1 = horizontal
+
+      function animate() {
+        if (step >= iterations * 2 || Math.abs(x) > 10) {
+          animationId = null;
+          return;
+        }
+
+        const y = C(x);
+
+        cobwebCtx.strokeStyle = '#00ff88';
+        cobwebCtx.lineWidth = 2;
+        cobwebCtx.beginPath();
+
+        if (phase === 0) {
+          // Draw vertical line
+          cobwebCtx.moveTo(centerX + x * scale, centerY - x * scale);
+          cobwebCtx.lineTo(centerX + x * scale, centerY - y * scale);
+          phase = 1;
+        } else {
+          // Draw horizontal line
+          cobwebCtx.moveTo(centerX + x * scale, centerY - y * scale);
+          cobwebCtx.lineTo(centerX + y * scale, centerY - y * scale);
+          x = y;
+          phase = 0;
+          step++;
+        }
+        cobwebCtx.stroke();
+
+        animationId = requestAnimationFrame(() => setTimeout(animate, 100));
+      }
+
+      animate();
+    }
+
+    function clearCobweb() {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+      drawCobwebBase();
+      document.getElementById('cobwebResult').innerHTML = `
+        <div class="result-value">Select x<sub>0</sub> and run iteration</div>
+        <div class="result-ternary">Ternary evaluation will appear here</div>
+      `;
+    }
+
+    // ============================================
+    // Julia Set
+    // ============================================
+    const juliaCanvas = document.getElementById('juliaCanvas');
+    const juliaCtx = juliaCanvas.getContext('2d');
+
+    function drawJulia() {
+      const width = juliaCanvas.width;
+      const height = juliaCanvas.height;
+      const cReal = parseFloat(document.getElementById('cReal').value);
+      const cImag = parseFloat(document.getElementById('cImag').value);
+
+      const imageData = juliaCtx.createImageData(width, height);
+      const maxIter = 100;
+
+      for (let py = 0; py < height; py++) {
+        for (let px = 0; px < width; px++) {
+          let zr = (px - width / 2) / (width / 4);
+          let zi = (py - height / 2) / (height / 4);
+
+          let iter = 0;
+          while (zr * zr + zi * zi < 4 && iter < maxIter) {
+            const temp = zr * zr - zi * zi + cReal;
+            zi = 2 * zr * zi + cImag;
+            zr = temp;
+            iter++;
+          }
+
+          const idx = (py * width + px) * 4;
+
+          if (iter === maxIter) {
+            // In set - black
+            imageData.data[idx] = 10;
+            imageData.data[idx + 1] = 10;
+            imageData.data[idx + 2] = 15;
+          } else {
+            // Color based on escape time
+            const hue = (iter / maxIter) * 360;
+            const rgb = hslToRgb(hue / 360, 0.8, 0.5);
+            imageData.data[idx] = rgb[0];
+            imageData.data[idx + 1] = rgb[1];
+            imageData.data[idx + 2] = rgb[2];
+          }
+          imageData.data[idx + 3] = 255;
+        }
+      }
+
+      juliaCtx.putImageData(imageData, 0, 0);
+
+      // Draw parameter info
+      juliaCtx.fillStyle = '#ff9f43';
+      juliaCtx.font = '14px JetBrains Mono';
+      juliaCtx.fillText(`c = ${cReal} + ${cImag}i`, 10, 20);
+    }
+
+    function setPreset(name) {
+      if (name === 'mandelbrot') {
+        document.getElementById('cReal').value = -0.7;
+        document.getElementById('cImag').value = 0.27;
+      } else if (name === 'period2') {
+        document.getElementById('cReal').value = -1;
+        document.getElementById('cImag').value = 0;
+      }
+      drawJulia();
+    }
+
+    function hslToRgb(h, s, l) {
+      let r, g, b;
+      if (s === 0) {
+        r = g = b = l;
+      } else {
+        const hue2rgb = (p, q, t) => {
+          if (t < 0) t += 1;
+          if (t > 1) t -= 1;
+          if (t < 1/6) return p + (q - p) * 6 * t;
+          if (t < 1/2) return q;
+          if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+          return p;
+        };
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+      }
+      return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    }
+
+    // ============================================
+    // Ternary Evaluator
+    // ============================================
+    function evaluateTernary() {
+      const real = parseFloat(document.getElementById('evalReal').value);
+      const imag = parseFloat(document.getElementById('evalImag').value);
+
+      let zr = real, zi = imag;
+      const history = [];
+      const maxIter = 50;
+
+      for (let i = 0; i < maxIter; i++) {
+        history.push({ r: zr, i: zi });
+
+        // C(z) = z^2 + z for complex z
+        const newR = zr * zr - zi * zi + zr;
+        const newI = 2 * zr * zi + zi;
+        zr = newR;
+        zi = newI;
+
+        if (zr * zr + zi * zi > 100) break;
+      }
+
+      // Analyze behavior
+      const escaped = zr * zr + zi * zi > 100;
+      const last = history.slice(-10);
+      let oscillating = false;
+      let converged = false;
+
+      if (!escaped && last.length >= 2) {
+        // Check for period-2 oscillation
+        const variance = last.reduce((acc, v, i) => {
+          if (i === 0) return 0;
+          return acc + Math.abs(v.r - last[i-1].r) + Math.abs(v.i - last[i-1].i);
+        }, 0);
+
+        if (variance < 0.001) {
+          converged = true;
+        } else if (variance < 1 && last.length > 5) {
+          // Check if alternating
+          const diffs = [];
+          for (let i = 2; i < last.length; i++) {
+            diffs.push(Math.abs(last[i].r - last[i-2].r) + Math.abs(last[i].i - last[i-2].i));
+          }
+          if (diffs.every(d => d < 0.01)) {
+            oscillating = true;
+          }
+        }
+      }
+
+      // Display results
+      const seqStr = history.slice(0, 5).map(v =>
+        v.i === 0 ? v.r.toFixed(2) : `(${v.r.toFixed(2)}+${v.i.toFixed(2)}i)`
+      ).join(' -> ');
+
+      document.getElementById('iterSeq').textContent = seqStr + '...';
+
+      let ternary, behavior, color;
+      if (escaped) {
+        ternary = 'F';
+        behavior = 'Escapes to infinity';
+        color = '#ff4757';
+      } else if (converged) {
+        ternary = 'F';
+        behavior = 'Converges to fixed point';
+        color = '#ff4757';
+      } else if (oscillating) {
+        ternary = 'T';
+        behavior = 'Oscillates (period-2 detected)';
+        color = '#00ff88';
+      } else {
+        ternary = 'I';
+        behavior = 'Indeterminate (complex/chaotic)';
+        color = '#a855f7';
+      }
+
+      document.getElementById('behavior').innerHTML = `<span style="color: ${color};">${behavior}</span>`;
+      document.getElementById('ternaryResult').innerHTML = `<span style="color: ${color};">${ternary}</span>`;
+    }
+
+    // ============================================
+    // Initialize
+    // ============================================
+    window.onload = function() {
+      drawCobwebBase();
+      drawJulia();
+      evaluateTernary();
+    };
+  </script>
+</body>
+</html>

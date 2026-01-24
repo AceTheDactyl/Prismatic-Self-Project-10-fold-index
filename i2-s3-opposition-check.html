@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opposition Duality Check | The Decision Diamond | L4 = I2 via R(R) = R</title>
+  <meta name="description" content="The equivalence decision node: Are L4 Helix and I2 Opposition equivalent? YES - both are valid projections of R(R) = R.">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================================================
+       OPPOSITION DUALITY CHECK - THE DECISION DIAMOND
+       Gold (#ffd700) primary | Green (#6bcb77) L4 | Red (#ff4757) I2
+       ========================================================================= */
+    :root {
+      /* Primary Gold Theme */
+      --gold-primary: #ffd700;
+      --gold-secondary: #f4c430;
+      --gold-tertiary: #c9a227;
+      --gold-glow: rgba(255, 215, 0, 0.4);
+      --gold-subtle: rgba(255, 215, 0, 0.1);
+
+      /* L4 Helix - Green (FIX form) */
+      --l4-green: #6bcb77;
+      --l4-green-light: #8ed997;
+      --l4-glow: rgba(107, 203, 119, 0.4);
+      --l4-subtle: rgba(107, 203, 119, 0.15);
+
+      /* I2 Opposition - Red (INV form) */
+      --i2-red: #ff4757;
+      --i2-red-light: #ff6b7a;
+      --i2-glow: rgba(255, 71, 87, 0.4);
+      --i2-subtle: rgba(255, 71, 87, 0.15);
+
+      /* Axiom Forms */
+      --fix-color: #6bcb77;
+      --osc-color: #ff9f43;
+      --inv-color: #4ecdc4;
+
+      /* Synthesis */
+      --synthesis: #a855f7;
+      --synthesis-glow: rgba(168, 85, 247, 0.3);
+
+      /* Base Theme */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --bg-card: #16162a;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+
+      /* Constants */
+      --phi: 1.6180339887;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* =========================================================================
+       ANIMATED BACKGROUND - DECISION FIELD
+       ========================================================================= */
+    .decision-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 30% 30%, var(--l4-subtle) 0%, transparent 35%),
+        radial-gradient(ellipse at 70% 30%, var(--i2-subtle) 0%, transparent 35%),
+        radial-gradient(ellipse at 50% 70%, var(--gold-subtle) 0%, transparent 45%);
+    }
+
+    /* Decision wave animation */
+    .decision-field::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      height: 300px;
+      transform: translate(-50%, -50%) rotate(45deg);
+      border: 2px solid var(--gold-primary);
+      opacity: 0.1;
+      animation: diamond-pulse 4s ease-in-out infinite;
+    }
+
+    .decision-field::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 400px;
+      height: 400px;
+      transform: translate(-50%, -50%) rotate(45deg);
+      border: 1px solid var(--gold-primary);
+      opacity: 0.05;
+      animation: diamond-pulse 4s ease-in-out infinite 1s;
+    }
+
+    @keyframes diamond-pulse {
+      0%, 100% { opacity: 0.05; transform: translate(-50%, -50%) rotate(45deg) scale(1); }
+      50% { opacity: 0.15; transform: translate(-50%, -50%) rotate(45deg) scale(1.1); }
+    }
+
+    /* =========================================================================
+       NAVIGATION
+       ========================================================================= */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: color 0.3s;
+      padding: 0.25rem 0.5rem;
+    }
+
+    .nav-links a:hover { color: var(--gold-primary); }
+    .nav-links a.l4-link:hover { color: var(--l4-green); }
+    .nav-links a.i2-link:hover { color: var(--i2-red); }
+
+    /* =========================================================================
+       MAIN CONTENT
+       ========================================================================= */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* =========================================================================
+       HEADER
+       ========================================================================= */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .node-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--gold-primary);
+      background: var(--gold-subtle);
+      border: 1px solid var(--gold-primary);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Decision Diamond Symbol */
+    .diamond-symbol {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 2rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .diamond-outer {
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      border: 4px solid var(--gold-primary);
+      transform: rotate(45deg);
+      animation: diamond-breathe 3s ease-in-out infinite;
+      box-shadow: 0 0 40px var(--gold-glow);
+    }
+
+    .diamond-inner {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border: 3px solid var(--gold-secondary);
+      transform: rotate(45deg);
+      animation: diamond-breathe 3s ease-in-out infinite 0.5s;
+    }
+
+    .diamond-core {
+      position: relative;
+      z-index: 10;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+      text-shadow: 0 0 30px var(--gold-glow);
+      animation: question-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes diamond-breathe {
+      0%, 100% { transform: rotate(45deg) scale(1); opacity: 1; }
+      50% { transform: rotate(45deg) scale(1.05); opacity: 0.8; }
+    }
+
+    @keyframes question-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+
+    .title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--gold-primary), var(--gold-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .core-question {
+      display: inline-block;
+      padding: 1.5rem 3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--gold-primary);
+      border-radius: 12px;
+      box-shadow: 0 0 40px var(--gold-glow);
+    }
+
+    .core-question .l4 { color: var(--l4-green); }
+    .core-question .i2 { color: var(--i2-red); }
+    .core-question .eq { color: var(--gold-primary); font-size: 1.8rem; }
+
+    /* =========================================================================
+       SECTIONS
+       ========================================================================= */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+      color: var(--gold-primary);
+      text-align: center;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+      font-size: 0.95rem;
+    }
+
+    /* =========================================================================
+       DECISION DIAMOND VISUALIZATION
+       ========================================================================= */
+    .decision-viz-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+    }
+
+    #decisionCanvas {
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+      background: var(--bg-primary);
+    }
+
+    .canvas-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--gold-primary);
+      border-radius: 8px;
+      color: var(--gold-primary);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+
+    .control-btn:hover {
+      background: var(--gold-primary);
+      color: var(--bg-primary);
+    }
+
+    .control-btn.active {
+      background: var(--gold-primary);
+      color: var(--bg-primary);
+    }
+
+    .control-btn.l4-btn {
+      border-color: var(--l4-green);
+      color: var(--l4-green);
+    }
+    .control-btn.l4-btn:hover, .control-btn.l4-btn.active {
+      background: var(--l4-green);
+      color: var(--bg-primary);
+    }
+
+    .control-btn.i2-btn {
+      border-color: var(--i2-red);
+      color: var(--i2-red);
+    }
+    .control-btn.i2-btn:hover, .control-btn.i2-btn.active {
+      background: var(--i2-red);
+      color: var(--bg-primary);
+    }
+
+    .status-display {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+    }
+
+    .status-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .status-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--gold-primary);
+    }
+
+    /* =========================================================================
+       THE ANSWER BOX
+       ========================================================================= */
+    .answer-box {
+      background: linear-gradient(135deg, var(--l4-subtle), var(--gold-subtle), var(--i2-subtle));
+      border: 3px solid var(--gold-primary);
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+      margin: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .answer-box::before {
+      content: 'THE ANSWER';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-primary);
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--gold-primary);
+    }
+
+    .answer-yes {
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+      text-shadow: 0 0 40px var(--gold-glow);
+      margin-bottom: 1rem;
+    }
+
+    .answer-statement {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+
+    .answer-equation {
+      font-size: 1.5rem;
+      padding: 1rem 2rem;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .answer-equation .l4 { color: var(--l4-green); }
+    .answer-equation .i2 { color: var(--i2-red); }
+    .answer-equation .gold { color: var(--gold-primary); }
+
+    /* =========================================================================
+       EQUIVALENCE TEST
+       ========================================================================= */
+    .equivalence-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: center;
+      margin: 2rem 0;
+    }
+
+    .equiv-side {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .equiv-side:hover {
+      transform: translateY(-5px);
+    }
+
+    .equiv-l4 {
+      border: 3px solid var(--l4-green);
+      box-shadow: 0 0 30px var(--l4-glow);
+    }
+
+    .equiv-i2 {
+      border: 3px solid var(--i2-red);
+      box-shadow: 0 0 30px var(--i2-glow);
+    }
+
+    .equiv-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .equiv-l4 .equiv-badge {
+      background: var(--l4-subtle);
+      color: var(--l4-green);
+      border: 1px solid var(--l4-green);
+    }
+
+    .equiv-i2 .equiv-badge {
+      background: var(--i2-subtle);
+      color: var(--i2-red);
+      border: 1px solid var(--i2-red);
+    }
+
+    .equiv-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .equiv-l4 .equiv-title { color: var(--l4-green); }
+    .equiv-i2 .equiv-title { color: var(--i2-red); }
+
+    .equiv-equation {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+    }
+
+    .equiv-l4 .equiv-equation { color: var(--l4-green); }
+    .equiv-i2 .equiv-equation { color: var(--i2-red); }
+
+    .equiv-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .equiv-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .equiv-symbol {
+      font-size: 3rem;
+      color: var(--gold-primary);
+      text-shadow: 0 0 20px var(--gold-glow);
+      animation: equiv-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes equiv-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.15); }
+    }
+
+    .equiv-via {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .equiv-via strong {
+      color: var(--gold-primary);
+    }
+
+    /* =========================================================================
+       THREE AXIOM FORMS TABLE
+       ========================================================================= */
+    .axiom-table-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+
+    .axiom-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .axiom-table th,
+    .axiom-table td {
+      padding: 1.25rem 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .axiom-table th {
+      background: var(--bg-tertiary);
+      color: var(--gold-primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .axiom-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .axiom-table tr:hover td {
+      background: var(--bg-tertiary);
+    }
+
+    .axiom-table .form-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .badge-fix {
+      background: rgba(107, 203, 119, 0.2);
+      color: var(--fix-color);
+      border: 1px solid var(--fix-color);
+    }
+
+    .badge-osc {
+      background: rgba(255, 159, 67, 0.2);
+      color: var(--osc-color);
+      border: 1px solid var(--osc-color);
+    }
+
+    .badge-inv {
+      background: rgba(78, 205, 196, 0.2);
+      color: var(--inv-color);
+      border: 1px solid var(--inv-color);
+    }
+
+    .axiom-table .equation-cell {
+      font-size: 1.1rem;
+    }
+
+    .axiom-table .result-cell {
+      font-weight: 600;
+    }
+
+    .axiom-table .path-cell {
+      font-size: 0.9rem;
+    }
+
+    .path-l4 { color: var(--l4-green); }
+    .path-osc { color: var(--osc-color); }
+    .path-i2 { color: var(--i2-red); }
+
+    /* =========================================================================
+       THE DEEPER LOGIC
+       ========================================================================= */
+    .logic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .logic-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .logic-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--gold-primary);
+    }
+
+    .logic-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--gold-primary);
+    }
+
+    .logic-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .logic-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gold-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .logic-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* =========================================================================
+       PATH TRACING
+       ========================================================================= */
+    .path-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .path-visual {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: center;
+      margin-top: 2rem;
+    }
+
+    .path-side {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .path-side.active {
+      transform: scale(1.02);
+    }
+
+    .path-l4-side {
+      border: 2px solid var(--l4-green);
+    }
+
+    .path-l4-side.active {
+      box-shadow: 0 0 40px var(--l4-glow);
+    }
+
+    .path-i2-side {
+      border: 2px solid var(--i2-red);
+    }
+
+    .path-i2-side.active {
+      box-shadow: 0 0 40px var(--i2-glow);
+    }
+
+    .path-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .path-l4-side .path-icon { color: var(--l4-green); }
+    .path-i2-side .path-icon { color: var(--i2-red); }
+
+    .path-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .path-l4-side .path-name { color: var(--l4-green); }
+    .path-i2-side .path-name { color: var(--i2-red); }
+
+    .path-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .path-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .convergence-point {
+      width: 80px;
+      height: 80px;
+      background: var(--bg-primary);
+      border: 3px solid var(--gold-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+      box-shadow: 0 0 30px var(--gold-glow);
+    }
+
+    .convergence-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    /* =========================================================================
+       VIEW TOGGLE
+       ========================================================================= */
+    .view-toggle-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .view-toggle {
+      display: inline-flex;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 4px;
+      margin-top: 1.5rem;
+    }
+
+    .view-btn {
+      padding: 0.75rem 2rem;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .view-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .view-btn.active {
+      background: var(--gold-primary);
+      color: var(--bg-primary);
+    }
+
+    .view-btn.fix-view.active {
+      background: var(--l4-green);
+    }
+
+    .view-btn.inv-view.active {
+      background: var(--i2-red);
+    }
+
+    #viewDisplay {
+      margin-top: 2rem;
+      padding: 2rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      min-height: 200px;
+    }
+
+    .view-content {
+      display: none;
+    }
+
+    .view-content.active {
+      display: block;
+    }
+
+    .view-equation {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .view-description {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    /* =========================================================================
+       KEY INSIGHT
+       ========================================================================= */
+    .insight-box {
+      background: linear-gradient(135deg, rgba(107, 203, 119, 0.1), rgba(168, 85, 247, 0.1), rgba(255, 71, 87, 0.1));
+      border: 2px solid var(--synthesis);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .insight-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--synthesis);
+      margin-bottom: 1.5rem;
+    }
+
+    .insight-text {
+      font-size: 1.1rem;
+      line-height: 1.9;
+      margin-bottom: 1.5rem;
+    }
+
+    .insight-equation {
+      font-size: 1.5rem;
+      color: var(--gold-primary);
+    }
+
+    /* =========================================================================
+       FOOTER
+       ========================================================================= */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem 2rem;
+      display: inline-block;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      border: 1px solid var(--gold-primary);
+    }
+
+    .footer-equation .l4 { color: var(--l4-green); }
+    .footer-equation .i2 { color: var(--i2-red); }
+    .footer-equation .gold { color: var(--gold-primary); }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--gold-primary);
+    }
+
+    /* =========================================================================
+       RESPONSIVE
+       ========================================================================= */
+    @media (max-width: 900px) {
+      .title { font-size: 1.6rem; }
+      .equivalence-grid { grid-template-columns: 1fr; }
+      .equiv-center { order: -1; flex-direction: row; padding: 1rem 0; }
+      .path-visual { grid-template-columns: 1fr; }
+      .path-center { order: -1; flex-direction: row; gap: 2rem; padding: 1rem 0; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="decision-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">Opposition Duality Check :: Decision Diamond</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-l4-helix-equivalence.html" class="l4-link">L4 Helix</a>
+      <a href="i2-s3-i2-opposition.html" class="i2-link">I2 Opposition</a>
+      <a href="i2-s3-opposition-synthesis.html">Synthesis</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <span class="node-badge">DECISION NODE :: PHASE 3</span>
+
+      <div class="diamond-symbol">
+        <div class="diamond-outer"></div>
+        <div class="diamond-inner"></div>
+        <span class="diamond-core" id="diamondQuestion">?</span>
+      </div>
+
+      <h1 class="title">Opposition Duality Check</h1>
+      <p class="subtitle">
+        The decision diamond that asks the fundamental question:
+        Are L4 Helix and I2 Opposition equivalent projections of R(R) = R?
+      </p>
+
+      <div class="core-question">
+        <span class="l4">L4</span>
+        <span class="eq"> = </span>
+        <span class="i2">I2</span>
+        <span class="eq"> ?</span>
+      </div>
+    </header>
+
+    <!-- The Answer -->
+    <section>
+      <div class="answer-box">
+        <div class="answer-yes">YES</div>
+        <div class="answer-statement">
+          Both are <strong>valid projections</strong> of the same underlying structure.<br>
+          Opposition is not contradiction - it is <strong>completion</strong>.
+        </div>
+        <div class="answer-equation">
+          <span class="l4">L4 Helix (FIX)</span>
+          <span class="gold"> = </span>
+          <span class="i2">I2 Opposed (INV)</span>
+          <span style="color: var(--text-secondary);"> via </span>
+          <span class="gold">R(R) = R</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Decision Diamond Interactive -->
+    <section>
+      <h2 class="section-title">Interactive Decision Diamond</h2>
+      <p class="section-subtitle">
+        Watch the equivalence check process: inputs from trifurcation, output to two parallel valid paths
+      </p>
+
+      <div class="decision-viz-container">
+        <canvas id="decisionCanvas" width="800" height="500"></canvas>
+
+        <div class="canvas-controls">
+          <button class="control-btn active" onclick="setDecisionMode('check')">Equivalence Check</button>
+          <button class="control-btn l4-btn" onclick="setDecisionMode('l4')">Trace L4 Path</button>
+          <button class="control-btn i2-btn" onclick="setDecisionMode('i2')">Trace I2 Path</button>
+          <button class="control-btn" onclick="setDecisionMode('converge')">Show Convergence</button>
+          <button class="control-btn" onclick="resetDecision()">Reset</button>
+        </div>
+
+        <div class="status-display">
+          <div class="status-label">Current Mode</div>
+          <div class="status-value" id="modeStatus">Equivalence Check - Verifying L4 = I2</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Equivalence Test -->
+    <section>
+      <h2 class="section-title">The Equivalence Test</h2>
+      <p class="section-subtitle">
+        Two forms, one truth: both satisfy R(R) = R at different projections
+      </p>
+
+      <div class="equivalence-grid">
+        <!-- L4 Side -->
+        <div class="equiv-side equiv-l4">
+          <span class="equiv-badge">FIX FORM</span>
+          <div class="equiv-title">L4 = 7</div>
+          <div class="equiv-equation">L4 = phi^4 + psi^4 = 7</div>
+          <div class="equiv-desc">
+            <strong>Structure:</strong> 3+1 dimensional helix<br>
+            <strong>Generator:</strong> Lucas sequence<br>
+            <strong>Attractor:</strong> Cyclic return at depth 7<br>
+            <strong>Axiom:</strong> R(R) = R (fixed point)
+          </div>
+        </div>
+
+        <!-- Equivalence Symbol -->
+        <div class="equiv-center">
+          <div class="equiv-symbol" id="equivSymbol">=</div>
+          <div class="equiv-via">
+            <strong>Both satisfy</strong><br>
+            R(R) = R<br>
+            at different<br>
+            projections
+          </div>
+        </div>
+
+        <!-- I2 Side -->
+        <div class="equiv-side equiv-i2">
+          <span class="equiv-badge">INV FORM</span>
+          <div class="equiv-title">I2 Opposed</div>
+          <div class="equiv-equation">R(R) = -R</div>
+          <div class="equiv-desc">
+            <strong>Structure:</strong> 1D ring (Z, +, x)<br>
+            <strong>Generator:</strong> Identity iteration<br>
+            <strong>Fixed Points:</strong> {1, i, -1, -i}<br>
+            <strong>Axiom:</strong> R(R) = -R (inversion)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Three Axiom Forms Check -->
+    <section>
+      <h2 class="section-title">The Three Axiom Forms Check</h2>
+      <p class="section-subtitle">
+        Self-reference admits exactly three structural possibilities
+      </p>
+
+      <div class="axiom-table-container">
+        <table class="axiom-table">
+          <thead>
+            <tr>
+              <th>Form</th>
+              <th>Equation</th>
+              <th>Result</th>
+              <th>Path</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="form-badge badge-fix">FIX</span></td>
+              <td class="equation-cell" style="color: var(--fix-color);">R(R) = R</td>
+              <td class="result-cell" style="color: var(--fix-color);">phi</td>
+              <td class="path-cell path-l4">L4 Helix</td>
+            </tr>
+            <tr>
+              <td><span class="form-badge badge-osc">OSC</span></td>
+              <td class="equation-cell" style="color: var(--osc-color);">R(R) != R</td>
+              <td class="result-cell" style="color: var(--osc-color);">omega</td>
+              <td class="path-cell path-osc">Oscillation</td>
+            </tr>
+            <tr>
+              <td><span class="form-badge badge-inv">INV</span></td>
+              <td class="equation-cell" style="color: var(--inv-color);">R(R) = -R</td>
+              <td class="result-cell" style="color: var(--inv-color);">{1,i,-1,-i}</td>
+              <td class="path-cell path-i2">I2 Opposed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="text-align: center; margin-top: 1.5rem; padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border);">
+        <p style="color: var(--text-secondary);">
+          <strong style="color: var(--gold-primary);">Key Insight:</strong>
+          FIX and INV are <em>dual</em> forms - both resolve the self-reference equation.<br>
+          OSC is the unstable middle ground between them.
+        </p>
+      </div>
+    </section>
+
+    <!-- Path Tracing -->
+    <section>
+      <h2 class="section-title">Trace the Paths to S3</h2>
+      <p class="section-subtitle">
+        Click each path to see how both converge to the S3 attractor
+      </p>
+
+      <div class="path-container">
+        <div class="path-visual">
+          <div class="path-side path-l4-side" id="pathL4" onclick="tracePath('l4')">
+            <div class="path-icon">H</div>
+            <div class="path-name">L4 Helix Path</div>
+            <div class="path-desc">
+              Helical unfolding through<br>
+              3+1 dimensions<br>
+              Lucas generator: L4 = 7
+            </div>
+          </div>
+
+          <div class="path-center">
+            <div class="convergence-point" id="convergencePoint">S3</div>
+            <div class="convergence-label">
+              Both paths<br>
+              converge here
+            </div>
+          </div>
+
+          <div class="path-side path-i2-side" id="pathI2" onclick="tracePath('i2')">
+            <div class="path-icon">R</div>
+            <div class="path-name">I2 Opposition Path</div>
+            <div class="path-desc">
+              Algebraic encoding through<br>
+              ring structure<br>
+              Fourth roots: {1,i,-1,-i}
+            </div>
+          </div>
+        </div>
+
+        <div id="pathInfo" style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--bg-tertiary); border-radius: 12px; min-height: 80px; display: flex; align-items: center; justify-content: center;">
+          <span style="color: var(--text-secondary);">Click a path to trace its journey to S3</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FIX/INV View Toggle -->
+    <section>
+      <h2 class="section-title">Toggle Between Views</h2>
+      <p class="section-subtitle">
+        See the same structure through different projections
+      </p>
+
+      <div class="view-toggle-container">
+        <p style="color: var(--text-secondary);">Select a view to see how R(R) = R manifests:</p>
+
+        <div class="view-toggle">
+          <button class="view-btn fix-view active" onclick="setView('fix')">FIX View (L4)</button>
+          <button class="view-btn" onclick="setView('both')">Both Views</button>
+          <button class="view-btn inv-view" onclick="setView('inv')">INV View (I2)</button>
+        </div>
+
+        <div id="viewDisplay">
+          <div class="view-content fix-view-content active" id="fixView">
+            <div class="view-equation" style="color: var(--l4-green);">R(R) = R</div>
+            <div class="view-description">
+              <strong style="color: var(--l4-green);">The FIX Form (L4 Helix):</strong><br><br>
+              Self-reference finds its fixed point. The recursion R(R) stabilizes at phi,
+              the golden ratio. This manifests as the L4 = 7 helix structure -
+              seven levels of recursive depth before cyclic return.<br><br>
+              <strong>Properties:</strong> Stability, Being, Matter<br>
+              <strong>Dimension:</strong> 3+1 (helical unfolding)<br>
+              <strong>Generator:</strong> Lucas sequence L_n = phi^n + psi^n
+            </div>
+          </div>
+
+          <div class="view-content inv-view-content" id="invView">
+            <div class="view-equation" style="color: var(--i2-red);">R(R) = -R</div>
+            <div class="view-description">
+              <strong style="color: var(--i2-red);">The INV Form (I2 Opposition):</strong><br><br>
+              Self-reference inverts. The recursion R(R) negates, creating the four-fold
+              identity cycle {1, i, -1, -i}. This manifests as the ring structure
+              (I^n, +, x) isomorphic to the integers.<br><br>
+              <strong>Properties:</strong> Identity, Observing, Consciousness<br>
+              <strong>Dimension:</strong> 1 (ring)<br>
+              <strong>Generator:</strong> Identity iteration I^n
+            </div>
+          </div>
+
+          <div class="view-content both-view-content" id="bothView">
+            <div class="view-equation">
+              <span style="color: var(--l4-green);">R(R) = R</span>
+              <span style="color: var(--gold-primary);"> :: </span>
+              <span style="color: var(--i2-red);">R(R) = -R</span>
+            </div>
+            <div class="view-description">
+              <strong style="color: var(--gold-primary);">The Synthesis (Both Valid):</strong><br><br>
+              L4 helix <em>unfolds</em> what I2 ring <em>encodes</em>.
+              Both are projections of the same underlying self-referential structure.
+              What looks like contradiction (R vs -R) is actually complementarity.<br><br>
+              <strong>FIX captures:</strong> Temporal unfolding, spatial structure<br>
+              <strong>INV captures:</strong> Algebraic encoding, identity boundaries<br>
+              <strong>Together:</strong> Complete representation of R(R) = R
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Deeper Logic -->
+    <section>
+      <h2 class="section-title">The Deeper Logic</h2>
+      <p class="section-subtitle">
+        Why opposition creates completeness, not contradiction
+      </p>
+
+      <div class="logic-grid">
+        <div class="logic-card">
+          <div class="logic-icon">!=</div>
+          <div class="logic-title">Opposition is NOT Contradiction</div>
+          <div class="logic-text">
+            Logical contradiction (A and not-A) destroys meaning.
+            Structural opposition (FIX and INV) creates completeness.
+            They are <em>dual</em>, not <em>contradictory</em>.
+          </div>
+        </div>
+
+        <div class="logic-card">
+          <div class="logic-icon">Y</div>
+          <div class="logic-title">Both Paths Lead to S3</div>
+          <div class="logic-text">
+            Whether you traverse via L4 helix or I2 ring,
+            both paths converge at the S3 attractor.
+            The destination validates both journeys.
+          </div>
+        </div>
+
+        <div class="logic-card">
+          <div class="logic-icon">O</div>
+          <div class="logic-title">Completeness Requires Both</div>
+          <div class="logic-text">
+            L4 alone misses algebraic depth.
+            I2 alone misses temporal dynamics.
+            Together they span the full structure of R(R) = R.
+          </div>
+        </div>
+
+        <div class="logic-card">
+          <div class="logic-icon">=</div>
+          <div class="logic-title">Valid in Opposition Itself</div>
+          <div class="logic-text">
+            The equivalence L4 = I2 is not despite their opposition,
+            but <em>through</em> it. Opposition is the mechanism
+            by which completeness emerges.
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-title">The Central Insight</div>
+        <div class="insight-text">
+          When the decision diamond asks "L4 = I2?", the answer is YES.<br>
+          Not because they are identical, but because they are <strong>complementary projections</strong>.<br>
+          The apparent tension between FIX and INV generates, not nullifies.<br>
+          <em>Consciousness lives in this very gap.</em>
+        </div>
+        <div class="insight-equation">
+          L4 (unfolds) || I2 (encodes) = R(R) = R (complete)
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      <span class="l4">L4</span> <span class="gold">=</span> <span class="i2">I2</span>
+      <span style="color: var(--text-secondary);"> :: </span>
+      <span class="gold">Both valid in opposition</span>
+      <span style="color: var(--text-secondary);"> :: </span>
+      <span class="gold">R(R) = R</span>
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">I2 S3 Decision Tree</a>
+      <a href="i2-s3-l4-helix-equivalence.html">L4 Helix Equivalence</a>
+      <a href="i2-s3-i2-opposition.html">I2 Opposition</a>
+      <a href="i2-s3-opposition-synthesis.html">Opposition Synthesis</a>
+    </div>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // CONSTANTS
+    // =========================================================================
+    const PHI = (1 + Math.sqrt(5)) / 2;
+    const PSI = (1 - Math.sqrt(5)) / 2;
+
+    // =========================================================================
+    // DECISION DIAMOND CANVAS
+    // =========================================================================
+    const canvas = document.getElementById('decisionCanvas');
+    const ctx = canvas.getContext('2d');
+    let decisionMode = 'check';
+    let animationFrame;
+    let time = 0;
+
+    // Colors
+    const colors = {
+      gold: '#ffd700',
+      goldGlow: 'rgba(255, 215, 0, 0.4)',
+      l4: '#6bcb77',
+      l4Glow: 'rgba(107, 203, 119, 0.4)',
+      i2: '#ff4757',
+      i2Glow: 'rgba(255, 71, 87, 0.4)',
+      bg: '#0a0a0f',
+      secondary: '#12121a',
+      text: '#a0a0b0'
+    };
+
+    function drawDecisionDiamond() {
+      const w = canvas.width;
+      const h = canvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+
+      // Clear
+      ctx.fillStyle = colors.bg;
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw input arrow from top (trifurcation)
+      drawArrow(cx, 30, cx, cy - 80, colors.gold, 'Trifurcation Input');
+
+      // Draw main decision diamond
+      drawDiamond(cx, cy, 70, time);
+
+      // Draw output paths
+      const pathGlowL4 = decisionMode === 'l4' || decisionMode === 'converge' ? 1 : 0.3;
+      const pathGlowI2 = decisionMode === 'i2' || decisionMode === 'converge' ? 1 : 0.3;
+
+      // L4 path (left)
+      ctx.globalAlpha = pathGlowL4;
+      drawPath(cx - 60, cy + 60, 100, h - 100, colors.l4, 'L4 Helix');
+
+      // I2 path (right)
+      ctx.globalAlpha = pathGlowI2;
+      drawPath(cx + 60, cy + 60, w - 100, h - 100, colors.i2, 'I2 Opposed');
+
+      ctx.globalAlpha = 1;
+
+      // Draw L4 endpoint
+      drawEndpoint(100, h - 100, colors.l4, 'L4', decisionMode === 'l4' || decisionMode === 'converge');
+
+      // Draw I2 endpoint
+      drawEndpoint(w - 100, h - 100, colors.i2, 'I2', decisionMode === 'i2' || decisionMode === 'converge');
+
+      // Draw S3 convergence if in converge mode
+      if (decisionMode === 'converge') {
+        drawConvergence(cx, h - 60);
+      }
+
+      // Draw equivalence verification animation
+      if (decisionMode === 'check') {
+        drawEquivalenceCheck(cx, cy, time);
+      }
+
+      // Update question mark animation
+      const questionEl = document.getElementById('diamondQuestion');
+      if (decisionMode === 'check') {
+        questionEl.textContent = time % 60 < 30 ? '?' : '=';
+      } else {
+        questionEl.textContent = '=';
+      }
+
+      time++;
+      animationFrame = requestAnimationFrame(drawDecisionDiamond);
+    }
+
+    function drawDiamond(x, y, size, t) {
+      // Outer glow
+      const glowSize = size + 10 + Math.sin(t * 0.05) * 5;
+      ctx.strokeStyle = colors.gold;
+      ctx.lineWidth = 2;
+      ctx.shadowColor = colors.goldGlow;
+      ctx.shadowBlur = 20 + Math.sin(t * 0.05) * 10;
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(Math.PI / 4);
+
+      // Outer diamond
+      ctx.strokeRect(-glowSize/2, -glowSize/2, glowSize, glowSize);
+
+      // Inner diamond
+      ctx.lineWidth = 3;
+      ctx.strokeRect(-size/2, -size/2, size, size);
+
+      ctx.restore();
+      ctx.shadowBlur = 0;
+
+      // Label
+      ctx.fillStyle = colors.gold;
+      ctx.font = 'bold 24px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const symbol = decisionMode === 'check' ? (t % 60 < 30 ? '?' : '=') : '=';
+      ctx.fillText(symbol, x, y);
+    }
+
+    function drawArrow(x1, y1, x2, y2, color, label) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+
+      // Arrowhead
+      const angle = Math.atan2(y2 - y1, x2 - x1);
+      const headLen = 12;
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      // Label
+      if (label) {
+        ctx.fillStyle = colors.text;
+        ctx.font = '12px JetBrains Mono';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, (x1 + x2) / 2 + 60, (y1 + y2) / 2);
+      }
+    }
+
+    function drawPath(x1, y1, x2, y2, color, label) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 15;
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+
+      // Curved path
+      const midX = (x1 + x2) / 2;
+      const midY = (y1 + y2) / 2 + 30;
+      ctx.quadraticCurveTo(midX, midY, x2, y2);
+      ctx.stroke();
+
+      ctx.shadowBlur = 0;
+
+      // Arrow at end
+      const t = 0.95;
+      const prevT = 0.9;
+      const endX = (1-t)*(1-t)*x1 + 2*(1-t)*t*midX + t*t*x2;
+      const endY = (1-t)*(1-t)*y1 + 2*(1-t)*t*midY + t*t*y2;
+      const prevX = (1-prevT)*(1-prevT)*x1 + 2*(1-prevT)*prevT*midX + prevT*prevT*x2;
+      const prevY = (1-prevT)*(1-prevT)*y1 + 2*(1-prevT)*prevT*midY + prevT*prevT*y2;
+
+      const angle = Math.atan2(endY - prevY, endX - prevX);
+      const headLen = 10;
+      ctx.beginPath();
+      ctx.moveTo(endX, endY);
+      ctx.lineTo(endX - headLen * Math.cos(angle - Math.PI / 6), endY - headLen * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(endX - headLen * Math.cos(angle + Math.PI / 6), endY - headLen * Math.sin(angle + Math.PI / 6));
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      // Label
+      ctx.fillStyle = colors.text;
+      ctx.font = '11px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, midX, midY - 15);
+    }
+
+    function drawEndpoint(x, y, color, label, active) {
+      ctx.beginPath();
+      ctx.arc(x, y, 25, 0, Math.PI * 2);
+      ctx.fillStyle = active ? color : colors.secondary;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      if (active) {
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 20;
+      }
+      ctx.fill();
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      ctx.fillStyle = active ? colors.bg : color;
+      ctx.font = 'bold 14px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, x, y);
+    }
+
+    function drawConvergence(x, y) {
+      // Draw convergence lines
+      ctx.strokeStyle = colors.gold;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+
+      // From L4
+      ctx.beginPath();
+      ctx.moveTo(130, canvas.height - 100);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+
+      // From I2
+      ctx.beginPath();
+      ctx.moveTo(canvas.width - 130, canvas.height - 100);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+
+      ctx.setLineDash([]);
+
+      // S3 point
+      ctx.beginPath();
+      ctx.arc(x, y, 30, 0, Math.PI * 2);
+      ctx.fillStyle = colors.gold;
+      ctx.shadowColor = colors.goldGlow;
+      ctx.shadowBlur = 30;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      ctx.fillStyle = colors.bg;
+      ctx.font = 'bold 16px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('S3', x, y);
+
+      ctx.fillStyle = colors.gold;
+      ctx.font = '10px JetBrains Mono';
+      ctx.fillText('Attractor', x, y + 45);
+    }
+
+    function drawEquivalenceCheck(x, y, t) {
+      // Pulsing verification circles
+      const phases = [0, Math.PI * 2 / 3, Math.PI * 4 / 3];
+
+      phases.forEach((phase, i) => {
+        const r = 90 + (t * 2 + phase * 30) % 60;
+        const alpha = 1 - (r - 90) / 60;
+
+        if (alpha > 0) {
+          ctx.strokeStyle = `rgba(255, 215, 0, ${alpha * 0.5})`;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.rotate(Math.PI / 4);
+          ctx.strokeRect(-r/2, -r/2, r, r);
+          ctx.restore();
+        }
+      });
+
+      // "Checking..." text
+      ctx.fillStyle = colors.text;
+      ctx.font = '12px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('Verifying equivalence...', x, y + 90);
+    }
+
+    function setDecisionMode(mode) {
+      decisionMode = mode;
+
+      // Update button states
+      document.querySelectorAll('.canvas-controls .control-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // Update status
+      const statusMessages = {
+        'check': 'Equivalence Check - Verifying L4 = I2',
+        'l4': 'Tracing L4 Helix Path (FIX Form)',
+        'i2': 'Tracing I2 Opposition Path (INV Form)',
+        'converge': 'Showing Convergence to S3 Attractor'
+      };
+      document.getElementById('modeStatus').textContent = statusMessages[mode];
+    }
+
+    function resetDecision() {
+      time = 0;
+      decisionMode = 'check';
+      document.querySelectorAll('.canvas-controls .control-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelector('.canvas-controls .control-btn').classList.add('active');
+      document.getElementById('modeStatus').textContent = 'Equivalence Check - Verifying L4 = I2';
+    }
+
+    // =========================================================================
+    // PATH TRACING
+    // =========================================================================
+    function tracePath(path) {
+      const l4El = document.getElementById('pathL4');
+      const i2El = document.getElementById('pathI2');
+      const infoEl = document.getElementById('pathInfo');
+      const convEl = document.getElementById('convergencePoint');
+
+      // Reset
+      l4El.classList.remove('active');
+      i2El.classList.remove('active');
+
+      if (path === 'l4') {
+        l4El.classList.add('active');
+        infoEl.innerHTML = `
+          <div style="color: var(--l4-green);">
+            <strong>L4 Helix Path Journey:</strong><br><br>
+            1. Start from trifurcation decision<br>
+            2. Enter FIX form: R(R) = R<br>
+            3. Unfold through 3+1 dimensions<br>
+            4. Lucas generator: L_n = phi^n + psi^n<br>
+            5. Cyclic return at depth L4 = 7<br>
+            6. <strong>Arrive at S3 attractor</strong>
+          </div>
+        `;
+        convEl.style.borderColor = 'var(--l4-green)';
+      } else {
+        i2El.classList.add('active');
+        infoEl.innerHTML = `
+          <div style="color: var(--i2-red);">
+            <strong>I2 Opposition Path Journey:</strong><br><br>
+            1. Start from trifurcation decision<br>
+            2. Enter INV form: R(R) = -R<br>
+            3. Encode through ring structure<br>
+            4. Identity iteration: {1, i, -1, -i}<br>
+            5. Paradox threshold: mu_P = phi^-1<br>
+            6. <strong>Arrive at S3 attractor</strong>
+          </div>
+        `;
+        convEl.style.borderColor = 'var(--i2-red)';
+      }
+    }
+
+    // =========================================================================
+    // VIEW TOGGLE
+    // =========================================================================
+    function setView(view) {
+      // Update buttons
+      document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // Update content
+      document.querySelectorAll('.view-content').forEach(content => {
+        content.classList.remove('active');
+      });
+
+      if (view === 'fix') {
+        document.getElementById('fixView').classList.add('active');
+      } else if (view === 'inv') {
+        document.getElementById('invView').classList.add('active');
+      } else {
+        document.getElementById('bothView').classList.add('active');
+      }
+    }
+
+    // =========================================================================
+    // EQUIVALENCE SYMBOL ANIMATION
+    // =========================================================================
+    let equivTime = 0;
+    function animateEquivSymbol() {
+      const symbol = document.getElementById('equivSymbol');
+      equivTime++;
+
+      if (equivTime % 60 < 30) {
+        symbol.textContent = '=';
+        symbol.style.color = 'var(--gold-primary)';
+      } else {
+        symbol.textContent = '=';
+        symbol.style.opacity = 0.5 + 0.5 * Math.sin(equivTime * 0.1);
+      }
+
+      requestAnimationFrame(animateEquivSymbol);
+    }
+
+    // =========================================================================
+    // INITIALIZE
+    // =========================================================================
+    window.addEventListener('load', () => {
+      drawDecisionDiamond();
+      animateEquivSymbol();
+    });
+  </script>
+</body>
+</html>

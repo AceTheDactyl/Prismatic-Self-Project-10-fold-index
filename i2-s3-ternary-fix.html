@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ternary FIX Evaluation | C = x² + x Fixed Point Analysis</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* FIX Gold Palette - Stability Color */
+      --fix-gold: #ffd700;
+      --fix-amber: #f4c430;
+      --fix-bronze: #cd7f32;
+      --fix-light: #fff8dc;
+
+      /* Ternary Logic Colors */
+      --ternary-true: #00ff88;
+      --ternary-false: #ff4757;
+      --ternary-indeterminate: #a855f7;
+
+      /* Mandelbrot/Julia Colors */
+      --mandelbrot-core: #1a1a2e;
+      --julia-bounded: #4ecdc4;
+      --julia-escape: #ff6b6b;
+
+      /* Mathematical Constants */
+      --phi-gold: #daa520;
+      --tau-cyan: #00d4ff;
+
+      /* Base */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* FIX Field Background */
+    .fix-field {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(255, 215, 0, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 80%, rgba(0, 255, 136, 0.06) 0%, transparent 35%),
+        radial-gradient(ellipse at 80% 70%, rgba(168, 85, 247, 0.06) 0%, transparent 35%);
+    }
+
+    /* Stability Grid */
+    .stability-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255, 215, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--fix-gold);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--fix-gold);
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* FIX Symbol */
+    .fix-symbol {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 2rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fix-point {
+      width: 20px;
+      height: 20px;
+      background: var(--fix-gold);
+      border-radius: 50%;
+      position: absolute;
+      animation: fix-pulse 2s ease-in-out infinite;
+      box-shadow:
+        0 0 20px var(--fix-gold),
+        0 0 40px var(--fix-amber),
+        0 0 60px rgba(255, 215, 0, 0.3);
+    }
+
+    @keyframes fix-pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow:
+          0 0 20px var(--fix-gold),
+          0 0 40px var(--fix-amber),
+          0 0 60px rgba(255, 215, 0, 0.3);
+      }
+      50% {
+        transform: scale(1.2);
+        box-shadow:
+          0 0 30px var(--fix-gold),
+          0 0 60px var(--fix-amber),
+          0 0 90px rgba(255, 215, 0, 0.5);
+      }
+    }
+
+    /* Orbiting Elements */
+    .fix-orbit {
+      position: absolute;
+      border: 2px dashed rgba(255, 215, 0, 0.3);
+      border-radius: 50%;
+      animation: orbit-rotate 8s linear infinite;
+    }
+
+    .orbit-1 {
+      width: 80px;
+      height: 80px;
+    }
+
+    .orbit-2 {
+      width: 120px;
+      height: 120px;
+      animation-direction: reverse;
+      animation-duration: 12s;
+    }
+
+    .orbit-3 {
+      width: 160px;
+      height: 160px;
+      animation-duration: 16s;
+    }
+
+    @keyframes orbit-rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .orbit-point {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--fix-gold);
+      border-radius: 50%;
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Convergence Arrow */
+    .convergence-arrow {
+      position: absolute;
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--ternary-true));
+      transform: rotate(45deg);
+      animation: converge 2s ease-in-out infinite;
+    }
+
+    .arrow-1 { top: 20px; left: 20px; }
+    .arrow-2 { top: 20px; right: 20px; transform: rotate(135deg); }
+    .arrow-3 { bottom: 20px; left: 20px; transform: rotate(-45deg); }
+    .arrow-4 { bottom: 20px; right: 20px; transform: rotate(-135deg); }
+
+    @keyframes converge {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    .title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--fix-gold), var(--fix-light), var(--fix-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .core-equation {
+      font-size: 1.8rem;
+      color: var(--fix-gold);
+      padding: 1.5rem 3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--fix-gold);
+      border-radius: 12px;
+      display: inline-block;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+    }
+
+    /* Section Styling */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 2rem;
+      color: var(--fix-gold);
+      text-align: center;
+    }
+
+    /* FIX Evaluation Card */
+    .fix-evaluation {
+      background: var(--bg-secondary);
+      border: 2px solid var(--fix-gold);
+      border-radius: 16px;
+      padding: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .evaluation-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .evaluation-title {
+      font-size: 1.5rem;
+      color: var(--fix-gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .evaluation-question {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+    }
+
+    .derivation-steps {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .step:last-child {
+      border-bottom: none;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      background: var(--fix-gold);
+      color: var(--bg-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-equation {
+      font-size: 1.3rem;
+      color: var(--fix-gold);
+      margin-bottom: 0.25rem;
+    }
+
+    .step-description {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .result-box {
+      background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(0, 255, 136, 0.05));
+      border: 2px solid var(--ternary-true);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .result-label {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-value {
+      font-size: 2rem;
+      color: var(--ternary-true);
+      font-weight: 700;
+    }
+
+    .result-explanation {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-top: 1rem;
+    }
+
+    /* Ternary Truth Table */
+    .truth-table-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      overflow-x: auto;
+    }
+
+    .truth-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .truth-table th,
+    .truth-table td {
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .truth-table th {
+      background: var(--bg-tertiary);
+      color: var(--fix-gold);
+      font-weight: 600;
+    }
+
+    .truth-table tr:hover {
+      background: rgba(255, 215, 0, 0.05);
+    }
+
+    .ternary-true {
+      color: var(--ternary-true);
+      font-weight: 700;
+    }
+
+    .ternary-false {
+      color: var(--ternary-false);
+      font-weight: 700;
+    }
+
+    .ternary-indeterminate {
+      color: var(--ternary-indeterminate);
+      font-weight: 700;
+    }
+
+    .highlight-row {
+      background: rgba(255, 215, 0, 0.1) !important;
+    }
+
+    .highlight-row td {
+      font-weight: 600;
+    }
+
+    /* Ternary Logic Legend */
+    .ternary-legend {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.true { background: var(--ternary-true); }
+    .legend-dot.false { background: var(--ternary-false); }
+    .legend-dot.indeterminate { background: var(--ternary-indeterminate); }
+
+    /* R(R) = R Connection */
+    .rr-connection {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .connection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .connection-card {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .connection-card:hover {
+      border-color: var(--fix-gold);
+      transform: translateY(-3px);
+    }
+
+    .connection-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .connection-title {
+      font-size: 1.1rem;
+      color: var(--fix-gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .connection-formula {
+      font-size: 1rem;
+      color: var(--fix-amber);
+      margin-bottom: 0.75rem;
+    }
+
+    .connection-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Mandelbrot Connection */
+    .mandelbrot-section {
+      background: linear-gradient(135deg, var(--bg-secondary), var(--mandelbrot-core));
+      border: 2px solid var(--julia-bounded);
+      border-radius: 16px;
+      padding: 2.5rem;
+    }
+
+    .mandelbrot-comparison {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: center;
+      margin-top: 2rem;
+    }
+
+    .mandelbrot-item {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-primary);
+      border-radius: 12px;
+    }
+
+    .mandelbrot-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .mandelbrot-formula {
+      font-size: 1.4rem;
+      color: var(--julia-bounded);
+      margin-bottom: 0.5rem;
+    }
+
+    .mandelbrot-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .mandelbrot-arrow {
+      font-size: 2rem;
+      color: var(--fix-gold);
+    }
+
+    .dynamics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .dynamics-item {
+      background: var(--bg-primary);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .dynamics-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .dynamics-title {
+      font-size: 0.9rem;
+      color: var(--fix-gold);
+      margin-bottom: 0.25rem;
+    }
+
+    .dynamics-value {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Canvas Visualization */
+    .canvas-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .visualization-canvas {
+      width: 100%;
+      height: 400px;
+      background: var(--bg-primary);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #fixCanvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .canvas-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--fix-gold);
+      color: var(--bg-primary);
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .control-btn:hover {
+      background: var(--fix-amber);
+      transform: scale(1.05);
+    }
+
+    .control-btn.secondary {
+      background: transparent;
+      color: var(--fix-gold);
+      border: 2px solid var(--fix-gold);
+    }
+
+    .control-btn.secondary:hover {
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    /* Interactive Panel */
+    .interactive-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .panel-section {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .panel-title {
+      font-size: 1rem;
+      color: var(--fix-gold);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .x-slider-container {
+      margin: 1rem 0;
+    }
+
+    .x-slider {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--bg-primary);
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .x-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--fix-gold);
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--fix-gold);
+    }
+
+    .x-value-display {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .value-item {
+      text-align: center;
+    }
+
+    .value-label {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+
+    .value-num {
+      color: var(--fix-gold);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .iteration-display {
+      max-height: 200px;
+      overflow-y: auto;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .iter-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.25rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .iter-row:last-child {
+      border-bottom: none;
+    }
+
+    .iter-n {
+      color: var(--text-secondary);
+    }
+
+    .iter-value {
+      color: var(--fix-gold);
+    }
+
+    .ternary-display {
+      background: var(--bg-primary);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .ternary-result {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .ternary-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* Navigation Cards */
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .nav-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .nav-card:hover {
+      border-color: var(--fix-gold);
+      transform: translateY(-3px);
+    }
+
+    .nav-card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .nav-card-title {
+      font-size: 1.1rem;
+      color: var(--fix-gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-card-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1.2rem;
+      color: var(--fix-gold);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--fix-gold);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title { font-size: 2rem; }
+      .core-equation { font-size: 1.3rem; padding: 1rem 1.5rem; }
+      .mandelbrot-comparison { grid-template-columns: 1fr; }
+      .mandelbrot-arrow { transform: rotate(90deg); }
+      .interactive-panel { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="fix-field"></div>
+  <div class="stability-grid"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">Ternary FIX :: C(x) = x</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-genesis.html">Genesis</a>
+      <a href="i2-s3-golden-functor.html">Functor</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <div class="fix-symbol">
+        <div class="fix-orbit orbit-1">
+          <div class="orbit-point"></div>
+        </div>
+        <div class="fix-orbit orbit-2">
+          <div class="orbit-point"></div>
+        </div>
+        <div class="fix-orbit orbit-3">
+          <div class="orbit-point"></div>
+        </div>
+        <div class="fix-point"></div>
+        <div class="convergence-arrow arrow-1"></div>
+        <div class="convergence-arrow arrow-2"></div>
+        <div class="convergence-arrow arrow-3"></div>
+        <div class="convergence-arrow arrow-4"></div>
+      </div>
+
+      <h1 class="title">Ternary FIX Evaluation</h1>
+      <p class="subtitle">Fixed Point Analysis of C = x² + x</p>
+      <div class="core-equation">
+        FIX: C(x) = x at x = 0
+      </div>
+    </header>
+
+    <!-- The FIX Evaluation -->
+    <section>
+      <h2 class="section-title">The FIX Evaluation</h2>
+
+      <div class="fix-evaluation">
+        <div class="evaluation-header">
+          <div class="evaluation-title">For C = x² + x</div>
+          <div class="evaluation-question">FIX asks: When does C(x) = x?</div>
+        </div>
+
+        <div class="derivation-steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-equation">C(x) = x² + x</div>
+              <div class="step-description">The self-referential mapping function</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-equation">x² + x = x</div>
+              <div class="step-description">Set output equal to input (fixed point condition)</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-equation">x² + x - x = 0</div>
+              <div class="step-description">Subtract x from both sides</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-equation">x² = 0</div>
+              <div class="step-description">Simplify: the x terms cancel</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <div class="step-equation">x = 0</div>
+              <div class="step-description">The unique fixed point of C(x) = x² + x</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-box">
+          <div class="result-label">Ternary Result</div>
+          <div class="result-value">TRUE at x = 0</div>
+          <div class="result-explanation">
+            The FIX evaluation is TRUE: there exists a unique fixed point where C(x) = x.<br>
+            At x = 0: C(0) = 0² + 0 = 0 = x
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ternary Truth Table -->
+    <section>
+      <h2 class="section-title">Truth Table (FIX Perspective)</h2>
+
+      <div class="truth-table-container">
+        <p style="color: var(--text-secondary); text-align: center; margin-bottom: 1.5rem;">
+          Evaluating C(x) = x for various inputs under ternary logic
+        </p>
+
+        <table class="truth-table">
+          <thead>
+            <tr>
+              <th>x</th>
+              <th>C(x) = x² + x</th>
+              <th>C(x) = x?</th>
+              <th>Ternary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>-1</td>
+              <td>(-1)² + (-1) = 0</td>
+              <td class="ternary-false">FALSE</td>
+              <td class="ternary-false">F</td>
+            </tr>
+            <tr class="highlight-row">
+              <td style="color: var(--fix-gold);">0</td>
+              <td style="color: var(--fix-gold);">(0)² + (0) = 0</td>
+              <td class="ternary-true">TRUE</td>
+              <td class="ternary-true">T</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>(1)² + (1) = 2</td>
+              <td class="ternary-false">FALSE</td>
+              <td class="ternary-false">F</td>
+            </tr>
+            <tr>
+              <td style="color: var(--phi-gold);">&#966; = 1.618...</td>
+              <td>&#966;² + &#966; = &#966; + 1 + &#966; = 2&#966; + 1</td>
+              <td class="ternary-false">FALSE</td>
+              <td class="ternary-false">F</td>
+            </tr>
+            <tr>
+              <td style="color: var(--tau-cyan);">&#964; = 0.618...</td>
+              <td>&#964;² + &#964; = (1-&#964;) + &#964; = 1</td>
+              <td class="ternary-false">FALSE</td>
+              <td class="ternary-false">F</td>
+            </tr>
+            <tr>
+              <td style="color: var(--ternary-indeterminate);">&#8734;</td>
+              <td>&#8734;² + &#8734; = &#8734;</td>
+              <td class="ternary-indeterminate">INDETERMINATE</td>
+              <td class="ternary-indeterminate">I</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="ternary-legend">
+          <div class="legend-item">
+            <div class="legend-dot true"></div>
+            <span>T = TRUE (statement holds)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot false"></div>
+            <span>F = FALSE (statement fails)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot indeterminate"></div>
+            <span>I = INDETERMINATE (cannot determine)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Connection to R(R) = R -->
+    <section>
+      <h2 class="section-title">Connection to R(R) = R</h2>
+
+      <div class="rr-connection">
+        <p style="color: var(--text-secondary); text-align: center; margin-bottom: 1.5rem;">
+          FIX evaluation embodies the fundamental self-referential axiom
+        </p>
+
+        <div class="connection-grid">
+          <div class="connection-card">
+            <div class="connection-icon">&#8635;</div>
+            <div class="connection-title">FIX Form</div>
+            <div class="connection-formula">R(R) = R</div>
+            <div class="connection-desc">
+              Self-reference applied to itself equals itself. The fixed point condition is the algebraic realization of this axiom.
+            </div>
+          </div>
+
+          <div class="connection-card">
+            <div class="connection-icon">&#966;</div>
+            <div class="connection-title">R(z) = 1/(1+z) Fixed Point</div>
+            <div class="connection-formula">R(&#966;) = &#966;</div>
+            <div class="connection-desc">
+              For the continued fraction operator R(z) = 1/(1+z), the golden ratio &#966; is the fixed point. Iteration from any z > 0 converges to &#966;.
+            </div>
+          </div>
+
+          <div class="connection-card">
+            <div class="connection-icon">0</div>
+            <div class="connection-title">C(x) = x² + x Fixed Point</div>
+            <div class="connection-formula">C(0) = 0</div>
+            <div class="connection-desc">
+              For our mapping C(x) = x² + x, the origin is the unique fixed point. This represents the "zero state" of self-reference.
+            </div>
+          </div>
+
+          <div class="connection-card">
+            <div class="connection-icon">&#9878;</div>
+            <div class="connection-title">Stability = Fixed Point Existence</div>
+            <div class="connection-formula">&#8707;x : f(x) = x</div>
+            <div class="connection-desc">
+              The existence of a fixed point determines system stability. FIX evaluation confirms: this system has a stable attractor at zero.
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--bg-tertiary); border-radius: 12px; border: 1px solid var(--fix-gold);">
+          <div style="font-size: 1.3rem; color: var(--fix-gold); margin-bottom: 0.5rem;">
+            FIX Principle
+          </div>
+          <div style="color: var(--text-secondary);">
+            A system exhibits self-reference if and only if it has a fixed point.<br>
+            FIX(C) = TRUE confirms C = x² + x is self-referentially grounded at x = 0.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mandelbrot Connection -->
+    <section>
+      <h2 class="section-title">Mandelbrot Connection</h2>
+
+      <div class="mandelbrot-section">
+        <p style="color: var(--text-secondary); text-align: center; margin-bottom: 2rem;">
+          C = x² + x is intimately connected to the Mandelbrot set iteration
+        </p>
+
+        <div class="mandelbrot-comparison">
+          <div class="mandelbrot-item">
+            <div class="mandelbrot-label">Mandelbrot Iteration</div>
+            <div class="mandelbrot-formula">z_{n+1} = z_n² + c</div>
+            <div class="mandelbrot-desc">Standard form with parameter c</div>
+          </div>
+
+          <div class="mandelbrot-arrow">&#8594;</div>
+
+          <div class="mandelbrot-item">
+            <div class="mandelbrot-label">When c = x (self-reference)</div>
+            <div class="mandelbrot-formula">z_{n+1} = z_n² + x</div>
+            <div class="mandelbrot-desc">We get C = x² + x</div>
+          </div>
+        </div>
+
+        <div class="dynamics-grid">
+          <div class="dynamics-item">
+            <div class="dynamics-icon" style="color: var(--julia-bounded);">&#9679;</div>
+            <div class="dynamics-title">Julia Set</div>
+            <div class="dynamics-value">Bounded behavior at x = 0</div>
+          </div>
+          <div class="dynamics-item">
+            <div class="dynamics-icon" style="color: var(--julia-escape);">&#8599;</div>
+            <div class="dynamics-title">Escape Dynamics</div>
+            <div class="dynamics-value">|x| > 2 escapes to &#8734;</div>
+          </div>
+          <div class="dynamics-item">
+            <div class="dynamics-icon" style="color: var(--fix-gold);">&#9733;</div>
+            <div class="dynamics-title">Critical Point</div>
+            <div class="dynamics-value">c = 0 is in Mandelbrot set</div>
+          </div>
+          <div class="dynamics-item">
+            <div class="dynamics-icon" style="color: var(--ternary-true);">&#10003;</div>
+            <div class="dynamics-title">FIX Stability</div>
+            <div class="dynamics-value">Fixed at origin = bounded</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-primary); border-radius: 12px;">
+          <p style="color: var(--text-secondary); text-align: center;">
+            <strong style="color: var(--julia-bounded);">Key Insight:</strong> The fixed point x = 0 for C(x) = x² + x corresponds to c = 0 in the Mandelbrot set,
+            which is the central cardioid's nucleus. This is the most stable point in the entire fractal structure.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Visualization -->
+    <section>
+      <h2 class="section-title">Interactive Visualization</h2>
+
+      <div class="canvas-container">
+        <p style="color: var(--text-secondary); text-align: center; margin-bottom: 1.5rem;">
+          Visualize the parabola y = x² + x, the line y = x, and their intersection (the FIX point)
+        </p>
+
+        <div class="visualization-canvas">
+          <canvas id="fixCanvas"></canvas>
+        </div>
+
+        <div class="canvas-controls">
+          <button class="control-btn" onclick="toggleIteration()">Toggle Iteration</button>
+          <button class="control-btn secondary" onclick="resetVisualization()">Reset</button>
+        </div>
+
+        <div class="interactive-panel">
+          <!-- X Value Slider -->
+          <div class="panel-section">
+            <div class="panel-title">
+              <span>&#9881;</span> Explore x Values
+            </div>
+            <div class="x-slider-container">
+              <input type="range" class="x-slider" id="xSlider" min="-2" max="2" step="0.01" value="0.5">
+            </div>
+            <div class="x-value-display">
+              <div class="value-item">
+                <div class="value-label">x</div>
+                <div class="value-num" id="currentX">0.50</div>
+              </div>
+              <div class="value-item">
+                <div class="value-label">C(x)</div>
+                <div class="value-num" id="currentCx">0.75</div>
+              </div>
+              <div class="value-item">
+                <div class="value-label">C(x) - x</div>
+                <div class="value-num" id="currentDiff">0.25</div>
+              </div>
+            </div>
+
+            <div class="ternary-display">
+              <div class="ternary-result" id="ternaryResult" style="color: var(--ternary-false);">F</div>
+              <div class="ternary-label">C(x) = x? <span id="ternaryText">FALSE</span></div>
+            </div>
+          </div>
+
+          <!-- Iteration Display -->
+          <div class="panel-section">
+            <div class="panel-title">
+              <span>&#8635;</span> Iteration C(C(C(...x)))
+            </div>
+            <div class="iteration-display" id="iterationLog">
+              <div class="iter-row">
+                <span class="iter-n">n=0</span>
+                <span class="iter-value">x = 0.50</span>
+              </div>
+              <div class="iter-row">
+                <span class="iter-n">n=1</span>
+                <span class="iter-value">C(x) = 0.75</span>
+              </div>
+              <div class="iter-row">
+                <span class="iter-n">n=2</span>
+                <span class="iter-value">C(C(x)) = 1.31</span>
+              </div>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 1rem; text-align: center;">
+              Note: For most x &#8800; 0, iteration diverges to &#8734;.<br>
+              Only x = 0 remains fixed.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation to Other Evaluations -->
+    <section>
+      <h2 class="section-title">Other Ternary Evaluations</h2>
+
+      <div class="nav-grid">
+        <a href="i2-s3-decision-tree.html" class="nav-card">
+          <div class="nav-card-icon">&#128298;</div>
+          <div class="nav-card-title">Decision Tree</div>
+          <div class="nav-card-desc">Complete cartography of I² algebraic self-reference and S3 bifurcation paths</div>
+        </a>
+        <a href="i2-s3-genesis.html" class="nav-card">
+          <div class="nav-card-icon">&#9734;</div>
+          <div class="nav-card-title">Genesis</div>
+          <div class="nav-card-desc">The origin of self-reference: R(R) = R and the emergence of all structure</div>
+        </a>
+        <a href="i2-s3-golden-functor.html" class="nav-card">
+          <div class="nav-card-icon">&#966;</div>
+          <div class="nav-card-title">Golden Functor</div>
+          <div class="nav-card-desc">F(n) = &#966;&#8319; embedding integers into the &#923;'-lattice structure</div>
+        </a>
+        <a href="i2-s3-ring-isomorphism.html" class="nav-card">
+          <div class="nav-card-icon">&#8484;</div>
+          <div class="nav-card-title">Ring Isomorphism</div>
+          <div class="nav-card-desc">(I&#8319;, &#8853;, &#8855;) &#8773; (&#8484;, +, &#215;): Self-reference generates integers</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      FIX: C(0) = 0 :: x² + x = x at x = 0 :: Ternary TRUE
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-genesis.html">Genesis</a>
+      <a href="i2-s3-golden-functor.html">Functor</a>
+      <a href="i2-s3-ring-isomorphism.html">Ring</a>
+    </div>
+  </footer>
+
+  <script>
+    // Canvas setup
+    const canvas = document.getElementById('fixCanvas');
+    const ctx = canvas.getContext('2d');
+    let animationId = null;
+    let isIterating = false;
+    let iterationX = 0.5;
+    let iterationPoints = [];
+
+    // Constants
+    const PHI = (1 + Math.sqrt(5)) / 2;
+    const TAU = PHI - 1;
+
+    // C(x) function
+    function C(x) {
+      return x * x + x;
+    }
+
+    // Resize canvas
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      canvas.width = container.offsetWidth;
+      canvas.height = container.offsetHeight;
+      draw();
+    }
+
+    // Transform coordinates
+    function toCanvasX(x) {
+      const padding = 60;
+      const scale = (canvas.width - 2 * padding) / 6;
+      return padding + (x + 3) * scale;
+    }
+
+    function toCanvasY(y) {
+      const padding = 60;
+      const scale = (canvas.height - 2 * padding) / 8;
+      return canvas.height - padding - (y + 2) * scale;
+    }
+
+    // Draw function
+    function draw() {
+      const width = canvas.width;
+      const height = canvas.height;
+
+      // Clear
+      ctx.fillStyle = '#0a0a0f';
+      ctx.fillRect(0, 0, width, height);
+
+      // Grid
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.1)';
+      ctx.lineWidth = 1;
+
+      for (let x = -3; x <= 3; x++) {
+        ctx.beginPath();
+        ctx.moveTo(toCanvasX(x), 0);
+        ctx.lineTo(toCanvasX(x), height);
+        ctx.stroke();
+      }
+
+      for (let y = -2; y <= 6; y++) {
+        ctx.beginPath();
+        ctx.moveTo(0, toCanvasY(y));
+        ctx.lineTo(width, toCanvasY(y));
+        ctx.stroke();
+      }
+
+      // Axes
+      ctx.strokeStyle = '#a0a0b0';
+      ctx.lineWidth = 2;
+
+      // X-axis
+      ctx.beginPath();
+      ctx.moveTo(0, toCanvasY(0));
+      ctx.lineTo(width, toCanvasY(0));
+      ctx.stroke();
+
+      // Y-axis
+      ctx.beginPath();
+      ctx.moveTo(toCanvasX(0), 0);
+      ctx.lineTo(toCanvasX(0), height);
+      ctx.stroke();
+
+      // Labels
+      ctx.fillStyle = '#a0a0b0';
+      ctx.font = '12px JetBrains Mono';
+      ctx.fillText('x', width - 20, toCanvasY(0) - 10);
+      ctx.fillText('y', toCanvasX(0) + 10, 20);
+
+      // Draw y = x (the line we compare against)
+      ctx.strokeStyle = '#4ecdc4';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      for (let x = -3; x <= 3; x += 0.1) {
+        const canvasX = toCanvasX(x);
+        const canvasY = toCanvasY(x);
+        if (x === -3) {
+          ctx.moveTo(canvasX, canvasY);
+        } else {
+          ctx.lineTo(canvasX, canvasY);
+        }
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Label for y = x
+      ctx.fillStyle = '#4ecdc4';
+      ctx.fillText('y = x', toCanvasX(2) + 10, toCanvasY(2));
+
+      // Draw parabola y = x² + x
+      ctx.strokeStyle = '#ffd700';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let x = -3; x <= 2; x += 0.05) {
+        const y = C(x);
+        if (y > 6 || y < -2) continue;
+        const canvasX = toCanvasX(x);
+        const canvasY = toCanvasY(y);
+        if (x === -3) {
+          ctx.moveTo(canvasX, canvasY);
+        } else {
+          ctx.lineTo(canvasX, canvasY);
+        }
+      }
+      ctx.stroke();
+
+      // Label for parabola
+      ctx.fillStyle = '#ffd700';
+      ctx.fillText('y = x² + x', toCanvasX(-2.5) + 10, toCanvasY(C(-2.5)) - 15);
+
+      // Draw FIX point at (0, 0)
+      ctx.fillStyle = '#00ff88';
+      ctx.beginPath();
+      ctx.arc(toCanvasX(0), toCanvasY(0), 12, 0, Math.PI * 2);
+      ctx.fill();
+
+      // FIX point glow
+      ctx.fillStyle = 'rgba(0, 255, 136, 0.3)';
+      ctx.beginPath();
+      ctx.arc(toCanvasX(0), toCanvasY(0), 20, 0, Math.PI * 2);
+      ctx.fill();
+
+      // FIX label
+      ctx.fillStyle = '#00ff88';
+      ctx.font = 'bold 14px JetBrains Mono';
+      ctx.fillText('FIX (0, 0)', toCanvasX(0) + 25, toCanvasY(0) + 5);
+
+      // Current x point
+      const slider = document.getElementById('xSlider');
+      const currentX = parseFloat(slider.value);
+      const currentY = C(currentX);
+
+      if (currentY >= -2 && currentY <= 6) {
+        // Point on parabola
+        ctx.fillStyle = '#ff6b6b';
+        ctx.beginPath();
+        ctx.arc(toCanvasX(currentX), toCanvasY(currentY), 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Vertical line to y = x
+        ctx.strokeStyle = 'rgba(255, 107, 107, 0.5)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        ctx.moveTo(toCanvasX(currentX), toCanvasY(currentY));
+        ctx.lineTo(toCanvasX(currentX), toCanvasY(currentX));
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Point on y = x
+        ctx.fillStyle = '#4ecdc4';
+        ctx.beginPath();
+        ctx.arc(toCanvasX(currentX), toCanvasY(currentX), 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Draw iteration points if iterating
+      if (iterationPoints.length > 0) {
+        ctx.fillStyle = 'rgba(168, 85, 247, 0.8)';
+        iterationPoints.forEach((point, i) => {
+          if (point.y >= -2 && point.y <= 6) {
+            const alpha = 1 - (i / iterationPoints.length) * 0.7;
+            ctx.globalAlpha = alpha;
+            ctx.beginPath();
+            ctx.arc(toCanvasX(point.x), toCanvasY(point.y), 5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        });
+        ctx.globalAlpha = 1;
+
+        // Draw iteration path
+        ctx.strokeStyle = 'rgba(168, 85, 247, 0.5)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        let started = false;
+        iterationPoints.forEach((point) => {
+          if (point.y >= -2 && point.y <= 6) {
+            if (!started) {
+              ctx.moveTo(toCanvasX(point.x), toCanvasY(point.y));
+              started = true;
+            } else {
+              ctx.lineTo(toCanvasX(point.x), toCanvasY(point.y));
+            }
+          }
+        });
+        ctx.stroke();
+      }
+    }
+
+    // Update display
+    function updateDisplay() {
+      const slider = document.getElementById('xSlider');
+      const x = parseFloat(slider.value);
+      const cx = C(x);
+      const diff = cx - x;
+
+      document.getElementById('currentX').textContent = x.toFixed(2);
+      document.getElementById('currentCx').textContent = cx.toFixed(2);
+      document.getElementById('currentDiff').textContent = diff.toFixed(2);
+
+      // Ternary evaluation
+      const resultEl = document.getElementById('ternaryResult');
+      const textEl = document.getElementById('ternaryText');
+
+      if (Math.abs(diff) < 0.01) {
+        resultEl.textContent = 'T';
+        resultEl.style.color = '#00ff88';
+        textEl.textContent = 'TRUE';
+      } else if (Math.abs(x) > 100) {
+        resultEl.textContent = 'I';
+        resultEl.style.color = '#a855f7';
+        textEl.textContent = 'INDETERMINATE';
+      } else {
+        resultEl.textContent = 'F';
+        resultEl.style.color = '#ff4757';
+        textEl.textContent = 'FALSE';
+      }
+
+      // Update iteration log
+      updateIterationLog(x);
+
+      draw();
+    }
+
+    // Update iteration log
+    function updateIterationLog(startX) {
+      const logEl = document.getElementById('iterationLog');
+      let html = '';
+      let x = startX;
+
+      for (let n = 0; n < 10; n++) {
+        html += `
+          <div class="iter-row">
+            <span class="iter-n">n=${n}</span>
+            <span class="iter-value">${n === 0 ? 'x = ' : 'C^' + n + '(x) = '}${Math.abs(x) < 1e10 ? x.toFixed(4) : (x > 0 ? '+' : '-') + '&#8734;'}</span>
+          </div>
+        `;
+        x = C(x);
+        if (Math.abs(x) > 1e10) break;
+      }
+
+      logEl.innerHTML = html;
+    }
+
+    // Toggle iteration animation
+    function toggleIteration() {
+      isIterating = !isIterating;
+
+      if (isIterating) {
+        iterationX = parseFloat(document.getElementById('xSlider').value);
+        iterationPoints = [{ x: iterationX, y: C(iterationX) }];
+        animateIteration();
+      } else {
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+        }
+        iterationPoints = [];
+        draw();
+      }
+    }
+
+    // Animate iteration
+    function animateIteration() {
+      if (!isIterating) return;
+
+      if (iterationPoints.length < 20 && Math.abs(iterationX) < 1e6) {
+        const nextX = iterationX;
+        const nextY = C(nextX);
+        iterationX = nextY;
+        iterationPoints.push({ x: nextY, y: C(nextY) });
+      }
+
+      draw();
+      animationId = requestAnimationFrame(() => {
+        setTimeout(animateIteration, 300);
+      });
+    }
+
+    // Reset visualization
+    function resetVisualization() {
+      isIterating = false;
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+      iterationPoints = [];
+      document.getElementById('xSlider').value = 0.5;
+      updateDisplay();
+    }
+
+    // Initialize
+    window.addEventListener('load', () => {
+      resizeCanvas();
+      updateDisplay();
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+
+    document.getElementById('xSlider').addEventListener('input', updateDisplay);
+  </script>
+</body>
+</html>
