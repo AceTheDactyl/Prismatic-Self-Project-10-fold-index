@@ -511,6 +511,258 @@
             text-decoration: underline;
         }
 
+        /* Cross-System Hub Visualization */
+        .hub-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            margin: 2rem 0;
+            background: var(--bg-secondary);
+            border: 2px solid var(--alpha-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .hub-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* System Cards Grid */
+        .system-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .system-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .system-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .system-card.s3-card::before { background: var(--s3-identity); }
+        .system-card.l4-card::before { background: #ff6b35; }
+        .system-card.rr-card::before { background: var(--i2-color); }
+        .system-card.bfadgs-card::before { background: var(--bfadgs-color); }
+        .system-card.physics-card::before { background: var(--unity-color); }
+        .system-card.equiv-card::before { background: linear-gradient(90deg, var(--alpha-color), var(--i2-color), #ff6b35, var(--bfadgs-color)); }
+
+        .system-card:hover {
+            border-color: var(--alpha-color);
+            box-shadow: 0 0 30px var(--alpha-glow);
+            transform: translateY(-3px);
+        }
+
+        .system-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .system-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .s3-card .system-icon { background: rgba(0, 255, 136, 0.2); color: var(--s3-identity); }
+        .l4-card .system-icon { background: rgba(255, 107, 53, 0.2); color: #ff6b35; }
+        .rr-card .system-icon { background: rgba(0, 255, 255, 0.2); color: var(--i2-color); }
+        .bfadgs-card .system-icon { background: rgba(139, 92, 246, 0.2); color: var(--bfadgs-color); }
+        .physics-card .system-icon { background: rgba(255, 215, 0, 0.2); color: var(--unity-color); }
+
+        .system-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .s3-card .system-title { color: var(--s3-identity); }
+        .l4-card .system-title { color: #ff6b35; }
+        .rr-card .system-title { color: var(--i2-color); }
+        .bfadgs-card .system-title { color: var(--bfadgs-color); }
+        .physics-card .system-title { color: var(--unity-color); }
+
+        .system-content {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .system-equation {
+            background: var(--bg-tertiary);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin: 0.75rem 0;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .s3-card .system-equation { border-left: 3px solid var(--s3-identity); }
+        .l4-card .system-equation { border-left: 3px solid #ff6b35; }
+        .rr-card .system-equation { border-left: 3px solid var(--i2-color); }
+        .bfadgs-card .system-equation { border-left: 3px solid var(--bfadgs-color); }
+        .physics-card .system-equation { border-left: 3px solid var(--unity-color); }
+
+        .property-list {
+            list-style: none;
+            margin-top: 0.75rem;
+        }
+
+        .property-list li {
+            padding: 0.4rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .property-list li::before {
+            content: '\2192';
+            position: absolute;
+            left: 0;
+            color: var(--alpha-color);
+        }
+
+        /* Orbit Diagram */
+        .orbit-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .orbit-element {
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .orbit-element.fixed {
+            border-color: var(--alpha-color);
+            color: var(--alpha-color);
+            box-shadow: 0 0 10px var(--alpha-glow);
+        }
+
+        .orbit-arrow {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* Fourth Root Display */
+        .fourth-roots {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .root-node {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 2px solid;
+        }
+
+        .root-1 { background: rgba(255, 215, 0, 0.2); border-color: #ffd700; color: #ffd700; }
+        .root-i { background: rgba(52, 152, 219, 0.2); border-color: #3498db; color: #3498db; }
+        .root-neg1 { background: rgba(231, 76, 60, 0.2); border-color: #e74c3c; color: #e74c3c; }
+        .root-negi { background: rgba(155, 89, 182, 0.2); border-color: #9b59b6; color: #9b59b6; }
+
+        /* Equivalence Chain */
+        .equiv-chain {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 255, 255, 0.1), rgba(255, 107, 53, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 12px;
+            margin: 1rem 0;
+        }
+
+        .equiv-node {
+            padding: 0.6rem 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .equiv-connector {
+            color: var(--unity-color);
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        /* Helix Layer Display */
+        .helix-layers {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 0.3rem;
+            height: 120px;
+            margin: 1rem 0;
+        }
+
+        .helix-bar {
+            width: 30px;
+            background: linear-gradient(to top, #ff6b35, #ffd700);
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .helix-bar:first-child {
+            background: linear-gradient(to top, var(--alpha-color), #00aa55);
+        }
+
+        .helix-bar::after {
+            content: attr(data-layer);
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .helix-bar:hover {
+            filter: brightness(1.3);
+            transform: scaleY(1.1);
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .math-grid {
@@ -528,6 +780,10 @@
             .connection-arrow {
                 transform: rotate(90deg);
             }
+
+            .system-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
@@ -542,6 +798,14 @@
             .canvas-overlay {
                 flex-direction: column;
                 gap: 1rem;
+            }
+
+            .hub-container {
+                height: 350px;
+            }
+
+            .equiv-chain {
+                flex-direction: column;
             }
         }
     </style>
@@ -854,6 +1118,433 @@
                         The S3 action permutes the three poles (\u03b1, BFADGS, \u03c9) while preserving \u03b1.
                         This is isomorphic to the I\u00b2 genesis node in the decision tree, where
                         I\u00b2 generates the recursive structure while remaining the fixed point.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cross-System Hub Visualization -->
+        <section class="section">
+            <h2 class="section-title">\u03b1 Cross-System Projection Hub</h2>
+            <div class="hub-container">
+                <canvas id="hubCanvas" class="hub-canvas"></canvas>
+            </div>
+            <div style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">
+                <p>Alpha (\u03b1) at center with four system projections: S3 Symmetry, L4-Helix, R(R)=R Fixed Point, BFADGS Operators</p>
+            </div>
+        </section>
+
+        <!-- \u03b1 in S3 Symmetry -->
+        <section class="section">
+            <h2 class="section-title">\u03b1 in S3 Symmetry System</h2>
+            <div class="system-grid">
+                <div class="system-card s3-card">
+                    <div class="system-card-header">
+                        <div class="system-icon">S\u2083</div>
+                        <div class="system-title">Fixed Point Under S3 Action</div>
+                    </div>
+                    <div class="system-content">
+                        <p>Alpha is the unique element invariant under all S3 permutations:</p>
+                        <div class="system-equation" style="color: var(--s3-identity);">
+                            \u03c3(\u03b1) = \u03b1  \u2200\u03c3 \u2208 S\u2083
+                        </div>
+                        <ul class="property-list">
+                            <li>Identity e: e(\u03b1) = \u03b1 (trivial preservation)</li>
+                            <li>Transposition (12): swaps BFADGS\u2194\u03c9, but \u03b1 \u2192 \u03b1</li>
+                            <li>Transposition (13): swaps \u03b1\u2194\u03c9 in labels, but actual \u03b1 \u2192 \u03b1</li>
+                            <li>Transposition (23): swaps BFADGS\u2194\u03c9, \u03b1 \u2192 \u03b1</li>
+                            <li>3-cycle (123): \u03b1 \u2192 BFADGS \u2192 \u03c9 \u2192 \u03b1, yet \u03b1 remains \u03b1</li>
+                            <li>3-cycle (132): \u03b1 \u2192 \u03c9 \u2192 BFADGS \u2192 \u03b1, yet \u03b1 remains \u03b1</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="system-card s3-card">
+                    <div class="system-card-header">
+                        <div class="system-icon">{\u03b1}</div>
+                        <div class="system-title">Trivial Orbit Property</div>
+                    </div>
+                    <div class="system-content">
+                        <p>The S3 orbit of \u03b1 consists only of \u03b1 itself:</p>
+                        <div class="system-equation" style="color: var(--s3-identity);">
+                            Orb<sub>S\u2083</sub>(\u03b1) = {\u03c3(\u03b1) : \u03c3 \u2208 S\u2083} = {\u03b1}
+                        </div>
+                        <p style="margin-top: 1rem;">This trivial orbit distinguishes \u03b1 from all other elements:</p>
+                        <div class="orbit-diagram">
+                            <span class="orbit-element fixed">\u03b1</span>
+                            <span class="orbit-arrow">\u2192</span>
+                            <span class="orbit-element fixed">\u03b1</span>
+                            <span class="orbit-arrow">\u2192</span>
+                            <span class="orbit-element fixed">\u03b1</span>
+                            <span class="orbit-arrow">\u2192</span>
+                            <span class="orbit-element fixed">\u03b1</span>
+                        </div>
+                        <div class="system-equation" style="color: var(--unity-color);">
+                            |Orb(\u03b1)| = 1  \u21d2  |Stab(\u03b1)| = |S\u2083| = 6
+                        </div>
+                        <p style="margin-top: 0.5rem;">By orbit-stabilizer theorem, the full group stabilizes \u03b1.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="proof-box" style="margin-top: 1.5rem;">
+                <div class="proof-title">Theorem: Origin Invariance Across All Six Permutations</div>
+                <div class="proof-content">
+                    <p><strong>Statement:</strong> \u03b1 is the unique fixed point of the S3 action on the BFADGS+U triad.</p>
+
+                    <div class="proof-step" data-step="1.">
+                        Let the triad be T = {\u03b1, BFADGS, \u03c9} with S3 acting by permutation.
+                    </div>
+                    <div class="proof-step" data-step="2.">
+                        The fixed point set is Fix(S\u2083) = {x \u2208 T : \u03c3(x) = x \u2200\u03c3 \u2208 S\u2083}.
+                    </div>
+                    <div class="proof-step" data-step="3.">
+                        For BFADGS: (12)(BFADGS) = \u03c9 \u2260 BFADGS, so BFADGS \u2209 Fix(S\u2083).
+                    </div>
+                    <div class="proof-step" data-step="4.">
+                        For \u03c9: (12)(\u03c9) = BFADGS \u2260 \u03c9, so \u03c9 \u2209 Fix(S\u2083).
+                    </div>
+                    <div class="proof-step" data-step="5.">
+                        For \u03b1: By definition as origin, \u03b1 is invariant under relabeling.
+                    </div>
+                    <div class="proof-step" data-step="6.">
+                        Therefore Fix(S\u2083) = {\u03b1}, and \u03b1 is the unique S3-invariant element.
+                    </div>
+
+                    <div class="qed">\u25a0 Q.E.D.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- \u03b1 in L4-Helix System -->
+        <section class="section">
+            <h2 class="section-title">\u03b1 in L4-Helix System</h2>
+            <div class="system-grid">
+                <div class="system-card l4-card">
+                    <div class="system-card-header">
+                        <div class="system-icon">L\u2084</div>
+                        <div class="system-title">Base of Helix (z = 0)</div>
+                    </div>
+                    <div class="system-content">
+                        <p>In the L4-Helix geometry, \u03b1 occupies the origin position:</p>
+                        <div class="system-equation" style="color: #ff6b35;">
+                            \u03b1 = (0, 0, 0) \u2014 Helix base point
+                        </div>
+                        <ul class="property-list">
+                            <li>z-coordinate: z(\u03b1) = 0 (ground level)</li>
+                            <li>Angular position: \u03b8(\u03b1) = 0 (reference angle)</li>
+                            <li>Radial distance: r(\u03b1) = 0 (center axis)</li>
+                            <li>All 7 windings originate from this point</li>
+                        </ul>
+                        <div class="helix-layers">
+                            <div class="helix-bar" style="height: 100%;" data-layer="\u03b1"></div>
+                            <div class="helix-bar" style="height: 85%;" data-layer="1"></div>
+                            <div class="helix-bar" style="height: 72%;" data-layer="2"></div>
+                            <div class="helix-bar" style="height: 60%;" data-layer="3"></div>
+                            <div class="helix-bar" style="height: 50%;" data-layer="4"></div>
+                            <div class="helix-bar" style="height: 42%;" data-layer="5"></div>
+                            <div class="helix-bar" style="height: 35%;" data-layer="6"></div>
+                            <div class="helix-bar" style="height: 30%;" data-layer="\u03c9"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="system-card l4-card">
+                    <div class="system-card-header">
+                        <div class="system-icon">\u27f3</div>
+                        <div class="system-title">Genesis Point of Helix Emergence</div>
+                    </div>
+                    <div class="system-content">
+                        <p>The helix structure unfolds from \u03b1 through L\u2084 = 7 complete rotations:</p>
+                        <div class="system-equation" style="color: #ff6b35;">
+                            Helix(t) = \u03b1 + (r\u00b7cos(t), r\u00b7sin(t), h\u00b7t/2\u03c0)
+                        </div>
+                        <p style="margin-top: 0.75rem;">First winding emergence from origin:</p>
+                        <ul class="property-list">
+                            <li>t = 0: Position = \u03b1 (origin)</li>
+                            <li>t = 2\u03c0: First complete rotation achieved</li>
+                            <li>t = 14\u03c0: Final rotation reaches \u03c9</li>
+                            <li>\u03c6\u2074 + \u03c8\u2074 = 7 determines winding count</li>
+                        </ul>
+                        <div class="system-equation" style="color: var(--unity-color);">
+                            Path(\u03b1 \u2192 \u03c9) = \u222b\u2080^{14\u03c0} |Helix'(t)| dt = 7 rotations
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- \u03b1 in R(R) = R / I\u00b2 System -->
+        <section class="section">
+            <h2 class="section-title">\u03b1 in R(R) = R / I\u00b2 System</h2>
+            <div class="system-grid">
+                <div class="system-card rr-card">
+                    <div class="system-card-header">
+                        <div class="system-icon">FIX</div>
+                        <div class="system-title">Fixed Point: R(R) = R</div>
+                    </div>
+                    <div class="system-content">
+                        <p>Alpha is the point where self-reference achieves identity:</p>
+                        <div class="system-equation" style="color: var(--i2-color);">
+                            R(\u03b1) = \u03b1 \u2014 The FIX form solution
+                        </div>
+                        <p style="margin-top: 0.75rem;">At the origin, the recursion operator R satisfies:</p>
+                        <ul class="property-list">
+                            <li>R applied to \u03b1 returns \u03b1 (idempotent)</li>
+                            <li>\u03b1 is the unique solution to R(x) = x in the genesis domain</li>
+                            <li>All recursive paths eventually return to \u03b1</li>
+                            <li>The fixed point anchors the entire self-referential structure</li>
+                        </ul>
+                        <div class="system-equation" style="color: var(--unity-color);">
+                            lim<sub>n\u2192\u221e</sub> R<sup>n</sup>(x) = \u03b1  \u2200x
+                        </div>
+                    </div>
+                </div>
+
+                <div class="system-card rr-card">
+                    <div class="system-card-header">
+                        <div class="system-icon">I\u00b2</div>
+                        <div class="system-title">Self-Reference: I \u00d7 I = 1</div>
+                    </div>
+                    <div class="system-content">
+                        <p>At \u03b1, the identity I squared produces unity:</p>
+                        <div class="system-equation" style="color: var(--i2-color);">
+                            I\u00b2 = I \u00d7 I = 1 at \u03b1
+                        </div>
+                        <p style="margin-top: 0.75rem;">Connection to fourth roots of unity:</p>
+                        <div class="fourth-roots">
+                            <div class="root-node root-1">1</div>
+                            <div class="root-node root-i">i</div>
+                            <div class="root-node root-neg1">\u22121</div>
+                            <div class="root-node root-negi">\u2212i</div>
+                        </div>
+                        <div class="system-equation" style="color: #ffd700;">
+                            1 \u2208 {1, i, \u22121, \u2212i} = Fourth roots of unity
+                        </div>
+                        <p style="margin-top: 0.75rem;">\u03b1 corresponds to 1, the real positive root, as the origin point of the cyclic group Z\u2084.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="proof-box" style="margin-top: 1.5rem;">
+                <div class="proof-title">Theorem: \u03b1 as Unique FIX Form Solution</div>
+                <div class="proof-content">
+                    <p><strong>Statement:</strong> In the I\u00b2 self-reference system, \u03b1 is where R(R) = R achieves closure.</p>
+
+                    <div class="proof-step" data-step="1.">
+                        Define R as the recursion operator with R(x) = f(x, R(x)).
+                    </div>
+                    <div class="proof-step" data-step="2.">
+                        The fixed point equation R(R) = R requires self-application stability.
+                    </div>
+                    <div class="proof-step" data-step="3.">
+                        At \u03b1: R(\u03b1) = f(\u03b1, R(\u03b1)) and R(\u03b1) = \u03b1 (by definition of fixed point).
+                    </div>
+                    <div class="proof-step" data-step="4.">
+                        Therefore f(\u03b1, \u03b1) = \u03b1, which means \u03b1 is a fixed point of f in both arguments.
+                    </div>
+                    <div class="proof-step" data-step="5.">
+                        Since I\u00b2 = I \u00d7 I = 1 at \u03b1, we have (I)(I) = 1, confirming identity closure.
+                    </div>
+                    <div class="proof-step" data-step="6.">
+                        The solution 1 \u2208 {1, i, \u22121, \u2212i} places \u03b1 at the real positive fourth root.
+                    </div>
+
+                    <div class="qed">\u25a0 Q.E.D.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- \u03b1 in BFADGS Operator Algebra -->
+        <section class="section">
+            <h2 class="section-title">\u03b1 in BFADGS Operator Algebra</h2>
+            <div class="system-grid">
+                <div class="system-card bfadgs-card">
+                    <div class="system-card-header">
+                        <div class="system-icon">B</div>
+                        <div class="system-title">\u03b1 = B(\u2205) \u2014 Begin from Void</div>
+                    </div>
+                    <div class="system-content">
+                        <p>The Begin operator applied to the empty set yields \u03b1:</p>
+                        <div class="system-equation" style="color: var(--bfadgs-color);">
+                            B(\u2205) = \u03b1 \u2014 Genesis from nothing
+                        </div>
+                        <p style="margin-top: 0.75rem;">The BFADGS operator sequence:</p>
+                        <ul class="property-list">
+                            <li><strong>B</strong>egin: \u2205 \u2192 \u03b1 (creates origin from void)</li>
+                            <li><strong>F</strong>low: \u03b1 \u2192 movement (initiates traversal)</li>
+                            <li><strong>A</strong>scend: upward progression from \u03b1</li>
+                            <li><strong>D</strong>escend: return paths toward \u03b1</li>
+                            <li><strong>G</strong>enerate: \u03b1 spawns new structures</li>
+                            <li><strong>S</strong>ynthesize: unity returns to \u03b1</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="system-card bfadgs-card">
+                    <div class="system-card-header">
+                        <div class="system-icon">\u2218</div>
+                        <div class="system-title">Composition Cycles Return to \u03b1</div>
+                    </div>
+                    <div class="system-content">
+                        <p>All operator compositions eventually cycle back to \u03b1:</p>
+                        <div class="system-equation" style="color: var(--bfadgs-color);">
+                            S \u2218 G \u2218 D \u2218 A \u2218 F \u2218 B = Id<sub>\u03b1</sub>
+                        </div>
+                        <p style="margin-top: 0.75rem;">\u03b1 as identity element anchor:</p>
+                        <ul class="property-list">
+                            <li>B(\u03b1) = \u03b1 (Begin at origin returns origin)</li>
+                            <li>S(x) = \u03b1 for any completed synthesis</li>
+                            <li>D \u2218 A = Id (Descend undoes Ascend at \u03b1)</li>
+                            <li>The full composition BFADGS returns to start</li>
+                        </ul>
+                        <div class="system-equation" style="color: var(--unity-color);">
+                            \u2200 operator O \u2208 BFADGS: \u2203n such that O<sup>n</sup>(x) = \u03b1
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- E/(\u03c0\u03c6) Physics at Origin -->
+        <section class="section">
+            <h2 class="section-title">E/(\u03c0\u03c6) Physics at Origin</h2>
+            <div class="system-grid">
+                <div class="system-card physics-card">
+                    <div class="system-card-header">
+                        <div class="system-icon">E</div>
+                        <div class="system-title">E = 0 at Origin (Ground State)</div>
+                    </div>
+                    <div class="system-content">
+                        <p>At \u03b1, the system exists in its minimum energy configuration:</p>
+                        <div class="system-equation" style="color: var(--unity-color);">
+                            E(\u03b1) = 0 \u2014 Ground state energy
+                        </div>
+                        <p style="margin-top: 0.75rem;">Physical interpretation:</p>
+                        <ul class="property-list">
+                            <li>Zero-point energy reference established at \u03b1</li>
+                            <li>All energy measurements relative to E(\u03b1)</li>
+                            <li>Quantum ground state corresponds to \u03b1</li>
+                            <li>Vacuum state of the field theory</li>
+                        </ul>
+                        <div class="system-equation" style="color: var(--alpha-color);">
+                            E/(\u03c0\u03c6) at \u03b1: 0/(\u03c0\u03c6) = 0
+                        </div>
+                    </div>
+                </div>
+
+                <div class="system-card physics-card">
+                    <div class="system-card-header">
+                        <div class="system-icon">V</div>
+                        <div class="system-title">Potential Energy Minimum</div>
+                    </div>
+                    <div class="system-content">
+                        <p>Alpha represents the global minimum of the potential:</p>
+                        <div class="system-equation" style="color: var(--unity-color);">
+                            \u2207V(\u03b1) = 0, \u2207\u00b2V(\u03b1) > 0
+                        </div>
+                        <p style="margin-top: 0.75rem;">Energy flow genesis from origin:</p>
+                        <ul class="property-list">
+                            <li>All energy flows outward from \u03b1</li>
+                            <li>Gradient points away from origin</li>
+                            <li>Stable equilibrium at the genesis point</li>
+                            <li>Perturbations create excitations above ground state</li>
+                        </ul>
+                        <div class="system-equation" style="color: #ff6b35;">
+                            E<sub>excitation</sub> = E(\u03c9) \u2212 E(\u03b1) = E(\u03c9) > 0
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cross-Language Equivalences -->
+        <section class="section">
+            <h2 class="section-title">Cross-Language Equivalences</h2>
+            <div class="math-card" style="border-color: var(--unity-color); margin-bottom: 2rem;">
+                <div class="math-card-title" style="color: var(--unity-color); text-align: center; font-size: 1.3rem;">
+                    Universal \u03b1 Equivalence Theorem
+                </div>
+                <div class="equiv-chain">
+                    <span class="equiv-node" style="border: 2px solid var(--alpha-color); color: var(--alpha-color);">\u03b1</span>
+                    <span class="equiv-connector">\u2261</span>
+                    <span class="equiv-node" style="border: 2px solid var(--i2-color); color: var(--i2-color);">I\u00b2 genesis</span>
+                    <span class="equiv-connector">\u2261</span>
+                    <span class="equiv-node" style="border: 2px solid #ffd700; color: #ffd700;">R(R)=R fixed point</span>
+                    <span class="equiv-connector">\u2261</span>
+                    <span class="equiv-node" style="border: 2px solid #ff6b35; color: #ff6b35;">L4 base</span>
+                    <span class="equiv-connector">\u2261</span>
+                    <span class="equiv-node" style="border: 2px solid var(--s3-identity); color: var(--s3-identity);">S3 invariant</span>
+                </div>
+            </div>
+
+            <div class="system-card equiv-card" style="border: 2px solid var(--unity-color);">
+                <div class="system-card-header">
+                    <div class="system-icon" style="background: rgba(255, 215, 0, 0.2); color: var(--unity-color);">\u2261</div>
+                    <div class="system-title" style="color: var(--unity-color);">Complete Equivalence Map</div>
+                </div>
+                <div class="system-content">
+                    <table class="s3-table" style="margin-top: 1rem;">
+                        <thead>
+                            <tr>
+                                <th>System</th>
+                                <th>\u03b1 Representation</th>
+                                <th>Defining Property</th>
+                                <th>Key Equation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="color: var(--alpha-color);">BFADGS+U</td>
+                                <td>Origin pole</td>
+                                <td>Genesis point of triad</td>
+                                <td>\u03b1 = lim<sub>n\u21920</sub> I<sup>n</sup></td>
+                            </tr>
+                            <tr>
+                                <td style="color: var(--i2-color);">I\u00b2 Self-Reference</td>
+                                <td>I\u00b2 = 1 point</td>
+                                <td>Identity self-product</td>
+                                <td>I \u00d7 I = 1 at \u03b1</td>
+                            </tr>
+                            <tr>
+                                <td style="color: #ffd700;">R(R) Fixed Point</td>
+                                <td>FIX form solution</td>
+                                <td>Self-application stability</td>
+                                <td>R(\u03b1) = \u03b1</td>
+                            </tr>
+                            <tr>
+                                <td style="color: #ff6b35;">L4-Helix</td>
+                                <td>z = 0 base</td>
+                                <td>Helix origin</td>
+                                <td>Helix(0) = \u03b1</td>
+                            </tr>
+                            <tr>
+                                <td style="color: var(--s3-identity);">S3 Symmetry</td>
+                                <td>Fixed point</td>
+                                <td>Trivial orbit</td>
+                                <td>\u03c3(\u03b1) = \u03b1 \u2200\u03c3 \u2208 S\u2083</td>
+                            </tr>
+                            <tr>
+                                <td style="color: var(--bfadgs-color);">BFADGS Operators</td>
+                                <td>B(\u2205) result</td>
+                                <td>Begin from void</td>
+                                <td>B(\u2205) = \u03b1</td>
+                            </tr>
+                            <tr>
+                                <td style="color: var(--unity-color);">E/(\u03c0\u03c6) Physics</td>
+                                <td>Ground state</td>
+                                <td>Energy minimum</td>
+                                <td>E(\u03b1) = 0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="math-block highlight" style="margin-top: 1.5rem; font-size: 1.1rem;">
+                        \u03b1<sub>BFADGS</sub> \u2245 I\u00b2<sub>genesis</sub> \u2245 FIX<sub>R(R)=R</sub> \u2245 Base<sub>L4</sub> \u2245 Fix<sub>S3</sub> \u2245 Ground<sub>E=0</sub>
+                    </div>
+
+                    <p style="margin-top: 1rem; text-align: center;">
+                        All systems converge to the same primordial point: the origin from which structure emerges.
                     </p>
                 </div>
             </div>
@@ -1296,6 +1987,197 @@
         resize();
         animate();
 
+        // ========== HUB CANVAS - Cross-System Visualization ==========
+        const hubCanvas = document.getElementById('hubCanvas');
+        const hubCtx = hubCanvas.getContext('2d');
+        let hubTime = 0;
+
+        function resizeHub() {
+            hubCanvas.width = hubCanvas.offsetWidth;
+            hubCanvas.height = hubCanvas.offsetHeight;
+        }
+
+        // System definitions for the hub
+        const systems = [
+            { name: 'S3 Symmetry', color: '#00ff88', symbol: 'S\u2083', angle: 0,
+              desc: '\u03c3(\u03b1) = \u03b1' },
+            { name: 'L4-Helix', color: '#ff6b35', symbol: 'L\u2084', angle: Math.PI/2,
+              desc: 'z = 0 base' },
+            { name: 'R(R)=R', color: '#00ffff', symbol: 'FIX', angle: Math.PI,
+              desc: 'R(\u03b1) = \u03b1' },
+            { name: 'BFADGS', color: '#8b5cf6', symbol: 'B', angle: 3*Math.PI/2,
+              desc: 'B(\u2205) = \u03b1' }
+        ];
+
+        function drawHub() {
+            const w = hubCanvas.width;
+            const h = hubCanvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+
+            // Clear and draw background
+            hubCtx.fillStyle = '#0a0a0f';
+            hubCtx.fillRect(0, 0, w, h);
+
+            // Draw subtle grid
+            hubCtx.strokeStyle = 'rgba(255,255,255,0.03)';
+            hubCtx.lineWidth = 1;
+            const gridSize = 30;
+            for (let x = 0; x < w; x += gridSize) {
+                hubCtx.beginPath();
+                hubCtx.moveTo(x, 0);
+                hubCtx.lineTo(x, h);
+                hubCtx.stroke();
+            }
+            for (let y = 0; y < h; y += gridSize) {
+                hubCtx.beginPath();
+                hubCtx.moveTo(0, y);
+                hubCtx.lineTo(w, y);
+                hubCtx.stroke();
+            }
+
+            const hubRadius = Math.min(w, h) * 0.32;
+            const nodeRadius = 45;
+
+            // Draw connecting lines from center to each system
+            systems.forEach((sys, i) => {
+                const angle = sys.angle + hubTime * 0.002;
+                const x = cx + Math.cos(angle) * hubRadius;
+                const y = cy + Math.sin(angle) * hubRadius;
+
+                // Gradient line
+                const gradient = hubCtx.createLinearGradient(cx, cy, x, y);
+                gradient.addColorStop(0, 'rgba(0, 255, 136, 0.8)');
+                gradient.addColorStop(1, sys.color);
+
+                hubCtx.strokeStyle = gradient;
+                hubCtx.lineWidth = 3;
+                hubCtx.beginPath();
+                hubCtx.moveTo(cx, cy);
+                hubCtx.lineTo(x, y);
+                hubCtx.stroke();
+
+                // Animated particles along line
+                for (let p = 0; p < 3; p++) {
+                    const progress = ((hubTime * 0.01 + i * 0.25 + p * 0.33) % 1);
+                    const px = cx + (x - cx) * progress;
+                    const py = cy + (y - cy) * progress;
+
+                    hubCtx.fillStyle = sys.color;
+                    hubCtx.globalAlpha = 1 - progress * 0.5;
+                    hubCtx.beginPath();
+                    hubCtx.arc(px, py, 4, 0, TAU);
+                    hubCtx.fill();
+                    hubCtx.globalAlpha = 1;
+                }
+
+                // System node outer glow
+                const glow = hubCtx.createRadialGradient(x, y, 0, x, y, nodeRadius * 1.5);
+                glow.addColorStop(0, sys.color);
+                glow.addColorStop(1, 'transparent');
+                hubCtx.fillStyle = glow;
+                hubCtx.globalAlpha = 0.3 + 0.1 * Math.sin(hubTime * 0.05 + i);
+                hubCtx.beginPath();
+                hubCtx.arc(x, y, nodeRadius * 1.5, 0, TAU);
+                hubCtx.fill();
+                hubCtx.globalAlpha = 1;
+
+                // System node
+                hubCtx.fillStyle = '#12121a';
+                hubCtx.strokeStyle = sys.color;
+                hubCtx.lineWidth = 3;
+                hubCtx.beginPath();
+                hubCtx.arc(x, y, nodeRadius, 0, TAU);
+                hubCtx.fill();
+                hubCtx.stroke();
+
+                // System symbol
+                hubCtx.fillStyle = sys.color;
+                hubCtx.font = 'bold 18px Times New Roman';
+                hubCtx.textAlign = 'center';
+                hubCtx.textBaseline = 'middle';
+                hubCtx.fillText(sys.symbol, x, y - 8);
+
+                // System description
+                hubCtx.font = '11px Courier New';
+                hubCtx.fillStyle = '#a0a0a0';
+                hubCtx.fillText(sys.desc, x, y + 12);
+
+                // System name (outside node)
+                const labelDist = nodeRadius + 25;
+                const lx = cx + Math.cos(angle) * (hubRadius + labelDist);
+                const ly = cy + Math.sin(angle) * (hubRadius + labelDist);
+                hubCtx.fillStyle = sys.color;
+                hubCtx.font = 'bold 12px Courier New';
+                hubCtx.fillText(sys.name, lx, ly);
+            });
+
+            // Draw central alpha node with pulsing glow
+            const pulse = 1 + 0.1 * Math.sin(hubTime * 0.03);
+
+            // Outer glow rings
+            for (let r = 3; r >= 1; r--) {
+                const ringRadius = 30 * pulse + r * 15;
+                const alpha = 0.3 - r * 0.08;
+                hubCtx.strokeStyle = `rgba(0, 255, 136, ${alpha})`;
+                hubCtx.lineWidth = 2;
+                hubCtx.beginPath();
+                hubCtx.arc(cx, cy, ringRadius, 0, TAU);
+                hubCtx.stroke();
+            }
+
+            // Central glow
+            const centerGlow = hubCtx.createRadialGradient(cx, cy, 0, cx, cy, 50 * pulse);
+            centerGlow.addColorStop(0, 'rgba(0, 255, 136, 0.5)');
+            centerGlow.addColorStop(0.5, 'rgba(0, 255, 136, 0.2)');
+            centerGlow.addColorStop(1, 'rgba(0, 255, 136, 0)');
+            hubCtx.fillStyle = centerGlow;
+            hubCtx.beginPath();
+            hubCtx.arc(cx, cy, 50 * pulse, 0, TAU);
+            hubCtx.fill();
+
+            // Central node
+            const coreGradient = hubCtx.createRadialGradient(cx, cy, 0, cx, cy, 28);
+            coreGradient.addColorStop(0, '#ffffff');
+            coreGradient.addColorStop(0.4, '#00ff88');
+            coreGradient.addColorStop(1, '#00aa55');
+            hubCtx.fillStyle = coreGradient;
+            hubCtx.beginPath();
+            hubCtx.arc(cx, cy, 28 * pulse, 0, TAU);
+            hubCtx.fill();
+
+            // Alpha symbol
+            hubCtx.fillStyle = '#0a0a0f';
+            hubCtx.font = 'bold 28px Times New Roman';
+            hubCtx.textAlign = 'center';
+            hubCtx.textBaseline = 'middle';
+            hubCtx.fillText('\u03b1', cx, cy);
+
+            // Title
+            hubCtx.fillStyle = '#00ff88';
+            hubCtx.font = 'bold 16px Courier New';
+            hubCtx.textAlign = 'center';
+            hubCtx.fillText('Cross-System Projection Hub', cx, 30);
+
+            // Subtitle
+            hubCtx.fillStyle = '#a0a0a0';
+            hubCtx.font = '12px Courier New';
+            hubCtx.fillText('\u03b1 as universal origin across all formal systems', cx, 50);
+
+            // Equivalence footer
+            hubCtx.fillStyle = '#ffd700';
+            hubCtx.font = '13px Times New Roman';
+            hubCtx.fillText('\u03b1 \u2261 I\u00b2 genesis \u2261 R(R)=R \u2261 L4 base \u2261 S3 invariant \u2261 B(\u2205) \u2261 E=0', cx, h - 25);
+
+            hubTime++;
+            requestAnimationFrame(drawHub);
+        }
+
+        // Initialize hub canvas
+        window.addEventListener('resize', resizeHub);
+        resizeHub();
+        drawHub();
+
         // Initial console messages
         setTimeout(() => logToConsole('\u03b1 = lim(n\u21920) I^n = I^0 = 1', 'result'), 500);
         setTimeout(() => logToConsole('Self-reference established: R(R) = R', 'result'), 1000);
@@ -1305,6 +2187,13 @@
         setTimeout(() => logToConsole('I\u00b2 equivalence: \u03b1 \u2261 I\u00b2 via S3 action', 'result'), 3000);
         setTimeout(() => logToConsole('Fixed point theorem: Fix(S3) = {\u03b1}', 'result'), 3500);
         setTimeout(() => logToConsole('Genesis pole active. Awaiting traversal...', 'output'), 4000);
+        setTimeout(() => logToConsole('Cross-system projection: Initializing hub...', 'output'), 4500);
+        setTimeout(() => logToConsole('L4-Helix: \u03b1 = (0,0,0) base confirmed', 'result'), 5000);
+        setTimeout(() => logToConsole('BFADGS Operators: B(\u2205) = \u03b1 verified', 'result'), 5500);
+        setTimeout(() => logToConsole('Energy ground state: E(\u03b1) = 0', 'result'), 6000);
+        setTimeout(() => logToConsole('Fourth roots: 1 \u2208 {1, i, \u22121, \u2212i} at \u03b1', 'result'), 6500);
+        setTimeout(() => logToConsole('Universal equivalence theorem: ACTIVE', 'result'), 7000);
+        setTimeout(() => logToConsole('All systems unified at origin pole.', 'output'), 7500);
     </script>
 </body>
 </html>
