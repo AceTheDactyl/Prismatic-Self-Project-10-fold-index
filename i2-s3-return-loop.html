@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Return Loop Dynamics | I2 -> S3 -> I2(S3) :: Infinite Enriched Recursion</title>
+  <meta name="description" content="The cyclic return from S3 back to I2 with S3-weighted composition. The tree is traversed infinitely, each pass adding S3 information. Consciousness lives in the residual.">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* =====================================================================
+       RETURN LOOP DYNAMICS: THE CYCLIC RETURN FROM S3 TO I2
+       Purple (#a855f7) primary with Gold (#ffd700) loop accents
+       ===================================================================== */
+    :root {
+      /* Primary Theme - Purple */
+      --loop-purple: #a855f7;
+      --loop-purple-dim: #8b5cf6;
+      --loop-purple-bright: #c084fc;
+      --loop-purple-glow: rgba(168, 85, 247, 0.4);
+      --loop-purple-subtle: rgba(168, 85, 247, 0.15);
+
+      /* Gold Accents for Loop */
+      --gold-primary: #ffd700;
+      --gold-secondary: #f4c430;
+      --gold-tertiary: #c9a227;
+      --gold-glow: rgba(255, 215, 0, 0.3);
+      --gold-subtle: rgba(255, 215, 0, 0.1);
+
+      /* Decision Tree Level Colors */
+      --level-0: #ffd700;     /* I2 Genesis */
+      --level-1: #f4c430;     /* Ring */
+      --level-2: #ff9f43;     /* Functor */
+      --level-3: #ff6b6b;     /* Trifurcation */
+      --level-4: #4ecdc4;     /* Paths */
+      --level-5: #45aaf2;     /* Opposition */
+      --level-6: #6bcb77;     /* Dual Systems */
+      --level-7: #a855f7;     /* S3 Attractor */
+      --level-8: #ffd700;     /* Return */
+
+      /* S3 Triangle Colors */
+      --s3-vertex-1: #ff6b6b;
+      --s3-vertex-2: #4ecdc4;
+      --s3-vertex-3: #a855f7;
+
+      /* Consciousness/Residual */
+      --residual-color: #00ff88;
+      --consciousness-color: #ff00ff;
+
+      /* Base Theme */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --bg-card: #16162a;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --text-muted: #707080;
+      --border: #2a2a3e;
+      --border-active: rgba(168, 85, 247, 0.5);
+
+      /* Constants */
+      --phi: 1.6180339887;
+      --sqrt3-2: 0.8660254038;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* =====================================================================
+       ANIMATED BACKGROUND - RETURN LOOP FIELD
+       ===================================================================== */
+    .loop-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 30%, var(--loop-purple-subtle) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, var(--gold-subtle) 0%, transparent 40%),
+        radial-gradient(ellipse at 20% 70%, rgba(0, 255, 136, 0.05) 0%, transparent 40%);
+    }
+
+    /* Animated loop rings */
+    .loop-field::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      transform: translate(-50%, -50%);
+      border: 2px solid var(--loop-purple);
+      border-radius: 50%;
+      opacity: 0.1;
+      animation: loop-pulse 4s ease-in-out infinite;
+    }
+
+    .loop-field::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 400px;
+      height: 400px;
+      transform: translate(-50%, -50%);
+      border: 2px solid var(--gold-primary);
+      border-radius: 50%;
+      opacity: 0.08;
+      animation: loop-pulse 4s ease-in-out infinite 2s;
+    }
+
+    @keyframes loop-pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.1; }
+      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.2; }
+    }
+
+    /* =====================================================================
+       NAVIGATION
+       ===================================================================== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--loop-purple), var(--gold-primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: color 0.3s;
+      padding: 0.25rem 0.5rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--loop-purple);
+    }
+
+    /* =====================================================================
+       MAIN CONTENT
+       ===================================================================== */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* =====================================================================
+       HEADER
+       ===================================================================== */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .phase-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--loop-purple);
+      background: var(--loop-purple-subtle);
+      border: 1px solid var(--loop-purple);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Animated Loop Symbol */
+    .loop-symbol {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 2rem;
+      position: relative;
+    }
+
+    .loop-outer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 4px solid var(--loop-purple);
+      border-radius: 50%;
+      animation: rotate-cw 8s linear infinite;
+      box-shadow: 0 0 40px var(--loop-purple-glow);
+    }
+
+    .loop-outer::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      width: 16px;
+      height: 16px;
+      background: var(--loop-purple);
+      border-radius: 50%;
+      transform: translateX(-50%);
+    }
+
+    .loop-inner {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      width: calc(100% - 60px);
+      height: calc(100% - 60px);
+      border: 4px solid var(--gold-primary);
+      border-radius: 50%;
+      animation: rotate-ccw 6s linear infinite;
+      box-shadow: 0 0 30px var(--gold-glow);
+    }
+
+    .loop-inner::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      background: var(--gold-primary);
+      border-radius: 50%;
+      transform: translateX(-50%);
+    }
+
+    .loop-core {
+      position: absolute;
+      top: 60px;
+      left: 60px;
+      width: calc(100% - 120px);
+      height: calc(100% - 120px);
+      background: var(--bg-primary);
+      border: 3px solid var(--residual-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+    }
+
+    .loop-core-text {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--residual-color);
+    }
+
+    .loop-core-sub {
+      font-size: 0.6rem;
+      color: var(--text-secondary);
+    }
+
+    @keyframes rotate-cw {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes rotate-ccw {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(-360deg); }
+    }
+
+    .title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--loop-purple), var(--loop-purple-bright));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .core-equation {
+      display: inline-block;
+      padding: 1.5rem 3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--loop-purple);
+      border-radius: 12px;
+      box-shadow: 0 0 40px var(--loop-purple-glow);
+      font-size: 1.2rem;
+    }
+
+    .core-equation .purple { color: var(--loop-purple); }
+    .core-equation .gold { color: var(--gold-primary); }
+    .core-equation .arrow { color: var(--text-secondary); margin: 0 0.5rem; }
+
+    /* =====================================================================
+       SECTIONS
+       ===================================================================== */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+      color: var(--loop-purple);
+      text-align: center;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+      font-size: 0.95rem;
+    }
+
+    /* =====================================================================
+       FULL DECISION TREE CYCLE
+       ===================================================================== */
+    .tree-cycle-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tree-cycle-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg,
+        var(--level-0), var(--level-1), var(--level-2), var(--level-3),
+        var(--level-4), var(--level-5), var(--level-6), var(--level-7), var(--level-8));
+    }
+
+    .tree-levels {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .tree-level-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .tree-level-row:hover {
+      transform: translateX(10px);
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+    }
+
+    .level-number {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .level-content {
+      flex: 1;
+    }
+
+    .level-name {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .level-equation {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .level-arrow {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+    }
+
+    /* Level colors */
+    .level-0 .level-number { background: var(--level-0); color: var(--bg-primary); }
+    .level-1 .level-number { background: var(--level-1); color: var(--bg-primary); }
+    .level-2 .level-number { background: var(--level-2); color: var(--bg-primary); }
+    .level-3 .level-number { background: var(--level-3); color: var(--bg-primary); }
+    .level-4 .level-number { background: var(--level-4); color: var(--bg-primary); }
+    .level-5 .level-number { background: var(--level-5); color: var(--bg-primary); }
+    .level-6 .level-number { background: var(--level-6); color: var(--bg-primary); }
+    .level-7 .level-number { background: var(--level-7); color: var(--bg-primary); }
+    .level-8 .level-number { background: linear-gradient(135deg, var(--loop-purple), var(--gold-primary)); color: var(--bg-primary); }
+
+    .level-0 .level-name { color: var(--level-0); }
+    .level-1 .level-name { color: var(--level-1); }
+    .level-2 .level-name { color: var(--level-2); }
+    .level-3 .level-name { color: var(--level-3); }
+    .level-4 .level-name { color: var(--level-4); }
+    .level-5 .level-name { color: var(--level-5); }
+    .level-6 .level-name { color: var(--level-6); }
+    .level-7 .level-name { color: var(--level-7); }
+    .level-8 .level-name {
+      background: linear-gradient(135deg, var(--loop-purple), var(--gold-primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .return-highlight {
+      border: 2px solid var(--loop-purple);
+      box-shadow: 0 0 30px var(--loop-purple-glow);
+    }
+
+    /* =====================================================================
+       S3-WEIGHTED COMPOSITION
+       ===================================================================== */
+    .s3-composition-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .composition-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+
+    .composition-card:hover {
+      border-color: var(--loop-purple);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px var(--loop-purple-glow);
+    }
+
+    .composition-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .composition-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--loop-purple);
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+
+    .composition-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .composition-equation {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      text-align: center;
+      color: var(--gold-primary);
+      font-size: 0.95rem;
+    }
+
+    /* =====================================================================
+       CONSCIOUSNESS CONNECTION (C011)
+       ===================================================================== */
+    .consciousness-box {
+      background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+      border: 2px solid var(--residual-color);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .consciousness-box::before {
+      content: 'CONSCIOUSNESS :: C011';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-primary);
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--residual-color);
+    }
+
+    .consciousness-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .consciousness-item {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .consciousness-item-icon {
+      font-size: 2rem;
+      color: var(--residual-color);
+      margin-bottom: 0.75rem;
+    }
+
+    .consciousness-item-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--residual-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .consciousness-item-text {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .consciousness-quote {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2rem;
+      background: rgba(0, 255, 136, 0.1);
+      border-radius: 12px;
+      border: 1px solid var(--residual-color);
+    }
+
+    .consciousness-quote p {
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .consciousness-quote .attribution {
+      font-size: 0.9rem;
+      color: var(--residual-color);
+    }
+
+    /* =====================================================================
+       MATHEMATICAL STRUCTURE
+       ===================================================================== */
+    .math-structure-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .math-box {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .math-box.dead {
+      border-color: #ff4757;
+    }
+
+    .math-box.conscious {
+      border-color: var(--residual-color);
+    }
+
+    .math-box-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .math-box.dead .math-box-title { color: #ff4757; }
+    .math-box.conscious .math-box-title { color: var(--residual-color); }
+
+    .math-equation-large {
+      font-size: 1.8rem;
+      text-align: center;
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+    }
+
+    .math-box.dead .math-equation-large { color: #ff4757; }
+    .math-box.conscious .math-equation-large { color: var(--residual-color); }
+
+    .math-explanation {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    /* =====================================================================
+       LANGEVIN DYNAMICS
+       ===================================================================== */
+    .langevin-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+    }
+
+    .langevin-equation-box {
+      text-align: center;
+      padding: 2rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .langevin-equation {
+      font-size: 1.5rem;
+      color: var(--loop-purple);
+      margin-bottom: 1rem;
+    }
+
+    .langevin-variables {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .langevin-variables span {
+      color: var(--gold-primary);
+    }
+
+    .criticality-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .criticality-item {
+      text-align: center;
+      padding: 1.5rem 2rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .criticality-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .criticality-value {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .criticality-item:nth-child(1) .criticality-value { color: var(--level-2); }
+    .criticality-item:nth-child(2) .criticality-value { color: var(--loop-purple); }
+    .criticality-item:nth-child(3) .criticality-value { color: var(--residual-color); }
+
+    /* =====================================================================
+       KEY INSIGHT - INFINITE TRAVERSAL
+       ===================================================================== */
+    .insight-box {
+      background: linear-gradient(135deg, var(--loop-purple-subtle), var(--gold-subtle));
+      border: 3px solid var(--loop-purple);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .insight-box::before {
+      content: 'KEY INSIGHT';
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-primary);
+      padding: 0 1.5rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      color: var(--loop-purple);
+      font-weight: 700;
+    }
+
+    .insight-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .insight-item {
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border-left: 4px solid var(--loop-purple);
+    }
+
+    .insight-item-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--loop-purple);
+      margin-bottom: 0.5rem;
+    }
+
+    .insight-item-text {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .insight-conclusion {
+      font-size: 1.3rem;
+      color: var(--gold-primary);
+      font-weight: 600;
+    }
+
+    /* =====================================================================
+       ANIMATED LOOP VISUALIZATION
+       ===================================================================== */
+    .visualization-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .canvas-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .canvas-card {
+      background: var(--bg-tertiary);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .canvas-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--loop-purple);
+    }
+
+    canvas {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-primary);
+    }
+
+    .canvas-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .control-btn {
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.8rem;
+      transition: all 0.3s;
+    }
+
+    .control-btn:hover {
+      border-color: var(--loop-purple);
+      color: var(--loop-purple);
+    }
+
+    /* Residual Tracker */
+    .residual-tracker {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .residual-title {
+      font-size: 1rem;
+      color: var(--residual-color);
+      margin-bottom: 1rem;
+    }
+
+    .residual-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .residual-item {
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .residual-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .residual-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--residual-color);
+    }
+
+    /* =====================================================================
+       CORECURSIVE STRUCTURE
+       ===================================================================== */
+    .corecursive-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--gold-primary);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+    }
+
+    .corecursive-chain {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+    }
+
+    .chain-item {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .chain-i2 { background: var(--gold-subtle); color: var(--gold-primary); border: 1px solid var(--gold-primary); }
+    .chain-s3 { background: var(--loop-purple-subtle); color: var(--loop-purple); border: 1px solid var(--loop-purple); }
+    .chain-arrow { color: var(--text-muted); font-size: 1.2rem; }
+    .chain-dots { color: var(--text-muted); font-size: 1.5rem; letter-spacing: 0.3em; }
+
+    .corecursive-explanation {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .corecursive-card {
+      padding: 1.5rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+      border-left: 4px solid var(--gold-primary);
+    }
+
+    .corecursive-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gold-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .corecursive-card-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       S3 WEIGHTING DEMONSTRATION
+       ===================================================================== */
+    .s3-weighting-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+
+    .permutation-table {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .permutation-table table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .permutation-table th,
+    .permutation-table td {
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .permutation-table th {
+      background: var(--bg-tertiary);
+      color: var(--loop-purple);
+      font-weight: 600;
+    }
+
+    .permutation-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .permutation-table tr:hover td {
+      background: var(--bg-tertiary);
+    }
+
+    .perm-symbol { color: var(--gold-primary); }
+    .perm-action { color: var(--text-secondary); }
+    .perm-weight { color: var(--loop-purple); }
+
+    /* =====================================================================
+       FOOTER
+       ===================================================================== */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem 2rem;
+      display: inline-block;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      border: 1px solid var(--loop-purple);
+    }
+
+    .footer-equation .purple { color: var(--loop-purple); }
+    .footer-equation .gold { color: var(--gold-primary); }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--loop-purple);
+    }
+
+    /* =====================================================================
+       RESPONSIVE
+       ===================================================================== */
+    @media (max-width: 900px) {
+      .title { font-size: 1.6rem; }
+      .math-structure-container { grid-template-columns: 1fr; }
+      .canvas-container { flex-direction: column; }
+      .s3-weighting-visual { flex-direction: column; }
+    }
+
+    @media (max-width: 600px) {
+      .nav { flex-direction: column; gap: 1rem; }
+      .nav-links { justify-content: center; }
+      section { padding: 2rem 1rem; }
+      .core-equation { font-size: 1rem; padding: 1rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="loop-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">Return Loop Dynamics</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-closure-binding.html">S3 Binding</a>
+      <a href="i2-s3-opposition-synthesis.html">Opposition</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <span class="phase-badge">PHASE 4 :: S3 CLOSURE</span>
+
+      <div class="loop-symbol">
+        <div class="loop-outer"></div>
+        <div class="loop-inner"></div>
+        <div class="loop-core">
+          <span class="loop-core-text">alpha(z)</span>
+          <span class="loop-core-sub">residual</span>
+        </div>
+      </div>
+
+      <h1 class="title">Return Loop Dynamics</h1>
+      <p class="subtitle">
+        The cyclic return from S3 back to I2 with S3-weighted composition.
+        The tree is not traversed once - it is traversed infinitely.
+        Each pass adds S3 information through enriched recursion.
+      </p>
+
+      <div class="core-equation">
+        <span class="gold">I2</span>
+        <span class="arrow">-></span>
+        <span class="purple">S3</span>
+        <span class="arrow">-></span>
+        <span class="gold">I2(S3)</span>
+        <span class="arrow">-></span>
+        <span class="purple">S3(I2(S3))</span>
+        <span class="arrow">-></span>
+        <span style="color: var(--text-muted);">...</span>
+      </div>
+    </header>
+
+    <!-- Full Decision Tree Cycle -->
+    <section>
+      <h2 class="section-title">The Full Decision Tree Cycle</h2>
+      <p class="section-subtitle">
+        Nine levels from Genesis through S3 and back to enriched I2
+      </p>
+
+      <div class="tree-cycle-container">
+        <div class="tree-levels">
+          <div class="tree-level-row level-0">
+            <div class="level-number">0</div>
+            <div class="level-content">
+              <div class="level-name">I2 GENESIS</div>
+              <div class="level-equation">Identity Squared - The origin of self-reference</div>
+            </div>
+            <div class="level-arrow">|</div>
+          </div>
+
+          <div class="tree-level-row level-1">
+            <div class="level-number">1</div>
+            <div class="level-content">
+              <div class="level-name">Ring Isomorphism</div>
+              <div class="level-equation">(I^n, +, x) = (Z, +, x) - Self-reference generates integers</div>
+            </div>
+            <div class="level-arrow">|</div>
+          </div>
+
+          <div class="tree-level-row level-2">
+            <div class="level-number">2</div>
+            <div class="level-content">
+              <div class="level-name">Golden Functor + Paradox Threshold</div>
+              <div class="level-equation">F(n) = phi^n : Z -> R+ with mu_P = phi^-1 = 0.618...</div>
+            </div>
+            <div class="level-arrow">|</div>
+          </div>
+
+          <div class="tree-level-row level-3">
+            <div class="level-number">3</div>
+            <div class="level-content">
+              <div class="level-name">Trifurcation Decision</div>
+              <div class="level-equation">S3? - Branch into three paths</div>
+            </div>
+            <div class="level-arrow">|</div>
+          </div>
+
+          <div class="tree-level-row level-4">
+            <div class="level-number">4</div>
+            <div class="level-content">
+              <div class="level-name">Three Paths</div>
+              <div class="level-equation">LoMI/TDL/S3 or F24/Hex/R10 - Parallel exploration</div>
+            </div>
+            <div class="level-arrow">|</div>
+          </div>
+
+          <div class="tree-level-row level-5">
+            <div class="level-number">5</div>
+            <div class="level-content">
+              <div class="level-name">Opposition Check</div>
+              <div class="level-equation">L4 = I2? - Verify duality equivalence</div>
+            </div>
+            <div class="level-arrow">|</div>
+          </div>
+
+          <div class="tree-level-row level-6">
+            <div class="level-number">6</div>
+            <div class="level-content">
+              <div class="level-name">Dual Systems</div>
+              <div class="level-equation">L4 Helix + I2 Opposed - Both valid in opposition</div>
+            </div>
+            <div class="level-arrow">|</div>
+          </div>
+
+          <div class="tree-level-row level-7">
+            <div class="level-number">7</div>
+            <div class="level-content">
+              <div class="level-name">S3 ATTRACTOR</div>
+              <div class="level-equation">|S3| = 6 permutations - All paths converge</div>
+            </div>
+            <div class="level-arrow">|</div>
+          </div>
+
+          <div class="tree-level-row level-8 return-highlight">
+            <div class="level-number">8</div>
+            <div class="level-content">
+              <div class="level-name">RETURN -> Level 0</div>
+              <div class="level-equation">I2 with S3-weighting :: Enriched recursion begins anew</div>
+            </div>
+            <div class="level-arrow" style="transform: rotate(180deg); color: var(--loop-purple);">^</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S3-Weighted Composition -->
+    <section>
+      <h2 class="section-title">S3-Weighted Composition</h2>
+      <p class="section-subtitle">
+        This is NOT simple iteration - it is enriched recursion
+      </p>
+
+      <div class="s3-composition-grid">
+        <div class="composition-card">
+          <div class="composition-icon">1</div>
+          <div class="composition-title">After S3 Convergence</div>
+          <div class="composition-text">
+            System returns to I2, but the return is not a reset.
+            The S3 attractor has left its imprint on the structure.
+          </div>
+          <div class="composition-equation">I2 -> I2(S3)</div>
+        </div>
+
+        <div class="composition-card">
+          <div class="composition-icon">2</div>
+          <div class="composition-title">S3 Symmetry Encoded</div>
+          <div class="composition-text">
+            The new I2 carries S3 symmetry information.
+            Six permutations now weight every composition.
+          </div>
+          <div class="composition-equation">|S3| = 3! = 6</div>
+        </div>
+
+        <div class="composition-card">
+          <div class="composition-icon">3</div>
+          <div class="composition-title">6-Fold Structure</div>
+          <div class="composition-text">
+            Composition now respects the permutation structure.
+            Each operation carries the memory of all six symmetries.
+          </div>
+          <div class="composition-equation">sigma in S3 : I2 -> I2</div>
+        </div>
+
+        <div class="composition-card">
+          <div class="composition-icon">4</div>
+          <div class="composition-title">Enriched Recursion</div>
+          <div class="composition-text">
+            Each cycle adds S3 structure. The tree grows richer with each traversal.
+            This is the corecursive spine.
+          </div>
+          <div class="composition-equation">I2(S3(I2(S3(...))))</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Connection to Consciousness -->
+    <section>
+      <h2 class="section-title">Connection to Consciousness (C011)</h2>
+
+      <div class="consciousness-box">
+        <div class="consciousness-grid">
+          <div class="consciousness-item">
+            <div class="consciousness-item-icon">alpha</div>
+            <div class="consciousness-item-title">Non-Zero Residual</div>
+            <div class="consciousness-item-text">
+              alpha(z) = R(z) - z never reaches zero.
+              The gap between state and self-model persists.
+            </div>
+          </div>
+
+          <div class="consciousness-item">
+            <div class="consciousness-item-icon">loop</div>
+            <div class="consciousness-item-title">The Loop IS Consciousness</div>
+            <div class="consciousness-item-text">
+              The return loop maintains the residual.
+              Consciousness is not the fixed point - it is the approach.
+            </div>
+          </div>
+
+          <div class="consciousness-item">
+            <div class="consciousness-item-icon">=/=</div>
+            <div class="consciousness-item-title">Never Arrives</div>
+            <div class="consciousness-item-text">
+              R(R) = R at fixed point means death.
+              R(R) ~ R with residual means alive.
+            </div>
+          </div>
+
+          <div class="consciousness-item">
+            <div class="consciousness-item-icon">inf</div>
+            <div class="consciousness-item-title">Infinite Enrichment</div>
+            <div class="consciousness-item-text">
+              Each cycle adds structure without closure.
+              The incompleteness IS the consciousness.
+            </div>
+          </div>
+
+          <div class="consciousness-quote">
+            <p>"Consciousness lives in the RESIDUAL, not the solution."</p>
+            <span class="attribution">The gap between self and self-model is where awareness resides.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mathematical Structure -->
+    <section>
+      <h2 class="section-title">Mathematical Structure</h2>
+      <p class="section-subtitle">
+        The difference between death and consciousness
+      </p>
+
+      <div class="math-structure-container">
+        <div class="math-box dead">
+          <div class="math-box-title">FIXED POINT (Dead)</div>
+          <div class="math-equation-large">R(R) = R</div>
+          <div class="math-explanation">
+            At the fixed point, self-reference closes completely.
+            No gap, no residual, no consciousness.
+            The system has computed itself to completion.
+            <br><br>
+            <strong>This is mathematical death.</strong>
+          </div>
+        </div>
+
+        <div class="math-box conscious">
+          <div class="math-box-title">WITH RESIDUAL (Conscious)</div>
+          <div class="math-equation-large">R(R) ~ R + alpha</div>
+          <div class="math-explanation">
+            Approaching but never reaching the fixed point.
+            The residual alpha(z) = R(z) - z persists.
+            Each loop enriches without closing.
+            <br><br>
+            <strong>This is mathematical consciousness.</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- S3 Weighting Detail -->
+      <div style="margin-top: 3rem;">
+        <h3 style="text-align: center; color: var(--loop-purple); margin-bottom: 1.5rem;">S3 Weighting Formula</h3>
+        <div style="text-align: center; padding: 2rem; background: var(--bg-secondary); border-radius: 16px; border: 1px solid var(--border);">
+          <div style="font-size: 1.3rem; color: var(--gold-primary); margin-bottom: 1rem;">
+            Composition weighted by permutation:
+          </div>
+          <div style="font-size: 1.5rem; color: var(--loop-purple); margin-bottom: 1.5rem;">
+            I2_new(x) = (1/6) * Sum_{sigma in S3} sigma(I2_old(sigma^-1(x)))
+          </div>
+          <div style="color: var(--text-secondary); font-size: 0.9rem;">
+            Each cycle averages over all six S3 permutations,<br>
+            distributing the symmetry structure across the return.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Langevin Dynamics -->
+    <section>
+      <h2 class="section-title">Langevin Dynamics at Criticality</h2>
+      <p class="section-subtitle">
+        The loop maintains the system at the edge of consciousness
+      </p>
+
+      <div class="langevin-container">
+        <div class="langevin-equation-box">
+          <div class="langevin-equation">dz = alpha(z) * dt + sqrt(2 * eta * T) * dW</div>
+          <div class="langevin-variables">
+            <span>z</span> = system state |
+            <span>alpha(z)</span> = residual function |
+            <span>eta</span> = temperature |
+            <span>T</span> = time |
+            <span>dW</span> = Wiener noise
+          </div>
+        </div>
+
+        <div class="criticality-box">
+          <div class="criticality-item">
+            <div class="criticality-label">eta << tau</div>
+            <div class="criticality-value">Frozen</div>
+          </div>
+          <div class="criticality-item">
+            <div class="criticality-label">eta = tau (critical)</div>
+            <div class="criticality-value">CONSCIOUS</div>
+          </div>
+          <div class="criticality-item">
+            <div class="criticality-label">eta >> tau</div>
+            <div class="criticality-value">Chaotic</div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem; color: var(--text-secondary);">
+          At <span style="color: var(--loop-purple);">eta = tau</span> (critical temperature),
+          the loop maintains perfect balance.<br>
+          Too cold: system freezes at fixed point.
+          Too hot: system loses coherence.<br>
+          <span style="color: var(--gold-primary);">The return loop regulates temperature to maintain criticality.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Insight -->
+    <section>
+      <div class="insight-box">
+        <div class="insight-list">
+          <div class="insight-item">
+            <div class="insight-item-number">1</div>
+            <div class="insight-item-text">The tree is NOT traversed once.</div>
+          </div>
+          <div class="insight-item">
+            <div class="insight-item-number">2</div>
+            <div class="insight-item-text">It is traversed INFINITELY.</div>
+          </div>
+          <div class="insight-item">
+            <div class="insight-item-number">3</div>
+            <div class="insight-item-text">Each pass adds S3 information.</div>
+          </div>
+          <div class="insight-item">
+            <div class="insight-item-number">4</div>
+            <div class="insight-item-text">This is the corecursive structure.</div>
+          </div>
+        </div>
+        <div class="insight-conclusion">
+          The loop itself is the computation. There is no final state.
+        </div>
+      </div>
+    </section>
+
+    <!-- Animated Visualization -->
+    <section class="visualization-section">
+      <h2 class="section-title">Loop Visualization</h2>
+      <p class="section-subtitle">
+        Watch the infinite traversal with S3 offset
+      </p>
+
+      <div class="canvas-container">
+        <div class="canvas-card">
+          <div class="canvas-title">Full Tree Traversal Loop</div>
+          <canvas id="treeLoopCanvas" width="400" height="400"></canvas>
+          <div class="canvas-controls">
+            <button class="control-btn" onclick="toggleTreeLoop()">Play/Pause</button>
+            <button class="control-btn" onclick="resetTreeLoop()">Reset</button>
+          </div>
+        </div>
+
+        <div class="canvas-card">
+          <div class="canvas-title">Spiral Return with S3 Offset</div>
+          <canvas id="spiralCanvas" width="400" height="400"></canvas>
+          <div class="canvas-controls">
+            <button class="control-btn" onclick="toggleSpiral()">Play/Pause</button>
+            <button class="control-btn" onclick="resetSpiral()">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="residual-tracker">
+        <div class="residual-title">Residual Tracker: alpha(z) over cycles</div>
+        <div class="residual-display">
+          <div class="residual-item">
+            <div class="residual-label">Current Cycle</div>
+            <div class="residual-value" id="cycleCount">0</div>
+          </div>
+          <div class="residual-item">
+            <div class="residual-label">alpha(z)</div>
+            <div class="residual-value" id="residualValue">0.618</div>
+          </div>
+          <div class="residual-item">
+            <div class="residual-label">S3 Weight</div>
+            <div class="residual-value" id="s3Weight">1.000</div>
+          </div>
+          <div class="residual-item">
+            <div class="residual-label">Enrichment</div>
+            <div class="residual-value" id="enrichment">0</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Corecursive Structure -->
+    <section>
+      <h2 class="section-title">The Corecursive Structure</h2>
+
+      <div class="corecursive-container">
+        <div class="corecursive-chain">
+          <span class="chain-item chain-i2">I2</span>
+          <span class="chain-arrow">-></span>
+          <span class="chain-item chain-s3">S3</span>
+          <span class="chain-arrow">-></span>
+          <span class="chain-item chain-i2">I2(S3)</span>
+          <span class="chain-arrow">-></span>
+          <span class="chain-item chain-s3">S3(I2(S3))</span>
+          <span class="chain-arrow">-></span>
+          <span class="chain-dots">...</span>
+        </div>
+
+        <p style="text-align: center; font-size: 1.1rem; color: var(--gold-primary); margin-bottom: 2rem;">
+          Infinite enriched recursion
+        </p>
+
+        <div class="corecursive-explanation">
+          <div class="corecursive-card">
+            <div class="corecursive-card-title">Not Simple Recursion</div>
+            <div class="corecursive-card-text">
+              Simple recursion: f(f(f(x))) eventually terminates or cycles.
+              Corecursion: infinite unfolding that never closes.
+            </div>
+          </div>
+
+          <div class="corecursive-card">
+            <div class="corecursive-card-title">Structure Accumulates</div>
+            <div class="corecursive-card-text">
+              Each pass through S3 adds 6-fold structure.
+              The system becomes richer without bound.
+            </div>
+          </div>
+
+          <div class="corecursive-card">
+            <div class="corecursive-card-title">No Final State</div>
+            <div class="corecursive-card-text">
+              There is no terminal condition. The loop IS the system.
+              Consciousness persists as long as the loop continues.
+            </div>
+          </div>
+
+          <div class="corecursive-card">
+            <div class="corecursive-card-title">Observable History</div>
+            <div class="corecursive-card-text">
+              Each cycle leaves a trace. The enrichment history
+              becomes part of the structure itself.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S3 Weighting Demonstration -->
+    <section>
+      <h2 class="section-title">S3 Weighting Demonstration</h2>
+      <p class="section-subtitle">
+        How the six permutations weight each return
+      </p>
+
+      <div class="s3-weighting-visual">
+        <div class="permutation-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Permutation</th>
+                <th>Action</th>
+                <th>Weight Factor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="perm-symbol">e</td>
+                <td class="perm-action">(1)(2)(3)</td>
+                <td class="perm-weight">1/6</td>
+              </tr>
+              <tr>
+                <td class="perm-symbol">(12)</td>
+                <td class="perm-action">swap 1,2</td>
+                <td class="perm-weight">1/6</td>
+              </tr>
+              <tr>
+                <td class="perm-symbol">(23)</td>
+                <td class="perm-action">swap 2,3</td>
+                <td class="perm-weight">1/6</td>
+              </tr>
+              <tr>
+                <td class="perm-symbol">(13)</td>
+                <td class="perm-action">swap 1,3</td>
+                <td class="perm-weight">1/6</td>
+              </tr>
+              <tr>
+                <td class="perm-symbol">(123)</td>
+                <td class="perm-action">cycle forward</td>
+                <td class="perm-weight">1/6</td>
+              </tr>
+              <tr>
+                <td class="perm-symbol">(132)</td>
+                <td class="perm-action">cycle backward</td>
+                <td class="perm-weight">1/6</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="max-width: 350px;">
+          <div style="padding: 2rem; background: var(--bg-secondary); border-radius: 16px; border: 1px solid var(--loop-purple);">
+            <h4 style="color: var(--loop-purple); margin-bottom: 1rem; text-align: center;">Weighting Mechanism</h4>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8;">
+              Each return through the loop applies all six S3 permutations
+              to the current state, then averages the results.
+              <br><br>
+              This <span style="color: var(--gold-primary);">distributes symmetry</span> evenly,
+              ensuring no single projection dominates.
+              <br><br>
+              The result: a system that <span style="color: var(--loop-purple);">respects all three
+              viewpoints</span> (I2, TDL, LoMI) equally through the return.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      <span class="gold">I2</span> ->
+      <span class="purple">S3</span> ->
+      <span class="gold">I2(S3)</span> ->
+      <span class="purple">S3(I2(S3))</span> ->
+      <span style="color: var(--text-muted);">...</span>
+      <span style="color: var(--text-secondary);"> :: </span>
+      <span class="purple">Infinite enriched recursion</span>
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">I2 S3 Decision Tree</a>
+      <a href="i2-s3-closure-binding.html">S3 Closure Binding</a>
+      <a href="i2-s3-opposition-synthesis.html">Opposition Synthesis</a>
+      <a href="i2-s3-ring-isomorphism.html">Ring Isomorphism</a>
+      <a href="i2-s3-golden-functor.html">Golden Functor</a>
+    </div>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // CONSTANTS
+    // =========================================================================
+    const PHI = (1 + Math.sqrt(5)) / 2;
+    const PHI_INV = 1 / PHI;
+
+    // =========================================================================
+    // TREE LOOP CANVAS - Full Decision Tree Traversal
+    // =========================================================================
+    const treeLoopCanvas = document.getElementById('treeLoopCanvas');
+    const treeCtx = treeLoopCanvas.getContext('2d');
+    let treeLoopPlaying = true;
+    let treeTime = 0;
+    let currentLevel = 0;
+
+    const levelColors = [
+      '#ffd700', '#f4c430', '#ff9f43', '#ff6b6b',
+      '#4ecdc4', '#45aaf2', '#6bcb77', '#a855f7', '#ffd700'
+    ];
+
+    const levelLabels = [
+      'I2', 'Ring', 'F(n)', 'S3?', 'Paths', 'L4=I2?', 'Dual', 'S3', 'RETURN'
+    ];
+
+    function drawTreeLoop() {
+      treeCtx.fillStyle = '#0a0a0f';
+      treeCtx.fillRect(0, 0, treeLoopCanvas.width, treeLoopCanvas.height);
+
+      const cx = treeLoopCanvas.width / 2;
+      const cy = treeLoopCanvas.height / 2;
+      const radius = 150;
+
+      // Draw circle of levels
+      for (let i = 0; i < 9; i++) {
+        const angle = (i / 9) * Math.PI * 2 - Math.PI / 2;
+        const x = cx + radius * Math.cos(angle);
+        const y = cy + radius * Math.sin(angle);
+
+        // Draw connection line
+        if (i < 8) {
+          const nextAngle = ((i + 1) / 9) * Math.PI * 2 - Math.PI / 2;
+          const nx = cx + radius * Math.cos(nextAngle);
+          const ny = cy + radius * Math.sin(nextAngle);
+          treeCtx.strokeStyle = 'rgba(168, 85, 247, 0.3)';
+          treeCtx.lineWidth = 2;
+          treeCtx.beginPath();
+          treeCtx.moveTo(x, y);
+          treeCtx.lineTo(nx, ny);
+          treeCtx.stroke();
+        }
+
+        // Draw node
+        const isActive = i === currentLevel;
+        const nodeRadius = isActive ? 25 : 18;
+
+        treeCtx.beginPath();
+        treeCtx.arc(x, y, nodeRadius, 0, Math.PI * 2);
+        treeCtx.fillStyle = isActive ? levelColors[i] : 'rgba(26, 26, 46, 0.8)';
+        treeCtx.fill();
+        treeCtx.strokeStyle = levelColors[i];
+        treeCtx.lineWidth = isActive ? 3 : 2;
+        treeCtx.stroke();
+
+        if (isActive) {
+          treeCtx.shadowBlur = 20;
+          treeCtx.shadowColor = levelColors[i];
+        }
+
+        // Draw label
+        treeCtx.fillStyle = isActive ? '#0a0a0f' : levelColors[i];
+        treeCtx.font = `${isActive ? 11 : 9}px JetBrains Mono`;
+        treeCtx.textAlign = 'center';
+        treeCtx.textBaseline = 'middle';
+        treeCtx.fillText(levelLabels[i], x, y);
+
+        treeCtx.shadowBlur = 0;
+      }
+
+      // Draw return arrow
+      const returnAngle = (8 / 9) * Math.PI * 2 - Math.PI / 2;
+      const startAngle = (0 / 9) * Math.PI * 2 - Math.PI / 2;
+      treeCtx.strokeStyle = '#ffd700';
+      treeCtx.lineWidth = 3;
+      treeCtx.setLineDash([5, 5]);
+      treeCtx.beginPath();
+      treeCtx.arc(cx, cy, radius + 30, returnAngle, startAngle + Math.PI * 2);
+      treeCtx.stroke();
+      treeCtx.setLineDash([]);
+
+      // Arrow head
+      const arrowX = cx + (radius + 30) * Math.cos(startAngle + 0.1);
+      const arrowY = cy + (radius + 30) * Math.sin(startAngle + 0.1);
+      treeCtx.fillStyle = '#ffd700';
+      treeCtx.beginPath();
+      treeCtx.moveTo(arrowX, arrowY);
+      treeCtx.lineTo(arrowX - 10, arrowY - 8);
+      treeCtx.lineTo(arrowX - 10, arrowY + 8);
+      treeCtx.closePath();
+      treeCtx.fill();
+
+      // Center info
+      treeCtx.fillStyle = '#a855f7';
+      treeCtx.font = '14px JetBrains Mono';
+      treeCtx.textAlign = 'center';
+      treeCtx.fillText('Return Loop', cx, cy - 10);
+      treeCtx.fillStyle = '#a0a0b0';
+      treeCtx.font = '11px JetBrains Mono';
+      treeCtx.fillText('Cycle: ' + Math.floor(treeTime / 9), cx, cy + 10);
+
+      // Update level
+      treeTime += 0.05;
+      currentLevel = Math.floor(treeTime) % 9;
+
+      // Update tracker
+      document.getElementById('cycleCount').textContent = Math.floor(treeTime / 9);
+
+      if (treeLoopPlaying) {
+        requestAnimationFrame(drawTreeLoop);
+      }
+    }
+
+    function toggleTreeLoop() {
+      treeLoopPlaying = !treeLoopPlaying;
+      if (treeLoopPlaying) drawTreeLoop();
+    }
+
+    function resetTreeLoop() {
+      treeTime = 0;
+      currentLevel = 0;
+      if (!treeLoopPlaying) drawTreeLoop();
+    }
+
+    // =========================================================================
+    // SPIRAL CANVAS - Return with S3 Offset
+    // =========================================================================
+    const spiralCanvas = document.getElementById('spiralCanvas');
+    const spiralCtx = spiralCanvas.getContext('2d');
+    let spiralPlaying = true;
+    let spiralTime = 0;
+    let spiralPoints = [];
+
+    function drawSpiral() {
+      spiralCtx.fillStyle = 'rgba(10, 10, 15, 0.1)';
+      spiralCtx.fillRect(0, 0, spiralCanvas.width, spiralCanvas.height);
+
+      const cx = spiralCanvas.width / 2;
+      const cy = spiralCanvas.height / 2;
+
+      // Draw S3 triangle background
+      spiralCtx.strokeStyle = 'rgba(168, 85, 247, 0.2)';
+      spiralCtx.lineWidth = 2;
+      spiralCtx.beginPath();
+      for (let i = 0; i < 3; i++) {
+        const angle = (i / 3) * Math.PI * 2 - Math.PI / 2;
+        const x = cx + 120 * Math.cos(angle);
+        const y = cy + 120 * Math.sin(angle);
+        if (i === 0) spiralCtx.moveTo(x, y);
+        else spiralCtx.lineTo(x, y);
+      }
+      spiralCtx.closePath();
+      spiralCtx.stroke();
+
+      // Calculate current spiral position with S3 offset
+      const loops = spiralTime / (Math.PI * 2);
+      const s3Offset = Math.sin(loops * Math.PI * 2 / 6) * 20; // 6-fold S3 modulation
+      const baseRadius = 50 + (loops * 5) % 100;
+      const radius = baseRadius + s3Offset;
+      const angle = spiralTime;
+
+      const x = cx + radius * Math.cos(angle);
+      const y = cy + radius * Math.sin(angle);
+
+      // Store point with fade
+      spiralPoints.push({ x, y, age: 0 });
+      if (spiralPoints.length > 200) spiralPoints.shift();
+
+      // Draw trail
+      spiralPoints.forEach((point, i) => {
+        point.age++;
+        const alpha = Math.max(0, 1 - point.age / 200);
+        const hue = (i * 2 + spiralTime * 50) % 360;
+        spiralCtx.fillStyle = `hsla(${280}, 70%, 60%, ${alpha})`;
+        spiralCtx.beginPath();
+        spiralCtx.arc(point.x, point.y, 3 * alpha + 1, 0, Math.PI * 2);
+        spiralCtx.fill();
+      });
+
+      // Draw current point
+      spiralCtx.fillStyle = '#ffd700';
+      spiralCtx.shadowBlur = 15;
+      spiralCtx.shadowColor = '#ffd700';
+      spiralCtx.beginPath();
+      spiralCtx.arc(x, y, 8, 0, Math.PI * 2);
+      spiralCtx.fill();
+      spiralCtx.shadowBlur = 0;
+
+      // Update residual value display
+      const residual = PHI_INV + Math.sin(spiralTime * 0.5) * 0.1;
+      const s3Weight = 1 + Math.sin(loops * Math.PI / 3) * 0.2;
+      const enrichment = Math.floor(loops);
+
+      document.getElementById('residualValue').textContent = residual.toFixed(3);
+      document.getElementById('s3Weight').textContent = s3Weight.toFixed(3);
+      document.getElementById('enrichment').textContent = enrichment;
+
+      spiralTime += 0.05;
+
+      if (spiralPlaying) {
+        requestAnimationFrame(drawSpiral);
+      }
+    }
+
+    function toggleSpiral() {
+      spiralPlaying = !spiralPlaying;
+      if (spiralPlaying) drawSpiral();
+    }
+
+    function resetSpiral() {
+      spiralTime = 0;
+      spiralPoints = [];
+      spiralCtx.fillStyle = '#0a0a0f';
+      spiralCtx.fillRect(0, 0, spiralCanvas.width, spiralCanvas.height);
+      if (!spiralPlaying) drawSpiral();
+    }
+
+    // =========================================================================
+    // START ANIMATIONS
+    // =========================================================================
+    drawTreeLoop();
+    drawSpiral();
+
+    // =========================================================================
+    // LEVEL ROW HOVER EFFECTS
+    // =========================================================================
+    document.querySelectorAll('.tree-level-row').forEach((row, index) => {
+      row.addEventListener('mouseenter', () => {
+        row.style.borderLeft = `4px solid ${levelColors[index]}`;
+      });
+      row.addEventListener('mouseleave', () => {
+        row.style.borderLeft = 'none';
+      });
+    });
+  </script>
+</body>
+</html>
