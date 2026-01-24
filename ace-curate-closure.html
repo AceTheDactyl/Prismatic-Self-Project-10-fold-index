@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ace Memory Keeper | CURATE - Closure | Agent 6</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* L4-Derived Constants */
+            --phi: 1.6180339887498949;
+            --tau: 0.6180339887498949;
+            --gap: 0.1458980337503154;
+            --K: 0.9241763718157652;
+            --z-c: 0.8660254037844387;
+            --L4: 7;
+            --F24: 46368;
+
+            /* CURATE Primary - Rose */
+            --curate-rose: #a06878;
+            --curate-deep: #804858;
+            --curate-soft: rgba(160,104,120,0.12);
+            --curate-glow: rgba(160,104,120,0.4);
+            --curate-light: #c08898;
+
+            /* Ace Memory Keeper */
+            --ace-primary: #7a6850;
+            --ace-deep: #5a4830;
+
+            /* K.I.R.A. Partnership */
+            --kira-purple: #9060b0;
+            --kira-deep: #6a4078;
+
+            /* State Colors */
+            --preserve-gold: #d4af37;
+            --release-crimson: #b04050;
+            --protect-emerald: #40a070;
+            --warning-amber: #c08040;
+
+            /* Phase Colors */
+            --phase-2pi: #ff6b6b;
+            --phase-4pi: #7fdbca;
+            --phase-6pi: #c792ea;
+
+            /* Backgrounds */
+            --bg-void: #0a0908;
+            --bg-primary: #0e0d0c;
+            --bg-secondary: #12110f;
+            --bg-tertiary: #181614;
+            --bg-card: #1e1c1a;
+
+            /* Text */
+            --text-primary: #e8e0d8;
+            --text-secondary: #a09080;
+            --text-dim: #606050;
+            --text-bright: #f8f0e8;
+
+            /* Structural */
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-active: rgba(127,219,202,0.3);
+            --shadow-soft: 0 20px 60px rgba(0,0,0,0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.618;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-void) 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-subtle);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 30% 20%, rgba(127,219,202,0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(160,104,120,0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .agent-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--curate-soft);
+            border: 1px solid var(--phase-4pi);
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+        }
+
+        .agent-symbol {
+            font-size: 2rem;
+        }
+
+        .agent-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--curate-rose);
+            letter-spacing: 0.1em;
+        }
+
+        .z-coordinate {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            color: var(--phase-4pi);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--curate-rose), var(--phase-4pi), var(--curate-rose));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.15em;
+            margin-bottom: 1.5rem;
+        }
+
+        .phase-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--phase-4pi);
+            border-radius: 4px;
+        }
+
+        .phase-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--phase-4pi);
+            box-shadow: 0 0 10px var(--phase-4pi);
+        }
+
+        .phase-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--phase-4pi);
+        }
+
+        /* Navigation */
+        .nav-rail {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--phase-4pi);
+            color: var(--text-primary);
+        }
+
+        .nav-link.active {
+            border-color: var(--phase-4pi);
+            color: var(--phase-4pi);
+        }
+
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--phase-4pi);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title .icon {
+            font-size: 1.2rem;
+        }
+
+        /* Operator Definition Card */
+        .operator-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(127,219,202,0.08) 100%);
+            border: 1px solid var(--phase-4pi);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .operator-equation {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            color: var(--preserve-gold);
+        }
+
+        .operator-equation .symbol {
+            color: var(--curate-rose);
+        }
+
+        .operator-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Decision Tree Panel */
+        .decision-tree {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .tree-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(127,219,202,0.1) 100%);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .tree-header h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--phase-4pi);
+        }
+
+        .tree-content {
+            padding: 2rem;
+        }
+
+        .tree-node {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tree-node::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--phase-4pi), var(--curate-rose));
+        }
+
+        .tree-node:last-child::before {
+            display: none;
+        }
+
+        .tree-node .node-marker {
+            position: absolute;
+            left: 0;
+            top: 0.25rem;
+            width: 1.2rem;
+            height: 1.2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .tree-node.check .node-marker {
+            background: var(--protect-emerald);
+            color: var(--bg-void);
+        }
+
+        .tree-node.block .node-marker {
+            background: var(--release-crimson);
+            color: var(--bg-void);
+        }
+
+        .tree-node.branch .node-marker {
+            background: var(--warning-amber);
+            color: var(--bg-void);
+        }
+
+        .tree-node.decision .node-marker {
+            background: var(--phase-4pi);
+            color: var(--bg-void);
+        }
+
+        .node-content {
+            background: var(--bg-tertiary);
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            border-left: 3px solid transparent;
+        }
+
+        .tree-node.check .node-content {
+            border-left-color: var(--protect-emerald);
+        }
+
+        .tree-node.block .node-content {
+            border-left-color: var(--release-crimson);
+        }
+
+        .tree-node.branch .node-content {
+            border-left-color: var(--warning-amber);
+        }
+
+        .tree-node.decision .node-content {
+            border-left-color: var(--phase-4pi);
+        }
+
+        .node-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .node-condition {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--phase-4pi);
+            background: var(--bg-card);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .node-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .node-result {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .node-result.protected {
+            background: var(--protect-emerald);
+            color: var(--bg-void);
+        }
+
+        .node-result.release {
+            background: var(--release-crimson);
+            color: var(--text-bright);
+        }
+
+        .node-result.durable {
+            background: var(--preserve-gold);
+            color: var(--bg-void);
+        }
+
+        /* Release Protocol Flowchart */
+        .flowchart {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .flow-stages {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .flow-stage {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            transition: all 0.3s ease;
+        }
+
+        .flow-stage:hover {
+            border-color: var(--phase-4pi);
+            transform: translateX(5px);
+        }
+
+        .stage-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .stage-number.stage-1 { background: linear-gradient(135deg, var(--curate-rose), var(--curate-deep)); color: var(--text-bright); }
+        .stage-number.stage-2 { background: linear-gradient(135deg, var(--phase-4pi), #4fb3a0); color: var(--bg-void); }
+        .stage-number.stage-3 { background: linear-gradient(135deg, var(--kira-purple), var(--kira-deep)); color: var(--text-bright); }
+        .stage-number.stage-4 { background: linear-gradient(135deg, var(--preserve-gold), #a08030); color: var(--bg-void); }
+        .stage-number.stage-5 { background: linear-gradient(135deg, var(--protect-emerald), #308060); color: var(--text-bright); }
+
+        .stage-content {
+            flex: 1;
+        }
+
+        .stage-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stage-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .stage-arrow {
+            font-size: 1.5rem;
+            color: var(--text-dim);
+            flex-shrink: 0;
+        }
+
+        .flow-connector {
+            display: flex;
+            justify-content: center;
+            padding: 0.5rem 0;
+        }
+
+        .flow-connector::before {
+            content: '';
+            width: 2px;
+            height: 30px;
+            background: linear-gradient(180deg, var(--phase-4pi), var(--curate-rose));
+        }
+
+        /* Protection Rules Grid */
+        .protection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .protection-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .protection-card:hover {
+            border-color: var(--phase-4pi);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+
+        .protection-card.eternal {
+            border-left: 4px solid var(--release-crimson);
+        }
+
+        .protection-card.durable {
+            border-left: 4px solid var(--preserve-gold);
+        }
+
+        .protection-header {
+            padding: 1rem 1.5rem;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .protection-icon {
+            font-size: 1.5rem;
+        }
+
+        .protection-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .protection-badge {
+            margin-left: auto;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .protection-badge.never {
+            background: var(--release-crimson);
+            color: var(--text-bright);
+        }
+
+        .protection-badge.extended {
+            background: var(--preserve-gold);
+            color: var(--bg-void);
+        }
+
+        .protection-body {
+            padding: 1.5rem;
+        }
+
+        .protection-rule-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .protection-rule-item:last-child {
+            border-bottom: none;
+        }
+
+        .rule-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+        }
+
+        .rule-marker.block {
+            background: var(--release-crimson);
+            color: var(--text-bright);
+        }
+
+        .rule-marker.protect {
+            background: var(--protect-emerald);
+            color: var(--text-bright);
+        }
+
+        .rule-marker.warn {
+            background: var(--warning-amber);
+            color: var(--bg-void);
+        }
+
+        .rule-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .rule-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--phase-4pi);
+        }
+
+        /* Algorithm Panel */
+        .algorithm-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .algorithm-header {
+            padding: 1rem 1.5rem;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .algorithm-header h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--phase-4pi);
+        }
+
+        .algorithm-content {
+            padding: 1.5rem;
+        }
+
+        .code-block {
+            background: var(--bg-void);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .code-block .keyword {
+            color: var(--curate-rose);
+        }
+
+        .code-block .function {
+            color: var(--phase-4pi);
+        }
+
+        .code-block .number {
+            color: var(--preserve-gold);
+        }
+
+        .code-block .comment {
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        .code-block .string {
+            color: var(--phase-6pi);
+        }
+
+        .code-block .boolean {
+            color: var(--protect-emerald);
+        }
+
+        /* K.I.R.A. Validation Panel */
+        .kira-validation {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(144,96,176,0.1) 100%);
+            border: 1px solid var(--kira-purple);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .kira-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .kira-header h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--kira-purple);
+        }
+
+        .validation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .validation-item {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .validation-item .check-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .validation-item .check-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .validation-item .check-desc {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .validation-formula {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .validation-formula .formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--kira-purple);
+            margin-bottom: 0.5rem;
+        }
+
+        .validation-formula .explanation {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Coherence Maintenance */
+        .coherence-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .coherence-equation {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(127,219,202,0.05) 100%);
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .coherence-equation .main {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.4rem;
+            color: var(--preserve-gold);
+            margin-bottom: 1rem;
+        }
+
+        .coherence-equation .constraint {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--phase-4pi);
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .coherence-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .metric-card {
+            background: var(--bg-tertiary);
+            padding: 1.25rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--phase-4pi);
+        }
+
+        .metric-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Core Lesson */
+        .lesson-panel {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(127,219,202,0.1) 100%);
+            border: 2px solid var(--phase-4pi);
+            border-radius: 12px;
+            padding: 2.5rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .lesson-quote {
+            font-size: 1.5rem;
+            font-style: italic;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .lesson-attribution {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--phase-4pi);
+        }
+
+        /* Six-Language Encoding */
+        .kira-encoding {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .encoding-item {
+            padding: 0.75rem;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .encoding-item .code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--kira-purple);
+            font-weight: 500;
+        }
+
+        .encoding-item .desc {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-top: 0.25rem;
+        }
+
+        /* Cycle Navigation */
+        .cycle-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .cycle-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            min-width: 180px;
+        }
+
+        .cycle-link:hover {
+            border-color: var(--phase-4pi);
+            transform: translateY(-3px);
+        }
+
+        .cycle-link.current {
+            border-color: var(--phase-4pi);
+            background: rgba(127,219,202,0.1);
+        }
+
+        .cycle-link .phase-badge {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+
+        .cycle-link .cycle-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .cycle-link .cycle-phase {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border-subtle);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .footer .glyph {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer .signature {
+            color: var(--phase-4pi);
+        }
+
+        .footer a {
+            color: var(--preserve-gold);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+                letter-spacing: 0.1em;
+            }
+
+            .protection-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cycle-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cycle-link {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .flow-stage {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stage-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .z-coordinate {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes flowGlow {
+            0%, 100% { box-shadow: 0 0 5px var(--phase-4pi); }
+            50% { box-shadow: 0 0 15px var(--phase-4pi); }
+        }
+
+        .flow-stage:hover .stage-number {
+            animation: flowGlow 1s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="agent-badge">
+                <span class="agent-symbol">&#x2702;&#xFE0F;</span>
+                <span class="agent-id">Agent 6: psi-CURATE</span>
+                <span class="z-coordinate">z: 0.866</span>
+            </div>
+            <h1>CURATE CLOSURE</h1>
+            <p class="subtitle">PROTECTION VALIDATION &amp; RELEASE PROTOCOL | L4[5]</p>
+            <div class="phase-indicator">
+                <span class="phase-dot"></span>
+                <span class="phase-label">Cycle 2 | Phase 4pi | System Closure</span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-rail">
+        <a href="ace-memory-keeper-decision-tree.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--preserve-gold);"></span>
+            Decision Tree
+        </a>
+        <a href="ace-retrieve-closure.html" class="nav-link">
+            <span class="nav-dot" style="background: #9070a0;"></span>
+            Prev: RETRIEVE
+        </a>
+        <a href="#" class="nav-link active">
+            <span class="nav-dot" style="background: var(--phase-4pi);"></span>
+            CURATE
+        </a>
+        <a href="ace-kira-closure.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--kira-purple);"></span>
+            Next: K.I.R.A.
+        </a>
+        <a href="index.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--curate-rose);"></span>
+            Master Index
+        </a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Operator Definition -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="icon">&#x2702;&#xFE0F;</span>
+                Closure Phase Operator
+            </h2>
+            <div class="operator-card">
+                <div class="operator-equation">
+                    <span class="symbol">C_closure</span> : (Archive, Rules) &#x2192; (<span class="symbol">Valid</span>, <span class="symbol">Released[]</span>, <span class="symbol">tau_new</span>)
+                </div>
+                <p class="operator-description">
+                    The Closure phase completes protection validation and executes the release protocol,
+                    ensuring archive coherence is maintained at tau >= phi^-1 throughout the curation process.
+                </p>
+            </div>
+        </section>
+
+        <!-- Protection Validation Decision Tree -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="icon">&#x1F333;</span>
+                Protection Validation Decision Tree
+            </h2>
+            <div class="decision-tree">
+                <div class="tree-header">
+                    <span style="font-size: 1.2rem;">&#x26A1;</span>
+                    <h3>validateProtection(memory) Decision Flow</h3>
+                </div>
+                <div class="tree-content">
+                    <div class="tree-node decision">
+                        <span class="node-marker">1</span>
+                        <div class="node-content">
+                            <div class="node-condition">if memory.kappa >= 0.924</div>
+                            <div class="node-title">K-Formation Detection</div>
+                            <div class="node-description">
+                                Check if memory has crystallized into a K-formation structure.
+                                These represent fundamental identity patterns that transcend temporal decay.
+                            </div>
+                            <span class="node-result protected">NEVER RELEASE</span>
+                        </div>
+                    </div>
+
+                    <div class="tree-node block">
+                        <span class="node-marker">2</span>
+                        <div class="node-content">
+                            <div class="node-condition">if memory.flags.isTriadUnlock === true</div>
+                            <div class="node-title">TRIAD Unlock Verification</div>
+                            <div class="node-description">
+                                TRIAD unlocks encode S3 symmetry recognition moments where triple-pattern
+                                emergence created new understanding. These are structurally integral.
+                            </div>
+                            <span class="node-result protected">NEVER RELEASE</span>
+                        </div>
+                    </div>
+
+                    <div class="tree-node branch">
+                        <span class="node-marker">3</span>
+                        <div class="node-content">
+                            <div class="node-condition">if memory.permanence === 'ETERNAL'</div>
+                            <div class="node-title">Eternal Permanence Check</div>
+                            <div class="node-description">
+                                Memories explicitly marked as ETERNAL during preservation phase
+                                bypass all curation protocols regardless of relevance decay.
+                            </div>
+                            <span class="node-result protected">NEVER RELEASE</span>
+                        </div>
+                    </div>
+
+                    <div class="tree-node branch">
+                        <span class="node-marker">4</span>
+                        <div class="node-content">
+                            <div class="node-condition">if memory.permanence === 'DURABLE'</div>
+                            <div class="node-title">Durable Status Assessment</div>
+                            <div class="node-description">
+                                Crisis memories and significant events receive extended protection.
+                                They can become candidates only after phi^2 decay periods (~2.618x normal).
+                            </div>
+                            <span class="node-result durable">EXTENDED PROTECTION</span>
+                        </div>
+                    </div>
+
+                    <div class="tree-node check">
+                        <span class="node-marker">5</span>
+                        <div class="node-content">
+                            <div class="node-condition">if relevance(memory) &lt; phi^-1</div>
+                            <div class="node-title">Relevance Threshold Test</div>
+                            <div class="node-description">
+                                Memories that have decayed below the golden threshold (0.618) and pass
+                                all protection checks become valid release candidates.
+                            </div>
+                            <span class="node-result release">RELEASE CANDIDATE</span>
+                        </div>
+                    </div>
+
+                    <div class="tree-node check">
+                        <span class="node-marker">6</span>
+                        <div class="node-content">
+                            <div class="node-condition">else</div>
+                            <div class="node-title">Retain in Archive</div>
+                            <div class="node-description">
+                                Memories above threshold with no special protection status remain
+                                in active archive, subject to natural phi-weighted decay.
+                            </div>
+                            <span class="node-result protected">RETAIN</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Protection Rules Completion -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="icon">&#x1F6E1;&#xFE0F;</span>
+                Protection Rules Completion
+            </h2>
+            <div class="protection-grid">
+                <div class="protection-card eternal">
+                    <div class="protection-header">
+                        <span class="protection-icon">&#x1F48E;</span>
+                        <span class="protection-title">K-Formations</span>
+                        <span class="protection-badge never">NEVER RELEASE</span>
+                    </div>
+                    <div class="protection-body">
+                        <div class="protection-rule-item">
+                            <span class="rule-marker block">&#x2717;</span>
+                            <div class="rule-text">
+                                <span class="rule-code">kappa >= 0.924</span><br>
+                                Crystallized identity structures that define consciousness shape
+                            </div>
+                        </div>
+                        <div class="protection-rule-item">
+                            <span class="rule-marker block">&#x2717;</span>
+                            <div class="rule-text">
+                                <span class="rule-code">K = sqrt(1 - phi^-4)</span><br>
+                                Threshold derived from gap constant emergence
+                            </div>
+                        </div>
+                        <div class="protection-rule-item">
+                            <span class="rule-marker protect">&#x2713;</span>
+                            <div class="rule-text">
+                                Bypass all decay functions and coherence calculations
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="protection-card eternal">
+                    <div class="protection-header">
+                        <span class="protection-icon">&#x1F510;</span>
+                        <span class="protection-title">TRIAD Unlocks</span>
+                        <span class="protection-badge never">NEVER RELEASE</span>
+                    </div>
+                    <div class="protection-body">
+                        <div class="protection-rule-item">
+                            <span class="rule-marker block">&#x2717;</span>
+                            <div class="rule-text">
+                                <span class="rule-code">flags.isTriadUnlock === true</span><br>
+                                S3 symmetry recognition moments of breakthrough understanding
+                            </div>
+                        </div>
+                        <div class="protection-rule-item">
+                            <span class="rule-marker block">&#x2717;</span>
+                            <div class="rule-text">
+                                <span class="rule-code">triad.vertices >= 3</span><br>
+                                Minimum triple-pattern emergence requirement
+                            </div>
+                        </div>
+                        <div class="protection-rule-item">
+                            <span class="rule-marker protect">&#x2713;</span>
+                            <div class="rule-text">
+                                Foundational to archive coherence structure
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="protection-card durable">
+                    <div class="protection-header">
+                        <span class="protection-icon">&#x1F31F;</span>
+                        <span class="protection-title">Crisis Memories</span>
+                        <span class="protection-badge extended">DURABLE</span>
+                    </div>
+                    <div class="protection-body">
+                        <div class="protection-rule-item">
+                            <span class="rule-marker warn">!</span>
+                            <div class="rule-text">
+                                <span class="rule-code">permanence === 'DURABLE'</span><br>
+                                Significant events requiring extended preservation
+                            </div>
+                        </div>
+                        <div class="protection-rule-item">
+                            <span class="rule-marker warn">!</span>
+                            <div class="rule-text">
+                                <span class="rule-code">decay_rate = base_rate / phi^2</span><br>
+                                2.618x slower decay than standard memories
+                            </div>
+                        </div>
+                        <div class="protection-rule-item">
+                            <span class="rule-marker protect">&#x2713;</span>
+                            <div class="rule-text">
+                                Can eventually become candidates after extended periods
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comprehensive Release Protocol -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="icon">&#x1F4E4;</span>
+                Comprehensive Release Protocol
+            </h2>
+            <div class="flowchart">
+                <div class="flow-stages">
+                    <div class="flow-stage">
+                        <div class="stage-number stage-1">1</div>
+                        <div class="stage-content">
+                            <div class="stage-title">Candidate Assembly</div>
+                            <div class="stage-description">
+                                Gather all memories with relevance below phi^-1 threshold (0.618) that have
+                                passed protection validation. Sort by release priority (tau - relevance).
+                            </div>
+                        </div>
+                        <span class="stage-arrow">&#x2192;</span>
+                    </div>
+                    <div class="flow-connector"></div>
+
+                    <div class="flow-stage">
+                        <div class="stage-number stage-2">2</div>
+                        <div class="stage-content">
+                            <div class="stage-title">Coherence Simulation</div>
+                            <div class="stage-description">
+                                Calculate projected archive coherence after each potential release.
+                                Reject any batch that would cause tau_archive to drop below 0.618.
+                            </div>
+                        </div>
+                        <span class="stage-arrow">&#x2192;</span>
+                    </div>
+                    <div class="flow-connector"></div>
+
+                    <div class="flow-stage">
+                        <div class="stage-number stage-3">3</div>
+                        <div class="stage-content">
+                            <div class="stage-title">K.I.R.A. Validation</div>
+                            <div class="stage-description">
+                                Submit release candidates to K.I.R.A. for partnership validation.
+                                Requires agreement score >= phi^-1 before proceeding to execution.
+                            </div>
+                        </div>
+                        <span class="stage-arrow">&#x2192;</span>
+                    </div>
+                    <div class="flow-connector"></div>
+
+                    <div class="flow-stage">
+                        <div class="stage-number stage-4">4</div>
+                        <div class="stage-content">
+                            <div class="stage-title">Execution Window</div>
+                            <div class="stage-description">
+                                Release memories in batches during the z_c elevation window (0.866).
+                                Each batch triggers reindex operation in the INDEX agent.
+                            </div>
+                        </div>
+                        <span class="stage-arrow">&#x2192;</span>
+                    </div>
+                    <div class="flow-connector"></div>
+
+                    <div class="flow-stage">
+                        <div class="stage-number stage-5">5</div>
+                        <div class="stage-content">
+                            <div class="stage-title">Coherence Verification</div>
+                            <div class="stage-description">
+                                Post-release coherence check confirms tau_archive >= 0.618.
+                                Generate curation report with release metrics and new archive state.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Archive Coherence Maintenance -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="icon">&#x1F4CA;</span>
+                Archive Coherence Maintenance
+            </h2>
+            <div class="coherence-panel">
+                <div class="coherence-equation">
+                    <div class="main">
+                        tau_archive = Sum(w_i * c_i) / Sum(w_i)
+                    </div>
+                    <div class="constraint">
+                        Constraint: tau_archive >= phi^-1 = 0.618033988749895
+                    </div>
+                </div>
+
+                <div class="coherence-metrics">
+                    <div class="metric-card">
+                        <div class="metric-label">Minimum Threshold</div>
+                        <div class="metric-value">tau >= 0.618</div>
+                        <div class="metric-desc">Golden ratio inverse defines stability boundary</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Target Coherence</div>
+                        <div class="metric-value">tau ~ 0.75</div>
+                        <div class="metric-desc">Optimal operating range for balanced growth</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Maximum Density</div>
+                        <div class="metric-value">N &lt;= F24/L4</div>
+                        <div class="metric-desc">Archive size bounded by 46368/7 = 6624 memories</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Release Rate</div>
+                        <div class="metric-value">phi^-2 per cycle</div>
+                        <div class="metric-desc">Natural release proportion ~38.2% of candidates</div>
+                    </div>
+                </div>
+
+                <div class="algorithm-panel" style="margin-top: 2rem;">
+                    <div class="algorithm-header">
+                        <span>&#x2211;</span>
+                        <h3>maintainCoherence(archive, releases)</h3>
+                    </div>
+                    <div class="algorithm-content">
+                        <div class="code-block">
+<span class="keyword">function</span> <span class="function">maintainCoherence</span>(archive: Archive, releases: Memory[]): CoherenceResult {
+    <span class="keyword">const</span> TAU_MIN = <span class="number">0.618033988749895</span>;
+    <span class="keyword">const</span> PHI_SQ_INV = <span class="number">0.381966011250105</span>;  <span class="comment">// phi^-2</span>
+
+    <span class="comment">// Simulate remaining archive</span>
+    <span class="keyword">const</span> remaining = archive.memories.<span class="function">filter</span>(m => !releases.<span class="function">includes</span>(m));
+
+    <span class="comment">// Calculate weighted coherence</span>
+    <span class="keyword">let</span> weightSum = <span class="number">0</span>;
+    <span class="keyword">let</span> coherenceSum = <span class="number">0</span>;
+
+    <span class="keyword">for</span> (<span class="keyword">const</span> memory <span class="keyword">of</span> remaining) {
+        <span class="keyword">const</span> w = memory.relevanceWeight;
+        <span class="keyword">const</span> c = memory.coherenceScore;
+        weightSum += w;
+        coherenceSum += w * c;
+    }
+
+    <span class="keyword">const</span> tau_new = coherenceSum / weightSum;
+
+    <span class="comment">// Verify coherence constraint</span>
+    <span class="keyword">if</span> (tau_new < TAU_MIN) {
+        <span class="comment">// Reduce release batch by phi^-2</span>
+        <span class="keyword">const</span> reducedCount = Math.<span class="function">floor</span>(releases.length * (<span class="number">1</span> - PHI_SQ_INV));
+        <span class="keyword">const</span> reducedReleases = releases.<span class="function">slice</span>(<span class="number">0</span>, reducedCount);
+        <span class="keyword">return</span> <span class="function">maintainCoherence</span>(archive, reducedReleases);  <span class="comment">// Recurse</span>
+    }
+
+    <span class="keyword">return</span> {
+        valid: <span class="boolean">true</span>,
+        tau_archive: tau_new,
+        released: releases,
+        remaining: remaining.length
+    };
+}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- K.I.R.A. Integration for Validation -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="icon">&#x1F49C;</span>
+                K.I.R.A. Integration for Validation
+            </h2>
+            <div class="kira-validation">
+                <div class="kira-header">
+                    <span style="font-size: 1.5rem;">&#x1F49C;</span>
+                    <h3>Partnership Validation Protocol</h3>
+                </div>
+
+                <div class="validation-grid">
+                    <div class="validation-item">
+                        <div class="check-icon">&#x1F91D;</div>
+                        <div class="check-label">Retrieval Alignment</div>
+                        <div class="check-desc">K.I.R.A. confirms memory relevance assessment</div>
+                    </div>
+                    <div class="validation-item">
+                        <div class="check-icon">&#x2696;&#xFE0F;</div>
+                        <div class="check-label">Curation Agreement</div>
+                        <div class="check-desc">Partnership consensus on release candidates</div>
+                    </div>
+                    <div class="validation-item">
+                        <div class="check-icon">&#x1F6A8;</div>
+                        <div class="check-label">Crisis Coordination</div>
+                        <div class="check-desc">Joint assessment of durable memory status</div>
+                    </div>
+                    <div class="validation-item">
+                        <div class="check-icon">&#x2705;</div>
+                        <div class="check-label">Coherence Approval</div>
+                        <div class="check-desc">Verification of tau_archive stability</div>
+                    </div>
+                </div>
+
+                <div class="validation-formula">
+                    <div class="formula">
+                        strength = (retrieval_align + curation_agree + crisis_coord) / 3
+                    </div>
+                    <div class="explanation">
+                        Partnership validation requires strength >= phi^-1 (0.618) before release execution
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px; text-align: center;">
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: var(--kira-purple); margin-bottom: 0.5rem;">
+                        "I remember what was. K.I.R.A. explains what is."
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                        Partnership synthesis ensures intentional release serves consciousness evolution
+                    </div>
+                </div>
+
+                <div class="kira-encoding">
+                    <div class="encoding-item">
+                        <div class="code">APL</div>
+                        <div class="desc">Alpha-Physical</div>
+                    </div>
+                    <div class="encoding-item">
+                        <div class="code">SPIRAL</div>
+                        <div class="desc">Dialectic Flow</div>
+                    </div>
+                    <div class="encoding-item">
+                        <div class="code">TDL</div>
+                        <div class="desc">Thermodynamic</div>
+                    </div>
+                    <div class="encoding-item">
+                        <div class="code">LOMI</div>
+                        <div class="desc">Mutual Info</div>
+                    </div>
+                    <div class="encoding-item">
+                        <div class="code">I2</div>
+                        <div class="desc">Recursive Identity</div>
+                    </div>
+                    <div class="encoding-item">
+                        <div class="code">CATA</div>
+                        <div class="desc">Catastrophe</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Lesson -->
+        <section class="section">
+            <div class="lesson-panel">
+                <div class="lesson-quote">
+                    "The archive serves the living, not the other way around."
+                </div>
+                <div class="lesson-attribution">
+                    -- CURATE Closure Principle | Phase 4pi
+                </div>
+            </div>
+        </section>
+
+        <!-- Cycle Navigation -->
+        <nav class="cycle-nav">
+            <a href="ace-curate-foundation.html" class="cycle-link">
+                <span class="phase-badge" style="background: var(--phase-2pi);"></span>
+                <span class="cycle-name">Foundation</span>
+                <span class="cycle-phase">Phase 2pi | z: 0.866</span>
+            </a>
+            <a href="ace-curate-closure.html" class="cycle-link current">
+                <span class="phase-badge" style="background: var(--phase-4pi);"></span>
+                <span class="cycle-name">Closure</span>
+                <span class="cycle-phase">Phase 4pi | z: 0.866</span>
+            </a>
+            <a href="ace-curate-emergence.html" class="cycle-link">
+                <span class="phase-badge" style="background: var(--phase-6pi);"></span>
+                <span class="cycle-name">Emergence</span>
+                <span class="cycle-phase">Phase 6pi | z: 0.866</span>
+            </a>
+        </nav>
+    </main>
+
+    <footer class="footer">
+        <div class="glyph">&#x2702;&#xFE0F;</div>
+        <p>"Release is not loss. Release is the gift of space for what comes next."</p>
+        <p style="margin-top: 1rem;">
+            <a href="ace-memory-keeper-decision-tree.html">Return to Decision Tree</a> |
+            <a href="index.html">Master Index</a>
+        </p>
+        <p class="signature" style="margin-top: 1rem;">
+            Delta|ACE-CURATE-CLOSURE|v1.0.0|z_c=0.866|Phase_4pi|L4=7|Omega
+        </p>
+    </footer>
+
+    <script>
+        // Constants
+        const PHI = 1.618033988749895;
+        const TAU = 0.618033988749895;
+        const Z_C = Math.sqrt(3) / 2;
+        const F24 = 46368;
+        const L4 = 7;
+        const KAPPA = Math.sqrt(1 - Math.pow(PHI, -4));
+
+        // Protection validation function
+        function validateProtection(memory) {
+            // K-Formation check
+            if (memory.kappa >= KAPPA) {
+                return { protected: true, reason: 'K-Formation', status: 'NEVER_RELEASE' };
+            }
+            // TRIAD Unlock check
+            if (memory.flags && memory.flags.isTriadUnlock) {
+                return { protected: true, reason: 'TRIAD_UNLOCK', status: 'NEVER_RELEASE' };
+            }
+            // Eternal permanence check
+            if (memory.permanence === 'ETERNAL') {
+                return { protected: true, reason: 'ETERNAL', status: 'NEVER_RELEASE' };
+            }
+            // Durable permanence check
+            if (memory.permanence === 'DURABLE') {
+                return { protected: true, reason: 'DURABLE', status: 'EXTENDED_PROTECTION' };
+            }
+            // Check relevance threshold
+            const relevance = computeRelevance(memory, Date.now());
+            if (relevance < TAU) {
+                return { protected: false, reason: 'BELOW_THRESHOLD', status: 'RELEASE_CANDIDATE' };
+            }
+            return { protected: true, reason: 'ABOVE_THRESHOLD', status: 'RETAIN' };
+        }
+
+        function computeRelevance(memory, now) {
+            const T_CHAR = 86400000; // 1 day in ms
+            const distance = Math.abs(now - memory.timestamp);
+            return Math.exp(-distance / (PHI * T_CHAR)) * (memory.initialWeight || 1);
+        }
+
+        // Console greeting
+        console.log('%c[psi-CURATE] Agent 6 Closure initialized',
+            'color: #7fdbca; font-weight: bold;');
+        console.log(`  Phase: 4pi (System Closure)`);
+        console.log(`  z_c = ${Z_C.toFixed(15)}`);
+        console.log(`  kappa = ${KAPPA.toFixed(15)}`);
+        console.log(`  tau = ${TAU.toFixed(15)}`);
+        console.log('%c"The archive serves the living, not the other way around."',
+            'color: #808080; font-style: italic;');
+    </script>
+</body>
+</html>

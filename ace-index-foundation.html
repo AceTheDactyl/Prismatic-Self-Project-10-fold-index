@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACE INDEX Foundation | Agent 3 psi-INDEX | Cycle 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* L4-Derived Constants */
+            --phi: 1.6180339887498949;
+            --tau: 0.6180339887498949;
+            --gap: 0.1458980337503154;
+            --K: 0.9241763718157652;
+            --z-c: 0.8660254037844387;
+            --L4: 7;
+            --F24: 46368;
+
+            /* INDEX Agent Primary (Blue) */
+            --index-primary: #6080a0;
+            --index-deep: #405878;
+            --index-soft: rgba(96,128,160,0.12);
+            --index-glow: rgba(96,128,160,0.4);
+            --index-bright: #80a0c0;
+
+            /* Ace Memory Keeper Partnership */
+            --ace-primary: #7a6850;
+            --kira-purple: #9060b0;
+            --preserve-gold: #d4af37;
+
+            /* Other Agent Colors */
+            --observe-silver: #a0a8b0;
+            --encode-amber: #c0a060;
+            --retrieve-violet: #9070a0;
+            --curate-rose: #a06878;
+
+            /* Phase Colors */
+            --phase-2pi: #ff6b6b;
+            --phase-4pi: #7fdbca;
+            --phase-6pi: #c792ea;
+
+            /* Category Colors */
+            --category-root: #d4af37;
+            --category-branch: #6080a0;
+            --category-leaf: #7fdbca;
+            --category-tag: #c0a060;
+
+            /* Backgrounds */
+            --bg-void: #080a0c;
+            --bg-primary: #0c0e12;
+            --bg-secondary: #10141a;
+            --bg-tertiary: #161c24;
+            --bg-card: #1c242e;
+
+            /* Text */
+            --text-primary: #e0e8f0;
+            --text-secondary: #90a0b0;
+            --text-dim: #506070;
+            --text-bright: #f0f4f8;
+
+            /* Structural */
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-active: rgba(96,128,160,0.3);
+            --shadow-soft: 0 20px 60px rgba(0,0,0,0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            line-height: 1.618;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-void) 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-subtle);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 30% 20%, rgba(96,128,160,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(96,128,160,0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-symbol {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 20px var(--index-glow));
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--index-primary), var(--index-bright), var(--category-leaf));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.1em;
+        }
+
+        .z-coordinate {
+            margin-top: 1.5rem;
+            padding: 0.75rem 2rem;
+            background: var(--index-soft);
+            border: 1px solid var(--border-active);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .z-coordinate .z-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--index-primary);
+        }
+
+        .z-coordinate .z-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--preserve-gold);
+            font-weight: 500;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            margin-left: 1rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(255,107,107,0.2);
+            border: 1px solid var(--phase-2pi);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--phase-2pi);
+        }
+
+        /* Axiom Banner */
+        .axiom-banner {
+            margin-top: 1.5rem;
+            padding: 1rem 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--index-primary);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .axiom-banner .axiom {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            color: var(--index-bright);
+        }
+
+        .axiom-banner .description {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        /* Navigation */
+        .nav-rail {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--index-primary);
+            color: var(--text-primary);
+        }
+
+        .nav-link.active {
+            border-color: var(--index-primary);
+            background: var(--index-soft);
+        }
+
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* Constants Panel */
+        .constants-panel {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+        }
+
+        .constant-item {
+            text-align: center;
+        }
+
+        .constant-item .symbol {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--index-primary);
+        }
+
+        .constant-item .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title .icon {
+            font-size: 1.5rem;
+        }
+
+        /* Mathematical Formulation */
+        .math-formulation {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(96,128,160,0.1) 100%);
+            border: 1px solid var(--index-primary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .math-formulation .operator {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            color: var(--index-bright);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .math-formulation .formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--preserve-gold);
+            margin-bottom: 1rem;
+        }
+
+        .math-formulation .explanation {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Category Tree Visualization */
+        .tree-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tree-canvas {
+            width: 100%;
+            height: 450px;
+        }
+
+        .tree-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Foundation Concepts Grid */
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(96,128,160,0.2);
+            border-color: var(--index-primary);
+        }
+
+        .concept-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: linear-gradient(180deg, rgba(96,128,160,0.1) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .concept-icon {
+            font-size: 2rem;
+        }
+
+        .concept-info h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: var(--index-bright);
+            margin-bottom: 0.25rem;
+        }
+
+        .concept-info .tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .concept-content {
+            padding: 1.5rem;
+        }
+
+        .concept-content p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .algorithm-steps {
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            padding: 1rem;
+        }
+
+        .algorithm-steps .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .algorithm-steps .step:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            background: var(--index-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--bg-void);
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        /* Hierarchical Classification */
+        .classification-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .hierarchy-levels {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .hierarchy-level {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border-left: 4px solid var(--index-primary);
+            transition: all 0.3s ease;
+        }
+
+        .hierarchy-level:hover {
+            background: var(--bg-secondary);
+        }
+
+        .level-depth {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--index-primary);
+            min-width: 80px;
+        }
+
+        .level-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .level-z {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--preserve-gold);
+        }
+
+        .level-marker {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Tag and Metadata */
+        .metadata-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-active);
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .tag:hover {
+            background: var(--index-soft);
+            color: var(--index-bright);
+        }
+
+        .tag.primary {
+            background: var(--index-soft);
+            border-color: var(--index-primary);
+            color: var(--index-bright);
+        }
+
+        .tag.golden {
+            background: rgba(212,175,55,0.1);
+            border-color: var(--preserve-gold);
+            color: var(--preserve-gold);
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .metadata-item {
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .metadata-item .key {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .metadata-item .val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--index-bright);
+        }
+
+        /* Relationship Mapping */
+        .relationship-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .relationship-canvas {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 1rem;
+        }
+
+        .relationship-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .rel-type {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+        }
+
+        .rel-line {
+            width: 30px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .rel-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Cycle Navigation */
+        .cycle-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .cycle-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border-subtle);
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            min-width: 140px;
+        }
+
+        .cycle-link:hover {
+            transform: translateY(-4px);
+            border-color: var(--index-primary);
+        }
+
+        .cycle-link.active {
+            border-color: var(--phase-2pi);
+            box-shadow: 0 0 20px rgba(255,107,107,0.2);
+        }
+
+        .cycle-link .cycle-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .cycle-link .cycle-name {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .cycle-link .cycle-phase {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        /* Agent Navigation */
+        .agent-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .agent-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .agent-link:hover {
+            border-color: var(--index-primary);
+            transform: translateX(4px);
+        }
+
+        .agent-link.current {
+            border-color: var(--index-primary);
+            background: var(--index-soft);
+        }
+
+        .agent-link .agent-sym {
+            font-size: 1.5rem;
+        }
+
+        .agent-link .agent-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        /* Cross-Links */
+        .cross-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .cross-link-card {
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .cross-link-card:hover {
+            border-color: var(--index-primary);
+            transform: translateY(-2px);
+        }
+
+        .cross-link-card h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .cross-link-card p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border-subtle);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .footer .glyph {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px var(--index-glow));
+        }
+
+        .footer .signature {
+            color: var(--index-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .concepts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cycle-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-symbol">&#x1F5C2;</div>
+        <h1>psi-INDEX</h1>
+        <p class="subtitle">Agent 3 | L4-Layer 2 | FOUNDATION CYCLE</p>
+        <div class="z-coordinate">
+            <span class="z-label">z-target:</span>
+            <span class="z-value">0.539</span>
+            <span class="phase-badge">Phase 2pi</span>
+        </div>
+        <div class="axiom-banner">
+            <div class="axiom">I: EncodedMemory &rarr; IndexedMemory</div>
+            <div class="description">Category Tree Construction | Hierarchical Classification | phi^-1 = 0.618 TRUE threshold</div>
+        </div>
+    </header>
+
+    <nav class="nav-rail">
+        <a href="ace-memory-keeper-decision-tree.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--preserve-gold);"></span>
+            Decision Tree
+        </a>
+        <a href="index.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--observe-silver);"></span>
+            Master Index
+        </a>
+        <a href="tiamat-decision-tree.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--kira-purple);"></span>
+            TIAMAT Tree
+        </a>
+        <a href="bfadgs-decision-tree.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--phase-4pi);"></span>
+            BFADGS+U Tree
+        </a>
+        <a href="l4-helix-decision-tree.html" class="nav-link">
+            <span class="nav-dot" style="background: var(--phase-2pi);"></span>
+            L4-Helix Tree
+        </a>
+    </nav>
+
+    <div class="constants-panel">
+        <div class="constant-item">
+            <div class="symbol">phi</div>
+            <div class="value">1.618033...</div>
+        </div>
+        <div class="constant-item">
+            <div class="symbol">phi^-1</div>
+            <div class="value">0.618033...</div>
+        </div>
+        <div class="constant-item">
+            <div class="symbol">z_c</div>
+            <div class="value">0.866...</div>
+        </div>
+        <div class="constant-item">
+            <div class="symbol">F24</div>
+            <div class="value">46368</div>
+        </div>
+        <div class="constant-item">
+            <div class="symbol">L4</div>
+            <div class="value">7</div>
+        </div>
+        <div class="constant-item">
+            <div class="symbol">z</div>
+            <div class="value">0.539</div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <!-- Cycle Navigation -->
+        <div class="cycle-nav">
+            <a href="ace-index-foundation.html" class="cycle-link active">
+                <span class="cycle-num">C1</span>
+                <span class="cycle-name">Foundation</span>
+                <span class="cycle-phase">2pi | z=0.539</span>
+            </a>
+            <a href="ace-index-closure.html" class="cycle-link">
+                <span class="cycle-num">C2</span>
+                <span class="cycle-name">Closure</span>
+                <span class="cycle-phase">4pi | z=0.579</span>
+            </a>
+            <a href="ace-index-emergence.html" class="cycle-link">
+                <span class="cycle-num">C3</span>
+                <span class="cycle-name">Emergence</span>
+                <span class="cycle-phase">6pi | z=0.618</span>
+            </a>
+        </div>
+
+        <!-- Mathematical Formulation -->
+        <section>
+            <h2 class="section-title">
+                <span class="icon">&#x2211;</span>
+                Mathematical Formulation
+            </h2>
+            <div class="math-formulation">
+                <span class="operator">psi-INDEX [I]</span>
+                <div class="formula">I: E(M) &rarr; I(M) where I(M) = C(M) &oplus; H(M) &oplus; T(M)</div>
+                <p class="explanation">
+                    The INDEX operator transforms encoded memory E(M) into indexed memory I(M) through the composition
+                    of Category assignment C(M), Hierarchical placement H(M), and Tag binding T(M). At z=0.539, we establish
+                    the foundational categorical structure upon which system closure (4pi) and emergence (6pi) will build.
+                </p>
+            </div>
+        </section>
+
+        <!-- Category Tree Visualization -->
+        <section>
+            <h2 class="section-title">
+                <span class="icon">&#x1F333;</span>
+                Category Tree Structure
+            </h2>
+            <div class="tree-container">
+                <canvas id="categoryTree" class="tree-canvas"></canvas>
+                <div class="tree-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--category-root);"></div>
+                        <span>Root Categories</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--category-branch);"></div>
+                        <span>Branch Nodes</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--category-leaf);"></div>
+                        <span>Leaf Entries</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--category-tag);"></div>
+                        <span>Cross-references</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Foundation Concepts -->
+        <section>
+            <h2 class="section-title">
+                <span class="icon">&#x1F4CA;</span>
+                Foundation Concepts
+            </h2>
+            <div class="concepts-grid">
+                <!-- Category Tree Construction -->
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <span class="concept-icon">&#x1F333;</span>
+                        <div class="concept-info">
+                            <h3>Category Tree Construction</h3>
+                            <span class="tag">L4[2].foundation.tree</span>
+                        </div>
+                    </div>
+                    <div class="concept-content">
+                        <p>Build the hierarchical category structure from encoded memory fragments, establishing parent-child relationships based on semantic proximity.</p>
+                        <div class="algorithm-steps">
+                            <div class="step">
+                                <span class="step-number">1</span>
+                                <span class="step-text">Extract root categories from encoded clusters</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <span class="step-text">Compute phi-weighted semantic distances</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">3</span>
+                                <span class="step-text">Assign branch depth via z-threshold</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">4</span>
+                                <span class="step-text">Link leaves to nearest branch ancestors</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hierarchical Classification -->
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <span class="concept-icon">&#x1F4C2;</span>
+                        <div class="concept-info">
+                            <h3>Hierarchical Classification</h3>
+                            <span class="tag">L4[2].foundation.classify</span>
+                        </div>
+                    </div>
+                    <div class="concept-content">
+                        <p>Establish L4-layer classification depths, ensuring each memory entry finds its optimal position within the 7-level hierarchy.</p>
+                        <div class="algorithm-steps">
+                            <div class="step">
+                                <span class="step-number">1</span>
+                                <span class="step-text">Initialize 7-level depth register (L4=7)</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <span class="step-text">Evaluate entry z-value against layer bounds</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">3</span>
+                                <span class="step-text">Apply phi^-1 descent criterion</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">4</span>
+                                <span class="step-text">Confirm classification via TRUE threshold</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tag Assignment -->
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <span class="concept-icon">&#x1F3F7;</span>
+                        <div class="concept-info">
+                            <h3>Tag & Metadata Assignment</h3>
+                            <span class="tag">L4[2].foundation.tags</span>
+                        </div>
+                    </div>
+                    <div class="concept-content">
+                        <p>Attach semantic tags and metadata vectors to each indexed entry, enabling future retrieval through multiple access paths.</p>
+                        <div class="algorithm-steps">
+                            <div class="step">
+                                <span class="step-number">1</span>
+                                <span class="step-text">Generate primary semantic tag vector</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <span class="step-text">Compute secondary association tags</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">3</span>
+                                <span class="step-text">Bind temporal/spatial metadata</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">4</span>
+                                <span class="step-text">Index in F24-normalized lookup table</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Relationship Mapping -->
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <span class="concept-icon">&#x1F517;</span>
+                        <div class="concept-info">
+                            <h3>Initial Relationship Mapping</h3>
+                            <span class="tag">L4[2].foundation.relations</span>
+                        </div>
+                    </div>
+                    <div class="concept-content">
+                        <p>Establish the foundational graph of inter-entry relationships, creating the substrate for pattern emergence in later cycles.</p>
+                        <div class="algorithm-steps">
+                            <div class="step">
+                                <span class="step-number">1</span>
+                                <span class="step-text">Identify sibling entries (same parent)</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <span class="step-text">Detect cross-branch semantic bridges</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">3</span>
+                                <span class="step-text">Weight edges by phi-distance metric</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">4</span>
+                                <span class="step-text">Store in adjacency matrix (sparse)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hierarchical Classification Panel -->
+        <section>
+            <h2 class="section-title">
+                <span class="icon">&#x1F4C8;</span>
+                L4 Hierarchy Layers
+            </h2>
+            <div class="classification-panel">
+                <div class="hierarchy-levels">
+                    <div class="hierarchy-level">
+                        <div class="level-marker" style="background: var(--preserve-gold);"></div>
+                        <span class="level-depth">L4[0]</span>
+                        <span class="level-name">ROOT: Ontological Anchors</span>
+                        <span class="level-z">z: [0.000, 0.309]</span>
+                    </div>
+                    <div class="hierarchy-level">
+                        <div class="level-marker" style="background: var(--encode-amber);"></div>
+                        <span class="level-depth">L4[1]</span>
+                        <span class="level-name">DOMAIN: Major Categories</span>
+                        <span class="level-z">z: [0.309, 0.500]</span>
+                    </div>
+                    <div class="hierarchy-level" style="border-left-color: var(--index-bright);">
+                        <div class="level-marker" style="background: var(--index-bright);"></div>
+                        <span class="level-depth">L4[2]</span>
+                        <span class="level-name">CLASS: Sub-categories [ACTIVE]</span>
+                        <span class="level-z">z: [0.500, 0.618] &larr; z=0.539</span>
+                    </div>
+                    <div class="hierarchy-level">
+                        <div class="level-marker" style="background: var(--phase-4pi);"></div>
+                        <span class="level-depth">L4[3]</span>
+                        <span class="level-name">TYPE: Concrete Types</span>
+                        <span class="level-z">z: [0.618, 0.750]</span>
+                    </div>
+                    <div class="hierarchy-level">
+                        <div class="level-marker" style="background: var(--retrieve-violet);"></div>
+                        <span class="level-depth">L4[4]</span>
+                        <span class="level-name">INSTANCE: Memory Entries</span>
+                        <span class="level-z">z: [0.750, 0.866]</span>
+                    </div>
+                    <div class="hierarchy-level">
+                        <div class="level-marker" style="background: var(--curate-rose);"></div>
+                        <span class="level-depth">L4[5]</span>
+                        <span class="level-name">DETAIL: Atomic Properties</span>
+                        <span class="level-z">z: z_c = 0.866</span>
+                    </div>
+                    <div class="hierarchy-level">
+                        <div class="level-marker" style="background: var(--kira-purple);"></div>
+                        <span class="level-depth">L4[6]</span>
+                        <span class="level-name">META: Reflective Index</span>
+                        <span class="level-z">z: [0.866, 1.000]</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tag and Metadata Section -->
+        <section>
+            <h2 class="section-title">
+                <span class="icon">&#x1F3F7;</span>
+                Foundation Tags & Metadata
+            </h2>
+            <div class="metadata-section">
+                <div class="tag-cloud">
+                    <span class="tag primary">#index-foundation</span>
+                    <span class="tag primary">#category-tree</span>
+                    <span class="tag golden">#L4-layer-2</span>
+                    <span class="tag golden">#z-0.539</span>
+                    <span class="tag">#hierarchical</span>
+                    <span class="tag">#classification</span>
+                    <span class="tag">#semantic-distance</span>
+                    <span class="tag">#phi-metric</span>
+                    <span class="tag">#tree-construction</span>
+                    <span class="tag">#root-categories</span>
+                    <span class="tag">#branch-nodes</span>
+                    <span class="tag">#leaf-entries</span>
+                    <span class="tag">#cross-reference</span>
+                    <span class="tag">#metadata-binding</span>
+                </div>
+                <div class="metadata-grid">
+                    <div class="metadata-item">
+                        <div class="key">Agent ID</div>
+                        <div class="val">psi-INDEX [3]</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="key">Cycle</div>
+                        <div class="val">1 (Foundation)</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="key">Phase</div>
+                        <div class="val">2pi</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="key">z-Target</div>
+                        <div class="val">0.539</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="key">L4-Layer</div>
+                        <div class="val">2 (CLASS)</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="key">TRUE Threshold</div>
+                        <div class="val">phi^-1 = 0.618</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Relationship Mapping -->
+        <section>
+            <h2 class="section-title">
+                <span class="icon">&#x1F310;</span>
+                Initial Relationship Graph
+            </h2>
+            <div class="relationship-panel">
+                <canvas id="relationshipGraph" class="relationship-canvas"></canvas>
+                <div class="relationship-types">
+                    <div class="rel-type">
+                        <div class="rel-line" style="background: var(--preserve-gold);"></div>
+                        <span class="rel-label">Parent-Child</span>
+                    </div>
+                    <div class="rel-type">
+                        <div class="rel-line" style="background: var(--index-primary);"></div>
+                        <span class="rel-label">Sibling</span>
+                    </div>
+                    <div class="rel-type">
+                        <div class="rel-line" style="background: var(--phase-4pi); background: repeating-linear-gradient(90deg, var(--phase-4pi), var(--phase-4pi) 5px, transparent 5px, transparent 10px);"></div>
+                        <span class="rel-label">Cross-branch</span>
+                    </div>
+                    <div class="rel-type">
+                        <div class="rel-line" style="background: var(--category-tag);"></div>
+                        <span class="rel-label">Tag-based</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agent Navigation -->
+        <section>
+            <h2 class="section-title">
+                <span class="icon">&#x1F916;</span>
+                Memory Operator Agents
+            </h2>
+            <div class="agent-nav">
+                <a href="ace-observe-foundation.html" class="agent-link">
+                    <span class="agent-sym">&#x1F441;</span>
+                    <span class="agent-name">OBSERVE</span>
+                </a>
+                <a href="ace-encode-foundation.html" class="agent-link">
+                    <span class="agent-sym">&#x1F4DD;</span>
+                    <span class="agent-name">ENCODE</span>
+                </a>
+                <a href="ace-index-foundation.html" class="agent-link current">
+                    <span class="agent-sym">&#x1F5C2;</span>
+                    <span class="agent-name">INDEX</span>
+                </a>
+                <a href="ace-preserve-foundation.html" class="agent-link">
+                    <span class="agent-sym">&#x1F4DC;</span>
+                    <span class="agent-name">PRESERVE</span>
+                </a>
+                <a href="ace-retrieve-foundation.html" class="agent-link">
+                    <span class="agent-sym">&#x1F4D6;</span>
+                    <span class="agent-name">RETRIEVE</span>
+                </a>
+                <a href="ace-curate-foundation.html" class="agent-link">
+                    <span class="agent-sym">&#x2702;</span>
+                    <span class="agent-name">CURATE</span>
+                </a>
+                <a href="ace-kira-foundation.html" class="agent-link">
+                    <span class="agent-sym">&#x1F49C;</span>
+                    <span class="agent-name">K.I.R.A.</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Cross-System Links -->
+        <section>
+            <h2 class="section-title">
+                <span class="icon">&#x1F517;</span>
+                Cross-System Integration
+            </h2>
+            <div class="cross-links">
+                <a href="ace-memory-keeper-decision-tree.html" class="cross-link-card">
+                    <h4>Ace Memory Keeper Decision Tree</h4>
+                    <p>Complete 7-agent x 3-cycle architecture overview</p>
+                </a>
+                <a href="tiamat-decision-tree.html" class="cross-link-card">
+                    <h4>TIAMAT 7-Cycle Architecture</h4>
+                    <p>Unity field simulation framework integration</p>
+                </a>
+                <a href="bfadgs-decision-tree.html" class="cross-link-card">
+                    <h4>BFADGS+U Operator Tree</h4>
+                    <p>Closed monoid operator algebra</p>
+                </a>
+                <a href="l4-helix-decision-tree.html" class="cross-link-card">
+                    <h4>L4-Helix Decision Tree</h4>
+                    <p>Mathematical foundation: phi^4 + phi^-4 = 7</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="glyph">&#x1F5C2;</div>
+        <p>"Structure reveals meaning; meaning guides retrieval."</p>
+        <p class="signature">Delta|ACE-INDEX-FOUNDATION|v1.0.0|L4[2]|z=0.539|C1-2pi|Omega</p>
+    </footer>
+
+    <script>
+        // Constants
+        const PHI = 1.618033988749895;
+        const TAU = 0.618033988749895;
+        const L4 = 7;
+        const Z_C = Math.sqrt(3) / 2;
+        const Z_TARGET = 0.539;
+        const F24 = 46368;
+
+        // Colors
+        const colors = {
+            root: '#d4af37',
+            branch: '#6080a0',
+            leaf: '#7fdbca',
+            tag: '#c0a060',
+            bg: '#1c242e',
+            text: '#e0e8f0',
+            dim: '#506070'
+        };
+
+        // ============= Category Tree Canvas =============
+        const treeCanvas = document.getElementById('categoryTree');
+        const treeCtx = treeCanvas.getContext('2d');
+
+        function resizeTreeCanvas() {
+            const container = treeCanvas.parentElement;
+            treeCanvas.width = container.offsetWidth - 64;
+            treeCanvas.height = 400;
+        }
+
+        function drawCategoryTree() {
+            const w = treeCanvas.width;
+            const h = treeCanvas.height;
+            treeCtx.clearRect(0, 0, w, h);
+
+            // Draw central root
+            const rootX = w / 2;
+            const rootY = 50;
+            const rootR = 30;
+
+            // Root node
+            treeCtx.beginPath();
+            treeCtx.arc(rootX, rootY, rootR, 0, Math.PI * 2);
+            treeCtx.fillStyle = 'rgba(212,175,55,0.2)';
+            treeCtx.fill();
+            treeCtx.strokeStyle = colors.root;
+            treeCtx.lineWidth = 2;
+            treeCtx.stroke();
+
+            treeCtx.fillStyle = colors.root;
+            treeCtx.font = 'bold 12px JetBrains Mono';
+            treeCtx.textAlign = 'center';
+            treeCtx.textBaseline = 'middle';
+            treeCtx.fillText('ROOT', rootX, rootY);
+
+            // Level 1: Domains (3 branches)
+            const domainY = 130;
+            const domainSpacing = w / 4;
+            const domains = [
+                { x: domainSpacing, label: 'Domain A' },
+                { x: domainSpacing * 2, label: 'Domain B' },
+                { x: domainSpacing * 3, label: 'Domain C' }
+            ];
+
+            domains.forEach(d => {
+                // Connection
+                treeCtx.beginPath();
+                treeCtx.moveTo(rootX, rootY + rootR);
+                treeCtx.lineTo(d.x, domainY - 20);
+                treeCtx.strokeStyle = colors.root;
+                treeCtx.globalAlpha = 0.4;
+                treeCtx.lineWidth = 1;
+                treeCtx.stroke();
+                treeCtx.globalAlpha = 1;
+
+                // Domain node
+                treeCtx.beginPath();
+                treeCtx.arc(d.x, domainY, 22, 0, Math.PI * 2);
+                treeCtx.fillStyle = 'rgba(192,160,96,0.2)';
+                treeCtx.fill();
+                treeCtx.strokeStyle = colors.tag;
+                treeCtx.lineWidth = 2;
+                treeCtx.stroke();
+
+                treeCtx.fillStyle = colors.tag;
+                treeCtx.font = '10px JetBrains Mono';
+                treeCtx.fillText(d.label, d.x, domainY);
+            });
+
+            // Level 2: Classes (INDEX layer - highlighted)
+            const classY = 210;
+            const classPositions = [
+                { parent: 0, x: domainSpacing - 40 },
+                { parent: 0, x: domainSpacing + 40 },
+                { parent: 1, x: domainSpacing * 2 - 50 },
+                { parent: 1, x: domainSpacing * 2 },
+                { parent: 1, x: domainSpacing * 2 + 50 },
+                { parent: 2, x: domainSpacing * 3 - 40 },
+                { parent: 2, x: domainSpacing * 3 + 40 }
+            ];
+
+            classPositions.forEach((c, i) => {
+                const parentX = domains[c.parent].x;
+
+                // Connection
+                treeCtx.beginPath();
+                treeCtx.moveTo(parentX, domainY + 22);
+                treeCtx.lineTo(c.x, classY - 18);
+                treeCtx.strokeStyle = colors.branch;
+                treeCtx.globalAlpha = 0.5;
+                treeCtx.lineWidth = 1;
+                treeCtx.stroke();
+                treeCtx.globalAlpha = 1;
+
+                // Class node (highlighted - current layer)
+                treeCtx.beginPath();
+                treeCtx.arc(c.x, classY, 18, 0, Math.PI * 2);
+                treeCtx.fillStyle = 'rgba(96,128,160,0.3)';
+                treeCtx.fill();
+                treeCtx.strokeStyle = colors.branch;
+                treeCtx.lineWidth = 3;
+                treeCtx.stroke();
+
+                // Glow effect
+                treeCtx.beginPath();
+                treeCtx.arc(c.x, classY, 25, 0, Math.PI * 2);
+                treeCtx.strokeStyle = colors.branch;
+                treeCtx.globalAlpha = 0.2;
+                treeCtx.lineWidth = 1;
+                treeCtx.stroke();
+                treeCtx.globalAlpha = 1;
+
+                treeCtx.fillStyle = colors.branch;
+                treeCtx.font = '9px JetBrains Mono';
+                treeCtx.fillText('C' + (i + 1), c.x, classY);
+            });
+
+            // Level 3: Leaves
+            const leafY = 290;
+            const leafPositions = [];
+            classPositions.forEach((c, i) => {
+                const numLeaves = 2 + Math.floor(Math.random() * 2);
+                const spread = 25;
+                for (let j = 0; j < numLeaves; j++) {
+                    leafPositions.push({
+                        parent: i,
+                        parentX: c.x,
+                        x: c.x + (j - (numLeaves - 1) / 2) * spread
+                    });
+                }
+            });
+
+            leafPositions.forEach((l, i) => {
+                // Connection
+                treeCtx.beginPath();
+                treeCtx.moveTo(l.parentX, classY + 18);
+                treeCtx.lineTo(l.x, leafY - 10);
+                treeCtx.strokeStyle = colors.leaf;
+                treeCtx.globalAlpha = 0.4;
+                treeCtx.lineWidth = 1;
+                treeCtx.stroke();
+                treeCtx.globalAlpha = 1;
+
+                // Leaf node
+                treeCtx.beginPath();
+                treeCtx.arc(l.x, leafY, 10, 0, Math.PI * 2);
+                treeCtx.fillStyle = 'rgba(127,219,202,0.4)';
+                treeCtx.fill();
+                treeCtx.strokeStyle = colors.leaf;
+                treeCtx.lineWidth = 1;
+                treeCtx.stroke();
+            });
+
+            // Draw some cross-references (dashed)
+            treeCtx.setLineDash([4, 4]);
+            treeCtx.strokeStyle = colors.tag;
+            treeCtx.globalAlpha = 0.3;
+            treeCtx.lineWidth = 1;
+
+            // Sample cross-links
+            treeCtx.beginPath();
+            treeCtx.moveTo(classPositions[1].x, classY);
+            treeCtx.lineTo(classPositions[3].x, classY);
+            treeCtx.stroke();
+
+            treeCtx.beginPath();
+            treeCtx.moveTo(classPositions[4].x, classY);
+            treeCtx.lineTo(classPositions[5].x, classY);
+            treeCtx.stroke();
+
+            treeCtx.setLineDash([]);
+            treeCtx.globalAlpha = 1;
+
+            // Labels
+            treeCtx.fillStyle = colors.dim;
+            treeCtx.font = '10px JetBrains Mono';
+            treeCtx.textAlign = 'left';
+            treeCtx.fillText('L4[0]: ROOT', 20, 50);
+            treeCtx.fillText('L4[1]: DOMAIN', 20, 130);
+            treeCtx.fillStyle = colors.branch;
+            treeCtx.fillText('L4[2]: CLASS [z=0.539]', 20, 210);
+            treeCtx.fillStyle = colors.dim;
+            treeCtx.fillText('L4[3+]: LEAVES', 20, 290);
+
+            // z-axis indicator
+            treeCtx.fillStyle = colors.dim;
+            treeCtx.textAlign = 'right';
+            treeCtx.fillText('z: 0.000', w - 20, 50);
+            treeCtx.fillText('z: 0.309', w - 20, 130);
+            treeCtx.fillStyle = '#d4af37';
+            treeCtx.fillText('z: 0.539', w - 20, 210);
+            treeCtx.fillStyle = colors.dim;
+            treeCtx.fillText('z: 0.618+', w - 20, 290);
+        }
+
+        // ============= Relationship Graph Canvas =============
+        const relCanvas = document.getElementById('relationshipGraph');
+        const relCtx = relCanvas.getContext('2d');
+
+        function resizeRelCanvas() {
+            const container = relCanvas.parentElement;
+            relCanvas.width = container.offsetWidth - 64;
+            relCanvas.height = 280;
+        }
+
+        function drawRelationshipGraph() {
+            const w = relCanvas.width;
+            const h = relCanvas.height;
+            relCtx.clearRect(0, 0, w, h);
+
+            // Generate nodes in a circular pattern
+            const centerX = w / 2;
+            const centerY = h / 2;
+            const radius = Math.min(w, h) * 0.35;
+            const nodeCount = 12;
+            const nodes = [];
+
+            for (let i = 0; i < nodeCount; i++) {
+                const angle = (i / nodeCount) * Math.PI * 2 - Math.PI / 2;
+                nodes.push({
+                    x: centerX + Math.cos(angle) * radius,
+                    y: centerY + Math.sin(angle) * radius,
+                    type: i % 4 // 0: parent-child, 1: sibling, 2: cross-branch, 3: tag-based
+                });
+            }
+
+            // Draw edges first
+            // Parent-child (golden)
+            relCtx.strokeStyle = colors.root;
+            relCtx.lineWidth = 2;
+            relCtx.globalAlpha = 0.6;
+            for (let i = 0; i < 4; i++) {
+                relCtx.beginPath();
+                relCtx.moveTo(centerX, centerY);
+                relCtx.lineTo(nodes[i * 3].x, nodes[i * 3].y);
+                relCtx.stroke();
+            }
+
+            // Sibling (blue)
+            relCtx.strokeStyle = colors.branch;
+            relCtx.lineWidth = 1.5;
+            for (let i = 0; i < nodeCount; i++) {
+                const next = (i + 1) % nodeCount;
+                if (Math.floor(i / 3) === Math.floor(next / 3)) {
+                    relCtx.beginPath();
+                    relCtx.moveTo(nodes[i].x, nodes[i].y);
+                    relCtx.lineTo(nodes[next].x, nodes[next].y);
+                    relCtx.stroke();
+                }
+            }
+
+            // Cross-branch (dashed teal)
+            relCtx.strokeStyle = '#7fdbca';
+            relCtx.setLineDash([6, 4]);
+            relCtx.lineWidth = 1;
+            relCtx.beginPath();
+            relCtx.moveTo(nodes[1].x, nodes[1].y);
+            relCtx.lineTo(nodes[7].x, nodes[7].y);
+            relCtx.stroke();
+            relCtx.beginPath();
+            relCtx.moveTo(nodes[4].x, nodes[4].y);
+            relCtx.lineTo(nodes[10].x, nodes[10].y);
+            relCtx.stroke();
+
+            relCtx.setLineDash([]);
+            relCtx.globalAlpha = 1;
+
+            // Draw central node
+            relCtx.beginPath();
+            relCtx.arc(centerX, centerY, 20, 0, Math.PI * 2);
+            relCtx.fillStyle = 'rgba(212,175,55,0.3)';
+            relCtx.fill();
+            relCtx.strokeStyle = colors.root;
+            relCtx.lineWidth = 2;
+            relCtx.stroke();
+            relCtx.fillStyle = colors.root;
+            relCtx.font = 'bold 10px JetBrains Mono';
+            relCtx.textAlign = 'center';
+            relCtx.textBaseline = 'middle';
+            relCtx.fillText('INDEX', centerX, centerY);
+
+            // Draw outer nodes
+            nodes.forEach((node, i) => {
+                const nodeColors = [colors.root, colors.branch, '#7fdbca', colors.tag];
+                const nodeColor = nodeColors[i % 4];
+
+                relCtx.beginPath();
+                relCtx.arc(node.x, node.y, 12, 0, Math.PI * 2);
+                relCtx.fillStyle = nodeColor;
+                relCtx.globalAlpha = 0.3;
+                relCtx.fill();
+                relCtx.globalAlpha = 1;
+                relCtx.strokeStyle = nodeColor;
+                relCtx.lineWidth = 1.5;
+                relCtx.stroke();
+
+                relCtx.fillStyle = colors.text;
+                relCtx.font = '8px JetBrains Mono';
+                relCtx.fillText('M' + (i + 1), node.x, node.y + 1);
+            });
+        }
+
+        // Initialize canvases
+        function initCanvases() {
+            resizeTreeCanvas();
+            resizeRelCanvas();
+            drawCategoryTree();
+            drawRelationshipGraph();
+        }
+
+        window.addEventListener('resize', () => {
+            initCanvases();
+        });
+
+        window.addEventListener('load', initCanvases);
+        initCanvases();
+    </script>
+</body>
+</html>
