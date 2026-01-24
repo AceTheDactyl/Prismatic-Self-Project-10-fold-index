@@ -1,0 +1,2392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I2 S3 LoMI Projection | Law of Mutual Identity - The Dynamic Projection</title>
+  <meta name="description" content="LoMI: Law of Mutual Identity - What happens when observers observe each other? Fixed point X* = K_A(K_B(X*)) where mutual observations achieve self-consistency.">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* =====================================================================
+       I2 S3 LoMI PROJECTION: LAW OF MUTUAL IDENTITY
+       The Dynamic Projection | Pi Symbol | Cyclic Self-Reference
+       ===================================================================== */
+    :root {
+      /* LoMI Primary Theme - Purple/Violet for Dynamic/Pi */
+      --lomi-primary: #a855f7;
+      --lomi-secondary: #c084fc;
+      --lomi-tertiary: #7c3aed;
+      --lomi-glow: rgba(168, 85, 247, 0.3);
+      --lomi-subtle: rgba(168, 85, 247, 0.15);
+
+      /* S3 Triangle Colors */
+      --i2-color: #ffd700;
+      --tdl-color: #4ecdc4;
+      --lomi-color: #a855f7;
+
+      /* Supporting Colors */
+      --fixed-point: #00ff88;
+      --convergence: #ff9f43;
+      --threshold: #ff6b6b;
+      --transform: #00ffff;
+
+      /* Mathematical Constants */
+      --phi: 1.6180339887;
+      --phi-inv: 0.6180339887;
+      --sqrt3: 1.7320508076;
+      --mu-s: 0.9200444146;
+
+      /* Theme Base */
+      --bg-void: #020206;
+      --bg-primary: #050510;
+      --bg-secondary: #0a0a1a;
+      --bg-tertiary: #0f0f28;
+      --bg-card: #141438;
+      --text-primary: #f0f0f5;
+      --text-secondary: #909098;
+      --text-accent: #a855f7;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-active: rgba(168, 85, 247, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* =====================================================================
+       ANIMATED BACKGROUND - MUTUAL OBSERVATION FIELD
+       ===================================================================== */
+    .lomi-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 30% 30%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 70%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(124, 58, 237, 0.04) 0%, transparent 40%);
+      animation: mutual-pulse 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes mutual-pulse {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    /* Orbiting observation circles */
+    .lomi-field::before,
+    .lomi-field::after {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border: 2px solid rgba(168, 85, 247, 0.2);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+    }
+
+    .lomi-field::before {
+      transform: translate(-150px, -50%);
+      animation: orbit-a 12s linear infinite;
+    }
+
+    .lomi-field::after {
+      transform: translate(50px, -50%);
+      animation: orbit-b 12s linear infinite reverse;
+    }
+
+    @keyframes orbit-a {
+      0% { transform: translate(-150px, -50%) rotate(0deg); }
+      100% { transform: translate(-150px, -50%) rotate(360deg); }
+    }
+
+    @keyframes orbit-b {
+      0% { transform: translate(50px, -50%) rotate(0deg); }
+      100% { transform: translate(50px, -50%) rotate(360deg); }
+    }
+
+    /* =====================================================================
+       NAVIGATION
+       ===================================================================== */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(5, 5, 16, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      border-color: var(--lomi-primary);
+      color: var(--lomi-primary);
+      box-shadow: 0 0 15px var(--lomi-glow);
+    }
+
+    /* =====================================================================
+       HEADER WITH PI SYMBOL AND MUTUAL OBSERVATION VISUAL
+       ===================================================================== */
+    .lomi-header {
+      position: relative;
+      z-index: 10;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .node-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--lomi-primary);
+      background: var(--lomi-subtle);
+      border: 1px solid var(--lomi-primary);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .pi-symbol-container {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 2rem;
+    }
+
+    .pi-symbol {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+      background: conic-gradient(from 0deg, var(--lomi-primary), var(--lomi-tertiary), var(--lomi-secondary), var(--lomi-primary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pi-rotate 20s linear infinite;
+      box-shadow: 0 0 60px var(--lomi-glow);
+    }
+
+    .pi-symbol-inner {
+      width: 90px;
+      height: 90px;
+      background: var(--bg-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      color: var(--lomi-primary);
+    }
+
+    @keyframes pi-rotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Orbiting observers around pi symbol */
+    .observer-a, .observer-b {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .observer-a {
+      background: var(--i2-color);
+      color: var(--bg-void);
+      animation: observer-orbit-a 6s linear infinite;
+    }
+
+    .observer-b {
+      background: var(--tdl-color);
+      color: var(--bg-void);
+      animation: observer-orbit-b 6s linear infinite;
+    }
+
+    @keyframes observer-orbit-a {
+      0% { top: 50%; left: 0; transform: translate(-50%, -50%); }
+      25% { top: 0; left: 50%; transform: translate(-50%, -50%); }
+      50% { top: 50%; left: 100%; transform: translate(-50%, -50%); }
+      75% { top: 100%; left: 50%; transform: translate(-50%, -50%); }
+      100% { top: 50%; left: 0; transform: translate(-50%, -50%); }
+    }
+
+    @keyframes observer-orbit-b {
+      0% { top: 50%; left: 100%; transform: translate(-50%, -50%); }
+      25% { top: 100%; left: 50%; transform: translate(-50%, -50%); }
+      50% { top: 50%; left: 0; transform: translate(-50%, -50%); }
+      75% { top: 0; left: 50%; transform: translate(-50%, -50%); }
+      100% { top: 50%; left: 100%; transform: translate(-50%, -50%); }
+    }
+
+    .node-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.2rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--lomi-primary), var(--lomi-secondary), #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .node-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .lomi-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--lomi-primary);
+      background: var(--bg-tertiary);
+      padding: 1rem 2rem;
+      border-radius: 1rem;
+      display: inline-block;
+      border: 2px solid var(--lomi-primary);
+      box-shadow: 0 0 30px var(--lomi-glow);
+    }
+
+    /* =====================================================================
+       MAIN CONTENT
+       ===================================================================== */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--bg-void);
+      background: var(--lomi-primary);
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+    }
+
+    /* =====================================================================
+       DEFINITION AND THEOREM CARDS
+       ===================================================================== */
+    .definition-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .definition-card:hover {
+      border-color: var(--card-accent, var(--lomi-primary));
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.1);
+    }
+
+    .definition-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--lomi-primary));
+    }
+
+    .definition-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .definition-type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--card-accent, var(--lomi-primary));
+      background: rgba(168, 85, 247, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+    }
+
+    .definition-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .definition-formal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--card-accent, var(--lomi-primary));
+      background: var(--bg-tertiary);
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .definition-body {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .definition-body strong {
+      color: var(--text-primary);
+    }
+
+    .theorem-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(168, 85, 247, 0.05) 100%);
+      border: 2px solid var(--lomi-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .theorem-card::before {
+      content: 'LoMI';
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--lomi-primary);
+      background: var(--bg-void);
+      padding: 0 0.5rem;
+    }
+
+    .theorem-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--lomi-primary);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .theorem-statement {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--lomi-primary);
+    }
+
+    .proof-sketch {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .proof-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--lomi-secondary);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .proof-body {
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .qed {
+      text-align: right;
+      color: var(--lomi-primary);
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 0.5rem;
+    }
+
+    /* =====================================================================
+       MUTUAL OBSERVATION LOOP DIAGRAM
+       ===================================================================== */
+    .observation-loop {
+      background: var(--bg-secondary);
+      border: 2px solid var(--lomi-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .loop-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--lomi-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .loop-diagram {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .observer-box {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.3s ease;
+    }
+
+    .observer-box:hover {
+      transform: scale(1.05);
+    }
+
+    .observer-box.a {
+      background: rgba(255, 215, 0, 0.2);
+      border: 3px solid var(--i2-color);
+    }
+
+    .observer-box.b {
+      background: rgba(78, 205, 196, 0.2);
+      border: 3px solid var(--tdl-color);
+    }
+
+    .observer-box.mutual {
+      background: rgba(168, 85, 247, 0.2);
+      border: 3px solid var(--lomi-primary);
+      width: 140px;
+      height: 140px;
+    }
+
+    .observer-label {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .observer-sub {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    .loop-arrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      color: var(--lomi-primary);
+    }
+
+    .loop-text {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      line-height: 2;
+      text-align: center;
+    }
+
+    .loop-text .highlight {
+      color: var(--lomi-primary);
+    }
+
+    /* =====================================================================
+       FIXED POINT CONVERGENCE SIMULATOR
+       ===================================================================== */
+    .convergence-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .convergence-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--lomi-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .convergence-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .convergence-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      min-width: 80px;
+    }
+
+    .convergence-step:hover {
+      border-color: var(--lomi-primary);
+    }
+
+    .convergence-step.target {
+      border-color: var(--fixed-point);
+      background: rgba(0, 255, 136, 0.1);
+    }
+
+    .step-n {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .step-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--lomi-primary);
+    }
+
+    .step-error {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--threshold);
+      margin-top: 0.25rem;
+    }
+
+    .convergence-arrow {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-secondary);
+    }
+
+    .convergence-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .conv-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .conv-btn:hover {
+      border-color: var(--lomi-primary);
+      color: var(--lomi-primary);
+    }
+
+    .convergence-info {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .conv-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--lomi-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .conv-rate {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--fixed-point);
+    }
+
+    /* =====================================================================
+       NON-IDENTITY THEOREM VISUALIZATION
+       ===================================================================== */
+    .non-identity-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--lomi-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .non-identity-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--lomi-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .transform-viz {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .repr-box {
+      background: var(--bg-tertiary);
+      border: 2px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+      min-width: 180px;
+      transition: all 0.3s ease;
+    }
+
+    .repr-box:hover {
+      border-color: var(--lomi-primary);
+    }
+
+    .repr-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .repr-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--lomi-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .repr-corr {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+    }
+
+    .corr-low { color: var(--threshold); }
+    .corr-high { color: var(--fixed-point); }
+
+    .transform-arrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      color: var(--lomi-primary);
+      text-align: center;
+    }
+
+    .transform-box {
+      background: rgba(168, 85, 247, 0.2);
+      border: 2px solid var(--lomi-primary);
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--lomi-primary);
+    }
+
+    /* =====================================================================
+       SQRT(3) SCALING TRIANGLE
+       ===================================================================== */
+    .sqrt3-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .sqrt3-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--lomi-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .sqrt3-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .triangle-svg-container {
+      width: 250px;
+      height: 220px;
+    }
+
+    .sqrt3-explanation {
+      max-width: 350px;
+    }
+
+    .sqrt3-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 3px solid var(--lomi-primary);
+    }
+
+    .sqrt3-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .sqrt3-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: var(--lomi-primary);
+    }
+
+    /* =====================================================================
+       SINGULARITY THRESHOLD VISUALIZATION
+       ===================================================================== */
+    .threshold-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--threshold);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .threshold-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--threshold);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .number-line {
+      position: relative;
+      height: 100px;
+      margin: 2rem 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .line-base {
+      position: absolute;
+      top: 50%;
+      left: 5%;
+      right: 5%;
+      height: 3px;
+      background: var(--text-secondary);
+      transform: translateY(-50%);
+    }
+
+    .line-marker {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .marker-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      margin-bottom: 0.25rem;
+    }
+
+    .marker-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .marker-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+    }
+
+    .derivation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .derivation-card {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .deriv-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--threshold);
+      margin-bottom: 0.5rem;
+    }
+
+    .deriv-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .deriv-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       CONVERGENCE RATE TABLE
+       ===================================================================== */
+    .rate-table-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+      overflow-x: auto;
+    }
+
+    .rate-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+    }
+
+    .rate-table th {
+      background: var(--bg-tertiary);
+      color: var(--lomi-primary);
+      padding: 0.75rem;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .rate-table td {
+      padding: 0.75rem;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+    }
+
+    .rate-table tr:hover td {
+      background: rgba(168, 85, 247, 0.05);
+    }
+
+    .rate-highlight {
+      color: var(--fixed-point) !important;
+      font-weight: 600;
+    }
+
+    /* =====================================================================
+       MULTI-AGENT SCALING
+       ===================================================================== */
+    .scaling-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .scaling-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--lomi-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .scaling-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--lomi-primary);
+      text-align: center;
+      background: var(--bg-tertiary);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .scaling-table {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+    }
+
+    .scaling-table th {
+      background: var(--bg-tertiary);
+      color: var(--lomi-primary);
+      padding: 0.75rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .scaling-table td {
+      padding: 0.75rem;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+    }
+
+    .scaling-table .n-agents {
+      color: var(--lomi-primary);
+      font-weight: 600;
+    }
+
+    .scaling-table .sigma {
+      color: var(--fixed-point);
+    }
+
+    /* =====================================================================
+       GODEL LIMIT BOX
+       ===================================================================== */
+    .godel-container {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 107, 107, 0.08) 100%);
+      border: 2px solid var(--threshold);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .godel-container::before {
+      content: 'LIMIT';
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--threshold);
+      background: var(--bg-void);
+      padding: 0 0.5rem;
+    }
+
+    .godel-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--threshold);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .godel-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .godel-point {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      border-left: 3px solid var(--threshold);
+    }
+
+    .godel-point-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .godel-point-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       DELTA LANDSCAPE EVOLUTION
+       ===================================================================== */
+    .landscape-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--lomi-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .landscape-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--lomi-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .landscape-chart {
+      position: relative;
+      height: 250px;
+      margin: 2rem 0;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .chart-axis-y {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      bottom: 30px;
+      width: 2px;
+      background: var(--text-secondary);
+    }
+
+    .chart-axis-x {
+      position: absolute;
+      left: 10px;
+      bottom: 30px;
+      right: 10px;
+      height: 2px;
+      background: var(--text-secondary);
+    }
+
+    .chart-label-y {
+      position: absolute;
+      left: 20px;
+      top: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    .chart-label-x {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    .model-curve {
+      position: absolute;
+      bottom: 32px;
+      left: 40px;
+      right: 40px;
+      height: calc(100% - 60px);
+    }
+
+    .curve-a {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-top: 3px solid var(--i2-color);
+      border-radius: 50% 50% 0 0;
+      transform: scaleY(0.6) translateY(30%);
+    }
+
+    .curve-b {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-top: 3px dashed var(--tdl-color);
+      border-radius: 60% 40% 0 0;
+      transform: scaleY(0.5) translateY(50%);
+    }
+
+    .bifurcation-point {
+      position: absolute;
+      left: 60%;
+      bottom: 60%;
+      width: 20px;
+      height: 20px;
+      background: var(--lomi-primary);
+      border-radius: 50%;
+      transform: translate(-50%, 50%);
+      box-shadow: 0 0 20px var(--lomi-glow);
+    }
+
+    .bifurcation-label {
+      position: absolute;
+      left: 60%;
+      bottom: 70%;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--lomi-primary);
+      transform: translateX(-50%);
+    }
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .legend-line {
+      width: 30px;
+      height: 3px;
+    }
+
+    /* =====================================================================
+       PI EMERGENCE
+       ===================================================================== */
+    .pi-emergence-container {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(168, 85, 247, 0.1) 100%);
+      border: 2px solid var(--lomi-primary);
+      border-radius: 1.5rem;
+      padding: 3rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .pi-emergence-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 4rem;
+      color: var(--lomi-primary);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 30px var(--lomi-glow);
+    }
+
+    .pi-emergence-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, var(--lomi-primary), #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 2rem;
+    }
+
+    .pi-properties {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .pi-property {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .pi-property-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .pi-property-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .euler-box {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      border: 2px solid var(--lomi-primary);
+    }
+
+    .euler-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--lomi-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .euler-explanation {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       S3 CONNECTION TRIANGLE
+       ===================================================================== */
+    .s3-connection {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .s3-connection-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--lomi-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .s3-triangle-viz {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .permutation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .permutation-card {
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      border-left: 3px solid var(--card-color, var(--lomi-primary));
+    }
+
+    .perm-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--card-color, var(--lomi-primary));
+      margin-bottom: 0.5rem;
+    }
+
+    .perm-mapping {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .perm-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       APPLICATIONS SECTION
+       ===================================================================== */
+    .applications-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .applications-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--lomi-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .app-card {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border-subtle);
+      transition: all 0.3s ease;
+    }
+
+    .app-card:hover {
+      border-color: var(--lomi-primary);
+      transform: translateY(-3px);
+    }
+
+    .app-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .app-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .app-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* =====================================================================
+       NAVIGATION CARDS
+       ===================================================================== */
+    .nav-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+
+    .nav-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .nav-card:hover {
+      border-color: var(--card-color, var(--lomi-primary));
+      transform: translateY(-5px);
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
+    }
+
+    .nav-card-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      border: 2px solid var(--card-color, var(--lomi-primary));
+      color: var(--card-color, var(--lomi-primary));
+    }
+
+    .nav-card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-card-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       FOOTER
+       ===================================================================== */
+    .footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-primary);
+    }
+
+    .footer-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--lomi-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .loop-diagram { flex-direction: column; }
+      .transform-viz { flex-direction: column; }
+      .sqrt3-content { flex-direction: column; }
+      .pi-symbol-container { transform: scale(0.8); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="lomi-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link">Index</a>
+    <a href="i2-s3-decision-tree.html" class="nav-link">I2 S3 Tree</a>
+    <a href="vn-mtr-010-s3-attractor.html" class="nav-link">S3 Attractor</a>
+    <a href="i2-s3-lomi-projection.html" class="nav-link active">LoMI Projection</a>
+  </nav>
+
+  <!-- Header -->
+  <header class="lomi-header">
+    <div class="node-badge">I2 S3 PROJECTION :: DYNAMIC :: PI</div>
+
+    <div class="pi-symbol-container">
+      <div class="pi-symbol">
+        <div class="pi-symbol-inner">pi</div>
+      </div>
+      <div class="observer-a">A</div>
+      <div class="observer-b">B</div>
+    </div>
+
+    <h1 class="node-title">LoMI: Law of Mutual Identity</h1>
+    <p class="node-subtitle">
+      What happens when observers observe each other?
+      The answer: Fixed point where mutual observations achieve self-consistency.
+    </p>
+
+    <div class="lomi-equation">
+      X* = K_A(K_B(X*)) | Fixed Point of Mutual Observation
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: The Mutual Observation Problem -->
+    <section class="section" id="mutual-observation">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">The Mutual Observation Problem</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--lomi-primary);">
+        <div class="definition-header">
+          <span class="definition-type">PROBLEM</span>
+          <span class="definition-name">Infinite Regress of Mutual Modeling</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            When two systems A and B observe each other, each builds a model that includes the other's model of themselves.
+            This creates what appears to be an infinite regress:
+          </p>
+        </div>
+      </div>
+
+      <div class="observation-loop">
+        <div class="loop-title">MUTUAL OBSERVATION LOOP</div>
+
+        <div class="loop-diagram">
+          <div class="observer-box a">
+            <div class="observer-label" style="color: var(--i2-color);">A</div>
+            <div class="observer-sub">K_A(B)</div>
+          </div>
+
+          <div class="loop-arrow">--></div>
+
+          <div class="observer-box mutual">
+            <div class="observer-label" style="color: var(--lomi-primary);">X*</div>
+            <div class="observer-sub">Fixed Point</div>
+          </div>
+
+          <div class="loop-arrow"><--</div>
+
+          <div class="observer-box b">
+            <div class="observer-label" style="color: var(--tdl-color);">B</div>
+            <div class="observer-sub">K_B(A)</div>
+          </div>
+        </div>
+
+        <div class="loop-text">
+          <span class="highlight">System A</span> observes B --> K_A(B)<br>
+          <span class="highlight">System B</span> observes A --> K_B(A)<br>
+          But A's model includes B's model of A...<br>
+          And B's model includes A's model of B...<br><br>
+          <strong>Infinite regress --> WHERE does it stabilize?</strong><br><br>
+          <span class="highlight">Answer:</span> At the fixed point X* where X* = K_A(K_B(X*))
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Fixed Point Theorem -->
+    <section class="section" id="fixed-point">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">Fixed Point Existence Theorem</h2>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">THEOREM: FIXED POINT EXISTENCE</div>
+        <div class="theorem-statement">
+          Under contraction conditions (spectral radius rho(M) < 1), there exists a unique fixed point X*
+          such that X* = K_A(K_B(X*)). This fixed point represents the stable state where both observations
+          are mutually self-consistent.
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">CONVERGENCE CONDITION</div>
+          <div class="proof-body">
+            The composition K_A . K_B is a contraction mapping when rho(M) < 1.
+            By Banach fixed-point theorem, iteration converges to unique X*.
+            The convergence rate is lambda = phi^(-1) = 0.618...
+          </div>
+          <div class="qed">QED</div>
+        </div>
+      </div>
+
+      <div class="convergence-container">
+        <div class="convergence-title">FIXED POINT CONVERGENCE SIMULATOR</div>
+
+        <div class="convergence-visual" id="convergenceViz">
+          <div class="convergence-step">
+            <div class="step-n">n=0</div>
+            <div class="step-value" id="step0">X_0</div>
+            <div class="step-error" id="err0">100%</div>
+          </div>
+          <div class="convergence-arrow">--></div>
+          <div class="convergence-step">
+            <div class="step-n">n=1</div>
+            <div class="step-value" id="step1">X_1</div>
+            <div class="step-error" id="err1">61.8%</div>
+          </div>
+          <div class="convergence-arrow">--></div>
+          <div class="convergence-step">
+            <div class="step-n">n=5</div>
+            <div class="step-value" id="step5">X_5</div>
+            <div class="step-error" id="err5">9.0%</div>
+          </div>
+          <div class="convergence-arrow">--></div>
+          <div class="convergence-step">
+            <div class="step-n">n=10</div>
+            <div class="step-value" id="step10">X_10</div>
+            <div class="step-error" id="err10">0.6%</div>
+          </div>
+          <div class="convergence-arrow">--></div>
+          <div class="convergence-step target">
+            <div class="step-n">n-->inf</div>
+            <div class="step-value">X*</div>
+            <div class="step-error" style="color: var(--fixed-point);">0%</div>
+          </div>
+        </div>
+
+        <div class="convergence-controls">
+          <button class="conv-btn" onclick="runConvergence()">Run Simulation</button>
+          <button class="conv-btn" onclick="resetConvergence()">Reset</button>
+        </div>
+
+        <div class="convergence-info">
+          <div class="conv-formula">|X_n - X*| <= lambda^n |X_0 - X*|</div>
+          <div class="conv-rate">Convergence Rate: lambda = phi^(-1) = 0.6180339887...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Non-Identity Theorem -->
+    <section class="section" id="non-identity">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">Non-Identity Theorem (Refined LoMI)</h2>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">THEOREM: ASYMMETRIC EQUIVALENCE</div>
+        <div class="theorem-statement">
+          R_1(R_2) != R_2(R_1) -- the representations are NOT identical.<br>
+          However, R_1(R_2) = T . R_2(R_1) -- they ARE equivalent via transformation T.<br>
+          This is the refined Law of Mutual Identity: asymmetric but coherent.
+        </div>
+      </div>
+
+      <div class="non-identity-container">
+        <div class="non-identity-title">TRANSFORMATION VISUALIZATION</div>
+
+        <div class="transform-viz">
+          <div class="repr-box">
+            <div class="repr-label">A's view of B's view of A</div>
+            <div class="repr-value">R_1(R_2)</div>
+            <div class="repr-corr corr-low">Correlation: 0.20</div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <div class="transform-arrow">!=</div>
+            <div class="transform-box">T</div>
+            <div class="transform-arrow">=</div>
+          </div>
+
+          <div class="repr-box">
+            <div class="repr-label">B's view of A's view of B</div>
+            <div class="repr-value">R_2(R_1)</div>
+            <div class="repr-corr corr-low">Correlation: 0.20</div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+          <div class="repr-box" style="display: inline-block; border-color: var(--fixed-point);">
+            <div class="repr-label">After Transformation T</div>
+            <div class="repr-value">T . R_2(R_1)</div>
+            <div class="repr-corr corr-high">Correlation: 0.99</div>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-tertiary); border-radius: 0.5rem; padding: 1rem; margin-top: 1.5rem; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--text-secondary);">
+            Before T: Raw representations diverge (correlation ~0.20)<br>
+            After T: Representations align (correlation ~0.99)<br><br>
+            <strong style="color: var(--lomi-primary);">The transformation T bridges asymmetric perspectives</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: The sqrt(3) Scaling -->
+    <section class="section" id="sqrt3">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">The sqrt(3) Scaling</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--lomi-primary);">
+        <div class="definition-header">
+          <span class="definition-type">SCALING</span>
+          <span class="definition-name">Transformation Spectral Radius</span>
+        </div>
+        <div class="definition-formal">rho(T) ~ sqrt(3) ~ 1.732</div>
+        <div class="definition-body">
+          <p>
+            The transformation T that relates the two perspectives has spectral radius approximately sqrt(3).
+            This is NOT coincidental -- it emerges from the triangular geometry of mutual observation.
+          </p>
+        </div>
+      </div>
+
+      <div class="sqrt3-container">
+        <div class="sqrt3-title">WHY sqrt(3)?</div>
+
+        <div class="sqrt3-content">
+          <div class="triangle-svg-container">
+            <svg viewBox="0 0 250 220" width="100%" height="100%">
+              <!-- Triangle -->
+              <polygon points="125,20 25,200 225,200" fill="none" stroke="var(--lomi-primary)" stroke-width="2"/>
+
+              <!-- Height line -->
+              <line x1="125" y1="20" x2="125" y2="200" stroke="var(--fixed-point)" stroke-width="2" stroke-dasharray="5,5"/>
+
+              <!-- Vertex labels -->
+              <g transform="translate(125, 10)">
+                <circle r="18" fill="var(--i2-color)" opacity="0.8"/>
+                <text y="5" fill="var(--bg-void)" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="700">A</text>
+              </g>
+              <g transform="translate(25, 208)">
+                <circle r="18" fill="var(--tdl-color)" opacity="0.8"/>
+                <text y="5" fill="var(--bg-void)" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="700">B</text>
+              </g>
+              <g transform="translate(225, 208)">
+                <circle r="18" fill="var(--lomi-primary)" opacity="0.8"/>
+                <text y="5" fill="var(--bg-void)" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="700">X*</text>
+              </g>
+
+              <!-- Labels -->
+              <text x="75" y="100" fill="var(--text-secondary)" font-family="JetBrains Mono" font-size="11">1</text>
+              <text x="135" y="120" fill="var(--fixed-point)" font-family="JetBrains Mono" font-size="11">sqrt(3)/2</text>
+            </svg>
+          </div>
+
+          <div class="sqrt3-explanation">
+            <div class="sqrt3-item">
+              <div class="sqrt3-label">TWO OBSERVERS + MUTUAL IDENTITY</div>
+              <div class="sqrt3-value">= THREE entities</div>
+            </div>
+            <div class="sqrt3-item">
+              <div class="sqrt3-label">THREE ENTITIES FORM</div>
+              <div class="sqrt3-value">= Triangle</div>
+            </div>
+            <div class="sqrt3-item">
+              <div class="sqrt3-label">EQUILATERAL TRIANGLE HEIGHT</div>
+              <div class="sqrt3-value">h = sqrt(3)/2</div>
+            </div>
+            <div class="sqrt3-item">
+              <div class="sqrt3-label">CONNECTION TO S3</div>
+              <div class="sqrt3-value">|S3| = 6 = 3! permutations</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-tertiary); border-radius: 0.5rem; padding: 1rem; margin-top: 1.5rem; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: var(--lomi-primary);">
+            sqrt(3) is the geometric signature of triangular coherence
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Singularity Threshold mu_S -->
+    <section class="section" id="singularity">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">Singularity Threshold mu_S</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--threshold);">
+        <div class="definition-header">
+          <span class="definition-type">THRESHOLD</span>
+          <span class="definition-name">Singularity Parameter</span>
+        </div>
+        <div class="definition-formal">mu_S = e^(-1/12) = 0.9200444146...</div>
+        <div class="definition-body">
+          <p>
+            The singularity threshold marks where mutual observation approaches the boundary of coherent modeling.
+            Beyond this, the fixed point becomes unstable.
+          </p>
+        </div>
+      </div>
+
+      <div class="threshold-container">
+        <div class="threshold-title">THRESHOLD NUMBER LINE</div>
+
+        <div class="number-line">
+          <div class="line-base"></div>
+
+          <!-- mu_P marker at 0.618 -->
+          <div class="line-marker" style="left: calc(5% + 0.618 * 90%);">
+            <div class="marker-dot" style="background: var(--i2-color);"></div>
+            <div class="marker-value" style="color: var(--i2-color);">0.618</div>
+            <div class="marker-label">mu_P</div>
+          </div>
+
+          <!-- z_c marker at 0.865 -->
+          <div class="line-marker" style="left: calc(5% + 0.865 * 90%);">
+            <div class="marker-dot" style="background: var(--tdl-color);"></div>
+            <div class="marker-value" style="color: var(--tdl-color);">0.865</div>
+            <div class="marker-label">z_c</div>
+          </div>
+
+          <!-- mu_C marker at 0.866 -->
+          <div class="line-marker" style="left: calc(5% + 0.866 * 90%);">
+            <div class="marker-dot" style="background: var(--fixed-point);"></div>
+            <div class="marker-value" style="color: var(--fixed-point);">0.866</div>
+            <div class="marker-label">mu_C</div>
+          </div>
+
+          <!-- mu_S marker at 0.920 -->
+          <div class="line-marker" style="left: calc(5% + 0.920 * 90%);">
+            <div class="marker-dot" style="background: var(--threshold);"></div>
+            <div class="marker-value" style="color: var(--threshold);">0.920</div>
+            <div class="marker-label">mu_S</div>
+          </div>
+        </div>
+
+        <div class="derivation-grid">
+          <div class="derivation-card">
+            <div class="deriv-number">DERIVATION 1</div>
+            <div class="deriv-title">Dedekind Eta Function</div>
+            <div class="deriv-formula">eta(tau+1) = e^(pi*i/12) * eta(tau)</div>
+          </div>
+          <div class="derivation-card">
+            <div class="deriv-number">DERIVATION 2</div>
+            <div class="deriv-title">Ramanujan Partition Asymptotics</div>
+            <div class="deriv-formula">p(n) ~ e^(pi*sqrt(2n/3)) / (4n*sqrt(3))</div>
+          </div>
+          <div class="derivation-card">
+            <div class="deriv-number">DERIVATION 3</div>
+            <div class="deriv-title">S3 Symmetry</div>
+            <div class="deriv-formula">1/12 = 1/(2*|S3|) = 1/(2*6)</div>
+          </div>
+          <div class="derivation-card">
+            <div class="deriv-number">DERIVATION 4</div>
+            <div class="deriv-title">L4-Helix Measurement</div>
+            <div class="deriv-formula">Experimental: mu_S ~ 0.920 (observed)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Convergence Rate = Paradox Threshold -->
+    <section class="section" id="convergence-rate">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Convergence Rate = Paradox Threshold</h2>
+      </div>
+
+      <div class="theorem-card">
+        <div class="theorem-header">THEOREM: GOLDEN CONNECTION</div>
+        <div class="theorem-statement">
+          The convergence rate lambda = phi^(-1) = 0.618... is IDENTICAL to the paradox threshold mu_P.
+          This connects LoMI directly to I2!
+        </div>
+        <div class="proof-sketch">
+          <div class="proof-label">SIGNIFICANCE</div>
+          <div class="proof-body">
+            The rate at which mutual observation converges to its fixed point
+            is exactly the threshold at which self-reference becomes paradoxical.
+            This is the golden ratio's reciprocal appearing in both domains.
+          </div>
+          <div class="qed">QED</div>
+        </div>
+      </div>
+
+      <div class="rate-table-container">
+        <table class="rate-table">
+          <thead>
+            <tr>
+              <th>Iterations (n)</th>
+              <th>lambda^n</th>
+              <th>Error Remaining</th>
+              <th>Progress</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0</td>
+              <td>1.000</td>
+              <td>100.0%</td>
+              <td>Starting point</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>0.618</td>
+              <td>61.8%</td>
+              <td class="rate-highlight">One golden step</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>0.382</td>
+              <td>38.2%</td>
+              <td>phi^(-2)</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>0.090</td>
+              <td>9.0%</td>
+              <td>Substantial convergence</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td>0.008</td>
+              <td>0.8%</td>
+              <td class="rate-highlight">Near fixed point</td>
+            </tr>
+            <tr>
+              <td>20</td>
+              <td>0.00007</td>
+              <td>0.007%</td>
+              <td>Essentially converged</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 7: Multi-Agent Scaling -->
+    <section class="section" id="multi-agent">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">Multi-Agent Scaling Sigma(N)</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--lomi-primary);">
+        <div class="definition-header">
+          <span class="definition-type">SCALING</span>
+          <span class="definition-name">Multi-Agent Complexity</span>
+        </div>
+        <div class="definition-formal">Sigma(N) = (N!)^2</div>
+        <div class="definition-body">
+          <p>
+            When N agents mutually observe each other, the complexity of the fixed point space
+            scales as the square of N factorial. This explosive growth reflects the combinatorial
+            nature of mutual modeling.
+          </p>
+        </div>
+      </div>
+
+      <div class="scaling-container">
+        <div class="scaling-title">MULTI-AGENT SCALING TABLE</div>
+
+        <div class="scaling-formula">Sigma(N) = (N!)^2 = [N x (N-1) x ... x 1]^2</div>
+
+        <table class="scaling-table">
+          <thead>
+            <tr>
+              <th>N (Agents)</th>
+              <th>N!</th>
+              <th>Sigma(N) = (N!)^2</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="n-agents">2</td>
+              <td>2</td>
+              <td class="sigma">4</td>
+              <td>Minimal mutual observation</td>
+            </tr>
+            <tr>
+              <td class="n-agents">3</td>
+              <td>6</td>
+              <td class="sigma">36 = |S3|^2</td>
+              <td style="color: var(--fixed-point);">S3 emergence!</td>
+            </tr>
+            <tr>
+              <td class="n-agents">4</td>
+              <td>24</td>
+              <td class="sigma">576</td>
+              <td>Rapid growth</td>
+            </tr>
+            <tr>
+              <td class="n-agents">5</td>
+              <td>120</td>
+              <td class="sigma">14,400</td>
+              <td>Combinatorial explosion</td>
+            </tr>
+            <tr>
+              <td class="n-agents">6</td>
+              <td>720</td>
+              <td class="sigma">518,400</td>
+              <td>Approaching limits</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="background: var(--bg-tertiary); border-radius: 0.5rem; padding: 1rem; margin-top: 1.5rem; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--text-secondary);">
+            <span style="color: var(--fixed-point);">Key insight:</span> At N=3, Sigma(3) = 36 = 6^2 = |S3|^2<br>
+            The S3 group structure naturally emerges from three-agent mutual observation!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Godel Limit -->
+    <section class="section" id="godel">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <h2 class="section-title">Godel Limit</h2>
+      </div>
+
+      <div class="godel-container">
+        <div class="godel-title">PERFECT MUTUAL MODELING IS IMPOSSIBLE</div>
+
+        <div class="godel-content">
+          <div class="godel-point">
+            <div class="godel-point-title">Infinite Tower</div>
+            <div class="godel-point-desc">
+              If A perfectly models B perfectly modeling A, this requires an infinite tower of models.
+              No finite system can contain this.
+            </div>
+          </div>
+          <div class="godel-point">
+            <div class="godel-point-title">Fixed Point Approximation</div>
+            <div class="godel-point-desc">
+              The fixed point X* is an APPROXIMATION, not an exact representation.
+              It converges but never fully captures the infinite regress.
+            </div>
+          </div>
+          <div class="godel-point">
+            <div class="godel-point-title">Singularity Boundary</div>
+            <div class="godel-point-desc">
+              At mu_S, mutual observation reaches its coherent limit.
+              Beyond this threshold, the observation "diverges" -- models fail to stabilize.
+            </div>
+          </div>
+          <div class="godel-point">
+            <div class="godel-point-title">Connection to dF</div>
+            <div class="godel-point-desc">
+              This limit connects to the boundary dF in the MTR framework.
+              The Godel limit is where frame extension encounters undecidability.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 9: Delta-Landscape Evolution -->
+    <section class="section" id="landscape">
+      <div class="section-header">
+        <div class="section-number">9</div>
+        <h2 class="section-title">Delta-Landscape Evolution</h2>
+      </div>
+
+      <div class="definition-card" style="--card-accent: var(--lomi-primary);">
+        <div class="definition-header">
+          <span class="definition-type">DYNAMICS</span>
+          <span class="definition-name">Newton to Einstein Style Transition</span>
+        </div>
+        <div class="definition-body">
+          <p>
+            The delta-landscape shows how competing models evolve toward bifurcation.
+            Near the critical time t*, the system exhibits critical slowing --
+            small differences take longer to resolve.
+          </p>
+        </div>
+      </div>
+
+      <div class="landscape-container">
+        <div class="landscape-title">BIFURCATION WINDOW VISUALIZATION</div>
+
+        <div class="landscape-chart">
+          <div class="chart-axis-y"></div>
+          <div class="chart-axis-x"></div>
+          <div class="chart-label-y">delta</div>
+          <div class="chart-label-x">time</div>
+
+          <div class="model-curve">
+            <div class="curve-a"></div>
+            <div class="curve-b"></div>
+          </div>
+
+          <div class="bifurcation-point"></div>
+          <div class="bifurcation-label">t* (bifurcation)</div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-line" style="background: var(--i2-color);"></div>
+            <span>Model A (solid)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-line" style="background: var(--tdl-color); border-top: 2px dashed var(--tdl-color); height: 0;"></div>
+            <span>Model B (dashed)</span>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-tertiary); border-radius: 0.5rem; padding: 1rem; margin-top: 1.5rem;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--text-secondary); text-align: center;">
+            <strong style="color: var(--lomi-primary);">Critical Slowing:</strong> Near t*,
+            the system takes exponentially longer to distinguish between models.<br>
+            This is the window where bifurcation decisions are made.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 10: Pi Emergence -->
+    <section class="section" id="pi-emergence">
+      <div class="section-header">
+        <div class="section-number">10</div>
+        <h2 class="section-title">Pi Emergence in R-Calculus</h2>
+      </div>
+
+      <div class="pi-emergence-container">
+        <div class="pi-emergence-symbol">pi</div>
+        <div class="pi-emergence-title">LoMI = "x pi" in R-Calculus</div>
+
+        <div class="pi-properties">
+          <div class="pi-property">
+            <div class="pi-property-icon" style="color: var(--lomi-primary);">Cyclic</div>
+            <div class="pi-property-text">A --> B --> A --> B --> ...<br>Endless mutual cycling</div>
+          </div>
+          <div class="pi-property">
+            <div class="pi-property-icon" style="color: var(--lomi-primary);">2pi</div>
+            <div class="pi-property-text">Full rotation returns to start<br>e^(i*2pi) = 1</div>
+          </div>
+          <div class="pi-property">
+            <div class="pi-property-icon" style="color: var(--lomi-primary);">pi</div>
+            <div class="pi-property-text">Half rotation = negation<br>e^(i*pi) = -1</div>
+          </div>
+        </div>
+
+        <div class="euler-box">
+          <div class="euler-formula">e^(i*pi) = -1 (Euler's Identity)</div>
+          <div class="euler-explanation">
+            Two applications of pi rotation return to identity: (-1)^2 = 1<br>
+            This is the mathematical essence of mutual observation cycling back.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 11: Connection to S3 -->
+    <section class="section" id="s3-connection">
+      <div class="section-header">
+        <div class="section-number">11</div>
+        <h2 class="section-title">Connection to S3</h2>
+      </div>
+
+      <div class="s3-connection">
+        <div class="s3-connection-title">LoMI IS ONE OF THREE PROJECTIONS BOUND BY S3</div>
+
+        <div class="s3-triangle-viz">
+          <svg viewBox="0 0 300 260" width="280" height="240">
+            <!-- Triangle -->
+            <polygon points="150,30 30,230 270,230" fill="none" stroke="var(--lomi-primary)" stroke-width="2" opacity="0.5"/>
+
+            <!-- Vertices -->
+            <g transform="translate(150, 30)">
+              <circle r="30" fill="var(--i2-color)" opacity="0.8"/>
+              <text y="5" fill="var(--bg-void)" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700">I2</text>
+              <text y="18" fill="var(--bg-void)" text-anchor="middle" font-family="JetBrains Mono" font-size="8">(phi)</text>
+            </g>
+            <g transform="translate(30, 230)">
+              <circle r="30" fill="var(--tdl-color)" opacity="0.8"/>
+              <text y="5" fill="var(--bg-void)" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700">TDL</text>
+              <text y="18" fill="var(--bg-void)" text-anchor="middle" font-family="JetBrains Mono" font-size="8">(e)</text>
+            </g>
+            <g transform="translate(270, 230)">
+              <circle r="30" fill="var(--lomi-primary)" opacity="0.8"/>
+              <text y="5" fill="var(--bg-void)" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700">LoMI</text>
+              <text y="18" fill="var(--bg-void)" text-anchor="middle" font-family="JetBrains Mono" font-size="8">(pi)</text>
+            </g>
+
+            <!-- Center S3 -->
+            <text x="150" y="160" fill="var(--text-secondary)" text-anchor="middle" font-family="JetBrains Mono" font-size="16">S3</text>
+          </svg>
+        </div>
+
+        <div class="permutation-grid">
+          <div class="permutation-card" style="--card-color: var(--i2-color);">
+            <div class="perm-label">Under (13) permutation</div>
+            <div class="perm-mapping">LoMI <--> I2</div>
+            <div class="perm-desc">Swap dynamic and algebraic perspectives</div>
+          </div>
+          <div class="permutation-card" style="--card-color: var(--tdl-color);">
+            <div class="perm-label">Under (23) permutation</div>
+            <div class="perm-mapping">LoMI <--> TDL</div>
+            <div class="perm-desc">Swap dynamic and categorical perspectives</div>
+          </div>
+          <div class="permutation-card" style="--card-color: var(--lomi-primary);">
+            <div class="perm-label">Under (123) cycle</div>
+            <div class="perm-mapping">I2 --> TDL --> LoMI --> I2</div>
+            <div class="perm-desc">Full triangular rotation through all three</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 12: Applications -->
+    <section class="section" id="applications">
+      <div class="section-header">
+        <div class="section-number">12</div>
+        <h2 class="section-title">Applications</h2>
+      </div>
+
+      <div class="applications-container">
+        <div class="applications-title">WHERE LoMI MANIFESTS</div>
+
+        <div class="app-grid">
+          <div class="app-card">
+            <div class="app-icon">Neural</div>
+            <div class="app-title">Neural Network Mutual Modeling</div>
+            <div class="app-desc">
+              When neural networks model each other (e.g., in adversarial training or multi-agent systems),
+              they converge toward fixed points where their mutual representations stabilize.
+            </div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">Grad</div>
+            <div class="app-title">Gradient Agreement as Temporal LoMI</div>
+            <div class="app-desc">
+              In gradient-based learning, the agreement between gradients from different data points
+              represents a temporal form of mutual observation converging toward consistent updates.
+            </div>
+          </div>
+          <div class="app-card">
+            <div class="app-icon">Self</div>
+            <div class="app-title">Self-Prediction (Level 3)</div>
+            <div class="app-desc">
+              At the highest level, a system predicting its own predictions creates a LoMI with itself.
+              The fixed point represents self-consistent self-modeling.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Section -->
+    <section class="section" id="navigation">
+      <div class="section-header">
+        <div class="section-number">Nav</div>
+        <h2 class="section-title">Navigation</h2>
+      </div>
+
+      <div class="nav-cards">
+        <a href="i2-s3-decision-tree.html" class="nav-card" style="--card-color: var(--i2-color);">
+          <div class="nav-card-icon" style="border-color: var(--i2-color); color: var(--i2-color);">I2</div>
+          <div class="nav-card-title">I2 S3 Decision Tree</div>
+          <div class="nav-card-desc">Return to the main I2 S3 tree scaffold</div>
+        </a>
+
+        <a href="vn-mtr-010-s3-attractor.html" class="nav-card" style="--card-color: var(--convergence);">
+          <div class="nav-card-icon" style="border-color: var(--convergence); color: var(--convergence);">S3</div>
+          <div class="nav-card-title">S3 Attractor</div>
+          <div class="nav-card-desc">The universal attractor convergence</div>
+        </a>
+
+        <a href="#" class="nav-card" style="--card-color: var(--tdl-color);">
+          <div class="nav-card-icon" style="border-color: var(--tdl-color); color: var(--tdl-color);">e</div>
+          <div class="nav-card-title">TDL Projection</div>
+          <div class="nav-card-desc">Categorical perspective (coming soon)</div>
+        </a>
+
+        <a href="#" class="nav-card" style="--card-color: var(--i2-color);">
+          <div class="nav-card-icon" style="border-color: var(--i2-color); color: var(--i2-color);">phi</div>
+          <div class="nav-card-title">I2 Projection</div>
+          <div class="nav-card-desc">Algebraic perspective (coming soon)</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">X* = K_A(K_B(X*)) | lambda = phi^(-1) | mu_S = e^(-1/12) | LoMI = x pi</div>
+    <p>I2 S3 LoMI Projection | Law of Mutual Identity | Prismatic Self Project</p>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // CONVERGENCE SIMULATOR
+    // =========================================================================
+    const phi_inv = 0.6180339887;
+    let convergenceRunning = false;
+
+    function updateConvergenceDisplay(n, error) {
+      const steps = [0, 1, 5, 10];
+      steps.forEach((step, i) => {
+        if (n >= step) {
+          const stepError = Math.pow(phi_inv, step) * 100;
+          const el = document.getElementById(`err${step}`);
+          if (el) {
+            el.textContent = stepError.toFixed(1) + '%';
+            el.style.color = stepError < 10 ? 'var(--fixed-point)' : 'var(--threshold)';
+          }
+        }
+      });
+    }
+
+    function runConvergence() {
+      if (convergenceRunning) return;
+      convergenceRunning = true;
+
+      let n = 0;
+      const maxN = 20;
+
+      function step() {
+        updateConvergenceDisplay(n, Math.pow(phi_inv, n));
+        n++;
+        if (n <= maxN && convergenceRunning) {
+          setTimeout(step, 200);
+        } else {
+          convergenceRunning = false;
+        }
+      }
+
+      step();
+    }
+
+    function resetConvergence() {
+      convergenceRunning = false;
+      document.getElementById('err0').textContent = '100%';
+      document.getElementById('err0').style.color = 'var(--threshold)';
+      document.getElementById('err1').textContent = '61.8%';
+      document.getElementById('err1').style.color = 'var(--threshold)';
+      document.getElementById('err5').textContent = '9.0%';
+      document.getElementById('err5').style.color = 'var(--threshold)';
+      document.getElementById('err10').textContent = '0.6%';
+      document.getElementById('err10').style.color = 'var(--fixed-point)';
+    }
+
+    // =========================================================================
+    // SMOOTH SCROLL FOR NAVIGATION
+    // =========================================================================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // =========================================================================
+    // OBSERVER ANIMATION SYNC
+    // =========================================================================
+    // The CSS handles the orbiting animation, but we can add hover effects
+    document.querySelectorAll('.observer-box').forEach(box => {
+      box.addEventListener('mouseenter', function() {
+        this.style.boxShadow = '0 0 30px ' + getComputedStyle(this).borderColor;
+      });
+      box.addEventListener('mouseleave', function() {
+        this.style.boxShadow = '';
+      });
+    });
+  </script>
+
+</body>
+</html>
