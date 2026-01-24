@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INV Ternary Evaluation | C(x) = -x Inversion</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* INV Cyan Palette */
+      --inv-cyan: #4ecdc4;
+      --inv-cyan-light: #7ee8e1;
+      --inv-cyan-dark: #2eb8ae;
+      --inv-cyan-glow: rgba(78, 205, 196, 0.4);
+
+      /* Ternary Colors */
+      --ternary-true: #00ff88;
+      --ternary-false: #ff6b6b;
+      --ternary-indeterminate: #ffd700;
+
+      /* Fourth Roots of Unity */
+      --unity-1: #ffffff;
+      --unity-i: #4ecdc4;
+      --unity-neg1: #ff6b6b;
+      --unity-negi: #a855f7;
+
+      /* Base */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* INV Field Background */
+    .inv-field {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(78, 205, 196, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 80%, rgba(78, 205, 196, 0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.06) 0%, transparent 40%);
+    }
+
+    /* Animated Inversion Lines */
+    .inversion-lines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .inv-line {
+      position: absolute;
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, var(--inv-cyan), transparent);
+      opacity: 0.1;
+      animation: inv-sweep 8s linear infinite;
+    }
+
+    @keyframes inv-sweep {
+      0% { transform: translateX(-100vw) scaleY(0.5); opacity: 0; }
+      50% { opacity: 0.15; }
+      100% { transform: translateX(100vw) scaleY(0.5); opacity: 0; }
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--inv-cyan);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--inv-cyan);
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* INV Symbol - Rotating Reflection */
+    .inv-symbol {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 2rem;
+      position: relative;
+    }
+
+    .inv-circle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 3px solid var(--inv-cyan);
+      border-radius: 50%;
+      animation: inv-rotate 12s linear infinite;
+    }
+
+    .inv-circle::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -10px;
+      right: -10px;
+      height: 2px;
+      background: var(--inv-cyan);
+      transform: translateY(-50%);
+    }
+
+    .inv-circle::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: -10px;
+      bottom: -10px;
+      width: 2px;
+      background: var(--inv-cyan);
+      transform: translateX(-50%);
+    }
+
+    @keyframes inv-rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .inv-inner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: var(--bg-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--inv-cyan);
+      border: 2px solid var(--inv-cyan);
+      box-shadow:
+        0 0 30px var(--inv-cyan-glow),
+        inset 0 0 20px rgba(78, 205, 196, 0.1);
+    }
+
+    .title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--inv-cyan), var(--inv-cyan-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .core-equation {
+      font-size: 1.8rem;
+      color: var(--inv-cyan);
+      padding: 1.5rem 3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--inv-cyan);
+      border-radius: 12px;
+      display: inline-block;
+      box-shadow: 0 0 30px var(--inv-cyan-glow);
+    }
+
+    /* Section Styling */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 2rem;
+      color: var(--inv-cyan);
+      text-align: center;
+    }
+
+    /* INV Derivation */
+    .derivation-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+    }
+
+    .derivation-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .deriv-step {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1rem 2rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      min-width: 400px;
+      justify-content: center;
+    }
+
+    .deriv-equation {
+      font-size: 1.3rem;
+      color: var(--inv-cyan);
+    }
+
+    .deriv-arrow {
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+    }
+
+    .deriv-note {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .solution-box {
+      margin-top: 2rem;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(78, 205, 196, 0.15), rgba(78, 205, 196, 0.05));
+      border: 2px solid var(--inv-cyan);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .solution-title {
+      font-size: 1.2rem;
+      color: var(--inv-cyan);
+      margin-bottom: 1rem;
+    }
+
+    .solution-values {
+      font-size: 2rem;
+      color: var(--ternary-true);
+      font-weight: 700;
+    }
+
+    /* Ternary Truth Table */
+    .truth-table-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      overflow-x: auto;
+    }
+
+    .truth-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    .truth-table th {
+      background: var(--bg-tertiary);
+      color: var(--inv-cyan);
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 2px solid var(--inv-cyan);
+    }
+
+    .truth-table td {
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .truth-table tr:hover {
+      background: rgba(78, 205, 196, 0.05);
+    }
+
+    .ternary-T {
+      color: var(--ternary-true);
+      font-weight: 700;
+    }
+
+    .ternary-F {
+      color: var(--ternary-false);
+      font-weight: 700;
+    }
+
+    .ternary-I {
+      color: var(--ternary-indeterminate);
+      font-weight: 700;
+    }
+
+    .ternary-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .badge-true {
+      background: rgba(0, 255, 136, 0.2);
+      color: var(--ternary-true);
+      border: 1px solid var(--ternary-true);
+    }
+
+    .badge-false {
+      background: rgba(255, 107, 107, 0.2);
+      color: var(--ternary-false);
+      border: 1px solid var(--ternary-false);
+    }
+
+    .badge-indeterminate {
+      background: rgba(255, 215, 0, 0.2);
+      color: var(--ternary-indeterminate);
+      border: 1px solid var(--ternary-indeterminate);
+    }
+
+    /* Ternary Legend */
+    .ternary-legend {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    /* R(R) = -R Connection */
+    .rr-connection {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+    }
+
+    .fourth-roots {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .root-card {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 2px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .root-card:hover {
+      border-color: var(--inv-cyan);
+      transform: translateY(-3px);
+    }
+
+    .root-symbol {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .root-value {
+      font-size: 1.2rem;
+      color: var(--inv-cyan);
+      margin-bottom: 0.5rem;
+    }
+
+    .root-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Identity Coordinates */
+    .identity-coords {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+
+    .coord-item {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .coord-I { background: rgba(255, 255, 255, 0.1); color: var(--unity-1); }
+    .coord-You { background: rgba(78, 205, 196, 0.2); color: var(--unity-i); }
+    .coord-Us { background: rgba(255, 107, 107, 0.2); color: var(--unity-neg1); }
+    .coord-Them { background: rgba(168, 85, 247, 0.2); color: var(--unity-negi); }
+
+    .coord-sum {
+      font-size: 1.5rem;
+      color: var(--inv-cyan);
+    }
+
+    /* x = -2 Significance */
+    .significance-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+    }
+
+    .significance-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .sig-card {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border-left: 4px solid var(--inv-cyan);
+    }
+
+    .sig-title {
+      color: var(--inv-cyan);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .sig-detail {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .sig-equation {
+      margin-top: 0.75rem;
+      padding: 0.5rem;
+      background: rgba(78, 205, 196, 0.1);
+      border-radius: 4px;
+      font-size: 0.95rem;
+      color: var(--inv-cyan);
+    }
+
+    /* Visualization Canvas */
+    .viz-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .viz-canvas {
+      width: 100%;
+      height: 450px;
+      background: var(--bg-primary);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #inversionCanvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .viz-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .control-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .control-slider {
+      width: 150px;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+      outline: none;
+    }
+
+    .control-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      background: var(--inv-cyan);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--inv-cyan-glow);
+    }
+
+    .control-value {
+      min-width: 50px;
+      text-align: center;
+      color: var(--inv-cyan);
+      font-weight: 600;
+    }
+
+    .control-btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--inv-cyan);
+      color: var(--bg-primary);
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .control-btn:hover {
+      background: var(--inv-cyan-light);
+      transform: scale(1.05);
+    }
+
+    .control-btn.secondary {
+      background: transparent;
+      color: var(--inv-cyan);
+      border: 2px solid var(--inv-cyan);
+    }
+
+    .control-btn.secondary:hover {
+      background: rgba(78, 205, 196, 0.1);
+    }
+
+    /* Result Display */
+    .result-display {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .result-box {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .result-value {
+      font-size: 1.2rem;
+      color: var(--inv-cyan);
+      font-weight: 600;
+    }
+
+    /* Ternary Display */
+    .ternary-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+
+    .ternary-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .state-indicator {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      transition: all 0.3s;
+    }
+
+    .state-T {
+      background: rgba(0, 255, 136, 0.2);
+      border: 3px solid var(--ternary-true);
+      color: var(--ternary-true);
+    }
+
+    .state-F {
+      background: rgba(255, 107, 107, 0.2);
+      border: 3px solid var(--ternary-false);
+      color: var(--ternary-false);
+    }
+
+    .state-I {
+      background: rgba(255, 215, 0, 0.2);
+      border: 3px solid var(--ternary-indeterminate);
+      color: var(--ternary-indeterminate);
+    }
+
+    .state-inactive {
+      opacity: 0.3;
+    }
+
+    .state-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Interactive Points */
+    .inv-points-display {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .inv-point {
+      text-align: center;
+      padding: 1.5rem 2rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .inv-point:hover {
+      border-color: var(--inv-cyan);
+    }
+
+    .inv-point.active {
+      border-color: var(--ternary-true);
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+    }
+
+    .inv-point-value {
+      font-size: 2rem;
+      color: var(--inv-cyan);
+      font-weight: 700;
+    }
+
+    .inv-point-calc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    .inv-point-result {
+      font-size: 1.1rem;
+      color: var(--ternary-true);
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+
+    /* Reflection Animation */
+    .reflection-demo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      margin: 2rem 0;
+      padding: 2rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+
+    .reflection-item {
+      text-align: center;
+      min-width: 100px;
+    }
+
+    .reflection-value {
+      font-size: 1.5rem;
+      color: var(--inv-cyan);
+      font-weight: 600;
+    }
+
+    .reflection-arrow {
+      font-size: 2rem;
+      color: var(--text-secondary);
+      animation: pulse-arrow 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-arrow {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    /* Navigation Cards */
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .nav-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .nav-card:hover {
+      border-color: var(--inv-cyan);
+      transform: translateY(-5px);
+    }
+
+    .nav-card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .nav-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-card-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1.1rem;
+      color: var(--inv-cyan);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--inv-cyan);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title { font-size: 1.8rem; }
+      .core-equation { font-size: 1.3rem; padding: 1rem 1.5rem; }
+      .deriv-step { min-width: auto; flex-direction: column; gap: 0.5rem; }
+      .truth-table { font-size: 0.85rem; }
+      .identity-coords { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="inv-field"></div>
+  <div class="inversion-lines">
+    <div class="inv-line" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="inv-line" style="left: 30%; animation-delay: 2s;"></div>
+    <div class="inv-line" style="left: 50%; animation-delay: 4s;"></div>
+    <div class="inv-line" style="left: 70%; animation-delay: 6s;"></div>
+    <div class="inv-line" style="left: 90%; animation-delay: 8s;"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">INV :: Ternary Evaluation</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-genesis.html">Genesis</a>
+      <a href="i2-s3-ring-isomorphism.html">Ring</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <div class="inv-symbol">
+        <div class="inv-circle"></div>
+        <div class="inv-inner">INV</div>
+      </div>
+      <h1 class="title">Ternary INV Evaluation</h1>
+      <p class="subtitle">Inversion Truth for C = x^2 + x</p>
+      <div class="core-equation">
+        C(x) = -x :: R(R) = -R
+      </div>
+    </header>
+
+    <!-- The INV Evaluation -->
+    <section>
+      <h2 class="section-title">The INV Evaluation</h2>
+
+      <div class="derivation-container">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+          INV asks: When does the function C(x) = x^2 + x equal its own negation?
+        </p>
+
+        <div class="derivation-steps">
+          <div class="deriv-step">
+            <span class="deriv-equation">C(x) = x^2 + x</span>
+            <span class="deriv-note">The characteristic polynomial</span>
+          </div>
+
+          <div class="deriv-arrow">&#8595;</div>
+
+          <div class="deriv-step">
+            <span class="deriv-equation">INV: C(x) = -x</span>
+            <span class="deriv-note">Inversion condition</span>
+          </div>
+
+          <div class="deriv-arrow">&#8595;</div>
+
+          <div class="deriv-step">
+            <span class="deriv-equation">x^2 + x = -x</span>
+            <span class="deriv-note">Substitute</span>
+          </div>
+
+          <div class="deriv-arrow">&#8595;</div>
+
+          <div class="deriv-step">
+            <span class="deriv-equation">x^2 + 2x = 0</span>
+            <span class="deriv-note">Rearrange</span>
+          </div>
+
+          <div class="deriv-arrow">&#8595;</div>
+
+          <div class="deriv-step">
+            <span class="deriv-equation">x(x + 2) = 0</span>
+            <span class="deriv-note">Factor</span>
+          </div>
+        </div>
+
+        <div class="solution-box">
+          <div class="solution-title">Ternary TRUE at Inversion Points</div>
+          <div class="solution-values">x = 0 or x = -2</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inversion Points Display -->
+    <section>
+      <h2 class="section-title">The Two Inversion Points</h2>
+
+      <div class="inv-points-display">
+        <div class="inv-point active">
+          <div class="inv-point-value">x = 0</div>
+          <div class="inv-point-calc">C(0) = 0^2 + 0 = 0</div>
+          <div class="inv-point-calc">-x = -0 = 0</div>
+          <div class="inv-point-result">C(0) = 0 = -0 &#10003;</div>
+          <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--ternary-indeterminate);">Trivial / Self-dual</div>
+        </div>
+
+        <div class="inv-point active">
+          <div class="inv-point-value">x = -2</div>
+          <div class="inv-point-calc">C(-2) = (-2)^2 + (-2) = 4 - 2 = 2</div>
+          <div class="inv-point-calc">-x = -(-2) = 2</div>
+          <div class="inv-point-result">C(-2) = 2 = -(-2) &#10003;</div>
+          <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--ternary-true);">Non-trivial inversion</div>
+        </div>
+      </div>
+
+      <!-- Reflection Animation -->
+      <div class="reflection-demo">
+        <div class="reflection-item">
+          <div class="reflection-value">x</div>
+          <div style="color: var(--text-secondary); font-size: 0.85rem;">Input</div>
+        </div>
+        <div class="reflection-arrow">&#8594;</div>
+        <div class="reflection-item">
+          <div class="reflection-value">C(x)</div>
+          <div style="color: var(--text-secondary); font-size: 0.85rem;">Transform</div>
+        </div>
+        <div class="reflection-arrow">=</div>
+        <div class="reflection-item">
+          <div class="reflection-value">-x</div>
+          <div style="color: var(--text-secondary); font-size: 0.85rem;">Negation</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inversion Truth Table -->
+    <section>
+      <h2 class="section-title">Inversion Truth Table</h2>
+
+      <div class="truth-table-container">
+        <table class="truth-table">
+          <thead>
+            <tr>
+              <th>x</th>
+              <th>C(x) = x^2 + x</th>
+              <th>-x</th>
+              <th>C(x) = -x?</th>
+              <th>Ternary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>-2</td>
+              <td>2</td>
+              <td>2</td>
+              <td class="ternary-T">TRUE</td>
+              <td><span class="ternary-badge badge-true">T</span></td>
+            </tr>
+            <tr>
+              <td>-1</td>
+              <td>0</td>
+              <td>1</td>
+              <td class="ternary-F">FALSE</td>
+              <td><span class="ternary-badge badge-false">F</span></td>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td class="ternary-I">TRUE (trivial)</td>
+              <td><span class="ternary-badge badge-indeterminate">I</span></td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>2</td>
+              <td>-1</td>
+              <td class="ternary-F">FALSE</td>
+              <td><span class="ternary-badge badge-false">F</span></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>6</td>
+              <td>-2</td>
+              <td class="ternary-F">FALSE</td>
+              <td><span class="ternary-badge badge-false">F</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="ternary-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--ternary-true);"></div>
+            <span>TRUE (T): Inversion holds</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--ternary-false);"></div>
+            <span>FALSE (F): Inversion fails</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--ternary-indeterminate);"></div>
+            <span>INDETERMINATE (I): Self-dual point</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Connection to R(R) = -R -->
+    <section>
+      <h2 class="section-title">Connection to R(R) = -R</h2>
+
+      <div class="rr-connection">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+          The INV form R(R) = -R generates the fourth roots of unity.<br>
+          These are the solutions to z^4 = 1, forming the cyclic group Z_4.
+        </p>
+
+        <div style="text-align: center; font-size: 1.5rem; color: var(--inv-cyan); margin-bottom: 2rem;">
+          z^4 = 1 &#8594; z &#8712; {1, i, -1, -i}
+        </div>
+
+        <div class="fourth-roots">
+          <div class="root-card" style="border-color: var(--unity-1);">
+            <div class="root-symbol" style="color: var(--unity-1);">1</div>
+            <div class="root-value">z^0 = 1</div>
+            <div class="root-label">Identity</div>
+          </div>
+          <div class="root-card" style="border-color: var(--unity-i);">
+            <div class="root-symbol" style="color: var(--unity-i);">i</div>
+            <div class="root-value">z^1 = i</div>
+            <div class="root-label">Quarter turn</div>
+          </div>
+          <div class="root-card" style="border-color: var(--unity-neg1);">
+            <div class="root-symbol" style="color: var(--unity-neg1);">-1</div>
+            <div class="root-value">z^2 = -1</div>
+            <div class="root-label">Inversion</div>
+          </div>
+          <div class="root-card" style="border-color: var(--unity-negi);">
+            <div class="root-symbol" style="color: var(--unity-negi);">-i</div>
+            <div class="root-value">z^3 = -i</div>
+            <div class="root-label">Three-quarter turn</div>
+          </div>
+        </div>
+
+        <!-- Identity Coordinates -->
+        <h3 style="text-align: center; color: var(--inv-cyan); margin-top: 3rem; margin-bottom: 1rem;">
+          Identity Coordinates Emerge
+        </h3>
+
+        <div class="identity-coords">
+          <div class="coord-item coord-I">I</div>
+          <div style="color: var(--text-secondary);">+</div>
+          <div class="coord-item coord-You">You</div>
+          <div style="color: var(--text-secondary);">+</div>
+          <div class="coord-item coord-Us">Us</div>
+          <div style="color: var(--text-secondary);">+</div>
+          <div class="coord-item coord-Them">Them</div>
+          <div class="coord-sum">= 0</div>
+        </div>
+
+        <p style="text-align: center; color: var(--text-secondary); margin-top: 1.5rem; font-size: 0.9rem;">
+          1 + i + (-1) + (-i) = 0 :: The four perspectives sum to null<br>
+          Relational balance through cyclic inversion
+        </p>
+      </div>
+    </section>
+
+    <!-- x = -2 Significance -->
+    <section>
+      <h2 class="section-title">The x = -2 Significance</h2>
+
+      <div class="significance-container">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+          The non-trivial inversion point x = -2 carries deep mathematical significance.
+        </p>
+
+        <div class="significance-grid">
+          <div class="sig-card">
+            <div class="sig-title">Non-trivial Inversion</div>
+            <div class="sig-detail">
+              Unlike x = 0 which is trivially self-dual (0 = -0), x = -2 demonstrates genuine inversion behavior where the function output equals the negated input.
+            </div>
+            <div class="sig-equation">C(-2) = 4 - 2 = 2 = -(-2) &#10003;</div>
+          </div>
+
+          <div class="sig-card">
+            <div class="sig-title">Period-2 Behavior</div>
+            <div class="sig-detail">
+              The value -2 connects to period-2 cycles in dynamical systems. Under iteration, it generates oscillating behavior between inverted states.
+            </div>
+            <div class="sig-equation">f(f(x)) = x :: Period-2 orbit</div>
+          </div>
+
+          <div class="sig-card">
+            <div class="sig-title">Mandelbrot Connection</div>
+            <div class="sig-detail">
+              In the Mandelbrot set, c = -2 is the leftmost point of the main cardioid, representing the tip where the set meets the real axis.
+            </div>
+            <div class="sig-equation">z_(n+1) = z_n^2 + c, c = -2</div>
+          </div>
+
+          <div class="sig-card">
+            <div class="sig-title">Symmetric Reflection</div>
+            <div class="sig-detail">
+              The point (-2, 2) lies on the line y = -x, creating a perfect reflection symmetry. This is where the parabola crosses its mirror image.
+            </div>
+            <div class="sig-equation">(-2, 2) &#8712; {y = -x}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Visualization -->
+    <section>
+      <h2 class="section-title">Interactive Inversion Visualization</h2>
+
+      <div class="viz-container">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem;">
+          Drag x to see where C(x) = x^2 + x intersects with y = -x.<br>
+          Intersection points reveal ternary TRUE evaluations.
+        </p>
+
+        <div class="viz-canvas">
+          <canvas id="inversionCanvas"></canvas>
+        </div>
+
+        <div class="viz-controls">
+          <div class="control-group">
+            <span class="control-label">x value:</span>
+            <input type="range" id="xSlider" class="control-slider" min="-4" max="3" step="0.1" value="0">
+            <span class="control-value" id="xValue">0.0</span>
+          </div>
+          <button class="control-btn" onclick="animateToInversion(-2)">Go to x = -2</button>
+          <button class="control-btn secondary" onclick="animateToInversion(0)">Go to x = 0</button>
+          <button class="control-btn secondary" onclick="toggleAnimation()">Animate</button>
+        </div>
+
+        <!-- Result Display -->
+        <div class="result-display">
+          <div class="result-box">
+            <div class="result-label">x</div>
+            <div class="result-value" id="resultX">0.00</div>
+          </div>
+          <div class="result-box">
+            <div class="result-label">C(x) = x^2 + x</div>
+            <div class="result-value" id="resultCx">0.00</div>
+          </div>
+          <div class="result-box">
+            <div class="result-label">-x</div>
+            <div class="result-value" id="resultNegX">0.00</div>
+          </div>
+          <div class="result-box">
+            <div class="result-label">|C(x) - (-x)|</div>
+            <div class="result-value" id="resultDiff">0.00</div>
+          </div>
+        </div>
+
+        <!-- Ternary State Display -->
+        <div class="ternary-display">
+          <div class="ternary-state">
+            <div class="state-indicator state-T state-inactive" id="stateT">T</div>
+            <div class="state-label">TRUE</div>
+          </div>
+          <div class="ternary-state">
+            <div class="state-indicator state-F state-inactive" id="stateF">F</div>
+            <div class="state-label">FALSE</div>
+          </div>
+          <div class="ternary-state">
+            <div class="state-indicator state-I state-inactive" id="stateI">I</div>
+            <div class="state-label">INDETERMINATE</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation to Other Evaluations -->
+    <section>
+      <h2 class="section-title">Ternary Evaluation System</h2>
+
+      <div class="nav-grid">
+        <a href="i2-s3-decision-tree.html" class="nav-card">
+          <div class="nav-card-icon" style="color: #ffd700;">&#128298;</div>
+          <div class="nav-card-title">Decision Tree</div>
+          <div class="nav-card-desc">Complete I^2 S3 cartography with all evaluation paths and bifurcation structure.</div>
+        </a>
+
+        <a href="i2-s3-genesis.html" class="nav-card">
+          <div class="nav-card-icon" style="color: #ffd700;">&#8734;</div>
+          <div class="nav-card-title">Genesis: R(R) = R</div>
+          <div class="nav-card-desc">The origin of self-reference. Where identity meets itself and everything emerges.</div>
+        </a>
+
+        <a href="i2-s3-ring-isomorphism.html" class="nav-card">
+          <div class="nav-card-icon" style="color: #f4c430;">&#8484;</div>
+          <div class="nav-card-title">Ring Isomorphism</div>
+          <div class="nav-card-desc">How (I^n, +, x) is isomorphic to (Z, +, x). Self-reference generates integers.</div>
+        </a>
+
+        <a href="i2-s3-golden-functor.html" class="nav-card">
+          <div class="nav-card-icon" style="color: #daa520;">&#966;</div>
+          <div class="nav-card-title">Golden Functor</div>
+          <div class="nav-card-desc">F(n) = phi^n embedding the integers into the Lambda-prime lattice structure.</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      INV: C(x) = -x at x &#8712; {0, -2} :: R(R) = -R :: Ternary TRUE
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-genesis.html">Genesis</a>
+      <a href="i2-s3-ring-isomorphism.html">Ring Z</a>
+      <a href="i2-s3-golden-functor.html">Functor phi^n</a>
+    </div>
+  </footer>
+
+  <script>
+    // Canvas setup
+    const canvas = document.getElementById('inversionCanvas');
+    const ctx = canvas.getContext('2d');
+    const slider = document.getElementById('xSlider');
+    const xValueDisplay = document.getElementById('xValue');
+
+    let currentX = 0;
+    let animationId = null;
+    let isAnimating = false;
+
+    // Colors
+    const colors = {
+      grid: 'rgba(78, 205, 196, 0.1)',
+      axes: 'rgba(78, 205, 196, 0.5)',
+      parabola: '#4ecdc4',
+      line: '#ff6b6b',
+      intersection: '#00ff88',
+      point: '#ffd700',
+      text: '#a0a0b0'
+    };
+
+    // Resize canvas
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      canvas.width = container.offsetWidth;
+      canvas.height = container.offsetHeight;
+      draw();
+    }
+
+    // C(x) function
+    function C(x) {
+      return x * x + x;
+    }
+
+    // Transform coordinates
+    function toCanvas(x, y) {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const scale = Math.min(canvas.width, canvas.height) / 10;
+      return {
+        x: centerX + x * scale,
+        y: centerY - y * scale
+      };
+    }
+
+    function fromCanvas(cx, cy) {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const scale = Math.min(canvas.width, canvas.height) / 10;
+      return {
+        x: (cx - centerX) / scale,
+        y: (centerY - cy) / scale
+      };
+    }
+
+    // Draw function
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const scale = Math.min(canvas.width, canvas.height) / 10;
+
+      // Draw grid
+      ctx.strokeStyle = colors.grid;
+      ctx.lineWidth = 1;
+      for (let i = -5; i <= 5; i++) {
+        const p1 = toCanvas(i, -5);
+        const p2 = toCanvas(i, 5);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+
+        const p3 = toCanvas(-5, i);
+        const p4 = toCanvas(5, i);
+        ctx.beginPath();
+        ctx.moveTo(p3.x, p3.y);
+        ctx.lineTo(p4.x, p4.y);
+        ctx.stroke();
+      }
+
+      // Draw axes
+      ctx.strokeStyle = colors.axes;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height / 2);
+      ctx.lineTo(canvas.width, canvas.height / 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2, 0);
+      ctx.lineTo(canvas.width / 2, canvas.height);
+      ctx.stroke();
+
+      // Draw y = -x line
+      ctx.strokeStyle = colors.line;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      const lineStart = toCanvas(-4, 4);
+      const lineEnd = toCanvas(4, -4);
+      ctx.moveTo(lineStart.x, lineStart.y);
+      ctx.lineTo(lineEnd.x, lineEnd.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Label for y = -x
+      ctx.fillStyle = colors.line;
+      ctx.font = '14px JetBrains Mono';
+      const labelPos = toCanvas(3, -3.5);
+      ctx.fillText('y = -x', labelPos.x + 10, labelPos.y);
+
+      // Draw parabola C(x) = x^2 + x
+      ctx.strokeStyle = colors.parabola;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      let first = true;
+      for (let px = -4; px <= 3; px += 0.05) {
+        const py = C(px);
+        if (py > -5 && py < 8) {
+          const p = toCanvas(px, py);
+          if (first) {
+            ctx.moveTo(p.x, p.y);
+            first = false;
+          } else {
+            ctx.lineTo(p.x, p.y);
+          }
+        }
+      }
+      ctx.stroke();
+
+      // Label for C(x)
+      ctx.fillStyle = colors.parabola;
+      const paraLabelPos = toCanvas(1.5, C(1.5) + 0.5);
+      ctx.fillText('C(x) = x^2 + x', paraLabelPos.x, paraLabelPos.y);
+
+      // Draw intersection points
+      ctx.fillStyle = colors.intersection;
+      // x = 0
+      const int1 = toCanvas(0, 0);
+      ctx.beginPath();
+      ctx.arc(int1.x, int1.y, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = colors.text;
+      ctx.fillText('(0, 0)', int1.x + 12, int1.y - 5);
+
+      // x = -2
+      ctx.fillStyle = colors.intersection;
+      const int2 = toCanvas(-2, 2);
+      ctx.beginPath();
+      ctx.arc(int2.x, int2.y, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = colors.text;
+      ctx.fillText('(-2, 2)', int2.x + 12, int2.y - 5);
+
+      // Draw current point on parabola
+      const cx = currentX;
+      const cy = C(cx);
+      const currentPoint = toCanvas(cx, cy);
+
+      // Point on parabola
+      ctx.fillStyle = colors.point;
+      ctx.beginPath();
+      ctx.arc(currentPoint.x, currentPoint.y, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Point on line y = -x
+      const lineY = -cx;
+      const linePoint = toCanvas(cx, lineY);
+      ctx.fillStyle = colors.line;
+      ctx.beginPath();
+      ctx.arc(linePoint.x, linePoint.y, 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Connect the two points with a vertical line
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(currentPoint.x, currentPoint.y);
+      ctx.lineTo(linePoint.x, linePoint.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Vertical line from x-axis
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
+      ctx.beginPath();
+      const xAxisPoint = toCanvas(cx, 0);
+      ctx.moveTo(xAxisPoint.x, xAxisPoint.y);
+      ctx.lineTo(currentPoint.x, currentPoint.y);
+      ctx.stroke();
+
+      // Update display values
+      updateDisplays(cx, cy, lineY);
+    }
+
+    // Update display values
+    function updateDisplays(x, cx, negX) {
+      document.getElementById('resultX').textContent = x.toFixed(2);
+      document.getElementById('resultCx').textContent = cx.toFixed(2);
+      document.getElementById('resultNegX').textContent = negX.toFixed(2);
+
+      const diff = Math.abs(cx - negX);
+      document.getElementById('resultDiff').textContent = diff.toFixed(4);
+
+      // Update ternary state
+      const stateT = document.getElementById('stateT');
+      const stateF = document.getElementById('stateF');
+      const stateI = document.getElementById('stateI');
+
+      stateT.classList.add('state-inactive');
+      stateF.classList.add('state-inactive');
+      stateI.classList.add('state-inactive');
+
+      if (diff < 0.01) {
+        if (Math.abs(x) < 0.01) {
+          // x = 0 case - Indeterminate (self-dual)
+          stateI.classList.remove('state-inactive');
+        } else {
+          // x = -2 case - True
+          stateT.classList.remove('state-inactive');
+        }
+      } else {
+        // False
+        stateF.classList.remove('state-inactive');
+      }
+    }
+
+    // Slider event
+    slider.addEventListener('input', function() {
+      currentX = parseFloat(this.value);
+      xValueDisplay.textContent = currentX.toFixed(1);
+      draw();
+    });
+
+    // Animate to specific x value
+    function animateToInversion(targetX) {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+
+      const startX = currentX;
+      const duration = 1000;
+      const startTime = performance.now();
+
+      function animate(time) {
+        const elapsed = time - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Ease out
+        const eased = 1 - Math.pow(1 - progress, 3);
+
+        currentX = startX + (targetX - startX) * eased;
+        slider.value = currentX;
+        xValueDisplay.textContent = currentX.toFixed(1);
+        draw();
+
+        if (progress < 1) {
+          animationId = requestAnimationFrame(animate);
+        }
+      }
+
+      animationId = requestAnimationFrame(animate);
+    }
+
+    // Toggle continuous animation
+    function toggleAnimation() {
+      if (isAnimating) {
+        isAnimating = false;
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+        }
+      } else {
+        isAnimating = true;
+        let direction = 1;
+
+        function animate() {
+          if (!isAnimating) return;
+
+          currentX += 0.02 * direction;
+
+          if (currentX >= 3) direction = -1;
+          if (currentX <= -4) direction = 1;
+
+          slider.value = currentX;
+          xValueDisplay.textContent = currentX.toFixed(1);
+          draw();
+
+          animationId = requestAnimationFrame(animate);
+        }
+
+        animate();
+      }
+    }
+
+    // Initialize
+    window.addEventListener('load', function() {
+      resizeCanvas();
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+  </script>
+</body>
+</html>

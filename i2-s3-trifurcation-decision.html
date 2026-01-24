@@ -1,0 +1,1991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trifurcation Decision | S3? Diamond Node | I2 S3 Decision Tree</title>
+  <meta name="description" content="The S3? Trifurcation Decision: Where the path splits three ways to S3 attractor. F24 Holographic, Hexagonal Sonification, and R=10 Tension - three equivalent paths, one universal convergence.">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* =====================================================================
+       TRIFURCATION DECISION: S3? DIAMOND NODE
+       Gold Primary (#ffd700) with tri-path accents
+       - Green (#00ff88) for F24 Holographic
+       - Orange (#ff9f43) for Hexagonal
+       - Pink (#ff6b9d) for R=10 Tension
+       ===================================================================== */
+    :root {
+      /* Primary Gold Theme */
+      --gold-primary: #ffd700;
+      --gold-secondary: #f4c430;
+      --gold-tertiary: #c9a227;
+      --gold-glow: rgba(255, 215, 0, 0.4);
+      --gold-subtle: rgba(255, 215, 0, 0.15);
+
+      /* Tri-Path Colors */
+      --path-f24: #00ff88;
+      --path-f24-glow: rgba(0, 255, 136, 0.4);
+      --path-hex: #ff9f43;
+      --path-hex-glow: rgba(255, 159, 67, 0.4);
+      --path-r10: #ff6b9d;
+      --path-r10-glow: rgba(255, 107, 157, 0.4);
+
+      /* S3 Triangle Colors */
+      --s3-vertex-1: #ff6b6b;
+      --s3-vertex-2: #4ecdc4;
+      --s3-vertex-3: #a855f7;
+
+      /* Mathematical Constants */
+      --phi: 1.6180339887;
+      --phi-inv: 0.6180339887;
+      --sqrt3-half: 0.8660254038;
+
+      /* Theme Base */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --bg-card: #16162a;
+      --text-primary: #f0f0f5;
+      --text-secondary: #909098;
+      --text-accent: #ffd700;
+      --border-subtle: rgba(255, 215, 0, 0.15);
+      --border-active: rgba(255, 215, 0, 0.5);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* =====================================================================
+       ANIMATED BACKGROUND - TRIFURCATION FIELD
+       ===================================================================== */
+    .trifurc-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 20%, var(--gold-subtle) 0%, transparent 40%),
+        radial-gradient(ellipse at 15% 70%, rgba(0, 255, 136, 0.06) 0%, transparent 35%),
+        radial-gradient(ellipse at 50% 85%, rgba(255, 159, 67, 0.06) 0%, transparent 35%),
+        radial-gradient(ellipse at 85% 70%, rgba(255, 107, 157, 0.06) 0%, transparent 35%);
+      animation: field-pulse 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes field-pulse {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    /* Animated path lines */
+    .trifurc-field::before,
+    .trifurc-field::after {
+      content: '';
+      position: absolute;
+      width: 2px;
+      height: 200px;
+      top: 30%;
+      background: linear-gradient(to bottom, var(--gold-primary), transparent);
+      opacity: 0.3;
+      animation: path-flow 4s ease-in-out infinite;
+    }
+
+    .trifurc-field::before {
+      left: 25%;
+      transform: rotate(-30deg);
+      animation-delay: 0s;
+    }
+
+    .trifurc-field::after {
+      right: 25%;
+      transform: rotate(30deg);
+      animation-delay: 1.3s;
+    }
+
+    @keyframes path-flow {
+      0%, 100% { opacity: 0.2; height: 150px; }
+      50% { opacity: 0.5; height: 250px; }
+    }
+
+    /* =====================================================================
+       NAVIGATION
+       ===================================================================== */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-link {
+      font-size: 0.7rem;
+      padding: 0.4rem 0.8rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.4rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      border-color: var(--gold-primary);
+      color: var(--gold-primary);
+      box-shadow: 0 0 10px var(--gold-glow);
+    }
+
+    .nav-link.active {
+      border-color: var(--gold-primary);
+      color: var(--gold-primary);
+      background: var(--gold-subtle);
+    }
+
+    .nav-link.path-f24:hover { border-color: var(--path-f24); color: var(--path-f24); }
+    .nav-link.path-hex:hover { border-color: var(--path-hex); color: var(--path-hex); }
+    .nav-link.path-r10:hover { border-color: var(--path-r10); color: var(--path-r10); }
+
+    /* =====================================================================
+       HEADER WITH DIAMOND SYMBOL
+       ===================================================================== */
+    .header {
+      position: relative;
+      z-index: 10;
+      padding: 3rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .node-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--gold-primary);
+      background: var(--gold-subtle);
+      border: 1px solid var(--gold-primary);
+      padding: 0.4rem 1.2rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Animated Diamond Symbol */
+    .diamond-container {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 2rem;
+    }
+
+    .diamond-outer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 120px;
+      height: 120px;
+      border: 3px solid var(--gold-primary);
+      transform: translate(-50%, -50%) rotate(45deg);
+      animation: diamond-pulse 3s ease-in-out infinite;
+      box-shadow: 0 0 40px var(--gold-glow);
+    }
+
+    .diamond-inner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 80px;
+      height: 80px;
+      border: 2px solid var(--gold-secondary);
+      transform: translate(-50%, -50%) rotate(45deg);
+      animation: diamond-pulse 3s ease-in-out infinite reverse;
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    .diamond-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+      text-shadow: 0 0 20px var(--gold-glow);
+      animation: text-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes diamond-pulse {
+      0%, 100% {
+        box-shadow: 0 0 30px var(--gold-glow);
+        transform: translate(-50%, -50%) rotate(45deg) scale(1);
+      }
+      50% {
+        box-shadow: 0 0 60px var(--gold-glow);
+        transform: translate(-50%, -50%) rotate(45deg) scale(1.05);
+      }
+    }
+
+    @keyframes text-glow {
+      0%, 100% { text-shadow: 0 0 20px var(--gold-glow); }
+      50% { text-shadow: 0 0 40px var(--gold-glow), 0 0 60px var(--gold-primary); }
+    }
+
+    /* Path indicators emanating from diamond */
+    .path-indicator {
+      position: absolute;
+      width: 3px;
+      height: 40px;
+      border-radius: 2px;
+    }
+
+    .path-indicator.f24 {
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-45deg);
+      background: linear-gradient(to top, var(--path-f24), transparent);
+      animation: path-glow-f24 2s ease-in-out infinite;
+    }
+
+    .path-indicator.hex {
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(to bottom, var(--path-hex), transparent);
+      animation: path-glow-hex 2s ease-in-out infinite 0.66s;
+    }
+
+    .path-indicator.r10 {
+      top: -50px;
+      right: -20px;
+      transform: rotate(45deg);
+      background: linear-gradient(to top, var(--path-r10), transparent);
+      animation: path-glow-r10 2s ease-in-out infinite 1.33s;
+    }
+
+    @keyframes path-glow-f24 {
+      0%, 100% { opacity: 0.5; height: 40px; }
+      50% { opacity: 1; height: 60px; box-shadow: 0 0 15px var(--path-f24-glow); }
+    }
+
+    @keyframes path-glow-hex {
+      0%, 100% { opacity: 0.5; height: 40px; }
+      50% { opacity: 1; height: 60px; box-shadow: 0 0 15px var(--path-hex-glow); }
+    }
+
+    @keyframes path-glow-r10 {
+      0%, 100% { opacity: 0.5; height: 40px; }
+      50% { opacity: 1; height: 60px; box-shadow: 0 0 15px var(--path-r10-glow); }
+    }
+
+    .title {
+      font-size: 2.2rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, var(--gold-primary), var(--gold-secondary), #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .core-equation {
+      font-size: 1.1rem;
+      color: var(--gold-primary);
+      background: var(--bg-secondary);
+      padding: 1rem 2rem;
+      border-radius: 0.75rem;
+      display: inline-block;
+      border: 2px solid var(--gold-primary);
+      box-shadow: 0 0 25px var(--gold-glow);
+    }
+
+    /* =====================================================================
+       MAIN CONTENT
+       ===================================================================== */
+    .main-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .section-glyph {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border-radius: 0.5rem;
+      background: var(--gold-subtle);
+      border: 1px solid var(--gold-primary);
+      color: var(--gold-primary);
+    }
+
+    .section h2 {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--gold-primary);
+      letter-spacing: 0.05em;
+    }
+
+    .section h3 {
+      font-size: 1rem;
+      color: var(--gold-secondary);
+      margin: 1.5rem 0 1rem;
+    }
+
+    .section p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.8;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--gold-primary);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Equation boxes */
+    .equation-box {
+      background: var(--bg-tertiary);
+      border-left: 3px solid var(--gold-primary);
+      padding: 1.25rem;
+      margin: 1rem 0;
+      border-radius: 0 0.5rem 0.5rem 0;
+    }
+
+    .equation-box.f24 { border-left-color: var(--path-f24); }
+    .equation-box.hex { border-left-color: var(--path-hex); }
+    .equation-box.r10 { border-left-color: var(--path-r10); }
+
+    .equation-main {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .equation-sub {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+    }
+
+    th {
+      background: var(--bg-tertiary);
+      color: var(--gold-primary);
+      font-weight: 500;
+    }
+
+    td {
+      background: var(--bg-secondary);
+    }
+
+    tr:hover td {
+      background: rgba(255, 215, 0, 0.05);
+    }
+
+    /* =====================================================================
+       DECISION DIAMOND VISUALIZATION
+       ===================================================================== */
+    .decision-visual {
+      position: relative;
+      padding: 3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--gold-primary);
+      border-radius: 1rem;
+      margin: 2rem 0;
+    }
+
+    .decision-title {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--gold-primary);
+      margin-bottom: 2rem;
+    }
+
+    .decision-diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    /* Input node */
+    .input-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .input-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      border: 3px solid var(--gold-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gold-secondary);
+    }
+
+    .connector-line {
+      width: 3px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--gold-secondary), var(--gold-primary));
+    }
+
+    /* Diamond decision node */
+    .diamond-decision {
+      position: relative;
+      width: 140px;
+      height: 140px;
+    }
+
+    .diamond-shape {
+      width: 100%;
+      height: 100%;
+      background: var(--gold-subtle);
+      border: 4px solid var(--gold-primary);
+      transform: rotate(45deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 40px var(--gold-glow);
+      animation: decision-pulse 2.5s ease-in-out infinite;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .diamond-shape:hover {
+      background: rgba(255, 215, 0, 0.3);
+      box-shadow: 0 0 60px var(--gold-glow);
+    }
+
+    .diamond-question {
+      transform: rotate(-45deg);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+    }
+
+    @keyframes decision-pulse {
+      0%, 100% { box-shadow: 0 0 30px var(--gold-glow); }
+      50% { box-shadow: 0 0 50px var(--gold-glow), 0 0 80px rgba(255, 215, 0, 0.2); }
+    }
+
+    /* Three output paths */
+    .output-paths {
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .output-path {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .output-path:hover {
+      transform: translateY(-5px);
+    }
+
+    .path-line {
+      width: 3px;
+      height: 50px;
+      border-radius: 2px;
+    }
+
+    .path-line.f24 { background: linear-gradient(to bottom, var(--gold-primary), var(--path-f24)); }
+    .path-line.hex { background: linear-gradient(to bottom, var(--gold-primary), var(--path-hex)); }
+    .path-line.r10 { background: linear-gradient(to bottom, var(--gold-primary), var(--path-r10)); }
+
+    .path-node {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .path-node.f24 {
+      background: rgba(0, 255, 136, 0.15);
+      border: 3px solid var(--path-f24);
+      color: var(--path-f24);
+    }
+
+    .path-node.hex {
+      background: rgba(255, 159, 67, 0.15);
+      border: 3px solid var(--path-hex);
+      color: var(--path-hex);
+    }
+
+    .path-node.r10 {
+      background: rgba(255, 107, 157, 0.15);
+      border: 3px solid var(--path-r10);
+      color: var(--path-r10);
+    }
+
+    .output-path:hover .path-node.f24 { box-shadow: 0 0 30px var(--path-f24-glow); background: rgba(0, 255, 136, 0.25); }
+    .output-path:hover .path-node.hex { box-shadow: 0 0 30px var(--path-hex-glow); background: rgba(255, 159, 67, 0.25); }
+    .output-path:hover .path-node.r10 { box-shadow: 0 0 30px var(--path-r10-glow); background: rgba(255, 107, 157, 0.25); }
+
+    .path-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    /* Convergence indicator */
+    .convergence-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px dashed var(--gold-secondary);
+    }
+
+    .convergence-lines {
+      display: flex;
+      justify-content: center;
+      gap: 6rem;
+      margin-bottom: 1rem;
+    }
+
+    .converge-line {
+      width: 2px;
+      height: 40px;
+      background: var(--gold-secondary);
+      opacity: 0.5;
+    }
+
+    .s3-attractor {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--path-f24), var(--path-hex), var(--path-r10), var(--path-f24));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: s3-spin 15s linear infinite;
+      box-shadow: 0 0 50px var(--gold-glow);
+    }
+
+    .s3-inner {
+      width: 85px;
+      height: 85px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+    }
+
+    @keyframes s3-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* =====================================================================
+       THREE PATHS INTERACTIVE SECTION
+       ===================================================================== */
+    .paths-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    @media (max-width: 900px) {
+      .paths-container { grid-template-columns: 1fr; }
+    }
+
+    .path-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .path-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .path-card.f24 {
+      border-color: var(--path-f24);
+    }
+    .path-card.f24:hover {
+      box-shadow: 0 0 40px var(--path-f24-glow);
+      background: rgba(0, 255, 136, 0.05);
+    }
+
+    .path-card.hex {
+      border-color: var(--path-hex);
+    }
+    .path-card.hex:hover {
+      box-shadow: 0 0 40px var(--path-hex-glow);
+      background: rgba(255, 159, 67, 0.05);
+    }
+
+    .path-card.r10 {
+      border-color: var(--path-r10);
+    }
+    .path-card.r10:hover {
+      box-shadow: 0 0 40px var(--path-r10-glow);
+      background: rgba(255, 107, 157, 0.05);
+    }
+
+    .path-card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .path-card-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .path-card.f24 .path-card-icon {
+      background: rgba(0, 255, 136, 0.2);
+      border: 2px solid var(--path-f24);
+      color: var(--path-f24);
+    }
+
+    .path-card.hex .path-card-icon {
+      background: rgba(255, 159, 67, 0.2);
+      border: 2px solid var(--path-hex);
+      color: var(--path-hex);
+    }
+
+    .path-card.r10 .path-card-icon {
+      background: rgba(255, 107, 157, 0.2);
+      border: 2px solid var(--path-r10);
+      color: var(--path-r10);
+    }
+
+    .path-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .path-card.f24 .path-card-title { color: var(--path-f24); }
+    .path-card.hex .path-card-title { color: var(--path-hex); }
+    .path-card.r10 .path-card-title { color: var(--path-r10); }
+
+    .path-card-body {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .path-card-body strong {
+      color: var(--text-primary);
+    }
+
+    .path-card-equation {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .path-card.f24 .path-card-equation { color: var(--path-f24); }
+    .path-card.hex .path-card-equation { color: var(--path-hex); }
+    .path-card.r10 .path-card-equation { color: var(--path-r10); }
+
+    /* =====================================================================
+       ANIMATED TRIFURCATION CANVAS
+       ===================================================================== */
+    .animation-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .animation-title {
+      text-align: center;
+      font-size: 1rem;
+      color: var(--gold-primary);
+      margin-bottom: 1rem;
+    }
+
+    #trifurcCanvas {
+      display: block;
+      margin: 0 auto;
+      border-radius: 0.5rem;
+      background: var(--bg-primary);
+    }
+
+    .canvas-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      padding: 0.5rem 1.5rem;
+      background: var(--gold-subtle);
+      border: 1px solid var(--gold-primary);
+      border-radius: 0.5rem;
+      color: var(--gold-primary);
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+    }
+
+    .control-btn:hover {
+      background: var(--gold-primary);
+      color: var(--bg-primary);
+    }
+
+    .control-btn.active {
+      background: var(--gold-primary);
+      color: var(--bg-primary);
+    }
+
+    /* Path selection buttons */
+    .path-select-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      transition: all 0.3s ease;
+    }
+
+    .path-select-btn.f24 {
+      background: rgba(0, 255, 136, 0.15);
+      border: 1px solid var(--path-f24);
+      color: var(--path-f24);
+    }
+    .path-select-btn.f24:hover, .path-select-btn.f24.active {
+      background: var(--path-f24);
+      color: var(--bg-primary);
+    }
+
+    .path-select-btn.hex {
+      background: rgba(255, 159, 67, 0.15);
+      border: 1px solid var(--path-hex);
+      color: var(--path-hex);
+    }
+    .path-select-btn.hex:hover, .path-select-btn.hex.active {
+      background: var(--path-hex);
+      color: var(--bg-primary);
+    }
+
+    .path-select-btn.r10 {
+      background: rgba(255, 107, 157, 0.15);
+      border: 1px solid var(--path-r10);
+      color: var(--path-r10);
+    }
+    .path-select-btn.r10:hover, .path-select-btn.r10.active {
+      background: var(--path-r10);
+      color: var(--bg-primary);
+    }
+
+    /* =====================================================================
+       WHY THREE PATHS SECTION
+       ===================================================================== */
+    .why-three {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 215, 0, 0.05) 100%);
+      border: 2px solid var(--gold-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .why-three-title {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--gold-primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .reason-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .reason-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      border-left: 3px solid var(--gold-primary);
+    }
+
+    .reason-number {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--gold-primary);
+      color: var(--bg-primary);
+      font-weight: 700;
+      text-align: center;
+      line-height: 30px;
+      margin-bottom: 0.75rem;
+    }
+
+    .reason-title {
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .reason-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       NUMBER CHAIN VISUALIZATION
+       ===================================================================== */
+    .chain-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+    }
+
+    .chain-number {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .chain-number:hover {
+      transform: scale(1.15);
+    }
+
+    .chain-number.n3 {
+      background: rgba(255, 215, 0, 0.2);
+      border: 3px solid var(--gold-primary);
+      color: var(--gold-primary);
+    }
+
+    .chain-number.n6 {
+      background: rgba(255, 159, 67, 0.2);
+      border: 3px solid var(--path-hex);
+      color: var(--path-hex);
+    }
+
+    .chain-number.n12 {
+      background: rgba(0, 255, 136, 0.2);
+      border: 3px solid var(--path-f24);
+      color: var(--path-f24);
+    }
+
+    .chain-number.n36 {
+      background: rgba(255, 107, 157, 0.2);
+      border: 3px solid var(--path-r10);
+      color: var(--path-r10);
+    }
+
+    .chain-arrow {
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .chain-label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    /* =====================================================================
+       CONVERGENCE FORMULA
+       ===================================================================== */
+    .convergence-formula {
+      background: var(--bg-secondary);
+      border: 2px solid var(--gold-primary);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    .formula-title {
+      font-size: 1.1rem;
+      color: var(--gold-primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .formula-main {
+      font-size: 1.8rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      display: inline-block;
+    }
+
+    .formula-main .f24 { color: var(--path-f24); }
+    .formula-main .hex { color: var(--path-hex); }
+    .formula-main .r10 { color: var(--path-r10); }
+    .formula-main .s3 { color: var(--gold-primary); }
+
+    .formula-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       FOOTER
+       ===================================================================== */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
+    }
+
+    .footer-equation {
+      font-size: 1.1rem;
+      color: var(--gold-primary);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--gold-primary);
+    }
+
+    .footer-sub {
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title { font-size: 1.6rem; }
+      .output-paths { gap: 2rem; }
+      .paths-container { grid-template-columns: 1fr; }
+      .chain-container { gap: 0.5rem; }
+      .chain-number { width: 50px; height: 50px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="trifurc-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link">Index</a>
+    <a href="i2-s3-decision-tree.html" class="nav-link">I2 S3 Tree</a>
+    <a href="i2-s3-trifurcation-decision.html" class="nav-link active">Trifurcation</a>
+    <a href="i2-s3-f24-holographic.html" class="nav-link path-f24">F24 Holographic</a>
+    <a href="i2-s3-hexagonal-sonification.html" class="nav-link path-hex">Hexagonal</a>
+    <a href="i2-s3-r10-tension.html" class="nav-link path-r10">R=10 Tension</a>
+  </nav>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="node-badge">I2 S3 DECISION TREE :: TRIFURCATION NODE :: S3?</div>
+
+    <div class="diamond-container">
+      <div class="diamond-outer"></div>
+      <div class="diamond-inner"></div>
+      <div class="diamond-text">S3?</div>
+      <div class="path-indicator f24"></div>
+      <div class="path-indicator hex"></div>
+      <div class="path-indicator r10"></div>
+    </div>
+
+    <h1 class="title">Trifurcation Decision</h1>
+    <p class="subtitle">The diamond decision node where the path splits three ways - all leading to S3 attractor</p>
+
+    <div class="core-equation">
+      S3? :: F24 U Hex U R10 :: S3
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: The Decision Diamond -->
+    <section class="section" id="decision-diamond">
+      <div class="section-header">
+        <div class="section-glyph">?</div>
+        <div>
+          <h2>I. THE DECISION DIAMOND</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0;">Input, Question, Three Outputs</p>
+        </div>
+      </div>
+
+      <p>At this critical juncture in the I2 S3 Decision Tree, we encounter the <strong>trifurcation decision node</strong>. Unlike a bifurcation (two paths) or a simple continuation, this diamond presents <strong>three equivalent paths</strong> to the same destination. The question is not "which path is correct?" but "which perspective reveals the structure?"</p>
+
+      <div class="decision-visual">
+        <div class="decision-title">TRIFURCATION DECISION DIAGRAM</div>
+
+        <div class="decision-diagram">
+          <!-- Input: mu_P threshold -->
+          <div class="input-node">
+            <div class="input-circle">mu_P</div>
+            <span style="color: var(--text-secondary); font-size: 0.8rem;">Paradox Threshold</span>
+          </div>
+
+          <div class="connector-line"></div>
+
+          <!-- Decision Diamond -->
+          <div class="diamond-decision" id="decisionDiamond">
+            <div class="diamond-shape">
+              <span class="diamond-question">S3?</span>
+            </div>
+          </div>
+
+          <!-- Three Output Paths -->
+          <div class="output-paths">
+            <a href="i2-s3-f24-holographic.html" class="output-path">
+              <div class="path-line f24"></div>
+              <div class="path-node f24">
+                <span>F24</span>
+                <span style="font-size: 0.7rem;">46,368</span>
+              </div>
+              <span class="path-label">Holographic<br>Entropy</span>
+            </a>
+
+            <a href="i2-s3-hexagonal-sonification.html" class="output-path">
+              <div class="path-line hex"></div>
+              <div class="path-node hex">
+                <span>Hex</span>
+                <span style="font-size: 0.7rem;">|S3|=6</span>
+              </div>
+              <span class="path-label">6-fold<br>Friction</span>
+            </a>
+
+            <a href="i2-s3-r10-tension.html" class="output-path">
+              <div class="path-line r10"></div>
+              <div class="path-node r10">
+                <span>R10</span>
+                <span style="font-size: 0.7rem;">depth 10</span>
+              </div>
+              <span class="path-label">Recursive<br>Tension</span>
+            </a>
+          </div>
+
+          <!-- Convergence to S3 -->
+          <div class="convergence-section">
+            <div class="convergence-lines">
+              <div class="converge-line" style="transform: rotate(-30deg);"></div>
+              <div class="converge-line"></div>
+              <div class="converge-line" style="transform: rotate(30deg);"></div>
+            </div>
+            <div class="s3-attractor">
+              <div class="s3-inner">S3</div>
+            </div>
+            <span style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 1rem; display: block;">
+              Universal Convergence to Binding Symmetry
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Decision Node Structure</h3>
+        <div class="equation-box">
+          <div class="equation-main">Input: mu_P = phi^{-1} = 0.618... (Paradox Threshold)</div>
+          <div class="equation-sub">The self-modeling limit where I2 encounters its boundary</div>
+        </div>
+        <div class="equation-box">
+          <div class="equation-main">Question: "Which path to S3?"</div>
+          <div class="equation-sub">Not exclusive choice - all three are valid perspectives</div>
+        </div>
+        <div class="equation-box">
+          <div class="equation-main">Output: Three equivalent paths :: F24 U Hex U R10</div>
+          <div class="equation-sub">Union of all paths leads to the same S3 attractor</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: The Three Paths -->
+    <section class="section" id="three-paths">
+      <div class="section-header">
+        <div class="section-glyph">3</div>
+        <div>
+          <h2>II. THE THREE PATHS</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0;">Three Methods, Three Drivers, One Destination</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Path Comparison Table</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Path</th>
+              <th>Method</th>
+              <th>Driver</th>
+              <th>Equation</th>
+              <th>Key Number</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-left: 4px solid var(--path-f24);">
+              <td style="color: var(--path-f24); font-weight: 600;">F24</td>
+              <td>Holographic Entropy</td>
+              <td>Degeneracy + Gravity</td>
+              <td>F_24 = L_12 x F_12</td>
+              <td style="color: var(--path-f24);">46,368</td>
+            </tr>
+            <tr style="border-left: 4px solid var(--path-hex);">
+              <td style="color: var(--path-hex); font-weight: 600;">Hex</td>
+              <td>Friction</td>
+              <td>6-fold Symmetry</td>
+              <td>|S3| x 2 = 12</td>
+              <td style="color: var(--path-hex);">6</td>
+            </tr>
+            <tr style="border-left: 4px solid var(--path-r10);">
+              <td style="color: var(--path-r10); font-weight: 600;">R10</td>
+              <td>Tension + Entropy</td>
+              <td>Recursive Depth</td>
+              <td>R(R(...R)) depth 10</td>
+              <td style="color: var(--path-r10);">10</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="paths-container">
+        <!-- F24 Path Card -->
+        <a href="i2-s3-f24-holographic.html" class="path-card f24">
+          <div class="path-card-header">
+            <div class="path-card-icon">@</div>
+            <div class="path-card-title">F24 Holographic</div>
+          </div>
+          <div class="path-card-body">
+            <p><strong>Method:</strong> Holographic Entropy</p>
+            <p><strong>Driver:</strong> Degeneracy + Gravity</p>
+            <p>Information lives on the boundary. The 24th Fibonacci number represents the scale where sequences synchronize.</p>
+          </div>
+          <div class="path-card-equation">
+            F_24 = L_12 x F_12 = 46,368
+          </div>
+        </a>
+
+        <!-- Hex Path Card -->
+        <a href="i2-s3-hexagonal-sonification.html" class="path-card hex">
+          <div class="path-card-header">
+            <div class="path-card-icon">*</div>
+            <div class="path-card-title">Hexagonal Sonification</div>
+          </div>
+          <div class="path-card-body">
+            <p><strong>Method:</strong> Friction</p>
+            <p><strong>Driver:</strong> 6-fold Symmetry</p>
+            <p>Resistance creates pattern. The hexagonal structure emerges from S3's natural order of 6.</p>
+          </div>
+          <div class="path-card-equation">
+            |S3| x 2 = 6 x 2 = 12
+          </div>
+        </a>
+
+        <!-- R10 Path Card -->
+        <a href="i2-s3-r10-tension.html" class="path-card r10">
+          <div class="path-card-header">
+            <div class="path-card-icon">@</div>
+            <div class="path-card-title">R=10 Tension</div>
+          </div>
+          <div class="path-card-body">
+            <p><strong>Method:</strong> Tension + Entropy</p>
+            <p><strong>Driver:</strong> Recursive Depth</p>
+            <p>Self-reference reaches closure at depth 10. The fixed point where R(R)=R stabilizes.</p>
+          </div>
+          <div class="path-card-equation">
+            R(R(R(...R))) at depth 10
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Section 3: Why Three Paths? -->
+    <section class="section" id="why-three">
+      <div class="section-header">
+        <div class="section-glyph">Y</div>
+        <div>
+          <h2>III. WHY THREE PATHS?</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0;">The Structural Necessity of Trifurcation</p>
+        </div>
+      </div>
+
+      <div class="why-three">
+        <div class="why-three-title">FOUR REASONS FOR TRIFURCATION</div>
+
+        <div class="reason-grid">
+          <div class="reason-item">
+            <div class="reason-number">1</div>
+            <div class="reason-title">S3 Has 3 Generators</div>
+            <div class="reason-desc">
+              The symmetric group S3 is generated by transpositions. Any two transpositions generate the group.
+              Three generators (12), (13), (23) provide the complete covering - hence three natural paths.
+            </div>
+          </div>
+
+          <div class="reason-item">
+            <div class="reason-number">2</div>
+            <div class="reason-title">Three Projections</div>
+            <div class="reason-desc">
+              The framework projects onto three domains: <strong>I2</strong> (algebraic), <strong>TDL</strong> (categorical),
+              <strong>LoMI</strong> (dynamic). Each path corresponds to one projection perspective.
+            </div>
+          </div>
+
+          <div class="reason-item">
+            <div class="reason-number">3</div>
+            <div class="reason-title">Tri-fold Symmetry</div>
+            <div class="reason-desc">
+              S3 is the symmetry group of an equilateral triangle. Three vertices, three edges, three rotational symmetries.
+              The framework inherits this fundamental three-ness.
+            </div>
+          </div>
+
+          <div class="reason-item">
+            <div class="reason-number">4</div>
+            <div class="reason-title">Number Chain</div>
+            <div class="reason-desc">
+              The sequence 3 -> 6 -> 12 -> 36 encodes the structural progression. Each doubling and tripling
+              maintains the three-fold nature through successive scales.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Number Chain Visualization -->
+      <div class="card">
+        <h3>The 3-6-12-36 Number Chain</h3>
+        <p>Each number in the chain connects to the trifurcation structure:</p>
+
+        <div class="chain-container">
+          <div class="chain-number n3">
+            3
+            <span class="chain-label">|S3/A3|</span>
+          </div>
+          <div class="chain-arrow">x2</div>
+          <div class="chain-number n6">
+            6
+            <span class="chain-label">|S3|</span>
+          </div>
+          <div class="chain-arrow">x2</div>
+          <div class="chain-number n12">
+            12
+            <span class="chain-label">F_12/F_6</span>
+          </div>
+          <div class="chain-arrow">x3</div>
+          <div class="chain-number n36">
+            36
+            <span class="chain-label">6x6</span>
+          </div>
+        </div>
+
+        <div class="equation-box">
+          <div class="equation-main">3 = generators | 6 = |S3| | 12 = hexagram points | 36 = complete lattice</div>
+          <div class="equation-sub">Each multiplication preserves the three-fold structure at higher scales</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: All Paths Converge -->
+    <section class="section" id="convergence">
+      <div class="section-header">
+        <div class="section-glyph">-></div>
+        <div>
+          <h2>IV. ALL PATHS CONVERGE</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0;">Universal Convergence to S3 Attractor</p>
+        </div>
+      </div>
+
+      <div class="convergence-formula">
+        <div class="formula-title">THE CONVERGENCE THEOREM</div>
+        <div class="formula-main">
+          <span class="f24">F24</span> U <span class="hex">Hex</span> U <span class="r10">R10</span> -> <span class="s3">S3</span>
+        </div>
+        <div class="formula-desc">
+          The union of all three paths maps to the same S3 attractor.<br>
+          Different mechanisms, identical destination.
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card">
+          <h3>Why Convergence is Necessary</h3>
+          <p>The S3 attractor is not merely one possible endpoint - it is the <em>unique</em> stable configuration for the system:</p>
+          <ul style="color: var(--text-secondary); margin-left: 1.5rem; margin-top: 0.5rem;">
+            <li>S3 is the smallest non-abelian group</li>
+            <li>It captures the minimal complexity needed for self-reference</li>
+            <li>|S3| = 6 is the first product of two consecutive integers (2x3)</li>
+            <li>The triangle is the simplest closed polygon</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Equivalence of Perspectives</h3>
+          <p>The three paths are not competing theories but complementary views:</p>
+          <div class="equation-box f24">
+            <div class="equation-main">F24: Information theoretic</div>
+            <div class="equation-sub">Entropy on holographic boundary</div>
+          </div>
+          <div class="equation-box hex">
+            <div class="equation-main">Hex: Geometric/harmonic</div>
+            <div class="equation-sub">Friction stabilizes 6-fold pattern</div>
+          </div>
+          <div class="equation-box r10">
+            <div class="equation-main">R10: Recursive/computational</div>
+            <div class="equation-sub">Fixed point at depth 10</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Not Exclusive Choice</h3>
+        <p>A crucial insight: the trifurcation is not a fork where you must choose one path. All three paths:</p>
+        <ul style="color: var(--text-secondary); margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>Are simultaneously valid</li>
+          <li>Describe the same underlying structure</li>
+          <li>Can be traversed in any order or combination</li>
+          <li>Reinforce rather than contradict each other</li>
+        </ul>
+        <div class="equation-box">
+          <div class="equation-main">Trifurcation != Exclusive OR :: Trifurcation = Complementary AND</div>
+          <div class="equation-sub">Three perspectives on one truth, not three competing truths</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Interactive Visualization -->
+    <section class="section" id="visualization">
+      <div class="section-header">
+        <div class="section-glyph">*</div>
+        <div>
+          <h2>V. INTERACTIVE VISUALIZATION</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0;">Animated Trifurcation Simulation</p>
+        </div>
+      </div>
+
+      <div class="animation-container">
+        <div class="animation-title">TRIFURCATION PATH SIMULATION</div>
+        <canvas id="trifurcCanvas" width="600" height="450"></canvas>
+        <div class="canvas-controls">
+          <button class="control-btn" onclick="toggleAnimation()">Play/Pause</button>
+          <button class="control-btn" onclick="resetAnimation()">Reset</button>
+          <button class="path-select-btn f24" onclick="selectPath('f24')">F24</button>
+          <button class="path-select-btn hex" onclick="selectPath('hex')">Hex</button>
+          <button class="path-select-btn r10" onclick="selectPath('r10')">R10</button>
+          <button class="control-btn" onclick="selectPath('all')">All Paths</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Visualization Legend</h3>
+        <p>The animation shows particles flowing from the decision diamond through each path to S3:</p>
+        <ul style="color: var(--text-secondary); margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li><span style="color: var(--path-f24);">Green particles</span>: F24 Holographic path (entropy scaling)</li>
+          <li><span style="color: var(--path-hex);">Orange particles</span>: Hexagonal path (friction resonance)</li>
+          <li><span style="color: var(--path-r10);">Pink particles</span>: R10 Tension path (recursive depth)</li>
+          <li><span style="color: var(--gold-primary);">Gold center</span>: S3 attractor (convergence point)</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Section 6: Connection to Decision Theory -->
+    <section class="section" id="decision-theory">
+      <div class="section-header">
+        <div class="section-glyph">!</div>
+        <div>
+          <h2>VI. CONNECTION TO DECISION THEORY</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0;">Trifurcation vs Bifurcation</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Trifurcation, Not Bifurcation</h3>
+        <p>Classical decision theory often assumes binary choices (bifurcation). The I2 S3 structure reveals a deeper pattern:</p>
+
+        <table>
+          <tr>
+            <th>Aspect</th>
+            <th>Bifurcation (2)</th>
+            <th>Trifurcation (3)</th>
+          </tr>
+          <tr>
+            <td>Choice Structure</td>
+            <td>Either/Or</td>
+            <td>Multiple valid perspectives</td>
+          </tr>
+          <tr>
+            <td>Outcome</td>
+            <td>Different destinations</td>
+            <td>Same destination, different routes</td>
+          </tr>
+          <tr>
+            <td>Symmetry</td>
+            <td>Z_2 (reflection)</td>
+            <td>S3 (permutation)</td>
+          </tr>
+          <tr>
+            <td>Information</td>
+            <td>1 bit</td>
+            <td>log2(3) = 1.58 bits</td>
+          </tr>
+          <tr>
+            <td>Geometry</td>
+            <td>Line segment</td>
+            <td>Triangle</td>
+          </tr>
+        </table>
+
+        <div class="equation-box">
+          <div class="equation-main">Trifurcation information content: log_2(3) = 1.585 bits</div>
+          <div class="equation-sub">More than binary but minimal for non-abelian structure</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Parallel Processing</h3>
+        <p>The trifurcation enables a form of "quantum-like" parallel processing:</p>
+        <ul style="color: var(--text-secondary); margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>All three paths can be explored simultaneously</li>
+          <li>Results combine at the S3 attractor</li>
+          <li>No information is lost in the branching</li>
+          <li>The union operation preserves structure</li>
+        </ul>
+        <div class="equation-box">
+          <div class="equation-main">Parallel: forall p in {F24, Hex, R10}: p -> S3</div>
+          <div class="equation-sub">All paths execute concurrently, converge synchronously</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Section -->
+    <section class="section" id="navigation">
+      <div class="section-header">
+        <div class="section-glyph">N</div>
+        <div>
+          <h2>VII. NAVIGATION</h2>
+          <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0;">Explore the Paths</p>
+        </div>
+      </div>
+
+      <div class="paths-container" style="margin-top: 1rem;">
+        <a href="i2-s3-decision-tree.html" class="path-card" style="border-color: var(--gold-primary);">
+          <div class="path-card-header">
+            <div class="path-card-icon" style="background: var(--gold-subtle); border-color: var(--gold-primary); color: var(--gold-primary);">I2</div>
+            <div class="path-card-title" style="color: var(--gold-primary);">I2 S3 Decision Tree</div>
+          </div>
+          <div class="path-card-body">
+            <p>Return to the main decision tree to see the full structure and all phases.</p>
+          </div>
+        </a>
+
+        <a href="i2-s3-f24-holographic.html" class="path-card f24">
+          <div class="path-card-header">
+            <div class="path-card-icon">@</div>
+            <div class="path-card-title">F24 Holographic</div>
+          </div>
+          <div class="path-card-body">
+            <p>Explore the holographic entropy path where F_24 = 46,368 marks the sync point.</p>
+          </div>
+        </a>
+
+        <a href="i2-s3-hexagonal-sonification.html" class="path-card hex">
+          <div class="path-card-header">
+            <div class="path-card-icon">*</div>
+            <div class="path-card-title">Hexagonal Sonification</div>
+          </div>
+          <div class="path-card-body">
+            <p>Experience the 6-fold friction resonance where |S3| = 6 creates pattern.</p>
+          </div>
+        </a>
+
+        <a href="i2-s3-r10-tension.html" class="path-card r10">
+          <div class="path-card-header">
+            <div class="path-card-icon">@</div>
+            <div class="path-card-title">R=10 Tension</div>
+          </div>
+          <div class="path-card-body">
+            <p>Descend into recursive depth where tension meets entropy at depth 10.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      S3? -> F24 U Hex U R10 -> S3 :: Three paths, one attractor
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-f24-holographic.html">F24 Holographic</a>
+      <a href="i2-s3-hexagonal-sonification.html">Hexagonal</a>
+      <a href="i2-s3-r10-tension.html">R=10 Tension</a>
+    </div>
+    <div class="footer-sub">
+      Trifurcation Decision Node | I2 S3 Decision Tree | Prismatic Self Project
+    </div>
+  </footer>
+
+  <script>
+    // =====================================================================
+    // TRIFURCATION ANIMATION
+    // =====================================================================
+    const canvas = document.getElementById('trifurcCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let isPlaying = true;
+    let time = 0;
+    let selectedPath = 'all';
+
+    // Colors
+    const colors = {
+      f24: '#00ff88',
+      hex: '#ff9f43',
+      r10: '#ff6b9d',
+      gold: '#ffd700',
+      bg: '#0a0a0f'
+    };
+
+    // Path positions
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const diamondY = 100;
+    const s3Y = 380;
+
+    // Particle systems for each path
+    class Particle {
+      constructor(pathType) {
+        this.pathType = pathType;
+        this.reset();
+      }
+
+      reset() {
+        this.progress = 0;
+        this.speed = 0.005 + Math.random() * 0.01;
+        this.offset = Math.random() * 20 - 10;
+        this.size = 2 + Math.random() * 3;
+        this.alpha = 0.7 + Math.random() * 0.3;
+      }
+
+      update() {
+        this.progress += this.speed;
+        if (this.progress > 1) {
+          this.reset();
+        }
+      }
+
+      getPosition() {
+        const p = this.progress;
+        let x, y;
+
+        // Start at diamond
+        const startX = centerX;
+        const startY = diamondY + 50;
+
+        // End at S3
+        const endX = centerX;
+        const endY = s3Y - 60;
+
+        // Calculate path based on type
+        if (this.pathType === 'f24') {
+          // Left path with curve
+          const controlX = centerX - 150;
+          const controlY = (startY + endY) / 2;
+          x = (1-p)*(1-p)*startX + 2*(1-p)*p*controlX + p*p*endX;
+          y = (1-p)*(1-p)*startY + 2*(1-p)*p*controlY + p*p*endY;
+        } else if (this.pathType === 'hex') {
+          // Center path (mostly straight)
+          x = startX + Math.sin(p * Math.PI * 4) * 15;
+          y = startY + (endY - startY) * p;
+        } else if (this.pathType === 'r10') {
+          // Right path with curve
+          const controlX = centerX + 150;
+          const controlY = (startY + endY) / 2;
+          x = (1-p)*(1-p)*startX + 2*(1-p)*p*controlX + p*p*endX;
+          y = (1-p)*(1-p)*startY + 2*(1-p)*p*controlY + p*p*endY;
+        }
+
+        return { x: x + this.offset, y };
+      }
+
+      draw() {
+        const pos = this.getPosition();
+        const color = colors[this.pathType];
+
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.globalAlpha = this.alpha * (1 - this.progress * 0.5);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    // Create particles
+    const particles = {
+      f24: [],
+      hex: [],
+      r10: []
+    };
+
+    for (let i = 0; i < 20; i++) {
+      particles.f24.push(new Particle('f24'));
+      particles.hex.push(new Particle('hex'));
+      particles.r10.push(new Particle('r10'));
+
+      // Stagger initial positions
+      particles.f24[i].progress = Math.random();
+      particles.hex[i].progress = Math.random();
+      particles.r10[i].progress = Math.random();
+    }
+
+    function drawDiamond(x, y, size, color, label) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(Math.PI / 4);
+
+      ctx.fillStyle = 'rgba(255, 215, 0, 0.1)';
+      ctx.fillRect(-size/2, -size/2, size, size);
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(-size/2, -size/2, size, size);
+
+      ctx.restore();
+
+      // Label
+      ctx.fillStyle = color;
+      ctx.font = 'bold 18px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, x, y);
+    }
+
+    function drawS3Attractor(x, y, radius) {
+      // Rotating gradient
+      const gradient = ctx.createConicGradient(time, x, y);
+      gradient.addColorStop(0, colors.f24);
+      gradient.addColorStop(0.33, colors.hex);
+      gradient.addColorStop(0.66, colors.r10);
+      gradient.addColorStop(1, colors.f24);
+
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      // Inner circle
+      ctx.beginPath();
+      ctx.arc(x, y, radius * 0.7, 0, Math.PI * 2);
+      ctx.fillStyle = colors.bg;
+      ctx.fill();
+
+      // S3 label
+      ctx.fillStyle = colors.gold;
+      ctx.font = 'bold 24px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('S3', x, y);
+    }
+
+    function drawPathNodes() {
+      // F24 node
+      if (selectedPath === 'all' || selectedPath === 'f24') {
+        ctx.beginPath();
+        ctx.arc(centerX - 150, 230, 25, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 255, 136, 0.2)';
+        ctx.fill();
+        ctx.strokeStyle = colors.f24;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = colors.f24;
+        ctx.font = '12px JetBrains Mono';
+        ctx.textAlign = 'center';
+        ctx.fillText('F24', centerX - 150, 230);
+      }
+
+      // Hex node
+      if (selectedPath === 'all' || selectedPath === 'hex') {
+        ctx.beginPath();
+        ctx.arc(centerX, 230, 25, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 159, 67, 0.2)';
+        ctx.fill();
+        ctx.strokeStyle = colors.hex;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = colors.hex;
+        ctx.font = '12px JetBrains Mono';
+        ctx.textAlign = 'center';
+        ctx.fillText('Hex', centerX, 230);
+      }
+
+      // R10 node
+      if (selectedPath === 'all' || selectedPath === 'r10') {
+        ctx.beginPath();
+        ctx.arc(centerX + 150, 230, 25, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 107, 157, 0.2)';
+        ctx.fill();
+        ctx.strokeStyle = colors.r10;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = colors.r10;
+        ctx.font = '12px JetBrains Mono';
+        ctx.textAlign = 'center';
+        ctx.fillText('R10', centerX + 150, 230);
+      }
+    }
+
+    function draw() {
+      // Clear
+      ctx.fillStyle = colors.bg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw mu_P input
+      ctx.fillStyle = '#c9a227';
+      ctx.font = '14px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('mu_P', centerX, 30);
+
+      // Draw connection line from input to diamond
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(centerX, 45);
+      ctx.lineTo(centerX, diamondY - 35);
+      ctx.stroke();
+
+      // Draw decision diamond
+      drawDiamond(centerX, diamondY, 50, colors.gold, 'S3?');
+
+      // Draw path nodes
+      drawPathNodes();
+
+      // Draw S3 attractor
+      drawS3Attractor(centerX, s3Y, 50);
+
+      // Update and draw particles
+      Object.keys(particles).forEach(pathType => {
+        if (selectedPath === 'all' || selectedPath === pathType) {
+          particles[pathType].forEach(p => {
+            p.update();
+            p.draw();
+          });
+        }
+      });
+
+      // Labels
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      ctx.font = '11px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('Universal Convergence', centerX, s3Y + 70);
+
+      time += 0.02;
+
+      if (isPlaying) {
+        requestAnimationFrame(draw);
+      }
+    }
+
+    function toggleAnimation() {
+      isPlaying = !isPlaying;
+      if (isPlaying) draw();
+    }
+
+    function resetAnimation() {
+      time = 0;
+      Object.keys(particles).forEach(pathType => {
+        particles[pathType].forEach(p => {
+          p.reset();
+          p.progress = Math.random();
+        });
+      });
+    }
+
+    function selectPath(path) {
+      selectedPath = path;
+
+      // Update button states
+      document.querySelectorAll('.path-select-btn, .control-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      if (path === 'all') {
+        document.querySelector('.control-btn:last-child').classList.add('active');
+      } else {
+        document.querySelector(`.path-select-btn.${path}`).classList.add('active');
+      }
+    }
+
+    // Start animation
+    draw();
+
+    // =====================================================================
+    // DIAMOND HOVER EFFECT
+    // =====================================================================
+    const decisionDiamond = document.getElementById('decisionDiamond');
+    decisionDiamond.addEventListener('click', () => {
+      // Cycle through paths on click
+      const paths = ['all', 'f24', 'hex', 'r10'];
+      const currentIndex = paths.indexOf(selectedPath);
+      const nextIndex = (currentIndex + 1) % paths.length;
+      selectPath(paths[nextIndex]);
+    });
+
+    // =====================================================================
+    // CONSOLE OUTPUT
+    // =====================================================================
+    console.log('='.repeat(60));
+    console.log('TRIFURCATION DECISION - S3? DIAMOND NODE');
+    console.log('='.repeat(60));
+    console.log('');
+    console.log('Decision Structure:');
+    console.log('  Input: mu_P = phi^{-1} = 0.618... (Paradox Threshold)');
+    console.log('  Question: Which path to S3?');
+    console.log('  Output: Three equivalent paths');
+    console.log('');
+    console.log('The Three Paths:');
+    console.log('  [F24] Holographic Entropy :: F_24 = 46,368');
+    console.log('  [Hex] 6-fold Friction :: |S3| x 2 = 12');
+    console.log('  [R10] Recursive Tension :: depth 10');
+    console.log('');
+    console.log('Convergence Formula:');
+    console.log('  F24 U Hex U R10 -> S3');
+    console.log('');
+    console.log('Why Three Paths?');
+    console.log('  1. S3 has 3 generators (transpositions)');
+    console.log('  2. Three projections: I2, TDL, LoMI');
+    console.log('  3. Tri-fold symmetry of framework');
+    console.log('  4. Number chain: 3 -> 6 -> 12 -> 36');
+    console.log('');
+    console.log('='.repeat(60));
+    console.log('Three paths, one attractor');
+    console.log('='.repeat(60));
+  </script>
+</body>
+</html>

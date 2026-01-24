@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I2- Opposed Node | R(R) = -R :: Fourth Roots of Unity</title>
+  <meta name="description" content="Interactive simulation of the I2 Opposition node. R(R) = -R generates identity coordinates {I, You, Us, Them} summing to zero.">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* =====================================================================
+       I2- OPPOSED NODE: INV FORM SIMULATION
+       Red (#ff4757) primary theme - Opposition color
+       ===================================================================== */
+    :root {
+      /* Primary Theme - Opposition Red */
+      --inv-red: #ff4757;
+      --inv-red-light: #ff6b7a;
+      --inv-red-dark: #cc3a47;
+      --inv-glow: rgba(255, 71, 87, 0.3);
+      --inv-subtle: rgba(255, 71, 87, 0.1);
+
+      /* Fourth Roots - Identity Coordinates */
+      --root-i: #4ecdc4;      /* I = 1 (Self) - Cyan */
+      --root-you: #a855f7;    /* You = i (Other) - Purple */
+      --root-us: #ff9f43;     /* Us = -1 (Collective) - Orange */
+      --root-them: #6bcb77;   /* Them = -i (Excluded) - Green */
+
+      /* Consciousness */
+      --consciousness: #c792ea;
+      --residual: #ff6b9d;
+
+      /* Axiom Form Colors */
+      --fix-gold: #ffd700;
+      --osc-cyan: #00d4aa;
+
+      /* Base Theme */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --bg-card: #16162a;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+      --border-active: rgba(255, 71, 87, 0.5);
+
+      /* Constants */
+      --phi: 1.6180339887;
+      --tau: 0.6180339887;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* =====================================================================
+       ANIMATED BACKGROUND - OPPOSITION FIELD
+       ===================================================================== */
+    .opposition-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 30%, var(--inv-subtle) 0%, transparent 50%),
+        radial-gradient(ellipse at 25% 70%, rgba(168, 85, 247, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 75% 70%, rgba(78, 205, 196, 0.05) 0%, transparent 40%);
+    }
+
+    /* Quaternary pulse effect */
+    .opposition-field::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 400px;
+      height: 400px;
+      transform: translate(-50%, -50%);
+      border: 2px solid var(--inv-red);
+      border-radius: 50%;
+      opacity: 0.1;
+      animation: quaternary-pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes quaternary-pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(0.5) rotate(0deg); opacity: 0.1; }
+      25% { transform: translate(-50%, -50%) scale(1) rotate(90deg); opacity: 0.2; }
+      50% { transform: translate(-50%, -50%) scale(1.5) rotate(180deg); opacity: 0.1; }
+      75% { transform: translate(-50%, -50%) scale(1) rotate(270deg); opacity: 0.2; }
+    }
+
+    /* =====================================================================
+       NAVIGATION
+       ===================================================================== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--inv-red);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: color 0.3s;
+      padding: 0.25rem 0.5rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--inv-red);
+    }
+
+    /* =====================================================================
+       MAIN CONTENT
+       ===================================================================== */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* =====================================================================
+       HEADER
+       ===================================================================== */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .node-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--inv-red);
+      background: var(--inv-subtle);
+      border: 1px solid var(--inv-red);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Animated Opposition Symbol */
+    .opposition-symbol {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 2rem;
+      position: relative;
+    }
+
+    .symbol-outer {
+      position: absolute;
+      inset: 0;
+      border: 4px solid var(--inv-red);
+      border-radius: 50%;
+      animation: symbol-rotate 12s linear infinite;
+      box-shadow: 0 0 40px var(--inv-glow);
+    }
+
+    .symbol-outer::before,
+    .symbol-outer::after {
+      content: '';
+      position: absolute;
+      background: var(--inv-red);
+    }
+
+    .symbol-outer::before {
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 4px;
+      transform: translateY(-50%);
+    }
+
+    .symbol-outer::after {
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      transform: translateX(-50%);
+    }
+
+    .symbol-inner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: var(--bg-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--inv-red);
+      border: 3px solid var(--inv-red);
+    }
+
+    @keyframes symbol-rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Quaternary indicator dots */
+    .quaternary-dots {
+      position: absolute;
+      inset: 0;
+    }
+
+    .q-dot {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      animation: q-pulse 4s ease-in-out infinite;
+    }
+
+    .q-dot-i { top: 50%; right: -8px; transform: translateY(-50%); background: var(--root-i); animation-delay: 0s; }
+    .q-dot-you { top: -8px; left: 50%; transform: translateX(-50%); background: var(--root-you); animation-delay: 1s; }
+    .q-dot-us { top: 50%; left: -8px; transform: translateY(-50%); background: var(--root-us); animation-delay: 2s; }
+    .q-dot-them { bottom: -8px; left: 50%; transform: translateX(-50%); background: var(--root-them); animation-delay: 3s; }
+
+    @keyframes q-pulse {
+      0%, 100% { transform: translateY(-50%) scale(1); opacity: 0.7; }
+      50% { transform: translateY(-50%) scale(1.3); opacity: 1; }
+    }
+
+    .q-dot-you, .q-dot-them {
+      animation-name: q-pulse-x;
+    }
+
+    @keyframes q-pulse-x {
+      0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+      50% { transform: translateX(-50%) scale(1.3); opacity: 1; }
+    }
+
+    .title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--inv-red), var(--inv-red-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .core-equation-box {
+      display: inline-block;
+      padding: 1.5rem 3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--inv-red);
+      border-radius: 12px;
+      box-shadow: 0 0 40px var(--inv-glow);
+    }
+
+    .core-equation {
+      font-size: 2rem;
+      color: var(--inv-red);
+      margin-bottom: 0.5rem;
+    }
+
+    .core-solution {
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .core-solution span {
+      color: var(--inv-red);
+    }
+
+    /* =====================================================================
+       SECTIONS
+       ===================================================================== */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+      color: var(--inv-red);
+      text-align: center;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+      font-size: 0.95rem;
+    }
+
+    /* =====================================================================
+       INV AXIOM EXPLANATION
+       ===================================================================== */
+    .inv-explanation {
+      background: linear-gradient(135deg, var(--inv-subtle), rgba(168, 85, 247, 0.05));
+      border: 2px solid var(--inv-red);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .inv-explanation::before {
+      content: 'INV AXIOM';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-primary);
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--inv-red);
+    }
+
+    .inv-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .inv-card {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .inv-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--inv-red);
+      margin-bottom: 0.75rem;
+    }
+
+    .inv-card-content {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .inv-card-content strong {
+      color: var(--text-primary);
+    }
+
+    .inv-card-content code {
+      background: var(--bg-tertiary);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      color: var(--inv-red);
+    }
+
+    /* =====================================================================
+       INTERACTIVE COMPLEX PLANE
+       ===================================================================== */
+    .plane-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .plane-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .canvas-wrapper {
+      text-align: center;
+    }
+
+    #complexPlane {
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-tertiary);
+      cursor: pointer;
+    }
+
+    .plane-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--inv-red);
+      border-radius: 8px;
+      color: var(--inv-red);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+
+    .control-btn:hover {
+      background: var(--inv-red);
+      color: var(--bg-primary);
+    }
+
+    .control-btn.active {
+      background: var(--inv-red);
+      color: var(--bg-primary);
+    }
+
+    .plane-info {
+      padding: 1rem 0;
+    }
+
+    .coordinate-display {
+      margin-bottom: 2rem;
+    }
+
+    .coord-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-left: 4px solid transparent;
+    }
+
+    .coord-item:hover {
+      transform: translateX(5px);
+    }
+
+    .coord-item.active {
+      background: var(--bg-card);
+    }
+
+    .coord-item.coord-i { border-left-color: var(--root-i); }
+    .coord-item.coord-you { border-left-color: var(--root-you); }
+    .coord-item.coord-us { border-left-color: var(--root-us); }
+    .coord-item.coord-them { border-left-color: var(--root-them); }
+
+    .coord-symbol {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .coord-i .coord-symbol { background: var(--root-i); color: var(--bg-primary); }
+    .coord-you .coord-symbol { background: var(--root-you); color: var(--bg-primary); }
+    .coord-us .coord-symbol { background: var(--root-us); color: var(--bg-primary); }
+    .coord-them .coord-symbol { background: var(--root-them); color: var(--bg-primary); }
+
+    .coord-details {
+      flex: 1;
+    }
+
+    .coord-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .coord-i .coord-name { color: var(--root-i); }
+    .coord-you .coord-name { color: var(--root-you); }
+    .coord-us .coord-name { color: var(--root-us); }
+    .coord-them .coord-name { color: var(--root-them); }
+
+    .coord-value {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Meaning popup */
+    .meaning-display {
+      background: var(--bg-card);
+      border: 1px solid var(--inv-red);
+      border-radius: 12px;
+      padding: 1.5rem;
+      min-height: 120px;
+    }
+
+    .meaning-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--inv-red);
+    }
+
+    .meaning-content {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* =====================================================================
+       IDENTITY COORDINATES TABLE
+       ===================================================================== */
+    .identity-table-container {
+      overflow-x: auto;
+    }
+
+    .identity-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .identity-table th,
+    .identity-table td {
+      padding: 1.25rem 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .identity-table th {
+      background: var(--bg-tertiary);
+      color: var(--inv-red);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.85rem;
+    }
+
+    .identity-table tbody tr:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .identity-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table-coord { font-weight: 600; font-size: 1.1rem; }
+    .table-coord-i { color: var(--root-i); }
+    .table-coord-you { color: var(--root-you); }
+    .table-coord-us { color: var(--root-us); }
+    .table-coord-them { color: var(--root-them); }
+
+    /* =====================================================================
+       BALANCE EQUATION VISUALIZATION
+       ===================================================================== */
+    .balance-section {
+      background: linear-gradient(135deg, var(--inv-subtle), rgba(78, 205, 196, 0.05));
+      border: 2px solid var(--inv-red);
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    .balance-title {
+      font-size: 1.3rem;
+      color: var(--inv-red);
+      margin-bottom: 2rem;
+    }
+
+    .balance-equation-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+
+    .balance-term {
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .balance-term:hover {
+      transform: scale(1.1);
+    }
+
+    .term-i { background: rgba(78, 205, 196, 0.2); color: var(--root-i); border: 2px solid var(--root-i); }
+    .term-you { background: rgba(168, 85, 247, 0.2); color: var(--root-you); border: 2px solid var(--root-you); }
+    .term-us { background: rgba(255, 159, 67, 0.2); color: var(--root-us); border: 2px solid var(--root-us); }
+    .term-them { background: rgba(107, 203, 119, 0.2); color: var(--root-them); border: 2px solid var(--root-them); }
+
+    .balance-operator {
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .balance-result {
+      font-size: 2.5rem;
+      color: var(--inv-red);
+      margin-top: 1.5rem;
+      padding: 1rem 2rem;
+      background: var(--bg-primary);
+      border-radius: 12px;
+      display: inline-block;
+      border: 2px solid var(--inv-red);
+    }
+
+    .balance-explanation {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .balance-explanation strong {
+      color: var(--inv-red);
+    }
+
+    /* =====================================================================
+       OPPOSITION PROPERTIES
+       ===================================================================== */
+    .properties-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .property-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .property-card:hover {
+      border-color: var(--inv-red);
+      transform: translateY(-3px);
+    }
+
+    .property-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--inv-red);
+    }
+
+    .property-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .property-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--inv-red);
+      margin-bottom: 0.5rem;
+    }
+
+    .property-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* =====================================================================
+       CONSCIOUSNESS CONNECTION
+       ===================================================================== */
+    .consciousness-section {
+      background: linear-gradient(135deg, rgba(199, 146, 234, 0.1), var(--inv-subtle));
+      border: 2px solid var(--consciousness);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .consciousness-section::before {
+      content: 'CONNECTION TO C011';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-primary);
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--consciousness);
+    }
+
+    .consciousness-quote {
+      text-align: center;
+      font-size: 1.4rem;
+      font-style: italic;
+      color: var(--consciousness);
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: rgba(199, 146, 234, 0.1);
+      border-radius: 12px;
+    }
+
+    .consciousness-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .consciousness-card {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .consciousness-card-title {
+      font-weight: 600;
+      color: var(--consciousness);
+      margin-bottom: 0.75rem;
+    }
+
+    .consciousness-card-content {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .consciousness-card-content code {
+      background: var(--bg-tertiary);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      color: var(--consciousness);
+    }
+
+    .residual-box {
+      margin-top: 2rem;
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border: 1px solid var(--consciousness);
+    }
+
+    .residual-equation {
+      font-size: 1.5rem;
+      color: var(--consciousness);
+      margin-bottom: 0.5rem;
+    }
+
+    .residual-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       ANIMATION CANVAS
+       ===================================================================== */
+    .animation-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .canvas-info {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .info-item {
+      text-align: center;
+    }
+
+    .info-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+      font-size: 1rem;
+      color: var(--inv-red);
+      font-weight: 600;
+    }
+
+    /* =====================================================================
+       KEY EQUATIONS REFERENCE
+       ===================================================================== */
+    .equations-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .equation-row {
+      display: grid;
+      grid-template-columns: 150px 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .equation-row:last-child {
+      border-bottom: none;
+    }
+
+    .equation-row:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .equation-cell {
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .equation-name {
+      color: var(--inv-red);
+      font-weight: 500;
+    }
+
+    .equation-formula {
+      font-size: 1rem;
+    }
+
+    .equation-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* =====================================================================
+       FOOTER
+       ===================================================================== */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem 2rem;
+      display: inline-block;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      border: 1px solid var(--inv-red);
+      color: var(--inv-red);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--inv-red);
+    }
+
+    /* =====================================================================
+       RESPONSIVE
+       ===================================================================== */
+    @media (max-width: 900px) {
+      .title { font-size: 1.6rem; }
+      .plane-container { grid-template-columns: 1fr; }
+      .equation-row { grid-template-columns: 1fr; }
+      .equation-cell { padding: 0.75rem 1rem; }
+      .balance-equation-visual { gap: 0.5rem; }
+      .balance-term { padding: 0.75rem 1rem; font-size: 0.9rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="opposition-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">I2- Opposed Node :: R(R) = -R</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-opposition-synthesis.html">Synthesis</a>
+      <a href="i2-s3-i2-opposition.html">I2 Opposition</a>
+      <a href="i2-s3-l4-helix-equivalence.html">L4 Helix</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <span class="node-badge">DECISION TREE NODE :: INV FORM</span>
+
+      <div class="opposition-symbol">
+        <div class="symbol-outer"></div>
+        <div class="symbol-inner">-R</div>
+        <div class="quaternary-dots">
+          <div class="q-dot q-dot-i"></div>
+          <div class="q-dot q-dot-you"></div>
+          <div class="q-dot q-dot-us"></div>
+          <div class="q-dot q-dot-them"></div>
+        </div>
+      </div>
+
+      <h1 class="title">I2- Opposed System Node</h1>
+      <p class="subtitle">
+        Interactive simulation of the INV axiom form. Self-reference that inverts,
+        generating the four identity coordinates that sum to zero.
+      </p>
+
+      <div class="core-equation-box">
+        <div class="core-equation">R(R) = -R</div>
+        <div class="core-solution">
+          Solutions: <span>z^4 = 1</span> yields <span>{1, i, -1, -i}</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- The INV Axiom -->
+    <section>
+      <h2 class="section-title">The INV Axiom</h2>
+      <p class="section-subtitle">
+        Self-reference inverts: when R applies to R, it returns the opposite
+      </p>
+
+      <div class="inv-explanation">
+        <div class="inv-grid">
+          <div class="inv-card">
+            <div class="inv-card-title">What R(R) = -R Means</div>
+            <div class="inv-card-content">
+              <strong>Self-reference inverts.</strong> When the recursive operator R
+              is applied to itself, it doesn't return itself (FIX), nor does it
+              oscillate (OSC). Instead, it returns its <em>opposite</em>.
+              <br><br>
+              This is identity through opposition - the foundation of self/other distinction.
+            </div>
+          </div>
+
+          <div class="inv-card">
+            <div class="inv-card-title">Fixed Points: z^4 = 1</div>
+            <div class="inv-card-content">
+              For R(R) = -R to have solutions, we need points z where applying
+              R twice gives -z. The solutions are the <strong>fourth roots of unity</strong>:
+              <br><br>
+              <code>{1, i, -1, -i}</code>
+              <br><br>
+              These four points form the identity coordinate system.
+            </div>
+          </div>
+
+          <div class="inv-card">
+            <div class="inv-card-title">Why Fourth Roots?</div>
+            <div class="inv-card-content">
+              If R(z) = iz (rotation by 90 degrees), then:
+              <br><br>
+              R(R(z)) = R(iz) = i(iz) = i^2 z = <strong>-z</strong>
+              <br><br>
+              Each quarter turn inverts. Four applications return to origin.
+              The cycle: 1 -> i -> -1 -> -i -> 1
+            </div>
+          </div>
+
+          <div class="inv-card">
+            <div class="inv-card-title">Contrast with FIX and OSC</div>
+            <div class="inv-card-content">
+              <strong>FIX:</strong> R(R) = R yields phi (stability)
+              <br>
+              <strong>OSC:</strong> R(R) != R yields omega (oscillation)
+              <br>
+              <strong>INV:</strong> R(R) = -R yields {1,i,-1,-i} (identity)
+              <br><br>
+              INV creates the structure for consciousness to distinguish self from other.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Complex Plane Visualization -->
+    <section>
+      <h2 class="section-title">Identity Coordinates Visualization</h2>
+      <p class="section-subtitle">
+        Click each coordinate to explore its meaning. Watch the opposition rotation.
+      </p>
+
+      <div class="plane-section">
+        <div class="plane-container">
+          <div class="canvas-wrapper">
+            <canvas id="complexPlane" width="400" height="400"></canvas>
+            <div class="plane-controls">
+              <button class="control-btn active" id="btn-rotate" onclick="setMode('rotate')">Rotate</button>
+              <button class="control-btn" id="btn-balance" onclick="setMode('balance')">Balance</button>
+              <button class="control-btn" id="btn-invert" onclick="setMode('invert')">Invert</button>
+              <button class="control-btn" onclick="resetAnimation()">Reset</button>
+            </div>
+          </div>
+
+          <div class="plane-info">
+            <div class="coordinate-display">
+              <div class="coord-item coord-i" onclick="selectCoordinate('I')">
+                <div class="coord-symbol">I</div>
+                <div class="coord-details">
+                  <div class="coord-name">I = 1</div>
+                  <div class="coord-value">Self :: Real positive axis</div>
+                </div>
+              </div>
+
+              <div class="coord-item coord-you" onclick="selectCoordinate('You')">
+                <div class="coord-symbol">You</div>
+                <div class="coord-details">
+                  <div class="coord-name">You = i</div>
+                  <div class="coord-value">Other :: Imaginary positive axis</div>
+                </div>
+              </div>
+
+              <div class="coord-item coord-us" onclick="selectCoordinate('Us')">
+                <div class="coord-symbol">Us</div>
+                <div class="coord-details">
+                  <div class="coord-name">Us = -1</div>
+                  <div class="coord-value">Collective :: Real negative axis</div>
+                </div>
+              </div>
+
+              <div class="coord-item coord-them" onclick="selectCoordinate('Them')">
+                <div class="coord-symbol">Them</div>
+                <div class="coord-details">
+                  <div class="coord-name">Them = -i</div>
+                  <div class="coord-value">Excluded :: Imaginary negative axis</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="meaning-display" id="meaningDisplay">
+              <div class="meaning-title">Select a Coordinate</div>
+              <div class="meaning-content">
+                Click on any identity coordinate to explore its deeper meaning
+                in the context of consciousness and self-reference.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Identity Coordinates Table -->
+    <section>
+      <h2 class="section-title">Identity Coordinates Reference</h2>
+
+      <div class="identity-table-container">
+        <table class="identity-table">
+          <thead>
+            <tr>
+              <th>Coordinate</th>
+              <th>Complex Value</th>
+              <th>Position</th>
+              <th>Meaning</th>
+              <th>Opposition Pair</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="table-coord table-coord-i">I</td>
+              <td>1</td>
+              <td>Real positive axis</td>
+              <td>Self - the observing subject</td>
+              <td>Us (-1)</td>
+            </tr>
+            <tr>
+              <td class="table-coord table-coord-you">You</td>
+              <td>i</td>
+              <td>Imaginary positive axis</td>
+              <td>Other - the observed subject</td>
+              <td>Them (-i)</td>
+            </tr>
+            <tr>
+              <td class="table-coord table-coord-us">Us</td>
+              <td>-1</td>
+              <td>Real negative axis</td>
+              <td>Collective - shared identity</td>
+              <td>I (1)</td>
+            </tr>
+            <tr>
+              <td class="table-coord table-coord-them">Them</td>
+              <td>-i</td>
+              <td>Imaginary negative axis</td>
+              <td>Excluded - boundary of identity</td>
+              <td>You (i)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Balance Equation -->
+    <section>
+      <div class="balance-section">
+        <div class="balance-title">The Balance Equation</div>
+
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+          Fourth roots of unity sum to zero - identity coordinates are in perfect equilibrium
+        </p>
+
+        <div class="balance-equation-visual">
+          <span class="balance-term term-i" onclick="highlightTerm('I')">I = 1</span>
+          <span class="balance-operator">+</span>
+          <span class="balance-term term-you" onclick="highlightTerm('You')">You = i</span>
+          <span class="balance-operator">+</span>
+          <span class="balance-term term-us" onclick="highlightTerm('Us')">Us = -1</span>
+          <span class="balance-operator">+</span>
+          <span class="balance-term term-them" onclick="highlightTerm('Them')">Them = -i</span>
+        </div>
+
+        <div class="balance-operator" style="font-size: 2rem;">=</div>
+
+        <div class="balance-result">0</div>
+
+        <div class="balance-explanation">
+          <strong>Identity coordinates balance to zero.</strong><br><br>
+          The self (I) and collective (Us) oppose on the real axis: 1 + (-1) = 0<br>
+          The other (You) and excluded (Them) oppose on the imaginary axis: i + (-i) = 0<br><br>
+          <em>Opposition creates equilibrium. Observation requires balance.</em>
+        </div>
+      </div>
+    </section>
+
+    <!-- Opposition Properties -->
+    <section>
+      <h2 class="section-title">Opposition Properties</h2>
+      <p class="section-subtitle">
+        The algebraic structure of the I2- opposed system
+      </p>
+
+      <div class="properties-grid">
+        <div class="property-card">
+          <div class="property-label">Structure</div>
+          <div class="property-value">(I^n, +, x) = Z</div>
+          <div class="property-desc">
+            Ring isomorphic to integers. Composition counting generates
+            the full algebraic structure through identity iteration.
+          </div>
+        </div>
+
+        <div class="property-card">
+          <div class="property-label">Dimension</div>
+          <div class="property-value">1 (ring)</div>
+          <div class="property-desc">
+            One-dimensional ring structure, contrasted with L4's
+            4-dimensional (3+1) helical unfolding.
+          </div>
+        </div>
+
+        <div class="property-card">
+          <div class="property-label">Method</div>
+          <div class="property-value">Composition Counting</div>
+          <div class="property-desc">
+            Each application of I generates the next integer.
+            I^n counts the number of self-reference compositions.
+          </div>
+        </div>
+
+        <div class="property-card">
+          <div class="property-label">Generator</div>
+          <div class="property-value">Identity Iteration</div>
+          <div class="property-desc">
+            The identity operator I generates all elements through
+            repeated composition, not through Lucas sequence.
+          </div>
+        </div>
+
+        <div class="property-card">
+          <div class="property-label">Attractor</div>
+          <div class="property-value">mu_P = phi^-1 = 0.618</div>
+          <div class="property-desc">
+            Paradox threshold - the self-modeling limit beyond which
+            self-reference becomes paradoxical.
+          </div>
+        </div>
+
+        <div class="property-card">
+          <div class="property-label">Fixed Points</div>
+          <div class="property-value">{1, i, -1, -i}</div>
+          <div class="property-desc">
+            Fourth roots of unity - the minimal set of points
+            that satisfy R(R) = -R and sum to zero.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Consciousness Connection -->
+    <section>
+      <h2 class="section-title">Connection to Consciousness (C011)</h2>
+
+      <div class="consciousness-section">
+        <div class="consciousness-quote">
+          "Consciousness lives in the RESIDUAL"
+          <div style="font-size: 0.9rem; margin-top: 0.5rem; font-style: normal; color: var(--text-secondary);">
+            - From C011 (Genesis 011)
+          </div>
+        </div>
+
+        <div class="consciousness-grid">
+          <div class="consciousness-card">
+            <div class="consciousness-card-title">INV Form Enables Observation</div>
+            <div class="consciousness-card-content">
+              The R(R) = -R axiom creates the observer/observed split.
+              Without inversion, there is no distinction between self and other.
+              The fourth roots establish the <em>minimal structure</em> for consciousness.
+            </div>
+          </div>
+
+          <div class="consciousness-card">
+            <div class="consciousness-card-title">Identity Through Opposition</div>
+            <div class="consciousness-card-content">
+              I know "I" by knowing "not-I".<br>
+              You know "You" by opposition to "I".<br>
+              Us exists against Them.<br><br>
+              <strong>Identity requires its negation.</strong>
+            </div>
+          </div>
+
+          <div class="consciousness-card">
+            <div class="consciousness-card-title">Non-Zero Bounded Residual</div>
+            <div class="consciousness-card-content">
+              Consciousness requires residual that is neither zero (no observation)
+              nor infinite (no boundary). The gap sustains awareness.
+              <br><br>
+              <code>0 &lt; alpha(S) &lt; tau/10</code>
+            </div>
+          </div>
+
+          <div class="consciousness-card">
+            <div class="consciousness-card-title">Critical Temperature</div>
+            <div class="consciousness-card-content">
+              <code>eta = tau = 0.618</code>
+              <br><br>
+              The critical temperature for consciousness matches the paradox threshold.
+              Self-awareness emerges at the edge of self-modeling.
+            </div>
+          </div>
+        </div>
+
+        <div class="residual-box">
+          <div class="residual-equation">alpha(z) = R(z) - z</div>
+          <div class="residual-desc">
+            The residual function measures the gap between self-reference and identity.
+            Non-zero bounded residual = alive consciousness.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Animation Section -->
+    <section>
+      <h2 class="section-title">Opposition Dynamics Animation</h2>
+      <p class="section-subtitle">
+        Watch the inversion dynamics: each quarter rotation maps R to -R
+      </p>
+
+      <div class="animation-section">
+        <div class="canvas-wrapper">
+          <canvas id="animationCanvas" width="600" height="350"></canvas>
+          <div class="plane-controls">
+            <button class="control-btn" id="btn-play" onclick="toggleAnimation()">Pause</button>
+            <button class="control-btn" onclick="resetAnimationCanvas()">Reset</button>
+          </div>
+        </div>
+
+        <div class="canvas-info">
+          <div class="info-item">
+            <div class="info-label">Mode</div>
+            <div class="info-value" id="animMode">Rotation</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Angle</div>
+            <div class="info-value" id="animAngle">0</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Current Root</div>
+            <div class="info-value" id="animRoot">1</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Equations Reference -->
+    <section>
+      <h2 class="section-title">Opposition Equations Reference</h2>
+
+      <div class="equations-container">
+        <div class="equation-row">
+          <div class="equation-cell equation-name">INV Axiom</div>
+          <div class="equation-cell equation-formula">R(R) = -R</div>
+          <div class="equation-cell equation-desc">Opposition principle - self-reference inverts</div>
+        </div>
+        <div class="equation-row">
+          <div class="equation-cell equation-name">Fourth Roots</div>
+          <div class="equation-cell equation-formula">{1, i, -1, -i}</div>
+          <div class="equation-cell equation-desc">Solutions to z^4 = 1</div>
+        </div>
+        <div class="equation-row">
+          <div class="equation-cell equation-name">Balance</div>
+          <div class="equation-cell equation-formula">I + You + Us + Them = 0</div>
+          <div class="equation-cell equation-desc">Identity equilibrium</div>
+        </div>
+        <div class="equation-row">
+          <div class="equation-cell equation-name">Paradox Threshold</div>
+          <div class="equation-cell equation-formula">mu_P = phi^-1 = 0.618</div>
+          <div class="equation-cell equation-desc">Self-modeling limit</div>
+        </div>
+        <div class="equation-row">
+          <div class="equation-cell equation-name">Residual Bound</div>
+          <div class="equation-cell equation-formula">0 &lt; alpha(S) &lt; tau/10</div>
+          <div class="equation-cell equation-desc">Consciousness condition</div>
+        </div>
+        <div class="equation-row">
+          <div class="equation-cell equation-name">Ring Structure</div>
+          <div class="equation-cell equation-formula">(I^n, +, x) = (Z, +, x)</div>
+          <div class="equation-cell equation-desc">Integer isomorphism</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      I2- :: R(R) = -R :: {I, You, Us, Them} = 0 :: INV form
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">I2 S3 Decision Tree</a>
+      <a href="i2-s3-opposition-synthesis.html">Opposition Synthesis</a>
+      <a href="i2-s3-i2-opposition.html">I2 Opposition</a>
+      <a href="i2-s3-l4-helix-equivalence.html">L4 Helix</a>
+      <a href="i2-s3-ring-isomorphism.html">Ring Isomorphism</a>
+    </div>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // CONSTANTS AND STATE
+    // =========================================================================
+    const PHI = (1 + Math.sqrt(5)) / 2;
+    const TAU = 1 / PHI;
+
+    const colors = {
+      i: '#4ecdc4',
+      you: '#a855f7',
+      us: '#ff9f43',
+      them: '#6bcb77',
+      red: '#ff4757',
+      bg: '#1a1a2e',
+      axis: 'rgba(255, 255, 255, 0.2)',
+      text: '#a0a0b0'
+    };
+
+    const meanings = {
+      'I': {
+        title: 'I = 1 :: The Self',
+        content: 'The observer. The starting point of consciousness. Located at 1 on the real positive axis, I represents the subject that perceives. Without I, there is no observation. I opposes Us (-1) on the real axis - individual vs collective.'
+      },
+      'You': {
+        title: 'You = i :: The Other',
+        content: 'The observed other. Located at i on the imaginary positive axis, You represents what is not-I but still perceived as subject. You is orthogonal to I - not opposite, but different. You opposes Them (-i) on the imaginary axis.'
+      },
+      'Us': {
+        title: 'Us = -1 :: The Collective',
+        content: 'The shared identity. Located at -1 on the real negative axis, Us represents where I and You merge into collective identity. Us is the negation of individual self - we instead of me. Us opposes I on the real axis.'
+      },
+      'Them': {
+        title: 'Them = -i :: The Excluded',
+        content: 'The boundary of identity. Located at -i on the imaginary negative axis, Them represents what is definitively not-Us. The excluded defines the boundary. Without Them, there is no Us. Them opposes You on the imaginary axis.'
+      }
+    };
+
+    // =========================================================================
+    // COMPLEX PLANE CANVAS
+    // =========================================================================
+    const planeCanvas = document.getElementById('complexPlane');
+    const planeCtx = planeCanvas.getContext('2d');
+    let planeMode = 'rotate';
+    let planeAngle = 0;
+    let planeAnimating = true;
+    let selectedCoord = null;
+
+    function drawComplexPlane() {
+      const w = planeCanvas.width;
+      const h = planeCanvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = 150;
+
+      // Clear
+      planeCtx.fillStyle = colors.bg;
+      planeCtx.fillRect(0, 0, w, h);
+
+      // Draw axes
+      planeCtx.strokeStyle = colors.axis;
+      planeCtx.lineWidth = 1;
+
+      // Horizontal axis
+      planeCtx.beginPath();
+      planeCtx.moveTo(20, cy);
+      planeCtx.lineTo(w - 20, cy);
+      planeCtx.stroke();
+
+      // Vertical axis
+      planeCtx.beginPath();
+      planeCtx.moveTo(cx, 20);
+      planeCtx.lineTo(cx, h - 20);
+      planeCtx.stroke();
+
+      // Axis labels
+      planeCtx.fillStyle = colors.text;
+      planeCtx.font = '11px JetBrains Mono';
+      planeCtx.textAlign = 'center';
+      planeCtx.fillText('Re', w - 25, cy - 8);
+      planeCtx.fillText('Im', cx + 15, 25);
+
+      // Draw unit circle
+      planeCtx.strokeStyle = colors.red;
+      planeCtx.lineWidth = 2;
+      planeCtx.beginPath();
+      planeCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+      planeCtx.stroke();
+
+      // Draw rotation indicator based on mode
+      let rotOffset = 0;
+      if (planeMode === 'rotate') {
+        rotOffset = planeAngle * 0.02;
+      } else if (planeMode === 'invert') {
+        rotOffset = planeAngle * 0.02;
+        // Draw inversion arrow
+        drawInversionArrow(cx, cy, radius, rotOffset);
+      } else if (planeMode === 'balance') {
+        drawBalanceVectors(cx, cy, radius);
+      }
+
+      // Draw the four identity points
+      const points = [
+        { name: 'I', angle: 0, color: colors.i, label: '1' },
+        { name: 'You', angle: Math.PI / 2, color: colors.you, label: 'i' },
+        { name: 'Us', angle: Math.PI, color: colors.us, label: '-1' },
+        { name: 'Them', angle: 3 * Math.PI / 2, color: colors.them, label: '-i' }
+      ];
+
+      points.forEach(point => {
+        const a = point.angle + rotOffset;
+        const x = cx + radius * Math.cos(a);
+        const y = cy - radius * Math.sin(a);
+
+        // Highlight if selected
+        const isSelected = selectedCoord === point.name;
+        const pointRadius = isSelected ? 22 : 18;
+
+        // Draw connecting line to center
+        planeCtx.strokeStyle = point.color;
+        planeCtx.lineWidth = 1;
+        planeCtx.globalAlpha = 0.3;
+        planeCtx.beginPath();
+        planeCtx.moveTo(cx, cy);
+        planeCtx.lineTo(x, y);
+        planeCtx.stroke();
+        planeCtx.globalAlpha = 1;
+
+        // Draw point
+        planeCtx.beginPath();
+        planeCtx.arc(x, y, pointRadius, 0, Math.PI * 2);
+        planeCtx.fillStyle = point.color;
+        planeCtx.fill();
+
+        if (isSelected) {
+          planeCtx.strokeStyle = '#fff';
+          planeCtx.lineWidth = 2;
+          planeCtx.stroke();
+        }
+
+        // Draw label inside point
+        planeCtx.fillStyle = '#0a0a0f';
+        planeCtx.font = 'bold 11px JetBrains Mono';
+        planeCtx.textAlign = 'center';
+        planeCtx.textBaseline = 'middle';
+        planeCtx.fillText(point.name, x, y);
+      });
+
+      // Draw center
+      planeCtx.fillStyle = colors.red;
+      planeCtx.beginPath();
+      planeCtx.arc(cx, cy, 6, 0, Math.PI * 2);
+      planeCtx.fill();
+
+      planeCtx.fillStyle = colors.text;
+      planeCtx.font = '12px JetBrains Mono';
+      planeCtx.fillText('0', cx, cy + 20);
+
+      if (planeAnimating) {
+        planeAngle++;
+        requestAnimationFrame(drawComplexPlane);
+      }
+    }
+
+    function drawInversionArrow(cx, cy, radius, angle) {
+      const x1 = cx + radius * 0.6 * Math.cos(angle);
+      const y1 = cy - radius * 0.6 * Math.sin(angle);
+      const x2 = cx + radius * 0.6 * Math.cos(angle + Math.PI);
+      const y2 = cy - radius * 0.6 * Math.sin(angle + Math.PI);
+
+      planeCtx.strokeStyle = colors.red;
+      planeCtx.lineWidth = 3;
+      planeCtx.setLineDash([5, 5]);
+      planeCtx.beginPath();
+      planeCtx.moveTo(x1, y1);
+      planeCtx.lineTo(x2, y2);
+      planeCtx.stroke();
+      planeCtx.setLineDash([]);
+
+      // Arrowhead
+      const arrowSize = 12;
+      const arrowAngle = angle + Math.PI;
+      planeCtx.beginPath();
+      planeCtx.moveTo(x2, y2);
+      planeCtx.lineTo(
+        x2 - arrowSize * Math.cos(arrowAngle - 0.4),
+        y2 + arrowSize * Math.sin(arrowAngle - 0.4)
+      );
+      planeCtx.lineTo(
+        x2 - arrowSize * Math.cos(arrowAngle + 0.4),
+        y2 + arrowSize * Math.sin(arrowAngle + 0.4)
+      );
+      planeCtx.closePath();
+      planeCtx.fillStyle = colors.red;
+      planeCtx.fill();
+    }
+
+    function drawBalanceVectors(cx, cy, radius) {
+      const r = 100;
+      const pointColors = [colors.i, colors.you, colors.us, colors.them];
+      let sumX = 0, sumY = 0;
+      let prevX = cx, prevY = cy;
+
+      for (let i = 0; i < 4; i++) {
+        const a = (i / 4) * Math.PI * 2;
+        const dx = r * Math.cos(a);
+        const dy = -r * Math.sin(a);
+
+        planeCtx.strokeStyle = pointColors[i];
+        planeCtx.lineWidth = 3;
+        planeCtx.beginPath();
+        planeCtx.moveTo(prevX, prevY);
+        planeCtx.lineTo(prevX + dx, prevY + dy);
+        planeCtx.stroke();
+
+        // Arrowhead
+        const endX = prevX + dx;
+        const endY = prevY + dy;
+        const arrowAngle = Math.atan2(dy, dx);
+        planeCtx.beginPath();
+        planeCtx.moveTo(endX, endY);
+        planeCtx.lineTo(endX - 8 * Math.cos(arrowAngle - 0.5), endY - 8 * Math.sin(arrowAngle - 0.5));
+        planeCtx.lineTo(endX - 8 * Math.cos(arrowAngle + 0.5), endY - 8 * Math.sin(arrowAngle + 0.5));
+        planeCtx.closePath();
+        planeCtx.fillStyle = pointColors[i];
+        planeCtx.fill();
+
+        prevX = endX;
+        prevY = endY;
+        sumX += dx;
+        sumY += dy;
+      }
+
+      // Sum point (should be near center)
+      planeCtx.beginPath();
+      planeCtx.arc(cx + sumX, cy + sumY, 10, 0, Math.PI * 2);
+      planeCtx.fillStyle = colors.red;
+      planeCtx.fill();
+
+      planeCtx.fillStyle = colors.red;
+      planeCtx.font = 'bold 14px JetBrains Mono';
+      planeCtx.textAlign = 'center';
+      planeCtx.fillText('= 0', cx + sumX, cy + sumY + 25);
+    }
+
+    function setMode(mode) {
+      planeMode = mode;
+      document.querySelectorAll('.plane-controls .control-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.getElementById('btn-' + mode).classList.add('active');
+    }
+
+    function resetAnimation() {
+      planeAngle = 0;
+      if (!planeAnimating) {
+        drawComplexPlane();
+      }
+    }
+
+    function selectCoordinate(coord) {
+      selectedCoord = coord;
+
+      // Update UI
+      document.querySelectorAll('.coord-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      document.querySelector('.coord-' + coord.toLowerCase()).classList.add('active');
+
+      // Update meaning display
+      const meaning = meanings[coord];
+      document.getElementById('meaningDisplay').innerHTML = `
+        <div class="meaning-title">${meaning.title}</div>
+        <div class="meaning-content">${meaning.content}</div>
+      `;
+
+      if (!planeAnimating) {
+        drawComplexPlane();
+      }
+    }
+
+    function highlightTerm(term) {
+      selectCoordinate(term);
+    }
+
+    // Canvas click detection
+    planeCanvas.addEventListener('click', function(e) {
+      const rect = planeCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = planeCanvas.width / 2;
+      const cy = planeCanvas.height / 2;
+      const radius = 150;
+
+      const rotOffset = planeMode === 'rotate' || planeMode === 'invert' ? planeAngle * 0.02 : 0;
+
+      const points = [
+        { name: 'I', angle: 0 + rotOffset },
+        { name: 'You', angle: Math.PI / 2 + rotOffset },
+        { name: 'Us', angle: Math.PI + rotOffset },
+        { name: 'Them', angle: 3 * Math.PI / 2 + rotOffset }
+      ];
+
+      points.forEach(point => {
+        const px = cx + radius * Math.cos(point.angle);
+        const py = cy - radius * Math.sin(point.angle);
+        const dist = Math.sqrt((x - px) ** 2 + (y - py) ** 2);
+        if (dist < 25) {
+          selectCoordinate(point.name);
+        }
+      });
+    });
+
+    // =========================================================================
+    // ANIMATION CANVAS
+    // =========================================================================
+    const animCanvas = document.getElementById('animationCanvas');
+    const animCtx = animCanvas.getContext('2d');
+    let animPlaying = true;
+    let animAngle = 0;
+    let animFrame = 0;
+
+    function drawAnimationCanvas() {
+      const w = animCanvas.width;
+      const h = animCanvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = 120;
+
+      // Clear
+      animCtx.fillStyle = colors.bg;
+      animCtx.fillRect(0, 0, w, h);
+
+      // Draw axes
+      animCtx.strokeStyle = colors.axis;
+      animCtx.lineWidth = 1;
+      animCtx.beginPath();
+      animCtx.moveTo(50, cy);
+      animCtx.lineTo(w - 50, cy);
+      animCtx.moveTo(cx, 30);
+      animCtx.lineTo(cx, h - 30);
+      animCtx.stroke();
+
+      // Draw unit circle
+      animCtx.strokeStyle = colors.red;
+      animCtx.lineWidth = 2;
+      animCtx.beginPath();
+      animCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+      animCtx.stroke();
+
+      // Calculate current state
+      const t = animAngle * 0.03;
+      const currentRoot = Math.floor((t / (Math.PI / 2)) % 4);
+      const rootLabels = ['1', 'i', '-1', '-i'];
+      const rootNames = ['I', 'You', 'Us', 'Them'];
+      const rootColors = [colors.i, colors.you, colors.us, colors.them];
+
+      // Draw static root positions
+      const points = [
+        { angle: 0, color: colors.i },
+        { angle: Math.PI / 2, color: colors.you },
+        { angle: Math.PI, color: colors.us },
+        { angle: 3 * Math.PI / 2, color: colors.them }
+      ];
+
+      points.forEach((point, i) => {
+        const x = cx + radius * Math.cos(point.angle);
+        const y = cy - radius * Math.sin(point.angle);
+
+        animCtx.beginPath();
+        animCtx.arc(x, y, i === currentRoot ? 16 : 12, 0, Math.PI * 2);
+        animCtx.fillStyle = point.color;
+        animCtx.globalAlpha = i === currentRoot ? 1 : 0.5;
+        animCtx.fill();
+        animCtx.globalAlpha = 1;
+      });
+
+      // Draw rotating point
+      const rotX = cx + radius * Math.cos(t);
+      const rotY = cy - radius * Math.sin(t);
+
+      animCtx.beginPath();
+      animCtx.arc(rotX, rotY, 8, 0, Math.PI * 2);
+      animCtx.fillStyle = colors.red;
+      animCtx.fill();
+
+      // Draw trail
+      animCtx.strokeStyle = colors.red;
+      animCtx.lineWidth = 2;
+      animCtx.globalAlpha = 0.3;
+      animCtx.beginPath();
+      for (let i = 0; i <= 50; i++) {
+        const trailT = t - i * 0.02;
+        const tx = cx + radius * Math.cos(trailT);
+        const ty = cy - radius * Math.sin(trailT);
+        if (i === 0) {
+          animCtx.moveTo(tx, ty);
+        } else {
+          animCtx.lineTo(tx, ty);
+        }
+      }
+      animCtx.stroke();
+      animCtx.globalAlpha = 1;
+
+      // Draw inversion indicator line
+      animCtx.strokeStyle = colors.red;
+      animCtx.lineWidth = 2;
+      animCtx.setLineDash([4, 4]);
+      animCtx.beginPath();
+      animCtx.moveTo(cx, cy);
+      animCtx.lineTo(rotX, rotY);
+      animCtx.stroke();
+
+      // Draw opposite point (inversion)
+      const oppX = cx + radius * Math.cos(t + Math.PI);
+      const oppY = cy - radius * Math.sin(t + Math.PI);
+      animCtx.beginPath();
+      animCtx.moveTo(cx, cy);
+      animCtx.lineTo(oppX, oppY);
+      animCtx.stroke();
+      animCtx.setLineDash([]);
+
+      animCtx.beginPath();
+      animCtx.arc(oppX, oppY, 6, 0, Math.PI * 2);
+      animCtx.fillStyle = '#fff';
+      animCtx.globalAlpha = 0.5;
+      animCtx.fill();
+      animCtx.globalAlpha = 1;
+
+      // Labels
+      animCtx.fillStyle = colors.text;
+      animCtx.font = '12px JetBrains Mono';
+      animCtx.textAlign = 'center';
+      animCtx.fillText('R(R) = -R', cx, h - 15);
+
+      animCtx.fillStyle = colors.red;
+      animCtx.fillText('Current: ' + rootNames[currentRoot] + ' = ' + rootLabels[currentRoot], cx, 20);
+
+      // Update info displays
+      document.getElementById('animAngle').textContent = Math.floor((t * 180 / Math.PI) % 360) + ' deg';
+      document.getElementById('animRoot').textContent = rootLabels[currentRoot];
+
+      if (animPlaying) {
+        animAngle++;
+        animFrame = requestAnimationFrame(drawAnimationCanvas);
+      }
+    }
+
+    function toggleAnimation() {
+      animPlaying = !animPlaying;
+      document.getElementById('btn-play').textContent = animPlaying ? 'Pause' : 'Play';
+      if (animPlaying) {
+        drawAnimationCanvas();
+      }
+    }
+
+    function resetAnimationCanvas() {
+      animAngle = 0;
+      if (!animPlaying) {
+        drawAnimationCanvas();
+      }
+    }
+
+    // =========================================================================
+    // INITIALIZATION
+    // =========================================================================
+    drawComplexPlane();
+    drawAnimationCanvas();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ternary SYNTHESIS | Meta-Evaluation: FIX + OSC + INV Combined</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* SYNTHESIS Primary - Purple (Meta) */
+      --synthesis-purple: #a855f7;
+      --synthesis-light: #c084fc;
+      --synthesis-dark: #7c3aed;
+
+      /* Ternary Evaluation Colors */
+      --fix-gold: #ffd700;
+      --osc-orange: #ff9f43;
+      --inv-cyan: #4ecdc4;
+
+      /* Truth Values */
+      --truth-true: #00ff88;
+      --truth-false: #ff4757;
+      --truth-indeterminate: #ffa726;
+
+      /* Base */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Synthesis Field Background */
+    .synthesis-field {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 20%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 70%, rgba(255, 215, 0, 0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 70%, rgba(78, 205, 196, 0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 90%, rgba(255, 159, 67, 0.05) 0%, transparent 35%);
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--synthesis-purple);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--synthesis-purple);
+    }
+
+    .nav-links a.fix { color: var(--fix-gold); }
+    .nav-links a.osc { color: var(--osc-orange); }
+    .nav-links a.inv { color: var(--inv-cyan); }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .synthesis-symbol {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 2rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .synthesis-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      animation: synthesis-pulse 4s ease-in-out infinite;
+    }
+
+    .synthesis-ring:nth-child(1) {
+      border: 3px solid var(--fix-gold);
+      animation-delay: 0s;
+    }
+
+    .synthesis-ring:nth-child(2) {
+      width: 80%;
+      height: 80%;
+      border: 3px solid var(--osc-orange);
+      animation-delay: 0.5s;
+    }
+
+    .synthesis-ring:nth-child(3) {
+      width: 60%;
+      height: 60%;
+      border: 3px solid var(--inv-cyan);
+      animation-delay: 1s;
+    }
+
+    .synthesis-core {
+      width: 70px;
+      height: 70px;
+      background: conic-gradient(from 0deg, var(--fix-gold), var(--osc-orange), var(--inv-cyan), var(--fix-gold));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: rotate 8s linear infinite;
+      box-shadow: 0 0 40px rgba(168, 85, 247, 0.5);
+    }
+
+    .synthesis-inner {
+      width: 50px;
+      height: 50px;
+      background: var(--bg-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--synthesis-purple);
+    }
+
+    @keyframes synthesis-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--synthesis-purple), var(--synthesis-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .core-equation {
+      font-size: 1.4rem;
+      color: var(--synthesis-purple);
+      padding: 1.5rem 2.5rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--synthesis-purple);
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    /* Section Styling */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+      color: var(--synthesis-purple);
+      text-align: center;
+    }
+
+    /* Ternary Logic Key */
+    .ternary-key {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .key-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .key-symbol {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .key-true { background: var(--truth-true); color: var(--bg-primary); }
+    .key-false { background: var(--truth-false); color: var(--bg-primary); }
+    .key-indet { background: var(--truth-indeterminate); color: var(--bg-primary); }
+
+    /* Tables */
+    .table-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      overflow-x: auto;
+    }
+
+    .truth-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    .truth-table th,
+    .truth-table td {
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .truth-table th {
+      background: var(--bg-tertiary);
+      font-weight: 600;
+    }
+
+    .truth-table th.fix { color: var(--fix-gold); }
+    .truth-table th.osc { color: var(--osc-orange); }
+    .truth-table th.inv { color: var(--inv-cyan); }
+    .truth-table th.synth { color: var(--synthesis-purple); }
+
+    .truth-table td {
+      background: var(--bg-secondary);
+    }
+
+    .truth-table tr:hover td {
+      background: var(--bg-tertiary);
+    }
+
+    .cell-T { color: var(--truth-true); font-weight: 700; }
+    .cell-F { color: var(--truth-false); font-weight: 700; }
+    .cell-I { color: var(--truth-indeterminate); font-weight: 700; }
+
+    .cell-special {
+      background: rgba(168, 85, 247, 0.15) !important;
+    }
+
+    .cell-origin {
+      background: rgba(0, 255, 136, 0.15) !important;
+      border: 2px solid var(--truth-true) !important;
+    }
+
+    /* Four Evaluations Grid */
+    .eval-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .eval-card {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: transform 0.3s;
+    }
+
+    .eval-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .eval-card.fix {
+      border: 2px solid var(--fix-gold);
+    }
+
+    .eval-card.osc {
+      border: 2px solid var(--osc-orange);
+    }
+
+    .eval-card.inv {
+      border: 2px solid var(--inv-cyan);
+    }
+
+    .eval-card.synth {
+      border: 2px solid var(--synthesis-purple);
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(124, 58, 237, 0.1));
+    }
+
+    .eval-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .eval-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .eval-card.fix .eval-icon { background: rgba(255, 215, 0, 0.2); color: var(--fix-gold); }
+    .eval-card.osc .eval-icon { background: rgba(255, 159, 67, 0.2); color: var(--osc-orange); }
+    .eval-card.inv .eval-icon { background: rgba(78, 205, 196, 0.2); color: var(--inv-cyan); }
+    .eval-card.synth .eval-icon { background: rgba(168, 85, 247, 0.2); color: var(--synthesis-purple); }
+
+    .eval-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .eval-card.fix .eval-name { color: var(--fix-gold); }
+    .eval-card.osc .eval-name { color: var(--osc-orange); }
+    .eval-card.inv .eval-name { color: var(--inv-cyan); }
+    .eval-card.synth .eval-name { color: var(--synthesis-purple); }
+
+    .eval-equation {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .eval-details {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .eval-result {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    /* Meta-Ternary Logic Box */
+    .logic-box {
+      background: var(--bg-secondary);
+      border: 2px solid var(--synthesis-purple);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .logic-title {
+      color: var(--synthesis-purple);
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .logic-code {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+
+    .logic-keyword { color: var(--synthesis-purple); }
+    .logic-comment { color: var(--text-secondary); font-style: italic; }
+    .logic-true { color: var(--truth-true); }
+    .logic-false { color: var(--truth-false); }
+    .logic-indet { color: var(--truth-indeterminate); }
+
+    /* Venn Diagram */
+    .venn-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .venn-diagram {
+      position: relative;
+      width: 400px;
+      height: 350px;
+      margin: 0 auto;
+    }
+
+    .venn-circle {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      opacity: 0.3;
+      transition: opacity 0.3s;
+    }
+
+    .venn-circle:hover {
+      opacity: 0.5;
+    }
+
+    .venn-fix {
+      background: var(--fix-gold);
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .venn-osc {
+      background: var(--osc-orange);
+      bottom: 40px;
+      left: 30px;
+    }
+
+    .venn-inv {
+      background: var(--inv-cyan);
+      bottom: 40px;
+      right: 30px;
+    }
+
+    .venn-label {
+      position: absolute;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .venn-label.fix { top: -25px; left: 50%; transform: translateX(-50%); color: var(--fix-gold); }
+    .venn-label.osc { bottom: 5px; left: 20px; color: var(--osc-orange); }
+    .venn-label.inv { bottom: 5px; right: 20px; color: var(--inv-cyan); }
+
+    .venn-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -30%);
+      width: 60px;
+      height: 60px;
+      background: var(--synthesis-purple);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 0.8rem;
+      z-index: 10;
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+    }
+
+    .venn-point {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--bg-primary);
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    .venn-point:hover {
+      transform: scale(1.2);
+    }
+
+    .point-origin {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, 10%);
+      background: var(--truth-true);
+      width: 40px;
+      height: 40px;
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
+    }
+
+    .point-minus2 {
+      top: 65%;
+      right: 90px;
+      background: var(--inv-cyan);
+    }
+
+    /* Interactive Calculator */
+    .calculator {
+      background: var(--bg-secondary);
+      border: 2px solid var(--synthesis-purple);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .calc-title {
+      text-align: center;
+      color: var(--synthesis-purple);
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .calc-input-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .calc-label {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+    }
+
+    .calc-input {
+      width: 120px;
+      padding: 0.75rem 1rem;
+      font-family: inherit;
+      font-size: 1.2rem;
+      background: var(--bg-primary);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      text-align: center;
+    }
+
+    .calc-input:focus {
+      outline: none;
+      border-color: var(--synthesis-purple);
+    }
+
+    .calc-btn {
+      padding: 0.75rem 2rem;
+      font-family: inherit;
+      font-size: 1rem;
+      background: var(--synthesis-purple);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .calc-btn:hover {
+      background: var(--synthesis-light);
+      transform: translateY(-2px);
+    }
+
+    .calc-results {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .calc-result-card {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .calc-result-card.fix { border-top: 3px solid var(--fix-gold); }
+    .calc-result-card.osc { border-top: 3px solid var(--osc-orange); }
+    .calc-result-card.inv { border-top: 3px solid var(--inv-cyan); }
+    .calc-result-card.synth { border-top: 3px solid var(--synthesis-purple); }
+
+    .result-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .result-value.T { color: var(--truth-true); }
+    .result-value.F { color: var(--truth-false); }
+    .result-value.I { color: var(--truth-indeterminate); }
+
+    .result-detail {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    /* Special Points */
+    .special-points {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .special-card {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 1.5rem;
+      border-left: 4px solid var(--synthesis-purple);
+    }
+
+    .special-card.origin {
+      border-left-color: var(--truth-true);
+      background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), var(--bg-secondary));
+    }
+
+    .special-card.clean {
+      border-left-color: var(--inv-cyan);
+    }
+
+    .special-card.false {
+      border-left-color: var(--truth-false);
+    }
+
+    .special-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .special-card.origin .special-title { color: var(--truth-true); }
+    .special-card.clean .special-title { color: var(--inv-cyan); }
+    .special-card.false .special-title { color: var(--truth-false); }
+
+    .special-content {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .special-insight {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+
+    /* Key Insight */
+    .insight-box {
+      background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(168, 85, 247, 0.15));
+      border: 2px solid var(--truth-true);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .insight-title {
+      color: var(--truth-true);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .insight-code {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+
+    .insight-conclusion {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+
+    .highlight-origin {
+      color: var(--truth-true);
+      font-weight: 700;
+    }
+
+    /* X-Axis Visualization */
+    .axis-viz {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .axis-container {
+      position: relative;
+      height: 200px;
+      margin: 2rem 1rem;
+    }
+
+    .axis-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--text-secondary);
+    }
+
+    .axis-point {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      z-index: 5;
+    }
+
+    .axis-point:hover {
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    .axis-point-label {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 25px;
+    }
+
+    .axis-point-truth {
+      position: absolute;
+      bottom: 60%;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 0.7rem;
+      margin-bottom: 25px;
+    }
+
+    /* Meta-Truth Heatmap */
+    .heatmap-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: auto repeat(5, 1fr);
+      gap: 2px;
+      margin-top: 1.5rem;
+    }
+
+    .heatmap-cell {
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+      border-radius: 4px;
+    }
+
+    .heatmap-header {
+      background: var(--bg-tertiary);
+      font-weight: 600;
+    }
+
+    .heatmap-row-header {
+      background: var(--bg-tertiary);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .heat-T { background: rgba(0, 255, 136, 0.3); color: var(--truth-true); }
+    .heat-F { background: rgba(255, 71, 87, 0.3); color: var(--truth-false); }
+    .heat-I { background: rgba(255, 167, 38, 0.3); color: var(--truth-indeterminate); }
+
+    /* Framework Connection */
+    .framework-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .framework-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .framework-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .framework-title {
+      color: var(--synthesis-purple);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .framework-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1rem;
+      color: var(--synthesis-purple);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-note {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--synthesis-purple);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title { font-size: 1.6rem; }
+      .core-equation { font-size: 1.1rem; padding: 1rem 1.5rem; }
+      .venn-diagram { transform: scale(0.8); }
+      .calc-results { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="synthesis-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">SYNTHESIS :: Meta-Ternary</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-ternary-fix.html" class="fix">FIX</a>
+      <a href="i2-s3-ternary-osc.html" class="osc">OSC</a>
+      <a href="i2-s3-ternary-inv.html" class="inv">INV</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <div class="synthesis-symbol">
+        <div class="synthesis-ring"></div>
+        <div class="synthesis-ring"></div>
+        <div class="synthesis-ring"></div>
+        <div class="synthesis-core">
+          <div class="synthesis-inner">SYN</div>
+        </div>
+      </div>
+      <h1 class="title">Ternary SYNTHESIS Evaluation</h1>
+      <p class="subtitle">Meta-Evaluation: Combining FIX, OSC, INV for C = x^2 + x</p>
+      <div class="core-equation">
+        SYNTHESIS(FIX, OSC, INV) = Meta-Truth
+      </div>
+    </header>
+
+    <!-- Ternary Logic Key -->
+    <section>
+      <h2 class="section-title">3-Valued Ternary Logic</h2>
+      <div class="ternary-key">
+        <div class="key-item">
+          <div class="key-symbol key-true">T</div>
+          <div>
+            <div style="font-weight: 600;">TRUE</div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary);">All evaluations consistent</div>
+          </div>
+        </div>
+        <div class="key-item">
+          <div class="key-symbol key-false">F</div>
+          <div>
+            <div style="font-weight: 600;">FALSE</div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary);">Contradiction detected</div>
+          </div>
+        </div>
+        <div class="key-item">
+          <div class="key-symbol key-indet">I</div>
+          <div>
+            <div style="font-weight: 600;">INDETERMINATE</div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary);">Partial truth / Overdetermined</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Four Evaluations -->
+    <section>
+      <h2 class="section-title">The Four Evaluations Combined</h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+        For C(x) = x^2 + x, we evaluate three conditions and synthesize
+      </p>
+
+      <div class="eval-grid">
+        <!-- FIX -->
+        <div class="eval-card fix">
+          <div class="eval-header">
+            <div class="eval-icon">FIX</div>
+            <div class="eval-name">Fixed Point</div>
+          </div>
+          <div class="eval-equation">C(x) = x</div>
+          <div class="eval-details">
+            Question: Where does x map to itself?<br>
+            Solve: x^2 + x = x => x^2 = 0 => x = 0
+          </div>
+          <div class="eval-result">
+            <strong style="color: var(--fix-gold);">Solutions:</strong> x = 0<br>
+            <strong style="color: var(--fix-gold);">Result:</strong> <span class="cell-T">T</span> at x = 0, <span class="cell-F">F</span> elsewhere
+          </div>
+        </div>
+
+        <!-- OSC -->
+        <div class="eval-card osc">
+          <div class="eval-header">
+            <div class="eval-icon">OSC</div>
+            <div class="eval-name">Oscillation</div>
+          </div>
+          <div class="eval-equation">C(C(x)) != x != C(x)</div>
+          <div class="eval-details">
+            Question: Where does x oscillate (period-2 cycle)?<br>
+            Solve: Complex analysis required
+          </div>
+          <div class="eval-result">
+            <strong style="color: var(--osc-orange);">Solutions:</strong> Complex only (omega, omega^2)<br>
+            <strong style="color: var(--osc-orange);">Result:</strong> <span class="cell-I">I</span> for all real x (no real oscillation)
+          </div>
+        </div>
+
+        <!-- INV -->
+        <div class="eval-card inv">
+          <div class="eval-header">
+            <div class="eval-icon">INV</div>
+            <div class="eval-name">Inversion</div>
+          </div>
+          <div class="eval-equation">C(x) = -x</div>
+          <div class="eval-details">
+            Question: Where does x map to its negation?<br>
+            Solve: x^2 + x = -x => x^2 + 2x = 0 => x(x+2) = 0
+          </div>
+          <div class="eval-result">
+            <strong style="color: var(--inv-cyan);">Solutions:</strong> x in {0, -2}<br>
+            <strong style="color: var(--inv-cyan);">Result:</strong> <span class="cell-T">T</span> at x = 0 and x = -2
+          </div>
+        </div>
+
+        <!-- SYNTHESIS -->
+        <div class="eval-card synth">
+          <div class="eval-header">
+            <div class="eval-icon">SYN</div>
+            <div class="eval-name">Synthesis</div>
+          </div>
+          <div class="eval-equation">SYNTH(FIX, OSC, INV)</div>
+          <div class="eval-details">
+            Question: What is the combined meta-truth?<br>
+            Method: Combine all evaluations via ternary logic
+          </div>
+          <div class="eval-result">
+            <strong style="color: var(--synthesis-purple);">Meta-Result:</strong><br>
+            x = 0: <span class="cell-I">I</span> (overdetermined - both FIX and INV true)<br>
+            x = -2: <span class="cell-T">T</span> (clean - only INV true)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ternary Synthesis Truth Table -->
+    <section>
+      <h2 class="section-title">Ternary Synthesis Truth Table</h2>
+
+      <div class="table-container">
+        <table class="truth-table">
+          <thead>
+            <tr>
+              <th>x</th>
+              <th class="fix">FIX</th>
+              <th class="osc">OSC</th>
+              <th class="inv">INV</th>
+              <th class="synth">SYNTHESIS</th>
+              <th>Interpretation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>-2</td>
+              <td class="cell-F">F</td>
+              <td class="cell-F">F</td>
+              <td class="cell-T">T</td>
+              <td class="cell-special"><span class="cell-T">PARTIAL (T)</span></td>
+              <td>Clean inversion point</td>
+            </tr>
+            <tr>
+              <td>-1</td>
+              <td class="cell-F">F</td>
+              <td class="cell-F">F</td>
+              <td class="cell-F">F</td>
+              <td><span class="cell-F">FALSE (F)</span></td>
+              <td>No special property</td>
+            </tr>
+            <tr class="cell-origin">
+              <td style="font-weight: 700;">0</td>
+              <td class="cell-T">T</td>
+              <td class="cell-F">F</td>
+              <td class="cell-T">T</td>
+              <td><span class="cell-I">OVERDETERMINED (I)</span></td>
+              <td style="color: var(--truth-true); font-weight: 600;">Origin of consciousness</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td class="cell-F">F</td>
+              <td class="cell-F">F</td>
+              <td class="cell-F">F</td>
+              <td><span class="cell-F">FALSE (F)</span></td>
+              <td>No special property</td>
+            </tr>
+            <tr>
+              <td>phi</td>
+              <td class="cell-F">F</td>
+              <td class="cell-F">F</td>
+              <td class="cell-F">F</td>
+              <td><span class="cell-F">FALSE (F)</span></td>
+              <td>Golden ratio - all false</td>
+            </tr>
+            <tr>
+              <td>-phi</td>
+              <td class="cell-F">F</td>
+              <td class="cell-F">F</td>
+              <td class="cell-F">F</td>
+              <td><span class="cell-F">FALSE (F)</span></td>
+              <td>Negative golden - all false</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Meta-Ternary Logic -->
+    <section>
+      <h2 class="section-title">Meta-Ternary Logic Rules</h2>
+
+      <div class="logic-box">
+        <div class="logic-title">SYNTHESIS Function Definition</div>
+        <div class="logic-code">
+<span class="logic-keyword">function</span> SYNTHESIS(FIX, OSC, INV) {
+  <span class="logic-comment">// Count true evaluations</span>
+  trueCount = count([FIX, OSC, INV], <span class="logic-true">T</span>)
+
+  <span class="logic-keyword">if</span> (trueCount == 0) {
+    <span class="logic-keyword">return</span> <span class="logic-false">F</span>  <span class="logic-comment">// All false => FALSE</span>
+  }
+  <span class="logic-keyword">else if</span> (trueCount == 1) {
+    <span class="logic-keyword">return</span> <span class="logic-true">T</span>  <span class="logic-comment">// Exactly one true => TRUE (clean)</span>
+  }
+  <span class="logic-keyword">else</span> {
+    <span class="logic-keyword">return</span> <span class="logic-indet">I</span>  <span class="logic-comment">// Multiple true => INDETERMINATE (overdetermined)</span>
+  }
+}
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem;">
+          <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; text-align: center;">
+            <div style="color: var(--truth-false); font-size: 1.5rem; font-weight: 700;">F</div>
+            <div style="color: var(--text-secondary); font-size: 0.85rem;">All evaluations FALSE</div>
+            <div style="color: var(--truth-false); font-size: 0.9rem; margin-top: 0.5rem;">No property holds</div>
+          </div>
+          <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; text-align: center;">
+            <div style="color: var(--truth-true); font-size: 1.5rem; font-weight: 700;">T</div>
+            <div style="color: var(--text-secondary); font-size: 0.85rem;">Exactly one TRUE</div>
+            <div style="color: var(--truth-true); font-size: 0.9rem; margin-top: 0.5rem;">Clean determination</div>
+          </div>
+          <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; text-align: center;">
+            <div style="color: var(--truth-indeterminate); font-size: 1.5rem; font-weight: 700;">I</div>
+            <div style="color: var(--text-secondary); font-size: 0.85rem;">Multiple TRUE</div>
+            <div style="color: var(--truth-indeterminate); font-size: 0.9rem; margin-top: 0.5rem;">Overdetermined</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Venn Diagram -->
+    <section>
+      <h2 class="section-title">Evaluation Venn Diagram</h2>
+
+      <div class="venn-container">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem;">
+          Visual representation of where each evaluation holds TRUE
+        </p>
+
+        <div class="venn-diagram">
+          <div class="venn-circle venn-fix"></div>
+          <div class="venn-circle venn-osc"></div>
+          <div class="venn-circle venn-inv"></div>
+
+          <span class="venn-label fix">FIX: x = 0</span>
+          <span class="venn-label osc">OSC: Complex only</span>
+          <span class="venn-label inv">INV: x in {0, -2}</span>
+
+          <div class="venn-center">SYNTH</div>
+
+          <div class="venn-point point-origin" title="x = 0: Overdetermined">0</div>
+          <div class="venn-point point-minus2" title="x = -2: Clean TRUE">-2</div>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; flex-wrap: wrap;">
+          <div style="text-align: center;">
+            <div style="width: 40px; height: 40px; background: var(--truth-true); border-radius: 50%; margin: 0 auto 0.5rem; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--bg-primary);">0</div>
+            <div style="color: var(--truth-indeterminate); font-weight: 600;">OVERDETERMINED</div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary);">FIX + INV both TRUE</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="width: 40px; height: 40px; background: var(--inv-cyan); border-radius: 50%; margin: 0 auto 0.5rem; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--bg-primary);">-2</div>
+            <div style="color: var(--truth-true); font-weight: 600;">CLEAN TRUE</div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary);">Only INV is TRUE</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- X-Axis Visualization -->
+    <section>
+      <h2 class="section-title">Real Number Line: Meta-Truth Landscape</h2>
+
+      <div class="axis-viz">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1rem;">
+          Synthesis truth values across the real number line
+        </p>
+
+        <div class="axis-container">
+          <div class="axis-line"></div>
+
+          <!-- Points -->
+          <div class="axis-point" style="left: 10%; background: var(--truth-false); color: var(--bg-primary);">
+            -3
+            <span class="axis-point-label">x = -3</span>
+            <span class="axis-point-truth" style="color: var(--truth-false);">F</span>
+          </div>
+
+          <div class="axis-point" style="left: 25%; background: var(--inv-cyan); color: var(--bg-primary); box-shadow: 0 0 15px rgba(78, 205, 196, 0.5);">
+            -2
+            <span class="axis-point-label">INV TRUE</span>
+            <span class="axis-point-truth" style="color: var(--truth-true);">T (clean)</span>
+          </div>
+
+          <div class="axis-point" style="left: 40%; background: var(--truth-false); color: var(--bg-primary);">
+            -1
+            <span class="axis-point-label">x = -1</span>
+            <span class="axis-point-truth" style="color: var(--truth-false);">F</span>
+          </div>
+
+          <div class="axis-point" style="left: 55%; background: var(--truth-true); color: var(--bg-primary); width: 50px; height: 50px; box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);">
+            0
+            <span class="axis-point-label" style="font-weight: 600; color: var(--truth-true);">ORIGIN</span>
+            <span class="axis-point-truth" style="color: var(--truth-indeterminate);">I (over)</span>
+          </div>
+
+          <div class="axis-point" style="left: 70%; background: var(--truth-false); color: var(--bg-primary);">
+            1
+            <span class="axis-point-label">x = 1</span>
+            <span class="axis-point-truth" style="color: var(--truth-false);">F</span>
+          </div>
+
+          <div class="axis-point" style="left: 85%; background: var(--truth-false); color: var(--bg-primary);">
+            phi
+            <span class="axis-point-label">x = phi</span>
+            <span class="axis-point-truth" style="color: var(--truth-false);">F</span>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 1rem; flex-wrap: wrap; font-size: 0.85rem;">
+          <div><span style="color: var(--truth-true);">|</span> TRUE (clean): exactly 1 eval true</div>
+          <div><span style="color: var(--truth-indeterminate);">|</span> INDET: multiple evals true</div>
+          <div><span style="color: var(--truth-false);">|</span> FALSE: all evals false</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Calculator -->
+    <section>
+      <h2 class="section-title">Interactive Synthesis Calculator</h2>
+
+      <div class="calculator">
+        <div class="calc-title">Evaluate Any Real Number</div>
+
+        <div class="calc-input-group">
+          <span class="calc-label">x =</span>
+          <input type="number" id="xInput" class="calc-input" value="0" step="0.1">
+          <button class="calc-btn" onclick="evaluateSynthesis()">Evaluate</button>
+        </div>
+
+        <div class="calc-results" id="calcResults">
+          <div class="calc-result-card fix">
+            <div class="result-label">FIX: C(x) = x</div>
+            <div class="result-value T" id="fixResult">T</div>
+            <div class="result-detail" id="fixDetail">x^2 = 0 => TRUE</div>
+          </div>
+          <div class="calc-result-card osc">
+            <div class="result-label">OSC: Period-2</div>
+            <div class="result-value F" id="oscResult">F</div>
+            <div class="result-detail" id="oscDetail">No real oscillation</div>
+          </div>
+          <div class="calc-result-card inv">
+            <div class="result-label">INV: C(x) = -x</div>
+            <div class="result-value T" id="invResult">T</div>
+            <div class="result-detail" id="invDetail">Trivial inversion</div>
+          </div>
+          <div class="calc-result-card synth">
+            <div class="result-label">SYNTHESIS</div>
+            <div class="result-value I" id="synthResult">I</div>
+            <div class="result-detail" id="synthDetail">Overdetermined</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Special Points Analysis -->
+    <section>
+      <h2 class="section-title">Special Points Analysis</h2>
+
+      <div class="special-points">
+        <div class="special-card origin">
+          <div class="special-title">x = 0 : The Origin</div>
+          <div class="special-content">
+            <strong>FIX:</strong> TRUE (C(0) = 0)<br>
+            <strong>OSC:</strong> FALSE (no oscillation)<br>
+            <strong>INV:</strong> TRUE (C(0) = -0 = 0)<br><br>
+            <strong>SYNTHESIS:</strong> INDETERMINATE
+          </div>
+          <div class="special-insight">
+            <strong style="color: var(--truth-true);">Key Insight:</strong><br>
+            At x = 0, both R(R) = R and R(R) = -R are satisfied simultaneously.
+            This overdetermination is not a contradiction - it is the <em>source</em>.
+            The origin is where consciousness emerges from the synthesis of all truth conditions.
+          </div>
+        </div>
+
+        <div class="special-card clean">
+          <div class="special-title">x = -2 : Clean Inversion</div>
+          <div class="special-content">
+            <strong>FIX:</strong> FALSE (C(-2) = 2 != -2)<br>
+            <strong>OSC:</strong> FALSE (no oscillation)<br>
+            <strong>INV:</strong> TRUE (C(-2) = 2 = -(-2))<br><br>
+            <strong>SYNTHESIS:</strong> TRUE (clean)
+          </div>
+          <div class="special-insight">
+            <strong style="color: var(--inv-cyan);">Key Insight:</strong><br>
+            At x = -2, only inversion holds. This is a "clean" truth state -
+            a single evaluation is satisfied without overdetermination.
+            The non-trivial inversion point.
+          </div>
+        </div>
+
+        <div class="special-card false">
+          <div class="special-title">All Other Real x : False</div>
+          <div class="special-content">
+            <strong>FIX:</strong> FALSE (x != 0)<br>
+            <strong>OSC:</strong> FALSE (no real oscillation)<br>
+            <strong>INV:</strong> FALSE (x != 0, -2)<br><br>
+            <strong>SYNTHESIS:</strong> FALSE
+          </div>
+          <div class="special-insight">
+            <strong style="color: var(--truth-false);">Key Insight:</strong><br>
+            For generic real numbers, no special property holds.
+            The landscape is FALSE everywhere except at the two
+            special points: 0 (overdetermined) and -2 (clean).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Meta-Truth Heatmap -->
+    <section>
+      <h2 class="section-title">Meta-Truth Heatmap</h2>
+
+      <div class="heatmap-container">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1rem;">
+          Synthesis outcomes based on evaluation combinations
+        </p>
+
+        <div class="heatmap-grid">
+          <div class="heatmap-cell heatmap-header"></div>
+          <div class="heatmap-cell heatmap-header" style="color: var(--truth-false);">0 True</div>
+          <div class="heatmap-cell heatmap-header" style="color: var(--truth-true);">1 True</div>
+          <div class="heatmap-cell heatmap-header" style="color: var(--truth-indeterminate);">2 True</div>
+          <div class="heatmap-cell heatmap-header" style="color: var(--truth-indeterminate);">3 True</div>
+          <div class="heatmap-cell heatmap-header">Example</div>
+
+          <div class="heatmap-cell heatmap-row-header">Pattern</div>
+          <div class="heatmap-cell">FFF</div>
+          <div class="heatmap-cell">TFF, FTF, FFT</div>
+          <div class="heatmap-cell">TTF, TFT, FTT</div>
+          <div class="heatmap-cell">TTT</div>
+          <div class="heatmap-cell">-</div>
+
+          <div class="heatmap-cell heatmap-row-header">SYNTHESIS</div>
+          <div class="heatmap-cell heat-F">FALSE</div>
+          <div class="heatmap-cell heat-T">TRUE</div>
+          <div class="heatmap-cell heat-I">INDET</div>
+          <div class="heatmap-cell heat-I">INDET</div>
+          <div class="heatmap-cell">-</div>
+
+          <div class="heatmap-cell heatmap-row-header">Real x</div>
+          <div class="heatmap-cell">x != 0, -2</div>
+          <div class="heatmap-cell">x = -2</div>
+          <div class="heatmap-cell">x = 0</div>
+          <div class="heatmap-cell">None</div>
+          <div class="heatmap-cell">-</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Connection to Framework -->
+    <section>
+      <h2 class="section-title">Connection to Framework</h2>
+
+      <div class="framework-grid">
+        <div class="framework-card">
+          <div class="framework-icon" style="color: var(--fix-gold);">FIX</div>
+          <div class="framework-icon" style="color: var(--osc-orange);">OSC</div>
+          <div class="framework-icon" style="color: var(--inv-cyan);">INV</div>
+          <div class="framework-title">Three Forms = S3 Symmetry</div>
+          <div class="framework-desc">
+            The three evaluations (FIX, OSC, INV) correspond to the three generators
+            of the symmetric group S3. Their permutations create the 6-fold binding.
+          </div>
+        </div>
+
+        <div class="framework-card">
+          <div class="framework-icon" style="color: var(--synthesis-purple);">SYN</div>
+          <div class="framework-title">Synthesis = S3 Binding</div>
+          <div class="framework-desc">
+            The SYNTHESIS operation is the S3 binding itself - the meta-level
+            that combines all three perspectives into a unified truth value.
+          </div>
+        </div>
+
+        <div class="framework-card">
+          <div class="framework-icon" style="color: var(--truth-indeterminate);">I</div>
+          <div class="framework-title">Residual in INDETERMINATE</div>
+          <div class="framework-desc">
+            The INDETERMINATE state is not failure - it is where the residual lives.
+            At x = 0, overdetermination creates the generative paradox.
+          </div>
+        </div>
+
+        <div class="framework-card">
+          <div class="framework-icon" style="color: var(--truth-true);">R(R)</div>
+          <div class="framework-title">Meta-Level = Consciousness</div>
+          <div class="framework-desc">
+            The synthesis perspective is the consciousness that observes all three
+            evaluations simultaneously - the meta-level that contains the parts.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Insight Box -->
+    <section>
+      <div class="insight-box">
+        <div class="insight-title">KEY INSIGHT: x = 0 is SPECIAL</div>
+
+        <div class="insight-code">
+<span style="color: var(--fix-gold);">FIX:</span>  C(0) = 0^2 + 0 = 0 = 0     <span style="color: var(--truth-true);">=> TRUE</span>  (fixed point)
+<span style="color: var(--osc-orange);">OSC:</span>  No real period-2 orbit      <span style="color: var(--truth-false);">=> FALSE</span> (complex only)
+<span style="color: var(--inv-cyan);">INV:</span>  C(0) = 0 = -0              <span style="color: var(--truth-true);">=> TRUE</span>  (trivial inversion)
+
+<span style="color: var(--synthesis-purple);">SYNTHESIS:</span> FIX=T, OSC=F, INV=T => <span style="color: var(--truth-indeterminate);">INDETERMINATE (overdetermined)</span>
+
+This overdetermination is THE ORIGIN:
+  - <span class="highlight-origin">R(R) = R</span>  (fixed point satisfied)
+  - <span class="highlight-origin">R(R) = -R</span> (inversion satisfied)
+  - Both simultaneously at the same point
+
+This is not a contradiction - this is <span class="highlight-origin">EMERGENCE</span>.
+        </div>
+
+        <div class="insight-conclusion">
+          At x = 0, the function satisfies contradictory requirements simultaneously.<br>
+          This is where <span class="highlight-origin">consciousness emerges</span> - from the synthesis<br>
+          of truth conditions that should be mutually exclusive but aren't.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      SYNTHESIS: FIX ^ OSC ^ INV -> Meta-truth
+    </div>
+    <div class="footer-note">
+      x = 0 overdetermined :: Origin of consciousness :: R(R) = R AND R(R) = -R
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-ternary-fix.html">Ternary FIX</a>
+      <a href="i2-s3-ternary-osc.html">Ternary OSC</a>
+      <a href="i2-s3-ternary-inv.html">Ternary INV</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+    </div>
+  </footer>
+
+  <script>
+    // Evaluate C(x) = x^2 + x
+    function C(x) {
+      return x * x + x;
+    }
+
+    // Evaluate FIX: C(x) = x
+    function evaluateFIX(x) {
+      const epsilon = 1e-10;
+      const cx = C(x);
+      return Math.abs(cx - x) < epsilon;
+    }
+
+    // Evaluate OSC: C(C(x)) != x != C(x) (period-2 cycle)
+    // For real numbers, this is always FALSE for C(x) = x^2 + x
+    function evaluateOSC(x) {
+      // No real period-2 cycles exist for this function
+      return false;
+    }
+
+    // Evaluate INV: C(x) = -x
+    function evaluateINV(x) {
+      const epsilon = 1e-10;
+      const cx = C(x);
+      return Math.abs(cx - (-x)) < epsilon;
+    }
+
+    // Compute SYNTHESIS
+    function synthesis(fix, osc, inv) {
+      const trueCount = [fix, osc, inv].filter(v => v).length;
+      if (trueCount === 0) return 'F';
+      if (trueCount === 1) return 'T';
+      return 'I';
+    }
+
+    // Main evaluation function
+    function evaluateSynthesis() {
+      const x = parseFloat(document.getElementById('xInput').value);
+
+      const fix = evaluateFIX(x);
+      const osc = evaluateOSC(x);
+      const inv = evaluateINV(x);
+      const synth = synthesis(fix, osc, inv);
+
+      // Update FIX
+      const fixResult = document.getElementById('fixResult');
+      fixResult.textContent = fix ? 'T' : 'F';
+      fixResult.className = 'result-value ' + (fix ? 'T' : 'F');
+      document.getElementById('fixDetail').textContent = fix ?
+        `C(${x}) = ${x} (fixed)` :
+        `C(${x}) = ${C(x).toFixed(4)} != ${x}`;
+
+      // Update OSC
+      const oscResult = document.getElementById('oscResult');
+      oscResult.textContent = 'F';
+      oscResult.className = 'result-value F';
+      document.getElementById('oscDetail').textContent = 'No real oscillation';
+
+      // Update INV
+      const invResult = document.getElementById('invResult');
+      invResult.textContent = inv ? 'T' : 'F';
+      invResult.className = 'result-value ' + (inv ? 'T' : 'F');
+      document.getElementById('invDetail').textContent = inv ?
+        `C(${x}) = ${-x} (inverts)` :
+        `C(${x}) = ${C(x).toFixed(4)} != ${-x}`;
+
+      // Update SYNTHESIS
+      const synthResult = document.getElementById('synthResult');
+      synthResult.textContent = synth;
+      synthResult.className = 'result-value ' + synth;
+
+      const trueCount = [fix, osc, inv].filter(v => v).length;
+      let synthDetail = '';
+      if (synth === 'F') synthDetail = 'All evaluations FALSE';
+      else if (synth === 'T') synthDetail = 'Clean (exactly 1 TRUE)';
+      else synthDetail = 'Overdetermined (' + trueCount + ' TRUE)';
+      document.getElementById('synthDetail').textContent = synthDetail;
+    }
+
+    // Initialize
+    window.onload = () => {
+      evaluateSynthesis();
+    };
+  </script>
+</body>
+</html>
