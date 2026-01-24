@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D: DESCEND | BFADGS+U Operator</title>
+    <style>
+        :root {
+            /* D Operator Color */
+            --op-D: #ef4444;
+            --op-D-glow: rgba(239, 68, 68, 0.4);
+
+            /* System Colors */
+            --alpha-color: #00ff88;
+            --omega-color: #ff6b35;
+            --bfadgs-color: #8b5cf6;
+            --unity-color: #ffd700;
+
+            /* Other Operators */
+            --op-B: #3b82f6;
+            --op-F: #10b981;
+            --op-A: #f59e0b;
+            --op-G: #8b5cf6;
+            --op-S: #ec4899;
+
+            /* Backgrounds */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a2e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, var(--bg-tertiary), transparent);
+            border-bottom: 2px solid var(--op-D);
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--op-D), transparent);
+        }
+
+        .operator-badge {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            border: 4px solid var(--op-D);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+            background: radial-gradient(circle, var(--op-D-glow), transparent);
+            box-shadow: 0 0 40px var(--op-D-glow);
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 40px var(--op-D-glow); }
+            50% { box-shadow: 0 0 60px var(--op-D-glow), 0 0 80px var(--op-D-glow); }
+        }
+
+        .operator-symbol {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--op-D);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: var(--op-D);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .formula-bar {
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--op-D);
+            border-radius: 4px;
+            display: inline-block;
+            font-size: 1.5rem;
+        }
+
+        .formula-bar .formula {
+            color: var(--op-D);
+            font-weight: bold;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Definition Section */
+        .definition-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--op-D);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: 'D';
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--op-D);
+            border-radius: 50%;
+            font-size: 1rem;
+            color: var(--op-D);
+        }
+
+        .definition-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .def-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .def-card:hover {
+            border-color: var(--op-D);
+            box-shadow: 0 0 20px var(--op-D-glow);
+        }
+
+        .def-card.highlight {
+            border-color: var(--op-D);
+            background: linear-gradient(135deg, var(--bg-secondary), rgba(239, 68, 68, 0.1));
+        }
+
+        .def-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--op-D);
+            opacity: 0.5;
+            margin-bottom: 0.5rem;
+        }
+
+        .def-title {
+            font-size: 1.1rem;
+            color: var(--op-D);
+            margin-bottom: 0.5rem;
+        }
+
+        .def-content {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .math-block {
+            background: var(--bg-tertiary);
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            margin: 0.75rem 0;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--text-primary);
+            border-left: 3px solid var(--op-D);
+        }
+
+        /* Inverse Relationship Section */
+        .inverse-section {
+            margin-bottom: 3rem;
+        }
+
+        .inverse-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .op-circle {
+            width: 100px;
+            height: 100px;
+            border: 3px solid;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .op-circle:hover {
+            transform: scale(1.1);
+        }
+
+        .op-circle.op-a {
+            border-color: var(--op-A);
+        }
+
+        .op-circle.op-d {
+            border-color: var(--op-D);
+            box-shadow: 0 0 20px var(--op-D-glow);
+        }
+
+        .op-circle .symbol {
+            font-size: 2rem;
+        }
+
+        .op-circle .label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .op-arrow {
+            font-size: 1.5rem;
+            color: var(--unity-color);
+        }
+
+        .result-box {
+            padding: 1rem 2rem;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--unity-color);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .result-box .equals {
+            font-size: 2rem;
+            color: var(--unity-color);
+        }
+
+        .result-box .identity {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Canvas Section */
+        .canvas-section {
+            margin-bottom: 3rem;
+        }
+
+        .canvas-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .descent-canvas {
+            width: 100%;
+            height: 500px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        .canvas-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+        }
+
+        .control-btn:hover {
+            border-color: var(--op-D);
+            color: var(--op-D);
+            box-shadow: 0 0 15px var(--op-D-glow);
+        }
+
+        .control-btn.primary {
+            border-color: var(--op-D);
+            color: var(--op-D);
+        }
+
+        .control-btn.primary:hover {
+            background: var(--op-D);
+            color: white;
+        }
+
+        .control-btn.ascend {
+            border-color: var(--op-A);
+            color: var(--op-A);
+        }
+
+        .control-btn.ascend:hover {
+            background: var(--op-A);
+            color: white;
+        }
+
+        /* Depth Counter */
+        .depth-counter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        .depth-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--op-D);
+            font-family: 'Courier New', monospace;
+        }
+
+        .depth-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .phase-indicator {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        /* Properties Grid */
+        .properties-section {
+            margin-bottom: 3rem;
+        }
+
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .prop-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .prop-card:hover {
+            border-color: var(--op-D);
+        }
+
+        .prop-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .prop-title {
+            font-size: 1rem;
+            color: var(--op-D);
+            margin-bottom: 0.5rem;
+        }
+
+        .prop-value {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Recursion Unwinding */
+        .recursion-section {
+            margin-bottom: 3rem;
+        }
+
+        .recursion-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .recursion-level {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .recursion-level.active {
+            border: 2px solid var(--op-D);
+            box-shadow: 0 0 15px var(--op-D-glow);
+        }
+
+        .level-num {
+            font-size: 1.2rem;
+            font-weight: bold;
+            width: 30px;
+        }
+
+        .level-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .descent-arrow {
+            font-size: 1.5rem;
+            color: var(--op-D);
+            animation: bounce-down 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce-down {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+
+        /* Implementation */
+        .implementation-section {
+            margin-bottom: 3rem;
+        }
+
+        .code-block {
+            background: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .code-comment {
+            color: #6a9955;
+        }
+
+        .code-keyword {
+            color: #569cd6;
+        }
+
+        .code-function {
+            color: #dcdcaa;
+        }
+
+        .code-operator {
+            color: var(--op-D);
+        }
+
+        .code-number {
+            color: #b5cea8;
+        }
+
+        .code-string {
+            color: #ce9178;
+        }
+
+        /* Navigation */
+        .nav-section {
+            margin-bottom: 3rem;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+        }
+
+        .nav-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .nav-card.current {
+            border-color: var(--op-D);
+            background: linear-gradient(135deg, var(--bg-secondary), rgba(239, 68, 68, 0.2));
+        }
+
+        .nav-card .nav-symbol {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-card .nav-name {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .back-link {
+            color: var(--unity-color);
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .definition-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .properties-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .inverse-diagram {
+                flex-direction: column;
+            }
+
+            .properties-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .depth-counter {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="operator-badge">
+            <span class="operator-symbol">D</span>
+        </div>
+        <h1 class="title">Descend</h1>
+        <p class="subtitle">Decrease Depth Operator</p>
+        <div class="formula-bar">
+            <span class="formula">D: n -> n-1</span>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Core Definitions -->
+        <section class="definition-section">
+            <h2 class="section-title">Core Definitions</h2>
+            <div class="definition-grid">
+                <div class="def-card highlight">
+                    <div class="def-number">01</div>
+                    <h3 class="def-title">Primary Definition</h3>
+                    <div class="def-content">
+                        <p>D (Descend) decreases the depth/level counter by 1. It is the fundamental operator for reducing recursion depth and returning toward the origin.</p>
+                        <div class="math-block">
+                            D: n -> n - 1
+                        </div>
+                        <p>Where n represents the current depth level in the traversal structure.</p>
+                    </div>
+                </div>
+
+                <div class="def-card">
+                    <div class="def-number">02</div>
+                    <h3 class="def-title">Movement Toward Alpha</h3>
+                    <div class="def-content">
+                        <p>D moves the system toward the origin point (alpha). Each application of D brings the state closer to the foundational level where the traversal began.</p>
+                        <div class="math-block">
+                            D^n(state) -> alpha as depth -> 0
+                        </div>
+                        <p>The descent operator traces the return path through the structure.</p>
+                    </div>
+                </div>
+
+                <div class="def-card">
+                    <div class="def-number">03</div>
+                    <h3 class="def-title">Inverse of Ascend</h3>
+                    <div class="def-content">
+                        <p>D is the algebraic inverse of A (Ascend). When composed, they form the identity operation on levels.</p>
+                        <div class="math-block">
+                            D . A = A . D = id (on levels)
+                        </div>
+                        <p>This establishes D and A as a conjugate pair within the BFADGS operator algebra.</p>
+                    </div>
+                </div>
+
+                <div class="def-card">
+                    <div class="def-number">04</div>
+                    <h3 class="def-title">Minimum Bound</h3>
+                    <div class="def-content">
+                        <p>Descent is bounded below by 0 (the origin level). The operator cannot reduce depth below the foundational alpha state.</p>
+                        <div class="math-block">
+                            D(0) = 0 (floor constraint)
+                        </div>
+                        <p>This boundary condition prevents invalid negative depths.</p>
+                    </div>
+                </div>
+
+                <div class="def-card">
+                    <div class="def-number">05</div>
+                    <h3 class="def-title">Unwinding Recursion</h3>
+                    <div class="def-content">
+                        <p>D implements the unwinding phase of recursive traversals. Each descent pops a level from the call stack.</p>
+                        <div class="math-block">
+                            unwind(stack) = D(top(stack))
+                        </div>
+                        <p>Recursion unwinding is essential for completing depth-first traversals.</p>
+                    </div>
+                </div>
+
+                <div class="def-card">
+                    <div class="def-number">06</div>
+                    <h3 class="def-title">Return to Paradox Threshold</h3>
+                    <div class="def-content">
+                        <p>D returns the system toward the paradox threshold (mu_P). At low depths, the self-referential nature of the system becomes more apparent.</p>
+                        <div class="math-block">
+                            lim_{D^n} state -> mu_P (as n -> depth)
+                        </div>
+                        <p>The paradox threshold marks the boundary between origin and structure.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inverse Relationship -->
+        <section class="inverse-section">
+            <h2 class="section-title">Inverse Relationship: D . A = Identity</h2>
+            <div class="inverse-diagram">
+                <div class="op-circle op-a">
+                    <span class="symbol" style="color: var(--op-A);">A</span>
+                    <span class="label">Ascend</span>
+                </div>
+                <div class="op-arrow">+</div>
+                <div class="op-circle op-d">
+                    <span class="symbol" style="color: var(--op-D);">D</span>
+                    <span class="label">Descend</span>
+                </div>
+                <div class="op-arrow">=</div>
+                <div class="result-box">
+                    <div class="equals">id</div>
+                    <div class="identity">Identity on Levels</div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 1rem; color: var(--text-secondary);">
+                <p>A increases depth (n -> n+1), D decreases depth (n -> n-1).</p>
+                <p>Composing them in either order returns to the original level.</p>
+            </div>
+        </section>
+
+        <!-- Interactive Depth Canvas -->
+        <section class="canvas-section">
+            <h2 class="section-title">Interactive Depth Visualization</h2>
+            <div class="canvas-container">
+                <div class="depth-counter">
+                    <div>
+                        <div class="depth-label">CURRENT DEPTH</div>
+                        <div class="depth-display" id="depthDisplay">0</div>
+                    </div>
+                    <div class="phase-indicator" id="phaseIndicator" style="background: var(--alpha-color); color: #000;">
+                        ALPHA (Origin)
+                    </div>
+                </div>
+                <canvas id="descentCanvas" class="descent-canvas"></canvas>
+                <div class="canvas-controls">
+                    <button class="control-btn ascend" onclick="ascend()">A: Ascend (+1)</button>
+                    <button class="control-btn primary" onclick="descend()">D: Descend (-1)</button>
+                    <button class="control-btn" onclick="descendMax()">D^max: Descend to Origin</button>
+                    <button class="control-btn" onclick="resetDepth()">Reset</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Properties -->
+        <section class="properties-section">
+            <h2 class="section-title">Operator Properties</h2>
+            <div class="properties-grid">
+                <div class="prop-card">
+                    <div class="prop-icon" style="color: var(--op-D);">-1</div>
+                    <h3 class="prop-title">Decrement</h3>
+                    <p class="prop-value">Reduces depth by exactly 1</p>
+                </div>
+                <div class="prop-card">
+                    <div class="prop-icon" style="color: var(--alpha-color);">0</div>
+                    <h3 class="prop-title">Floor Bound</h3>
+                    <p class="prop-value">Cannot descend below origin (0)</p>
+                </div>
+                <div class="prop-card">
+                    <div class="prop-icon" style="color: var(--op-A);">A^-1</div>
+                    <h3 class="prop-title">Inverse of A</h3>
+                    <p class="prop-value">D = A^(-1) algebraically</p>
+                </div>
+                <div class="prop-card">
+                    <div class="prop-icon" style="color: var(--omega-color);">mu_P</div>
+                    <h3 class="prop-title">Paradox Return</h3>
+                    <p class="prop-value">Returns toward threshold</p>
+                </div>
+                <div class="prop-card">
+                    <div class="prop-icon" style="color: var(--bfadgs-color);">pop</div>
+                    <h3 class="prop-title">Stack Unwind</h3>
+                    <p class="prop-value">Pops recursion level</p>
+                </div>
+                <div class="prop-card">
+                    <div class="prop-icon" style="color: var(--unity-color);">id</div>
+                    <h3 class="prop-title">Idempotent at 0</h3>
+                    <p class="prop-value">D(0) = 0 (fixed point)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recursion Unwinding -->
+        <section class="recursion-section">
+            <h2 class="section-title">Recursion Unwinding Visualization</h2>
+            <div class="recursion-diagram" id="recursionDiagram">
+                <div class="recursion-level" id="level4">
+                    <span class="level-num" style="color: var(--omega-color);">L4</span>
+                    <span class="level-desc">Deepest recursion (omega boundary)</span>
+                </div>
+                <div class="descent-arrow" id="arrow4">D</div>
+                <div class="recursion-level" id="level3">
+                    <span class="level-num" style="color: var(--bfadgs-color);">L3</span>
+                    <span class="level-desc">Deep traversal level</span>
+                </div>
+                <div class="descent-arrow" id="arrow3">D</div>
+                <div class="recursion-level" id="level2">
+                    <span class="level-num" style="color: var(--op-D);">L2</span>
+                    <span class="level-desc">Mid-level recursion</span>
+                </div>
+                <div class="descent-arrow" id="arrow2">D</div>
+                <div class="recursion-level" id="level1">
+                    <span class="level-num" style="color: var(--op-A);">L1</span>
+                    <span class="level-desc">Initial recursion level</span>
+                </div>
+                <div class="descent-arrow" id="arrow1">D</div>
+                <div class="recursion-level active" id="level0">
+                    <span class="level-num" style="color: var(--alpha-color);">L0</span>
+                    <span class="level-desc">Origin (alpha) - FLOOR</span>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 1rem; color: var(--text-secondary);">
+                <p>Each D operation unwinds one level of recursion until reaching the origin floor at L0.</p>
+            </div>
+        </section>
+
+        <!-- Implementation -->
+        <section class="implementation-section">
+            <h2 class="section-title">Implementation</h2>
+            <div class="code-block">
+<span class="code-comment">// D (Descend) Operator Implementation</span>
+<span class="code-comment">// Decreases depth level with floor constraint at origin</span>
+
+<span class="code-keyword">function</span> <span class="code-function">D</span>(state) {
+    <span class="code-comment">// Core descent operation: n -> n-1</span>
+    <span class="code-keyword">const</span> newDepth = Math.<span class="code-function">max</span>(<span class="code-number">0</span>, state.depth - <span class="code-number">1</span>);
+
+    <span class="code-comment">// Determine phase based on depth</span>
+    <span class="code-keyword">let</span> phase;
+    <span class="code-keyword">if</span> (newDepth === <span class="code-number">0</span>) {
+        phase = <span class="code-string">'alpha'</span>;  <span class="code-comment">// At origin</span>
+    } <span class="code-keyword">else if</span> (newDepth <= <span class="code-number">2</span>) {
+        phase = <span class="code-string">'near_origin'</span>;  <span class="code-comment">// Near paradox threshold</span>
+    } <span class="code-keyword">else</span> {
+        phase = <span class="code-string">'traversal'</span>;  <span class="code-comment">// Active traversal</span>
+    }
+
+    <span class="code-keyword">return</span> {
+        ...state,
+        depth: newDepth,
+        phase: phase,
+        history: [...state.history, <span class="code-string">'D'</span>]
+    };
+}
+
+<span class="code-comment">// Inverse verification: D . A = identity</span>
+<span class="code-keyword">function</span> <span class="code-function">verifyInverse</span>(state) {
+    <span class="code-keyword">const</span> afterA = <span class="code-function">A</span>(state);      <span class="code-comment">// Ascend: n -> n+1</span>
+    <span class="code-keyword">const</span> afterDA = <span class="code-function">D</span>(afterA);  <span class="code-comment">// Descend: n+1 -> n</span>
+    <span class="code-keyword">return</span> afterDA.depth === state.depth;  <span class="code-comment">// Should be true</span>
+}
+
+<span class="code-comment">// Floor constraint check</span>
+<span class="code-keyword">function</span> <span class="code-function">atFloor</span>(state) {
+    <span class="code-keyword">return</span> state.depth === <span class="code-number">0</span>;  <span class="code-comment">// Cannot descend further</span>
+}
+
+<span class="code-comment">// Unwind full recursion stack</span>
+<span class="code-keyword">function</span> <span class="code-function">unwindToOrigin</span>(state) {
+    <span class="code-keyword">let</span> current = state;
+    <span class="code-keyword">while</span> (current.depth > <span class="code-number">0</span>) {
+        current = <span class="code-function">D</span>(current);  <span class="code-comment">// Apply D repeatedly</span>
+    }
+    <span class="code-keyword">return</span> current;  <span class="code-comment">// Now at alpha origin</span>
+}
+            </div>
+        </section>
+
+        <!-- Operator Navigation -->
+        <section class="nav-section">
+            <h2 class="section-title">BFADGS Operators</h2>
+            <div class="nav-grid">
+                <a href="bfadgs-op-begin.html" class="nav-card">
+                    <div class="nav-symbol" style="color: var(--op-B);">B</div>
+                    <div class="nav-name">Begin</div>
+                </a>
+                <a href="bfadgs-op-flow.html" class="nav-card">
+                    <div class="nav-symbol" style="color: var(--op-F);">F</div>
+                    <div class="nav-name">Flow</div>
+                </a>
+                <a href="bfadgs-op-ascend.html" class="nav-card">
+                    <div class="nav-symbol" style="color: var(--op-A);">A</div>
+                    <div class="nav-name">Ascend</div>
+                </a>
+                <a href="bfadgs-op-descend.html" class="nav-card current">
+                    <div class="nav-symbol" style="color: var(--op-D);">D</div>
+                    <div class="nav-name">Descend</div>
+                </a>
+                <a href="bfadgs-op-generate.html" class="nav-card">
+                    <div class="nav-symbol" style="color: var(--op-G);">G</div>
+                    <div class="nav-name">Generate</div>
+                </a>
+                <a href="bfadgs-op-synthesize.html" class="nav-card">
+                    <div class="nav-symbol" style="color: var(--op-S);">S</div>
+                    <div class="nav-name">Synthesize</div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p><a href="bfadgs-u-scaffold.html" class="back-link">Return to BFADGS+U Scaffold</a></p>
+        <p style="margin-top: 0.5rem;"><a href="i2-s3-decision-tree.html" class="back-link">Return to I2 S3 Decision Tree</a></p>
+        <p style="margin-top: 1rem;">D: Descend Operator | n -> n-1 | BFADGS+U System</p>
+    </footer>
+
+    <script>
+        // Constants
+        const MAX_DEPTH = 7;
+        const FLOOR = 0;
+
+        // State
+        let currentDepth = 0;
+        let history = [];
+
+        // Canvas setup
+        const canvas = document.getElementById('descentCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            drawDescentVisualization();
+        }
+
+        function drawDescentVisualization() {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Clear
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, w, h);
+
+            // Draw vertical level structure
+            const levelHeight = h / (MAX_DEPTH + 2);
+            const centerX = w / 2;
+
+            // Draw level lines
+            for (let i = 0; i <= MAX_DEPTH; i++) {
+                const y = h - (i + 1) * levelHeight;
+                const alpha = i === currentDepth ? 1 : 0.3;
+
+                // Level line
+                ctx.strokeStyle = i === 0 ? `rgba(0, 255, 136, ${alpha})` :
+                                  i === currentDepth ? `rgba(239, 68, 68, ${alpha})` :
+                                  `rgba(255, 255, 255, ${alpha * 0.5})`;
+                ctx.lineWidth = i === currentDepth ? 3 : 1;
+
+                ctx.beginPath();
+                ctx.moveTo(centerX - 150, y);
+                ctx.lineTo(centerX + 150, y);
+                ctx.stroke();
+
+                // Level label
+                ctx.fillStyle = i === 0 ? '#00ff88' :
+                               i === currentDepth ? '#ef4444' : '#666';
+                ctx.font = i === currentDepth ? 'bold 16px Courier New' : '14px Courier New';
+                ctx.textAlign = 'right';
+                ctx.fillText(`L${i}`, centerX - 170, y + 5);
+
+                // Special labels
+                ctx.textAlign = 'left';
+                ctx.font = '12px Courier New';
+                if (i === 0) {
+                    ctx.fillStyle = '#00ff88';
+                    ctx.fillText('ORIGIN (alpha) - FLOOR', centerX + 170, y + 5);
+                } else if (i === MAX_DEPTH) {
+                    ctx.fillStyle = '#ff6b35';
+                    ctx.fillText('MAX DEPTH (omega)', centerX + 170, y + 5);
+                }
+            }
+
+            // Draw current position indicator
+            const currentY = h - (currentDepth + 1) * levelHeight;
+
+            // Glow effect
+            const gradient = ctx.createRadialGradient(centerX, currentY, 0, centerX, currentY, 40);
+            gradient.addColorStop(0, 'rgba(239, 68, 68, 0.5)');
+            gradient.addColorStop(1, 'rgba(239, 68, 68, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(centerX - 50, currentY - 30, 100, 60);
+
+            // Current position marker
+            ctx.beginPath();
+            ctx.arc(centerX, currentY, 20, 0, Math.PI * 2);
+            ctx.fillStyle = '#ef4444';
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // D symbol in marker
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 16px Courier New';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('D', centerX, currentY);
+
+            // Draw descent path (history visualization)
+            if (history.length > 0) {
+                ctx.strokeStyle = 'rgba(239, 68, 68, 0.3)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+
+                let prevDepth = 0;
+                history.forEach((op, i) => {
+                    const fromY = h - (prevDepth + 1) * levelHeight;
+                    const toDepth = op === 'A' ? Math.min(prevDepth + 1, MAX_DEPTH) : Math.max(prevDepth - 1, 0);
+                    const toY = h - (toDepth + 1) * levelHeight;
+
+                    const x = centerX - 100 + (i / history.length) * 200;
+                    if (i === 0) {
+                        ctx.moveTo(x, fromY);
+                    }
+                    ctx.lineTo(x + 10, toY);
+                    prevDepth = toDepth;
+                });
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // Draw floor indicator
+            const floorY = h - levelHeight;
+            ctx.fillStyle = 'rgba(0, 255, 136, 0.1)';
+            ctx.fillRect(0, floorY, w, h - floorY);
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(0, floorY);
+            ctx.lineTo(w, floorY);
+            ctx.stroke();
+
+            // Floor label
+            ctx.fillStyle = '#00ff88';
+            ctx.font = 'bold 14px Courier New';
+            ctx.textAlign = 'center';
+            ctx.fillText('FLOOR: D(0) = 0', w / 2, floorY + 25);
+
+            // Draw descent arrow if not at floor
+            if (currentDepth > 0) {
+                const arrowY = currentY + 40;
+                ctx.fillStyle = '#ef4444';
+                ctx.beginPath();
+                ctx.moveTo(centerX, arrowY);
+                ctx.lineTo(centerX - 15, arrowY - 20);
+                ctx.lineTo(centerX + 15, arrowY - 20);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.font = '12px Courier New';
+                ctx.fillText('D: n -> n-1', centerX, arrowY + 20);
+            }
+        }
+
+        function updateDisplay() {
+            document.getElementById('depthDisplay').textContent = currentDepth;
+
+            const phaseIndicator = document.getElementById('phaseIndicator');
+            if (currentDepth === 0) {
+                phaseIndicator.style.background = '#00ff88';
+                phaseIndicator.style.color = '#000';
+                phaseIndicator.textContent = 'ALPHA (Origin)';
+            } else if (currentDepth <= 2) {
+                phaseIndicator.style.background = '#ef4444';
+                phaseIndicator.style.color = '#fff';
+                phaseIndicator.textContent = 'NEAR PARADOX THRESHOLD';
+            } else if (currentDepth >= MAX_DEPTH) {
+                phaseIndicator.style.background = '#ff6b35';
+                phaseIndicator.style.color = '#fff';
+                phaseIndicator.textContent = 'OMEGA BOUNDARY';
+            } else {
+                phaseIndicator.style.background = '#8b5cf6';
+                phaseIndicator.style.color = '#fff';
+                phaseIndicator.textContent = 'ACTIVE TRAVERSAL';
+            }
+
+            // Update recursion diagram
+            for (let i = 0; i <= 4; i++) {
+                const level = document.getElementById(`level${i}`);
+                if (level) {
+                    level.classList.toggle('active', i === Math.min(currentDepth, 4));
+                }
+            }
+        }
+
+        function descend() {
+            if (currentDepth > FLOOR) {
+                currentDepth--;
+                history.push('D');
+                updateDisplay();
+                drawDescentVisualization();
+            }
+        }
+
+        function ascend() {
+            if (currentDepth < MAX_DEPTH) {
+                currentDepth++;
+                history.push('A');
+                updateDisplay();
+                drawDescentVisualization();
+            }
+        }
+
+        function descendMax() {
+            while (currentDepth > FLOOR) {
+                currentDepth--;
+                history.push('D');
+            }
+            updateDisplay();
+            drawDescentVisualization();
+        }
+
+        function resetDepth() {
+            currentDepth = 0;
+            history = [];
+            updateDisplay();
+            drawDescentVisualization();
+        }
+
+        // Initialize
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        updateDisplay();
+
+        // Animate recursion diagram
+        let animLevel = 4;
+        setInterval(() => {
+            if (animLevel > 0) {
+                document.getElementById(`level${animLevel}`).classList.remove('active');
+                animLevel--;
+                document.getElementById(`level${animLevel}`).classList.add('active');
+            } else {
+                document.getElementById(`level${animLevel}`).classList.remove('active');
+                animLevel = 4;
+                document.getElementById(`level${animLevel}`).classList.add('active');
+            }
+        }, 1500);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F: FLOW Operator | BFADGS+U</title>
+    <style>
+        :root {
+            /* Flow Operator Color */
+            --op-F: #10b981;
+            --op-F-dim: rgba(16, 185, 129, 0.3);
+            --op-F-glow: rgba(16, 185, 129, 0.6);
+
+            /* Supporting Colors */
+            --unity-color: #ffd700;
+            --bfadgs-color: #8b5cf6;
+            --alpha-color: #00ff88;
+            --omega-color: #ff6b35;
+
+            /* Backgrounds */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a2e;
+
+            /* Text */
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, var(--bg-tertiary), transparent);
+            border-bottom: 2px solid var(--op-F);
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--op-F), transparent);
+            box-shadow: 0 0 20px var(--op-F);
+        }
+
+        .operator-badge {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            border: 4px solid var(--op-F);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 1rem;
+            background: radial-gradient(circle, var(--op-F-dim), transparent);
+            box-shadow: 0 0 40px var(--op-F-glow), inset 0 0 30px var(--op-F-dim);
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 40px var(--op-F-glow), inset 0 0 30px var(--op-F-dim); }
+            50% { box-shadow: 0 0 60px var(--op-F), inset 0 0 40px var(--op-F-glow); }
+        }
+
+        .operator-symbol {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--op-F);
+            text-shadow: 0 0 20px var(--op-F);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: var(--op-F);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px var(--op-F-glow);
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            letter-spacing: 0.2em;
+        }
+
+        .formula-bar {
+            margin-top: 1.5rem;
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--op-F);
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 1.5rem;
+            color: var(--unity-color);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Section Styling */
+        .section {
+            margin-bottom: 3rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--op-F);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--op-F-dim);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: 'F';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: var(--op-F);
+            color: var(--bg-primary);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+        }
+
+        /* Definition Section */
+        .definition-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .definition-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .definition-card h3 {
+            color: var(--op-F);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .definition-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .math-block {
+            background: var(--bg-primary);
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.2rem;
+            text-align: center;
+            border-left: 3px solid var(--op-F);
+        }
+
+        .math-highlight {
+            color: var(--unity-color);
+        }
+
+        /* Golden Ratio Display */
+        .golden-display {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
+            border: 2px solid var(--op-F);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .phi-value {
+            font-size: 3rem;
+            color: var(--unity-color);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .phi-label {
+            color: var(--op-F);
+            font-size: 1.2rem;
+        }
+
+        .phi-expansion {
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Properties Grid */
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .property-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .property-card:hover {
+            border-color: var(--op-F);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
+        }
+
+        .property-icon {
+            font-size: 2rem;
+            color: var(--op-F);
+            margin-bottom: 0.5rem;
+        }
+
+        .property-name {
+            color: var(--text-primary);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .property-desc {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Flow Canvas */
+        .canvas-container {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .flow-canvas {
+            width: 100%;
+            height: 500px;
+            display: block;
+        }
+
+        .canvas-controls {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--op-F);
+            background: transparent;
+            color: var(--op-F);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .control-btn:hover {
+            background: var(--op-F);
+            color: var(--bg-primary);
+            box-shadow: 0 0 20px var(--op-F-glow);
+        }
+
+        .control-btn.active {
+            background: var(--op-F);
+            color: var(--bg-primary);
+        }
+
+        /* Iteration Table */
+        .iteration-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .iteration-table th,
+        .iteration-table td {
+            padding: 0.75rem 1rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .iteration-table th {
+            background: var(--bg-tertiary);
+            color: var(--op-F);
+        }
+
+        .iteration-table tr:nth-child(even) {
+            background: var(--bg-tertiary);
+        }
+
+        .iteration-table .golden {
+            color: var(--unity-color);
+            font-weight: bold;
+        }
+
+        /* Golden Functor Section */
+        .functor-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .functor-card {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--op-F);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .functor-formula {
+            font-size: 1.5rem;
+            color: var(--unity-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .functor-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .arrow-connector {
+            font-size: 2rem;
+            color: var(--op-F);
+        }
+
+        /* Implementation Section */
+        .implementation-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .step-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-card::after {
+            content: '';
+            position: absolute;
+            right: -1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid var(--op-F);
+        }
+
+        .step-card:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--op-F);
+            color: var(--bg-primary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 1rem;
+            font-weight: bold;
+        }
+
+        .step-title {
+            color: var(--op-F);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-desc {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Live Display */
+        .live-display {
+            display: flex;
+            justify-content: space-around;
+            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .live-stat {
+            text-align: center;
+        }
+
+        .live-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .live-value {
+            font-size: 1.5rem;
+            color: var(--op-F);
+            font-weight: bold;
+        }
+
+        .live-value.golden {
+            color: var(--unity-color);
+        }
+
+        /* Navigation */
+        .nav-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .nav-link {
+            color: var(--op-F);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--op-F);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--op-F);
+            color: var(--bg-primary);
+        }
+
+        .nav-center {
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            margin-top: 2rem;
+        }
+
+        .back-link {
+            color: var(--unity-color);
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .definition-grid {
+                grid-template-columns: 1fr;
+            }
+            .properties-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .implementation-steps {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .step-card::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .properties-grid {
+                grid-template-columns: 1fr;
+            }
+            .implementation-steps {
+                grid-template-columns: 1fr;
+            }
+            .functor-display {
+                flex-direction: column;
+            }
+            .arrow-connector {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="operator-badge">
+            <span class="operator-symbol">F</span>
+        </div>
+        <h1 class="title">FLOW</h1>
+        <p class="subtitle">TRAVERSE EDGE OPERATOR</p>
+        <div class="formula-bar">
+            F: x &rarr; &phi;&middot;x
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Definition Section -->
+        <section class="section">
+            <h2 class="section-title">Definition</h2>
+            <div class="definition-grid">
+                <div class="definition-card">
+                    <h3>Core Operation</h3>
+                    <p>The <strong>F (Flow)</strong> operator moves along an edge in the traversal graph, scaling the current position by the golden ratio <span style="color: var(--unity-color);">&phi; = 1.618033988749895...</span></p>
+                    <div class="math-block">
+                        F: x &rarr; &phi; &middot; x
+                    </div>
+                    <p>This transformation represents continuous motion through the graph structure, where each application of F expands the position by the golden ratio factor.</p>
+                </div>
+                <div class="definition-card">
+                    <h3>Semantic Meaning</h3>
+                    <p>F represents <strong>continuous traversal and motion</strong> within the BFADGS operator system. It is the primary mechanism for moving between states while preserving structural relationships.</p>
+                    <div class="math-block">
+                        Flow = Continuous &middot; Golden &middot; Traversal
+                    </div>
+                    <p>Unlike discrete jumps, F creates smooth transitions that follow the natural growth patterns of the golden ratio.</p>
+                </div>
+            </div>
+
+            <div class="golden-display">
+                <div class="phi-value">&phi; = 1.6180339887...</div>
+                <div class="phi-label">The Golden Ratio</div>
+                <div class="phi-expansion">&phi; = (1 + &radic;5) / 2 = lim F<sub>n+1</sub>/F<sub>n</sub> as n &rarr; &infin;</div>
+            </div>
+        </section>
+
+        <!-- Golden Functor Connection -->
+        <section class="section">
+            <h2 class="section-title">Golden Functor Connection</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                The F operator connects directly to the <strong>Golden Functor</strong> F(n) = &phi;<sup>n</sup>, establishing a morphism between discrete iterations and continuous golden growth.
+            </p>
+
+            <div class="functor-display">
+                <div class="functor-card">
+                    <div class="functor-formula">F(n) = &phi;<sup>n</sup></div>
+                    <div class="functor-label">Golden Functor</div>
+                </div>
+                <div class="arrow-connector">&harr;</div>
+                <div class="functor-card">
+                    <div class="functor-formula">F<sup>n</sup>(x) = &phi;<sup>n</sup>&middot;x</div>
+                    <div class="functor-label">Iterated Flow</div>
+                </div>
+                <div class="arrow-connector">&harr;</div>
+                <div class="functor-card">
+                    <div class="functor-formula">lim<sub>n&rarr;&infin;</sub> = &infin;</div>
+                    <div class="functor-label">Exponential Growth</div>
+                </div>
+            </div>
+
+            <div class="math-block">
+                <span class="math-highlight">Golden Functor Axiom:</span> F(n + m) = F(n) &middot; F(m) = &phi;<sup>n+m</sup>
+            </div>
+        </section>
+
+        <!-- Properties Section -->
+        <section class="section">
+            <h2 class="section-title">Properties</h2>
+            <div class="properties-grid">
+                <div class="property-card">
+                    <div class="property-icon">&rarr;</div>
+                    <div class="property-name">Workhorse of Navigation</div>
+                    <div class="property-desc">F is the primary traversal operator, enabling smooth movement across graph edges.</div>
+                </div>
+                <div class="property-card">
+                    <div class="property-icon">&phi;</div>
+                    <div class="property-name">Golden Scaling</div>
+                    <div class="property-desc">Each application multiplies position by &phi;, the universal growth constant.</div>
+                </div>
+                <div class="property-card">
+                    <div class="property-icon">&equiv;</div>
+                    <div class="property-name">Structure Preservation</div>
+                    <div class="property-desc">F preserves graph structure while transforming position coordinates.</div>
+                </div>
+                <div class="property-card">
+                    <div class="property-icon">&infin;</div>
+                    <div class="property-name">Unbounded Growth</div>
+                    <div class="property-desc">Repeated application leads to exponential golden expansion.</div>
+                </div>
+                <div class="property-card">
+                    <div class="property-icon">&oplus;</div>
+                    <div class="property-name">Composable</div>
+                    <div class="property-desc">F composes with all BFADGS operators maintaining closure.</div>
+                </div>
+                <div class="property-card">
+                    <div class="property-icon">&sube;</div>
+                    <div class="property-name">Invertible</div>
+                    <div class="property-desc">F<sup>-1</sup>(x) = x/&phi; = &phi;<sup>-1</sup>&middot;x (golden contraction)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Repeated Flow -->
+        <section class="section">
+            <h2 class="section-title">Repeated Flow: Exponential Golden Growth</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                When F is applied repeatedly, the position grows exponentially by powers of the golden ratio.
+            </p>
+
+            <div class="math-block">
+                <span class="math-highlight">F<sup>n</sup>(x) = &phi;<sup>n</sup> &middot; x</span> &nbsp;&nbsp;(Exponential Golden Growth)
+            </div>
+
+            <table class="iteration-table">
+                <thead>
+                    <tr>
+                        <th>n</th>
+                        <th>F<sup>n</sup> Operation</th>
+                        <th>&phi;<sup>n</sup> Value</th>
+                        <th>F<sup>n</sup>(1) Result</th>
+                        <th>Pattern</th>
+                    </tr>
+                </thead>
+                <tbody id="iterationTable">
+                    <!-- Populated by JavaScript -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Interactive Flow Demonstration -->
+        <section class="section">
+            <h2 class="section-title">Interactive Flow Demonstration</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                Watch the F operator in action. Click "Apply F" to traverse edges with golden ratio scaling, or use "Auto Flow" for continuous animation.
+            </p>
+
+            <div class="canvas-container">
+                <canvas id="flowCanvas" class="flow-canvas"></canvas>
+                <div class="canvas-controls">
+                    <button class="control-btn" onclick="applyFlow()">Apply F (x &rarr; &phi;&middot;x)</button>
+                    <button class="control-btn" onclick="applyInverseFlow()">Apply F<sup>-1</sup> (x &rarr; x/&phi;)</button>
+                    <button class="control-btn" id="autoBtn" onclick="toggleAutoFlow()">Auto Flow</button>
+                    <button class="control-btn" onclick="resetFlow()">Reset</button>
+                </div>
+            </div>
+
+            <div class="live-display">
+                <div class="live-stat">
+                    <div class="live-label">Iterations (n)</div>
+                    <div class="live-value" id="liveIterations">0</div>
+                </div>
+                <div class="live-stat">
+                    <div class="live-label">Current Position (x)</div>
+                    <div class="live-value" id="livePosition">1.000</div>
+                </div>
+                <div class="live-stat">
+                    <div class="live-label">&phi;<sup>n</sup> Factor</div>
+                    <div class="live-value golden" id="livePhiFactor">1.000</div>
+                </div>
+                <div class="live-stat">
+                    <div class="live-label">Edge Scale</div>
+                    <div class="live-value" id="liveScale">1.000</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Implementation -->
+        <section class="section">
+            <h2 class="section-title">Implementation</h2>
+            <div class="implementation-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Locate Current Node</div>
+                    <div class="step-desc">Identify position x in the traversal graph</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Select Edge</div>
+                    <div class="step-desc">Choose adjacent edge for traversal direction</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Apply &phi; Scaling</div>
+                    <div class="step-desc">Multiply position by golden ratio: x' = &phi;&middot;x</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Update State</div>
+                    <div class="step-desc">Move to new position along traversed edge</div>
+                </div>
+            </div>
+
+            <div class="math-block" style="margin-top: 1.5rem;">
+                <strong>Pseudocode:</strong><br><br>
+                function F(state):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;edge = select_adjacent_edge(state.position)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;state.position = &phi; * state.position<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;state.history.append('F')<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;return state
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <div class="nav-section">
+            <a href="bfadgs-op-begin.html" class="nav-link">&larr; B: Begin</a>
+            <span class="nav-center">F: Flow | BFADGS Operators</span>
+            <a href="bfadgs-op-ascend.html" class="nav-link">A: Ascend &rarr;</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p><a href="bfadgs-u-scaffold.html" class="back-link">&larr; Return to BFADGS+U Main</a></p>
+        <p style="margin-top: 0.5rem;"><a href="i2-s3-decision-tree.html" class="back-link">&larr; Return to I&sup2; S3 Decision Tree</a></p>
+        <p style="margin-top: 1rem;">F: FLOW Operator | &phi;-Scaled Traversal | BFADGS+U System</p>
+    </footer>
+
+    <script>
+        // Constants
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const PHI_INV = 1 / PHI;
+
+        // State
+        let state = {
+            position: 1,
+            iterations: 0,
+            autoFlow: false,
+            autoInterval: null
+        };
+
+        // Canvas setup
+        const canvas = document.getElementById('flowCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Particles for flow visualization
+        let particles = [];
+        let nodes = [];
+        let edges = [];
+        let currentNodeIndex = 0;
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            initializeGraph();
+        }
+
+        function initializeGraph() {
+            const w = canvas.width;
+            const h = canvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+
+            // Create nodes in a golden spiral pattern
+            nodes = [];
+            const numNodes = 12;
+            let radius = 50;
+            let angle = 0;
+
+            for (let i = 0; i < numNodes; i++) {
+                nodes.push({
+                    x: cx + Math.cos(angle) * radius,
+                    y: cy + Math.sin(angle) * radius,
+                    radius: 15 - i * 0.5,
+                    scale: Math.pow(PHI, i / 3)
+                });
+                radius *= 1.1;
+                angle += Math.PI * 2 / PHI; // Golden angle
+            }
+
+            // Create edges connecting sequential nodes
+            edges = [];
+            for (let i = 0; i < nodes.length - 1; i++) {
+                edges.push({
+                    from: i,
+                    to: i + 1,
+                    particles: []
+                });
+            }
+
+            // Initialize edge particles
+            edges.forEach(edge => {
+                for (let i = 0; i < 5; i++) {
+                    edge.particles.push({
+                        t: Math.random(),
+                        speed: 0.005 + Math.random() * 0.01
+                    });
+                }
+            });
+
+            currentNodeIndex = 0;
+            particles = [];
+        }
+
+        function draw() {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Clear with gradient background
+            const gradient = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, w/2);
+            gradient.addColorStop(0, '#1a1a2e');
+            gradient.addColorStop(1, '#0a0a0f');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, w, h);
+
+            // Draw golden spiral guide
+            drawGoldenSpiral();
+
+            // Draw edges with flow particles
+            edges.forEach((edge, i) => {
+                const fromNode = nodes[edge.from];
+                const toNode = nodes[edge.to];
+
+                // Edge line
+                ctx.beginPath();
+                ctx.moveTo(fromNode.x, fromNode.y);
+                ctx.lineTo(toNode.x, toNode.y);
+                ctx.strokeStyle = i < currentNodeIndex ? 'rgba(16, 185, 129, 0.6)' : 'rgba(16, 185, 129, 0.2)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Flow particles along edge
+                edge.particles.forEach(p => {
+                    p.t += p.speed;
+                    if (p.t > 1) p.t = 0;
+
+                    const x = fromNode.x + (toNode.x - fromNode.x) * p.t;
+                    const y = fromNode.y + (toNode.y - fromNode.y) * p.t;
+
+                    ctx.beginPath();
+                    ctx.arc(x, y, 3, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(16, 185, 129, ${1 - p.t})`;
+                    ctx.fill();
+                });
+            });
+
+            // Draw nodes
+            nodes.forEach((node, i) => {
+                const isActive = i === currentNodeIndex;
+                const isPast = i < currentNodeIndex;
+
+                // Node glow
+                if (isActive) {
+                    const glowGradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, 40);
+                    glowGradient.addColorStop(0, 'rgba(16, 185, 129, 0.5)');
+                    glowGradient.addColorStop(1, 'transparent');
+                    ctx.fillStyle = glowGradient;
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, 40, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Node circle
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                ctx.fillStyle = isActive ? '#10b981' : isPast ? 'rgba(16, 185, 129, 0.5)' : '#1a1a2e';
+                ctx.strokeStyle = isActive ? '#10b981' : isPast ? 'rgba(16, 185, 129, 0.6)' : 'rgba(16, 185, 129, 0.3)';
+                ctx.lineWidth = 2;
+                ctx.fill();
+                ctx.stroke();
+
+                // Node label
+                if (isActive) {
+                    ctx.fillStyle = '#0a0a0f';
+                    ctx.font = 'bold 12px Courier New';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('F', node.x, node.y);
+                }
+
+                // Scale label
+                ctx.fillStyle = isActive ? '#ffd700' : 'rgba(255, 215, 0, 0.5)';
+                ctx.font = '10px Courier New';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${node.scale.toFixed(2)}`, node.x, node.y + node.radius + 15);
+            });
+
+            // Draw phi formula
+            ctx.fillStyle = '#10b981';
+            ctx.font = 'bold 16px Courier New';
+            ctx.textAlign = 'left';
+            ctx.fillText(`F: x -> phi * x`, 20, 30);
+            ctx.fillStyle = '#ffd700';
+            ctx.fillText(`phi = ${PHI.toFixed(10)}`, 20, 50);
+
+            // Current state display
+            ctx.fillStyle = '#e0e0e0';
+            ctx.font = '14px Courier New';
+            ctx.textAlign = 'right';
+            ctx.fillText(`n = ${state.iterations}`, w - 20, 30);
+            ctx.fillText(`x = ${state.position.toFixed(6)}`, w - 20, 50);
+            ctx.fillStyle = '#10b981';
+            ctx.fillText(`phi^n = ${Math.pow(PHI, state.iterations).toFixed(6)}`, w - 20, 70);
+
+            requestAnimationFrame(draw);
+        }
+
+        function drawGoldenSpiral() {
+            const w = canvas.width;
+            const h = canvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.1)';
+            ctx.lineWidth = 1;
+
+            let a = 5;
+            let b = Math.log(PHI) / (Math.PI / 2);
+
+            for (let theta = 0; theta < Math.PI * 8; theta += 0.1) {
+                const r = a * Math.exp(b * theta);
+                const x = cx + r * Math.cos(theta);
+                const y = cy + r * Math.sin(theta);
+
+                if (theta === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+        }
+
+        function applyFlow() {
+            state.position *= PHI;
+            state.iterations++;
+
+            if (currentNodeIndex < nodes.length - 1) {
+                currentNodeIndex++;
+            }
+
+            updateDisplay();
+        }
+
+        function applyInverseFlow() {
+            if (state.iterations > 0) {
+                state.position *= PHI_INV;
+                state.iterations--;
+
+                if (currentNodeIndex > 0) {
+                    currentNodeIndex--;
+                }
+
+                updateDisplay();
+            }
+        }
+
+        function toggleAutoFlow() {
+            state.autoFlow = !state.autoFlow;
+            const btn = document.getElementById('autoBtn');
+
+            if (state.autoFlow) {
+                btn.classList.add('active');
+                btn.textContent = 'Stop Auto';
+                state.autoInterval = setInterval(() => {
+                    if (currentNodeIndex >= nodes.length - 1) {
+                        resetFlow();
+                    } else {
+                        applyFlow();
+                    }
+                }, 1000);
+            } else {
+                btn.classList.remove('active');
+                btn.textContent = 'Auto Flow';
+                clearInterval(state.autoInterval);
+            }
+        }
+
+        function resetFlow() {
+            state.position = 1;
+            state.iterations = 0;
+            currentNodeIndex = 0;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('liveIterations').textContent = state.iterations;
+            document.getElementById('livePosition').textContent = state.position.toFixed(6);
+            document.getElementById('livePhiFactor').textContent = Math.pow(PHI, state.iterations).toFixed(6);
+            document.getElementById('liveScale').textContent = (state.position / 1).toFixed(6);
+        }
+
+        // Populate iteration table
+        function populateIterationTable() {
+            const table = document.getElementById('iterationTable');
+            const fibonacci = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55];
+
+            for (let n = 0; n <= 9; n++) {
+                const phiN = Math.pow(PHI, n);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${n}</td>
+                    <td>F<sup>${n}</sup>(x) = phi<sup>${n}</sup> * x</td>
+                    <td class="golden">${phiN.toFixed(6)}</td>
+                    <td>${phiN.toFixed(6)}</td>
+                    <td>${n >= 2 ? `approx F(${fibonacci[n-1]}) + F(${fibonacci[n-2]})` : '-'}</td>
+                `;
+                table.appendChild(row);
+            }
+        }
+
+        // Initialize
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        populateIterationTable();
+        draw();
+    </script>
+</body>
+</html>

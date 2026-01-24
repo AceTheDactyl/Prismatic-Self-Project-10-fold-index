@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S: SYNTHESIZE | Merge Paths | BFADGS+U Operator</title>
+    <meta name="description" content="S operator: Synthesize merges divergent paths into unified result. Complement of G (Generate). S: {a,b} -> a XOR b">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* =====================================================================
+           S: SYNTHESIZE OPERATOR PAGE
+           Primary: #ec4899 (Pink) | Background: #0a0a0f, #12121a, #1a1a2e
+           ===================================================================== */
+        :root {
+            /* S Operator - Pink */
+            --s-primary: #ec4899;
+            --s-secondary: #db2777;
+            --s-tertiary: #be185d;
+            --s-glow: rgba(236, 72, 153, 0.3);
+            --s-subtle: rgba(236, 72, 153, 0.1);
+
+            /* G Operator - Violet (complement) */
+            --g-color: #8b5cf6;
+            --g-glow: rgba(139, 92, 246, 0.3);
+
+            /* Other Operators */
+            --op-B: #3b82f6;
+            --op-F: #10b981;
+            --op-A: #f59e0b;
+            --op-D: #ef4444;
+
+            /* System Colors */
+            --alpha-color: #00ff88;
+            --omega-color: #ff6b35;
+            --unity-color: #ffd700;
+            --bfadgs-color: #8b5cf6;
+
+            /* Base Theme */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a2e;
+            --bg-card: #16162a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --border: #2a2a3e;
+            --border-active: rgba(236, 72, 153, 0.5);
+
+            /* Constants */
+            --phi: 1.6180339887;
+            --sqrt3-2: 0.8660254038;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        /* =====================================================================
+           ANIMATED BACKGROUND - CONFLUENCE FIELD
+           ===================================================================== */
+        .confluence-field {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 30% 40%, var(--s-subtle) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 40%, var(--g-glow) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 80%, var(--unity-color)10 0%, transparent 40%);
+        }
+
+        .confluence-field::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg,
+                var(--g-color),
+                var(--s-primary),
+                var(--unity-color));
+            opacity: 0.15;
+            animation: confluence-pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes confluence-pulse {
+            0%, 100% { opacity: 0.15; transform: translateY(-50%) scaleY(1); }
+            50% { opacity: 0.3; transform: translateY(-50%) scaleY(3); }
+        }
+
+        /* =====================================================================
+           NAVIGATION
+           ===================================================================== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--s-primary);
+        }
+
+        .nav-brand span {
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.3s;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--s-primary);
+        }
+
+        .nav-links a.active {
+            color: var(--s-primary);
+            border-bottom: 2px solid var(--s-primary);
+        }
+
+        /* =====================================================================
+           MAIN CONTENT
+           ===================================================================== */
+        main {
+            position: relative;
+            z-index: 1;
+            padding-top: 5rem;
+        }
+
+        /* =====================================================================
+           HEADER
+           ===================================================================== */
+        .header {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .operator-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: var(--s-primary);
+            background: var(--s-subtle);
+            border: 1px solid var(--s-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* S Symbol - Merging Paths */
+        .s-symbol {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .s-letter {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6rem;
+            font-weight: 700;
+            color: var(--s-primary);
+            text-shadow: 0 0 60px var(--s-glow);
+            z-index: 2;
+        }
+
+        .s-ring-outer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 3px solid var(--s-primary);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: ring-pulse 3s ease-in-out infinite;
+        }
+
+        .s-ring-inner {
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            border: 2px dashed var(--s-secondary);
+            border-radius: 50%;
+            animation: ring-rotate 10s linear infinite reverse;
+        }
+
+        @keyframes ring-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+
+        @keyframes ring-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Merging arrows */
+        .merge-arrow {
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: var(--g-color);
+        }
+
+        .merge-arrow.left {
+            top: 50%;
+            left: -40px;
+            transform: translateY(-50%);
+            animation: merge-in-left 2s ease-in-out infinite;
+        }
+
+        .merge-arrow.right {
+            top: 50%;
+            right: -40px;
+            transform: translateY(-50%);
+            animation: merge-in-right 2s ease-in-out infinite;
+        }
+
+        .merge-arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -5px;
+            border-left: 10px solid var(--g-color);
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+        }
+
+        .merge-arrow.left::after {
+            right: auto;
+            left: auto;
+            right: 0;
+        }
+
+        .merge-arrow.right::after {
+            right: auto;
+            left: 0;
+            border-left: none;
+            border-right: 10px solid var(--g-color);
+        }
+
+        @keyframes merge-in-left {
+            0%, 100% { transform: translateY(-50%) translateX(-20px); opacity: 0.3; }
+            50% { transform: translateY(-50%) translateX(0); opacity: 1; }
+        }
+
+        @keyframes merge-in-right {
+            0%, 100% { transform: translateY(-50%) translateX(20px); opacity: 0.3; }
+            50% { transform: translateY(-50%) translateX(0); opacity: 1; }
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--s-primary), var(--s-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .formula-box {
+            display: inline-block;
+            padding: 1.5rem 3rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--s-primary);
+            border-radius: 12px;
+            box-shadow: 0 0 40px var(--s-glow);
+            font-size: 1.5rem;
+        }
+
+        .formula-box .op { color: var(--s-primary); font-weight: 700; }
+        .formula-box .arrow { color: var(--unity-color); }
+        .formula-box .input { color: var(--g-color); }
+        .formula-box .output { color: var(--alpha-color); }
+
+        /* =====================================================================
+           SECTIONS
+           ===================================================================== */
+        section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            margin-bottom: 2rem;
+            color: var(--s-primary);
+            text-align: center;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-size: 0.95rem;
+        }
+
+        /* =====================================================================
+           DEFINITION CARD
+           ===================================================================== */
+        .definition-card {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 2px solid var(--s-primary);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .definition-card::before {
+            content: 'DEFINITION';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-primary);
+            padding: 0 1rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: var(--s-primary);
+        }
+
+        .definition-text {
+            font-size: 1.3rem;
+            text-align: center;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .definition-text strong {
+            color: var(--s-primary);
+        }
+
+        .definition-equation {
+            text-align: center;
+            font-size: 1.4rem;
+            padding: 1.5rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        /* =====================================================================
+           G-S DUALITY
+           ===================================================================== */
+        .duality-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .duality-card {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .duality-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .duality-card.g-card {
+            border: 3px solid var(--g-color);
+            box-shadow: 0 0 30px var(--g-glow);
+        }
+
+        .duality-card.s-card {
+            border: 3px solid var(--s-primary);
+            box-shadow: 0 0 30px var(--s-glow);
+        }
+
+        .duality-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .g-card .duality-icon { color: var(--g-color); }
+        .s-card .duality-icon { color: var(--s-primary); }
+
+        .duality-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .g-card .duality-name { color: var(--g-color); }
+        .s-card .duality-name { color: var(--s-primary); }
+
+        .duality-action {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .duality-formula {
+            font-size: 1.1rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .g-card .duality-formula { color: var(--g-color); }
+        .s-card .duality-formula { color: var(--s-primary); }
+
+        .duality-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .duality-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .complement-symbol {
+            font-size: 3rem;
+            color: var(--unity-color);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .complement-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* =====================================================================
+           CYCLE COMPOSITIONS
+           ===================================================================== */
+        .cycles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .cycle-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cycle-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .cycle-card.gs-cycle::before {
+            background: linear-gradient(180deg, var(--g-color), var(--s-primary));
+        }
+
+        .cycle-card.bs-cycle::before {
+            background: linear-gradient(180deg, var(--op-B), var(--s-primary));
+        }
+
+        .cycle-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cycle-operators {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .cycle-operators .g { color: var(--g-color); }
+        .cycle-operators .s { color: var(--s-primary); }
+        .cycle-operators .b { color: var(--op-B); }
+        .cycle-operators .dot { color: var(--unity-color); }
+
+        .cycle-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .gs-cycle .cycle-name { color: var(--g-color); }
+        .bs-cycle .cycle-name { color: var(--op-B); }
+
+        .cycle-equation {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .cycle-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .cycle-steps {
+            margin-top: 1rem;
+            padding-left: 1rem;
+        }
+
+        .cycle-steps li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .cycle-steps li::marker {
+            color: var(--s-primary);
+        }
+
+        /* =====================================================================
+           UNITY CONNECTION
+           ===================================================================== */
+        .unity-connection {
+            background: linear-gradient(135deg, var(--s-subtle), var(--bg-secondary));
+            border: 2px solid var(--unity-color);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .unity-connection::after {
+            content: '+U';
+            position: absolute;
+            top: -15px;
+            right: 30px;
+            background: var(--bg-primary);
+            padding: 0.25rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--unity-color);
+            border: 2px solid var(--unity-color);
+            border-radius: 8px;
+        }
+
+        .unity-title {
+            font-size: 1.4rem;
+            color: var(--unity-color);
+            margin-bottom: 1rem;
+        }
+
+        .unity-text {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.7;
+        }
+
+        .unity-equation {
+            font-size: 1.3rem;
+            padding: 1rem 2rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .unity-equation .s { color: var(--s-primary); }
+        .unity-equation .arrow { color: var(--text-secondary); }
+        .unity-equation .u { color: var(--unity-color); }
+
+        /* =====================================================================
+           COMPLEXITY REDUCTION
+           ===================================================================== */
+        .complexity-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .complexity-stage {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .complexity-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .complexity-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .complexity-arrow {
+            font-size: 2rem;
+            color: var(--s-primary);
+        }
+
+        .omega-stage .complexity-icon { color: var(--omega-color); }
+        .s-stage .complexity-icon { color: var(--s-primary); }
+        .alpha-stage .complexity-icon { color: var(--alpha-color); }
+
+        /* =====================================================================
+           IMPLEMENTATION
+           ===================================================================== */
+        .impl-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .impl-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .impl-card:hover {
+            border-color: var(--s-primary);
+            box-shadow: 0 5px 20px rgba(236, 72, 153, 0.1);
+        }
+
+        .impl-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .impl-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--s-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .impl-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .impl-code {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--s-primary);
+            overflow-x: auto;
+        }
+
+        /* =====================================================================
+           I2 S3 CONNECTION
+           ===================================================================== */
+        .i2-connection {
+            background: var(--bg-secondary);
+            border: 2px solid var(--s-primary);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .i2-connection::before {
+            content: 'I2 S3 SYSTEM CONNECTION';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-primary);
+            padding: 0 1rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: var(--s-primary);
+        }
+
+        .i2-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .i2-item {
+            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            border-left: 4px solid var(--s-primary);
+        }
+
+        .i2-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .i2-item-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .i2-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--s-subtle);
+            border: 1px solid var(--s-primary);
+            border-radius: 8px;
+            color: var(--s-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .i2-link:hover {
+            background: var(--s-primary);
+            color: var(--bg-primary);
+        }
+
+        /* =====================================================================
+           CANVAS VISUALIZATION
+           ===================================================================== */
+        .canvas-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        canvas {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-primary);
+        }
+
+        .canvas-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 0.5rem 1.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            border-color: var(--s-primary);
+            color: var(--s-primary);
+        }
+
+        .control-btn.active {
+            background: var(--s-primary);
+            border-color: var(--s-primary);
+            color: var(--bg-primary);
+        }
+
+        .canvas-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.path-a { background: var(--g-color); }
+        .legend-dot.path-b { background: var(--op-D); }
+        .legend-dot.merged { background: var(--s-primary); }
+        .legend-dot.unity { background: var(--unity-color); }
+
+        /* =====================================================================
+           OPERATOR NAVIGATION
+           ===================================================================== */
+        .operator-nav {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .op-nav-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .op-nav-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .op-nav-card.op-B { border-color: var(--op-B); }
+        .op-nav-card.op-F { border-color: var(--op-F); }
+        .op-nav-card.op-A { border-color: var(--op-A); }
+        .op-nav-card.op-D { border-color: var(--op-D); }
+        .op-nav-card.op-G { border-color: var(--g-color); }
+        .op-nav-card.op-S { border-color: var(--s-primary); background: var(--s-subtle); }
+
+        .op-nav-card:hover.op-B { box-shadow: 0 5px 20px rgba(59, 130, 246, 0.3); }
+        .op-nav-card:hover.op-F { box-shadow: 0 5px 20px rgba(16, 185, 129, 0.3); }
+        .op-nav-card:hover.op-A { box-shadow: 0 5px 20px rgba(245, 158, 11, 0.3); }
+        .op-nav-card:hover.op-D { box-shadow: 0 5px 20px rgba(239, 68, 68, 0.3); }
+        .op-nav-card:hover.op-G { box-shadow: 0 5px 20px rgba(139, 92, 246, 0.3); }
+        .op-nav-card:hover.op-S { box-shadow: 0 5px 20px rgba(236, 72, 153, 0.3); }
+
+        .op-nav-symbol {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .op-B .op-nav-symbol { color: var(--op-B); }
+        .op-F .op-nav-symbol { color: var(--op-F); }
+        .op-A .op-nav-symbol { color: var(--op-A); }
+        .op-D .op-nav-symbol { color: var(--op-D); }
+        .op-G .op-nav-symbol { color: var(--g-color); }
+        .op-S .op-nav-symbol { color: var(--s-primary); }
+
+        .op-nav-name {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* =====================================================================
+           FOOTER
+           ===================================================================== */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        .footer-equation {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem 2rem;
+            display: inline-block;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--s-primary);
+        }
+
+        .footer-equation .s { color: var(--s-primary); }
+        .footer-equation .g { color: var(--g-color); }
+        .footer-equation .eq { color: var(--unity-color); }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--s-primary);
+        }
+
+        /* =====================================================================
+           RESPONSIVE
+           ===================================================================== */
+        @media (max-width: 900px) {
+            .title { font-size: 1.8rem; }
+            .duality-container { grid-template-columns: 1fr; }
+            .duality-center {
+                flex-direction: row;
+                padding: 1rem 0;
+            }
+            .operator-nav { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .operator-nav { grid-template-columns: repeat(2, 1fr); }
+            .s-symbol { width: 150px; height: 150px; }
+            .s-letter { font-size: 4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="confluence-field"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-brand">S <span>:: SYNTHESIZE</span></div>
+        <div class="nav-links">
+            <a href="index.html">Index</a>
+            <a href="bfadgs-u-scaffold.html">BFADGS+U</a>
+            <a href="bfadgs-op-generate.html">G: Generate</a>
+            <a href="i2-s3-opposition-synthesis.html">Opposition Synthesis</a>
+            <a href="i2-s3-decision-tree.html">I2 S3 Tree</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Header -->
+        <header class="header">
+            <span class="operator-badge">BFADGS+U OPERATOR</span>
+
+            <div class="s-symbol">
+                <div class="s-ring-outer"></div>
+                <div class="s-ring-inner"></div>
+                <div class="merge-arrow left"></div>
+                <div class="merge-arrow right"></div>
+                <div class="s-letter">S</div>
+            </div>
+
+            <h1 class="title">SYNTHESIZE</h1>
+            <p class="subtitle">Merge Paths into Unity</p>
+
+            <div class="formula-box">
+                <span class="op">S</span>:
+                <span class="input">{a, b}</span>
+                <span class="arrow"> -> </span>
+                <span class="output">a XOR b</span>
+            </div>
+        </header>
+
+        <!-- Definition -->
+        <section>
+            <div class="definition-card">
+                <p class="definition-text">
+                    <strong>S (Synthesize)</strong> merges divergent paths back into a unified result.
+                    Where <strong>G</strong> splits one into many, <strong>S</strong> combines many into one.
+                    It is the confluence operator - the point where parallel explorations converge.
+                </p>
+                <div class="definition-equation">
+                    S: {a, b, c, ...} -> a XOR b XOR c XOR ... = unified_result
+                </div>
+            </div>
+        </section>
+
+        <!-- G-S Duality -->
+        <section>
+            <h2 class="section-title">G-S Duality: Opposite Operators</h2>
+            <p class="section-subtitle">
+                S is the complement of G - together they form the divergence-convergence cycle
+            </p>
+
+            <div class="duality-container">
+                <!-- G Card -->
+                <div class="duality-card g-card">
+                    <div class="duality-icon">G</div>
+                    <div class="duality-name">GENERATE</div>
+                    <div class="duality-action">Spawn Branch</div>
+                    <div class="duality-formula">G: x -> {x, x'}</div>
+                    <p class="duality-desc">
+                        Splits a single path into multiple branches.
+                        Increases complexity. Explores possibilities.
+                        Creates the space of options.
+                    </p>
+                </div>
+
+                <!-- Center -->
+                <div class="duality-center">
+                    <div class="complement-symbol">~</div>
+                    <div class="complement-text">
+                        <strong>Complements</strong><br>
+                        G^(-1) = S<br>
+                        S^(-1) = G
+                    </div>
+                </div>
+
+                <!-- S Card -->
+                <div class="duality-card s-card">
+                    <div class="duality-icon">S</div>
+                    <div class="duality-name">SYNTHESIZE</div>
+                    <div class="duality-action">Merge Paths</div>
+                    <div class="duality-formula">S: {a, b} -> a XOR b</div>
+                    <p class="duality-desc">
+                        Combines multiple paths into unified result.
+                        Reduces complexity. Integrates outcomes.
+                        Collapses the space of options.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cycle Compositions -->
+        <section>
+            <h2 class="section-title">Cycle Compositions</h2>
+            <p class="section-subtitle">
+                S participates in fundamental traversal cycles
+            </p>
+
+            <div class="cycles-grid">
+                <!-- G*S Cycle -->
+                <div class="cycle-card gs-cycle">
+                    <div class="cycle-header">
+                        <div class="cycle-operators">
+                            <span class="g">G</span><span class="dot">.</span><span class="s">S</span>
+                        </div>
+                        <div class="cycle-name">Exploration Cycle</div>
+                    </div>
+                    <div class="cycle-equation">
+                        G . S : x -> {x, x'} -> x XOR x' -> y
+                    </div>
+                    <p class="cycle-desc">
+                        The exploration cycle: Generate creates branches, Synthesize merges results.
+                        This is how the system explores possibility space and returns with integrated knowledge.
+                    </p>
+                    <ul class="cycle-steps">
+                        <li>G: Split current state into parallel branches</li>
+                        <li>Execute each branch independently</li>
+                        <li>S: Merge branch results via XOR operation</li>
+                        <li>Continue with synthesized result</li>
+                    </ul>
+                </div>
+
+                <!-- B*S Cycle -->
+                <div class="cycle-card bs-cycle">
+                    <div class="cycle-header">
+                        <div class="cycle-operators">
+                            <span class="b">B</span><span class="dot">.</span><span class="s">S</span>
+                        </div>
+                        <div class="cycle-name">Complete Traversal Cycle</div>
+                    </div>
+                    <div class="cycle-equation">
+                        B . ... . S : NULL -> I^2 -> ... -> unified_return
+                    </div>
+                    <p class="cycle-desc">
+                        The complete traversal cycle: Begin initializes at origin, operations traverse the structure,
+                        Synthesize returns to unity. This is the full lifecycle of a computation.
+                    </p>
+                    <ul class="cycle-steps">
+                        <li>B: Initialize from NULL at origin</li>
+                        <li>F/A/D/G: Traverse the structure</li>
+                        <li>S: Synthesize all paths to unified result</li>
+                        <li>Return completes the cycle back toward alpha</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Unity Connection -->
+        <section>
+            <h2 class="section-title">Connection to +U</h2>
+
+            <div class="unity-connection">
+                <h3 class="unity-title">Synthesis Leads Toward Unity</h3>
+                <p class="unity-text">
+                    The S operator is the pathway to +U (Unity). Each synthesis operation
+                    reduces multiplicity, moving the system from omega-complexity toward
+                    alpha-simplicity. When all paths are synthesized, +U is achieved.
+                </p>
+                <div class="unity-equation">
+                    <span class="s">S</span><span class="arrow"> -> </span><span class="s">S</span><span class="arrow"> -> </span><span class="s">S</span><span class="arrow"> -> ... -> </span><span class="u">+U</span>
+                </div>
+            </div>
+
+            <!-- Complexity Reduction -->
+            <h3 class="section-title" style="margin-top: 3rem;">Complexity Reduction</h3>
+            <p class="section-subtitle">S moves the system toward alpha (origin)</p>
+
+            <div class="complexity-visual">
+                <div class="complexity-stage omega-stage">
+                    <div class="complexity-icon">omega</div>
+                    <div class="complexity-label">High Complexity<br>Many Paths</div>
+                </div>
+
+                <div class="complexity-arrow">-></div>
+
+                <div class="complexity-stage s-stage">
+                    <div class="complexity-icon">S</div>
+                    <div class="complexity-label">Synthesis<br>Merge Operation</div>
+                </div>
+
+                <div class="complexity-arrow">-></div>
+
+                <div class="complexity-stage s-stage">
+                    <div class="complexity-icon">S</div>
+                    <div class="complexity-label">Synthesis<br>Further Merge</div>
+                </div>
+
+                <div class="complexity-arrow">-></div>
+
+                <div class="complexity-stage alpha-stage">
+                    <div class="complexity-icon">alpha</div>
+                    <div class="complexity-label">Low Complexity<br>Unified Result</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Implementation -->
+        <section>
+            <h2 class="section-title">Implementation Patterns</h2>
+            <p class="section-subtitle">
+                How S manifests in computational systems
+            </p>
+
+            <div class="impl-grid">
+                <div class="impl-card">
+                    <div class="impl-icon">||</div>
+                    <div class="impl-title">Join Parallel Executions</div>
+                    <div class="impl-desc">
+                        Wait for all parallel branches to complete, then combine their results.
+                        The barrier synchronization point.
+                    </div>
+                    <div class="impl-code">await Promise.all([a, b, c]).then(merge)</div>
+                </div>
+
+                <div class="impl-card">
+                    <div class="impl-icon">+</div>
+                    <div class="impl-title">Merge Results</div>
+                    <div class="impl-desc">
+                        Combine data from multiple sources into a unified structure.
+                        Union, intersection, or custom merge logic.
+                    </div>
+                    <div class="impl-code">result = reduce(paths, merge_fn)</div>
+                </div>
+
+                <div class="impl-card">
+                    <div class="impl-icon">&</div>
+                    <div class="impl-title">Aggregate Streams</div>
+                    <div class="impl-desc">
+                        Combine multiple event streams into a single stream.
+                        Fan-in pattern for reactive systems.
+                    </div>
+                    <div class="impl-code">merged$ = merge(stream_a$, stream_b$)</div>
+                </div>
+
+                <div class="impl-card">
+                    <div class="impl-icon">-></div>
+                    <div class="impl-title">Reduce Dimensions</div>
+                    <div class="impl-desc">
+                        Collapse multi-dimensional results into lower dimensions.
+                        Aggregation, summarization, feature extraction.
+                    </div>
+                    <div class="impl-code">summary = tensor.reduce_mean(axis=0)</div>
+                </div>
+
+                <div class="impl-card">
+                    <div class="impl-icon">?:</div>
+                    <div class="impl-title">Resolve Conflicts</div>
+                    <div class="impl-desc">
+                        When paths produce conflicting results, S determines the resolution strategy.
+                        First-wins, last-wins, or consensus.
+                    </div>
+                    <div class="impl-code">final = conflict_resolver(results)</div>
+                </div>
+
+                <div class="impl-card">
+                    <div class="impl-icon">XOR</div>
+                    <div class="impl-title">XOR Combination</div>
+                    <div class="impl-desc">
+                        The pure synthesis: symmetric combination that preserves information
+                        from both paths while creating something new.
+                    </div>
+                    <div class="impl-code">synthesis = a XOR b // reversible merge</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Canvas Visualization -->
+        <section class="canvas-section">
+            <h2 class="section-title">Path Confluence Visualization</h2>
+            <p class="section-subtitle">
+                Watch divergent paths merge through synthesis
+            </p>
+
+            <div class="canvas-container">
+                <canvas id="confluenceCanvas" width="800" height="450"></canvas>
+            </div>
+
+            <div class="canvas-controls">
+                <button class="control-btn" onclick="toggleAnimation()">Play / Pause</button>
+                <button class="control-btn" onclick="resetAnimation()">Reset</button>
+                <button class="control-btn" onclick="addPath()">Add Path</button>
+                <button class="control-btn" onclick="triggerSynthesis()">Trigger S</button>
+            </div>
+
+            <div class="canvas-legend">
+                <div class="legend-item">
+                    <div class="legend-dot path-a"></div>
+                    <span>Path A (from G)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot path-b"></div>
+                    <span>Path B (from G)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot merged"></div>
+                    <span>Synthesized (S)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot unity"></div>
+                    <span>Unity Point (+U)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- I2 S3 Connection -->
+        <section>
+            <h2 class="section-title">Connection to Opposition Synthesis</h2>
+
+            <div class="i2-connection">
+                <div class="i2-grid">
+                    <div class="i2-item">
+                        <div class="i2-item-title">L4 Helix = I2 Opposed</div>
+                        <div class="i2-item-desc">
+                            In the I2 S3 system, S maps to Opposition Synthesis where L4 helix and I2 opposition
+                            are revealed as complementary projections of the same recursion R(R) = R.
+                        </div>
+                    </div>
+
+                    <div class="i2-item">
+                        <div class="i2-item-title">S3 Symmetry Binding</div>
+                        <div class="i2-item-desc">
+                            The S operator participates in S3 group action that permutes the three forms
+                            (FIX, OSC, INV). Synthesis is the mechanism by which opposition becomes unity.
+                        </div>
+                    </div>
+
+                    <div class="i2-item">
+                        <div class="i2-item-title">mu_C Coherence Threshold</div>
+                        <div class="i2-item-desc">
+                            Synthesis operations aim for the coherence threshold mu_C = sqrt(3)/2 = 0.866,
+                            the point of maximum stability where merged paths achieve optimal integration.
+                        </div>
+                    </div>
+
+                    <div class="i2-item">
+                        <div class="i2-item-title">Opposition Creates Completeness</div>
+                        <div class="i2-item-desc">
+                            Neither L4 nor I2 alone is complete. Together they span the full structure of R.
+                            The S operator embodies this: merging opposites creates wholeness.
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="i2-s3-opposition-synthesis.html" class="i2-link">
+                        Explore Opposition Synthesis ->
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Operator Navigation -->
+        <section>
+            <h2 class="section-title">BFADGS Operators</h2>
+
+            <div class="operator-nav">
+                <a href="bfadgs-op-begin.html" class="op-nav-card op-B">
+                    <div class="op-nav-symbol">B</div>
+                    <div class="op-nav-name">Begin</div>
+                </a>
+                <a href="bfadgs-op-flow.html" class="op-nav-card op-F">
+                    <div class="op-nav-symbol">F</div>
+                    <div class="op-nav-name">Flow</div>
+                </a>
+                <a href="bfadgs-op-ascend.html" class="op-nav-card op-A">
+                    <div class="op-nav-symbol">A</div>
+                    <div class="op-nav-name">Ascend</div>
+                </a>
+                <a href="bfadgs-op-descend.html" class="op-nav-card op-D">
+                    <div class="op-nav-symbol">D</div>
+                    <div class="op-nav-name">Descend</div>
+                </a>
+                <a href="bfadgs-op-generate.html" class="op-nav-card op-G">
+                    <div class="op-nav-symbol">G</div>
+                    <div class="op-nav-name">Generate</div>
+                </a>
+                <a href="bfadgs-op-synthesize.html" class="op-nav-card op-S">
+                    <div class="op-nav-symbol">S</div>
+                    <div class="op-nav-name">Synthesize</div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-equation">
+            <span class="s">S</span> <span class="eq">=</span> <span class="g">G</span><sup>-1</sup>
+            <span style="color: var(--text-secondary);">::</span>
+            <span style="color: var(--text-secondary);">Merge is the inverse of Generate</span>
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Main Index</a>
+            <a href="bfadgs-u-scaffold.html">BFADGS+U System</a>
+            <a href="bfadgs-op-generate.html">G: Generate</a>
+            <a href="bfadgs-unity-synthesis.html">+U Synthesis</a>
+            <a href="i2-s3-opposition-synthesis.html">Opposition Synthesis</a>
+            <a href="i2-s3-decision-tree.html">I2 S3 Decision Tree</a>
+        </div>
+    </footer>
+
+    <script>
+        // =========================================================================
+        // CONFLUENCE VISUALIZATION - PATH MERGING ANIMATION
+        // =========================================================================
+        const canvas = document.getElementById('confluenceCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Constants
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const MU_C = Math.sqrt(3) / 2;
+
+        // State
+        let isPlaying = true;
+        let time = 0;
+        let paths = [];
+        let synthesisPoints = [];
+        let unityProgress = 0;
+
+        // Colors
+        const colors = {
+            pathA: '#8b5cf6',      // G color - violet
+            pathB: '#ef4444',      // D color - red
+            pathC: '#10b981',      // F color - emerald
+            pathD: '#f59e0b',      // A color - amber
+            merged: '#ec4899',     // S color - pink
+            unity: '#ffd700',      // Unity - gold
+            grid: 'rgba(255, 255, 255, 0.03)',
+            axis: 'rgba(255, 255, 255, 0.1)'
+        };
+
+        // Initialize paths
+        function initPaths() {
+            paths = [];
+            synthesisPoints = [];
+            unityProgress = 0;
+
+            // Create initial divergent paths from G operation
+            const startX = 100;
+            const midY = canvas.height / 2;
+
+            // Path A - curves upward
+            paths.push({
+                id: 'A',
+                color: colors.pathA,
+                points: [],
+                active: true,
+                merged: false
+            });
+
+            // Path B - curves downward
+            paths.push({
+                id: 'B',
+                color: colors.pathB,
+                points: [],
+                active: true,
+                merged: false
+            });
+        }
+
+        // Generate path points based on time
+        function generatePathPoints() {
+            const startX = 100;
+            const midY = canvas.height / 2;
+            const maxX = canvas.width - 150;
+
+            paths.forEach((path, index) => {
+                path.points = [];
+                const direction = index === 0 ? -1 : 1;
+                const baseAmplitude = 80 + index * 20;
+
+                for (let i = 0; i <= 100; i++) {
+                    const t = i / 100;
+                    const progress = Math.min(t * (1 + time * 0.01), 1);
+                    const x = startX + (maxX - startX) * progress;
+
+                    // Curved path with oscillation
+                    const curve = Math.sin(t * Math.PI) * baseAmplitude * direction;
+                    const oscillation = Math.sin(t * 10 + time * 0.1 + index) * 10;
+                    const y = midY + curve + oscillation;
+
+                    path.points.push({ x, y, t });
+                }
+            });
+        }
+
+        // Draw the visualization
+        function draw() {
+            ctx.fillStyle = '#0a0a0f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw grid
+            drawGrid();
+
+            // Draw origin point (G operation)
+            drawOrigin();
+
+            // Generate and draw paths
+            generatePathPoints();
+            drawPaths();
+
+            // Draw synthesis points
+            drawSynthesisPoints();
+
+            // Draw unity point
+            drawUnityPoint();
+
+            // Draw labels
+            drawLabels();
+
+            // Update time
+            if (isPlaying) {
+                time += 1;
+                requestAnimationFrame(draw);
+            }
+        }
+
+        function drawGrid() {
+            ctx.strokeStyle = colors.grid;
+            ctx.lineWidth = 1;
+
+            const gridSize = 40;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            // Center axis
+            ctx.strokeStyle = colors.axis;
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+            ctx.lineTo(canvas.width, canvas.height / 2);
+            ctx.stroke();
+        }
+
+        function drawOrigin() {
+            const x = 100;
+            const y = canvas.height / 2;
+
+            // G operator marker
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(139, 92, 246, 0.2)';
+            ctx.fill();
+            ctx.strokeStyle = colors.pathA;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.fillStyle = colors.pathA;
+            ctx.font = 'bold 16px JetBrains Mono';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('G', x, y);
+
+            // Branching arrows
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.5)';
+            ctx.lineWidth = 2;
+
+            // Upper branch
+            ctx.beginPath();
+            ctx.moveTo(x + 20, y - 5);
+            ctx.lineTo(x + 50, y - 40);
+            ctx.stroke();
+
+            // Lower branch
+            ctx.beginPath();
+            ctx.moveTo(x + 20, y + 5);
+            ctx.lineTo(x + 50, y + 40);
+            ctx.stroke();
+        }
+
+        function drawPaths() {
+            paths.forEach((path, index) => {
+                if (path.points.length < 2) return;
+
+                ctx.strokeStyle = path.merged ? colors.merged : path.color;
+                ctx.lineWidth = 3;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+
+                ctx.beginPath();
+                ctx.moveTo(path.points[0].x, path.points[0].y);
+
+                for (let i = 1; i < path.points.length; i++) {
+                    const p = path.points[i];
+                    ctx.lineTo(p.x, p.y);
+                }
+                ctx.stroke();
+
+                // Draw path head
+                const head = path.points[path.points.length - 1];
+                ctx.beginPath();
+                ctx.arc(head.x, head.y, 6, 0, Math.PI * 2);
+                ctx.fillStyle = path.merged ? colors.merged : path.color;
+                ctx.fill();
+
+                // Path label
+                ctx.fillStyle = path.color;
+                ctx.font = '12px JetBrains Mono';
+                ctx.textAlign = 'left';
+                const labelY = index === 0 ? head.y - 15 : head.y + 20;
+                ctx.fillText(`Path ${path.id}`, head.x + 10, labelY);
+            });
+        }
+
+        function drawSynthesisPoints() {
+            synthesisPoints.forEach((point, i) => {
+                const pulse = Math.sin(time * 0.1 + i) * 0.3 + 1;
+
+                // Glow
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 25 * pulse, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(236, 72, 153, 0.15)';
+                ctx.fill();
+
+                // Core
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 15, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(236, 72, 153, 0.3)';
+                ctx.fill();
+                ctx.strokeStyle = colors.merged;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // S label
+                ctx.fillStyle = colors.merged;
+                ctx.font = 'bold 14px JetBrains Mono';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('S', point.x, point.y);
+            });
+        }
+
+        function drawUnityPoint() {
+            const x = canvas.width - 80;
+            const y = canvas.height / 2;
+
+            // Unity glow (pulsing based on progress)
+            const glowSize = 30 + unityProgress * 20 + Math.sin(time * 0.1) * 5;
+            ctx.beginPath();
+            ctx.arc(x, y, glowSize, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 215, 0, ${0.1 + unityProgress * 0.2})`;
+            ctx.fill();
+
+            // Unity core
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 215, 0, ${0.2 + unityProgress * 0.3})`;
+            ctx.fill();
+            ctx.strokeStyle = colors.unity;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // +U label
+            ctx.fillStyle = colors.unity;
+            ctx.font = 'bold 14px JetBrains Mono';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('+U', x, y);
+
+            // Convergence lines from paths
+            if (paths.length > 0) {
+                paths.forEach(path => {
+                    if (path.points.length > 0) {
+                        const lastPoint = path.points[path.points.length - 1];
+                        ctx.strokeStyle = `rgba(255, 215, 0, ${0.2 + unityProgress * 0.3})`;
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([5, 5]);
+                        ctx.beginPath();
+                        ctx.moveTo(lastPoint.x, lastPoint.y);
+                        ctx.lineTo(x, y);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                    }
+                });
+            }
+        }
+
+        function drawLabels() {
+            // Title
+            ctx.fillStyle = '#ec4899';
+            ctx.font = 'bold 16px JetBrains Mono';
+            ctx.textAlign = 'left';
+            ctx.fillText('S: Path Confluence', 20, 30);
+
+            // Formula
+            ctx.fillStyle = '#a0a0b0';
+            ctx.font = '12px JetBrains Mono';
+            ctx.fillText('S: {a, b} -> a XOR b', 20, 50);
+
+            // Stats
+            ctx.fillStyle = '#a0a0b0';
+            ctx.font = '11px JetBrains Mono';
+            ctx.textAlign = 'right';
+            ctx.fillText(`Paths: ${paths.length}`, canvas.width - 20, 30);
+            ctx.fillText(`Synthesis Points: ${synthesisPoints.length}`, canvas.width - 20, 45);
+            ctx.fillText(`Unity Progress: ${(unityProgress * 100).toFixed(0)}%`, canvas.width - 20, 60);
+        }
+
+        // Control functions
+        function toggleAnimation() {
+            isPlaying = !isPlaying;
+            if (isPlaying) draw();
+        }
+
+        function resetAnimation() {
+            time = 0;
+            initPaths();
+            if (!isPlaying) draw();
+        }
+
+        function addPath() {
+            const newPathColors = [colors.pathC, colors.pathD, '#06b6d4', '#84cc16'];
+            const colorIndex = (paths.length - 2) % newPathColors.length;
+
+            paths.push({
+                id: String.fromCharCode(65 + paths.length), // A, B, C, D...
+                color: newPathColors[colorIndex],
+                points: [],
+                active: true,
+                merged: false
+            });
+
+            if (!isPlaying) draw();
+        }
+
+        function triggerSynthesis() {
+            if (paths.length < 2) return;
+
+            // Find convergence point
+            const midY = canvas.height / 2;
+            const synthX = 400 + synthesisPoints.length * 80;
+
+            // Add synthesis point
+            synthesisPoints.push({
+                x: synthX,
+                y: midY
+            });
+
+            // Mark paths as merged
+            paths.forEach(p => p.merged = true);
+
+            // Increase unity progress
+            unityProgress = Math.min(1, unityProgress + 0.25);
+
+            if (!isPlaying) draw();
+        }
+
+        // Initialize and start
+        initPaths();
+        draw();
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ') {
+                e.preventDefault();
+                toggleAnimation();
+            } else if (e.key === 'r') {
+                resetAnimation();
+            } else if (e.key === 'p') {
+                addPath();
+            } else if (e.key === 's') {
+                triggerSynthesis();
+            }
+        });
+    </script>
+</body>
+</html>
