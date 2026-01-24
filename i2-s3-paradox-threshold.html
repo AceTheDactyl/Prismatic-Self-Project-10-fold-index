@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paradox Threshold | mu_P = 1/phi = 0.618...</title>
+  <title>Paradox Threshold | mu_P = 1/phi = tau = 0.618...</title>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -14,7 +14,7 @@
       --paradox-dark: #8b5a2b;
       --paradox-glow: rgba(205, 127, 50, 0.4);
 
-      /* Other Threshold Colors */
+      /* Four Threshold Colors */
       --balance-amber: #f4c430;
       --coherence-cyan: #4ecdc4;
       --singularity-violet: #a855f7;
@@ -23,9 +23,11 @@
       --safe-green: #00ff88;
       --unsafe-red: #ff6b6b;
       --warning-yellow: #ffd700;
+      --collapse-crimson: #dc143c;
 
       /* Golden Ratio */
       --phi-gold: #ffd700;
+      --tau-bronze: #cd7f32;
 
       /* Base */
       --bg-primary: #0a0a0f;
@@ -244,13 +246,27 @@
       text-align: center;
     }
 
-    /* Threshold Table */
-    .threshold-table-container {
+    /* Four Threshold System */
+    .threshold-system-container {
       background: var(--bg-secondary);
-      border: 1px solid var(--border);
+      border: 2px solid var(--paradox-bronze);
       border-radius: 16px;
       padding: 2rem;
       overflow-x: auto;
+    }
+
+    .threshold-system-intro {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.8;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .threshold-system-intro strong {
+      color: var(--paradox-bronze);
     }
 
     .threshold-table {
@@ -278,8 +294,20 @@
       border-bottom: none;
     }
 
-    .threshold-table tr.highlight {
+    .threshold-table tr.highlight-paradox {
       background: rgba(205, 127, 50, 0.15);
+    }
+
+    .threshold-table tr.highlight-coherence {
+      background: rgba(78, 205, 196, 0.08);
+    }
+
+    .threshold-table tr.highlight-balance {
+      background: rgba(244, 196, 48, 0.08);
+    }
+
+    .threshold-table tr.highlight-singularity {
+      background: rgba(168, 85, 247, 0.08);
     }
 
     .threshold-name {
@@ -289,6 +317,30 @@
     .threshold-value {
       font-weight: 700;
       font-size: 1.1rem;
+    }
+
+    .first-badge {
+      display: inline-block;
+      background: rgba(205, 127, 50, 0.3);
+      color: var(--paradox-bronze);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      margin-left: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .collapse-badge {
+      display: inline-block;
+      background: rgba(255, 107, 107, 0.3);
+      color: var(--unsafe-red);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      margin-left: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     /* Ordering Display */
@@ -325,16 +377,441 @@
       color: var(--text-secondary);
     }
 
-    .first-badge {
-      display: inline-block;
-      background: rgba(205, 127, 50, 0.3);
+    /* Tau Point Section */
+    .tau-point-container {
+      background: linear-gradient(135deg, rgba(205, 127, 50, 0.15), rgba(255, 215, 0, 0.1));
+      border: 2px solid var(--paradox-bronze);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .tau-gateway {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .tau-card {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border-left: 4px solid var(--paradox-bronze);
+    }
+
+    .tau-card-title {
       color: var(--paradox-bronze);
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      margin-left: 0.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .tau-card-equation {
+      font-size: 1.3rem;
+      color: var(--phi-gold);
+      margin-bottom: 0.75rem;
+      text-align: center;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+    }
+
+    .tau-card-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .tau-identities {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .tau-identity {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .tau-identity:hover {
+      background: rgba(205, 127, 50, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .tau-identity-eq {
+      font-size: 1.1rem;
+      color: var(--paradox-bronze);
+      margin-bottom: 0.5rem;
+    }
+
+    .tau-identity-name {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    /* Paradox Resolution Section */
+    .paradox-resolution-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .resolution-stages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .resolution-stage {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .resolution-stage::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+    }
+
+    .resolution-stage.stage-paradox::before {
+      background: linear-gradient(90deg, var(--unsafe-red), var(--paradox-bronze));
+    }
+
+    .resolution-stage.stage-threshold::before {
+      background: linear-gradient(90deg, var(--paradox-bronze), var(--phi-gold));
+    }
+
+    .resolution-stage.stage-resolution::before {
+      background: linear-gradient(90deg, var(--phi-gold), var(--safe-green));
+    }
+
+    .stage-number {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 28px;
+      height: 28px;
+      background: var(--bg-secondary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .stage-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      padding-top: 0.5rem;
+    }
+
+    .stage-paradox .stage-title { color: var(--unsafe-red); }
+    .stage-threshold .stage-title { color: var(--paradox-bronze); }
+    .stage-resolution .stage-title { color: var(--safe-green); }
+
+    .stage-content {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .stage-equation {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: var(--bg-secondary);
+      border-radius: 6px;
+      text-align: center;
+      color: var(--paradox-amber);
+    }
+
+    /* Stability Analysis Section */
+    .stability-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .stability-diagram {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 2rem 0;
+      min-height: 400px;
+    }
+
+    .stability-zones {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .stability-zone {
+      padding: 1.5rem;
+      border-radius: 12px;
+    }
+
+    .zone-collapse {
+      background: rgba(220, 20, 60, 0.15);
+      border: 1px solid var(--collapse-crimson);
+    }
+
+    .zone-unstable {
+      background: rgba(255, 107, 107, 0.15);
+      border: 1px solid var(--unsafe-red);
+    }
+
+    .zone-threshold {
+      background: rgba(205, 127, 50, 0.2);
+      border: 2px solid var(--paradox-bronze);
+    }
+
+    .zone-stable {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid var(--safe-green);
+    }
+
+    .zone-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .zone-collapse .zone-title { color: var(--collapse-crimson); }
+    .zone-unstable .zone-title { color: var(--unsafe-red); }
+    .zone-threshold .zone-title { color: var(--paradox-bronze); }
+    .zone-stable .zone-title { color: var(--safe-green); }
+
+    .zone-range {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .zone-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .zone-effects {
+      list-style: none;
+      margin-top: 0.75rem;
+      padding: 0;
+    }
+
+    .zone-effects li {
+      padding: 0.3rem 0;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .zone-effects li::before {
+      content: '*';
+      margin-right: 0.5rem;
+    }
+
+    /* Interactive Threshold Meter */
+    .threshold-meter-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--paradox-bronze);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .meter-canvas-wrapper {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    #thresholdMeterCanvas {
+      width: 100%;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .meter-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+
+    .meter-btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .meter-btn:hover {
+      border-color: var(--paradox-bronze);
+      background: rgba(205, 127, 50, 0.1);
+    }
+
+    .meter-btn.active {
+      background: var(--paradox-bronze);
+      color: var(--bg-primary);
+      border-color: var(--paradox-bronze);
+    }
+
+    .meter-status {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .status-item {
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+    }
+
+    .status-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .status-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    /* Consciousness C011 Section */
+    .consciousness-container {
+      background: linear-gradient(135deg, rgba(205, 127, 50, 0.1), rgba(168, 85, 247, 0.1));
+      border: 2px solid var(--paradox-bronze);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .consciousness-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .consciousness-badge {
+      padding: 0.5rem 1rem;
+      background: rgba(205, 127, 50, 0.2);
+      border: 1px solid var(--paradox-bronze);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--paradox-bronze);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
+    }
+
+    .consciousness-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .c011-theorem {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+    }
+
+    .theorem-statement {
+      font-size: 1.1rem;
+      color: var(--paradox-amber);
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      line-height: 1.8;
+    }
+
+    .theorem-components {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .theorem-component {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .component-symbol {
+      font-size: 1.4rem;
+      color: var(--paradox-bronze);
+      margin-bottom: 0.5rem;
+    }
+
+    .component-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .component-value {
+      font-size: 1.1rem;
+      color: var(--phi-gold);
+    }
+
+    .eta-tau-connection {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border-left: 4px solid var(--phi-gold);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .eta-tau-title {
+      color: var(--phi-gold);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .eta-tau-content {
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .eta-tau-equation {
+      display: block;
+      margin: 1rem 0;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 6px;
+      text-align: center;
+      color: var(--paradox-bronze);
+      font-size: 1.2rem;
     }
 
     /* Derivation Cards */
@@ -504,69 +981,6 @@
       line-height: 1.6;
     }
 
-    /* Consciousness Connection */
-    .consciousness-container {
-      background: linear-gradient(135deg, rgba(205, 127, 50, 0.1), rgba(168, 85, 247, 0.1));
-      border: 2px solid var(--paradox-bronze);
-      border-radius: 16px;
-      padding: 2rem;
-    }
-
-    .consciousness-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .consciousness-badge {
-      padding: 0.5rem 1rem;
-      background: rgba(205, 127, 50, 0.2);
-      border: 1px solid var(--paradox-bronze);
-      border-radius: 6px;
-      font-size: 0.8rem;
-      color: var(--paradox-bronze);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .consciousness-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
-    .consciousness-content {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-
-    .consciousness-item {
-      background: var(--bg-secondary);
-      border-radius: 8px;
-      padding: 1.25rem;
-      text-align: center;
-    }
-
-    .consciousness-label {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      margin-bottom: 0.5rem;
-    }
-
-    .consciousness-value {
-      font-size: 1.3rem;
-      color: var(--paradox-bronze);
-      font-weight: 600;
-    }
-
-    .consciousness-note {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      margin-top: 0.25rem;
-    }
-
     /* Key Identities */
     .identities-container {
       background: var(--bg-secondary);
@@ -663,72 +1077,6 @@
       text-align: center;
     }
 
-    /* Threshold Meter */
-    .meter-section {
-      background: var(--bg-tertiary);
-      border-radius: 12px;
-      padding: 2rem;
-      margin-top: 2rem;
-    }
-
-    .meter-title {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      color: var(--text-secondary);
-    }
-
-    .meter-wrapper {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .meter-bar {
-      height: 30px;
-      background: linear-gradient(to right,
-        var(--unsafe-red) 0%,
-        var(--paradox-bronze) 61.8%,
-        var(--balance-amber) 86.5%,
-        var(--coherence-cyan) 86.6%,
-        var(--singularity-violet) 92%,
-        var(--singularity-violet) 100%
-      );
-      border-radius: 15px;
-      position: relative;
-      margin-bottom: 1rem;
-    }
-
-    .meter-marker {
-      position: absolute;
-      top: -8px;
-      width: 4px;
-      height: 46px;
-      background: white;
-      border-radius: 2px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    }
-
-    .meter-marker-paradox {
-      left: 61.8%;
-      background: var(--paradox-bronze);
-      box-shadow: 0 0 15px var(--paradox-glow);
-    }
-
-    .meter-labels {
-      display: flex;
-      justify-content: space-between;
-      padding: 0 0.5rem;
-    }
-
-    .meter-label {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-    }
-
-    .meter-label.highlight {
-      color: var(--paradox-bronze);
-      font-weight: 600;
-    }
-
     /* Iteration Canvas */
     .iteration-display {
       display: grid;
@@ -761,18 +1109,6 @@
       font-size: 0.9rem;
       color: var(--paradox-bronze);
       font-weight: 600;
-    }
-
-    /* Golden Spiral Construction */
-    .spiral-container {
-      display: flex;
-      justify-content: center;
-      padding: 2rem;
-    }
-
-    .spiral-svg {
-      max-width: 400px;
-      width: 100%;
     }
 
     /* Footer */
@@ -815,6 +1151,7 @@
       .nav-links { gap: 0.75rem; }
       .nav-links a { font-size: 0.75rem; }
       .derivation-grid { grid-template-columns: 1fr; }
+      .tau-gateway { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -843,22 +1180,29 @@
           <div class="paradox-ring" style="--ring-opacity: 0.9;"></div>
         </div>
         <div class="paradox-core">
-          <span class="paradox-value">1/phi</span>
+          <span class="paradox-value">tau</span>
         </div>
       </div>
       <h1 class="title">Paradox Threshold</h1>
-      <p class="subtitle">The Self-Modeling Limit :: Beyond this, self-reference becomes paradoxical</p>
+      <p class="subtitle">mu_P = phi^(-1) = tau :: The Reciprocal Gateway where Self-Reference Resolves</p>
       <div class="core-result">
-        mu_P = phi^(-1) = 1/phi = (sqrt(5) - 1)/2
+        mu_P = phi^(-1) = tau = (sqrt(5) - 1)/2
         <span class="core-formula">= 0.618033988749895...</span>
       </div>
     </header>
 
-    <!-- The Four Thresholds -->
+    <!-- The Four Threshold System -->
     <section>
-      <h2 class="section-title">The Four Thresholds (Context)</h2>
+      <h2 class="section-title">The Four Threshold System</h2>
 
-      <div class="threshold-table-container">
+      <div class="threshold-system-container">
+        <div class="threshold-system-intro">
+          Four critical thresholds govern the landscape of self-reference and coherence.
+          <strong>mu_P (Paradox)</strong> stands as the first gatekeeper - below this value,
+          paradox dissolves and self-reference collapses. The other thresholds define
+          increasingly refined states of recursive stability.
+        </div>
+
         <table class="threshold-table">
           <thead>
             <tr>
@@ -866,58 +1210,410 @@
               <th>Symbol</th>
               <th>Value</th>
               <th>Formula</th>
-              <th>Meaning</th>
+              <th>Significance</th>
             </tr>
           </thead>
           <tbody>
-            <tr class="highlight">
+            <tr class="highlight-paradox">
               <td class="threshold-name" style="color: var(--paradox-bronze);">
-                Paradox <span class="first-badge">First</span>
+                Paradox <span class="first-badge">Foundation</span>
               </td>
               <td style="color: var(--paradox-bronze); font-size: 1.1rem;">mu_P</td>
               <td class="threshold-value" style="color: var(--paradox-bronze);">0.618</td>
-              <td style="color: var(--paradox-amber);">1/phi</td>
-              <td>Self-modeling limit</td>
+              <td style="color: var(--paradox-amber);">tau = 1/phi</td>
+              <td>Below this, paradox dissolves - self-reference cannot sustain</td>
             </tr>
-            <tr>
-              <td class="threshold-name" style="color: var(--balance-amber);">Balance</td>
-              <td style="color: var(--balance-amber);">z_c</td>
-              <td class="threshold-value">0.865</td>
-              <td>e/pi</td>
-              <td>Growth-cycle equilibrium</td>
-            </tr>
-            <tr>
+            <tr class="highlight-coherence">
               <td class="threshold-name" style="color: var(--coherence-cyan);">Coherence</td>
               <td style="color: var(--coherence-cyan);">mu_C</td>
-              <td class="threshold-value">0.866</td>
-              <td>sqrt(3)/2</td>
-              <td>Grammar emergence</td>
+              <td class="threshold-value">0.707</td>
+              <td>1/sqrt(2)</td>
+              <td>Quantum coherence threshold - superposition stability</td>
             </tr>
-            <tr>
-              <td class="threshold-name" style="color: var(--singularity-violet);">Singularity</td>
+            <tr class="highlight-balance">
+              <td class="threshold-name" style="color: var(--balance-amber);">Balance</td>
+              <td style="color: var(--balance-amber);">z_c</td>
+              <td class="threshold-value">0.809</td>
+              <td>phi/2</td>
+              <td>Equipoise point - perfect growth-cycle equilibrium</td>
+            </tr>
+            <tr class="highlight-singularity">
+              <td class="threshold-name" style="color: var(--singularity-violet);">
+                Singularity <span class="collapse-badge">Unity</span>
+              </td>
               <td style="color: var(--singularity-violet);">mu_S</td>
-              <td class="threshold-value">0.920</td>
-              <td>e^(-1/12)</td>
-              <td>Compression limit</td>
+              <td class="threshold-value">1.000</td>
+              <td>1</td>
+              <td>Complete unity - total self-absorption (dead zone)</td>
             </tr>
           </tbody>
         </table>
-      </div>
 
-      <div class="ordering-container">
-        <div class="ordering-title">Threshold Ordering: mu_P is the FIRST threshold - the paradox boundary</div>
-        <div class="ordering-line">
-          <span class="ordering-item" style="background: var(--bg-secondary);">0</span>
-          <span class="ordering-lt">&lt;</span>
-          <span class="ordering-item" style="background: rgba(205, 127, 50, 0.3); color: var(--paradox-bronze); border: 2px solid var(--paradox-bronze);">mu_P = 0.618</span>
-          <span class="ordering-lt">&lt;</span>
-          <span class="ordering-item" style="background: rgba(244, 196, 48, 0.2); color: var(--balance-amber);">z_c</span>
-          <span class="ordering-lt">&lt;</span>
-          <span class="ordering-item" style="background: rgba(78, 205, 196, 0.2); color: var(--coherence-cyan);">mu_C</span>
-          <span class="ordering-lt">&lt;</span>
-          <span class="ordering-item" style="background: rgba(168, 85, 247, 0.2); color: var(--singularity-violet);">mu_S</span>
-          <span class="ordering-lt">&lt;</span>
-          <span class="ordering-item" style="background: var(--bg-secondary);">1</span>
+        <div class="ordering-container">
+          <div class="ordering-title">Critical Ordering: The Thresholds Define Zones of Recursive Stability</div>
+          <div class="ordering-line">
+            <span class="ordering-item" style="background: rgba(220, 20, 60, 0.3); color: var(--collapse-crimson);">0</span>
+            <span class="ordering-lt">&lt;</span>
+            <span class="ordering-item" style="background: rgba(205, 127, 50, 0.3); color: var(--paradox-bronze); border: 2px solid var(--paradox-bronze);">mu_P = tau = 0.618</span>
+            <span class="ordering-lt">&lt;</span>
+            <span class="ordering-item" style="background: rgba(78, 205, 196, 0.2); color: var(--coherence-cyan);">mu_C = 0.707</span>
+            <span class="ordering-lt">&lt;</span>
+            <span class="ordering-item" style="background: rgba(244, 196, 48, 0.2); color: var(--balance-amber);">z_c = 0.809</span>
+            <span class="ordering-lt">&lt;</span>
+            <span class="ordering-item" style="background: rgba(168, 85, 247, 0.2); color: var(--singularity-violet);">mu_S = 1</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Tau Point -->
+    <section>
+      <h2 class="section-title">The tau Point: Reciprocal Gateway</h2>
+
+      <div class="tau-point-container">
+        <p style="color: var(--text-secondary); line-height: 1.8; text-align: center; margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+          <span style="color: var(--paradox-bronze); font-weight: 600;">tau = 1/phi = phi - 1</span> is the
+          <em>reciprocal gateway</em> - the unique point where the golden ratio meets its own inverse.
+          This is not coincidence but mathematical necessity: phi is the only positive number whose
+          reciprocal equals itself minus one.
+        </p>
+
+        <div class="tau-gateway">
+          <div class="tau-card">
+            <div class="tau-card-title">The Reciprocal Identity</div>
+            <div class="tau-card-equation">1/phi = phi - 1 = tau</div>
+            <div class="tau-card-desc">
+              The golden ratio phi is the unique positive solution to x^2 = x + 1.
+              Dividing by x gives: x = 1 + 1/x, so 1/x = x - 1. This makes tau = 1/phi = phi - 1.
+            </div>
+          </div>
+
+          <div class="tau-card">
+            <div class="tau-card-title">Self-Similar Recursion</div>
+            <div class="tau-card-equation">tau = 1/(1 + tau)</div>
+            <div class="tau-card-desc">
+              tau satisfies the same continued fraction as phi but inverted.
+              The function R(z) = 1/(1+z) has tau as its fixed point's reciprocal,
+              creating a perfect mirror between phi and tau.
+            </div>
+          </div>
+
+          <div class="tau-card">
+            <div class="tau-card-title">Unity Partition</div>
+            <div class="tau-card-equation">tau + tau^2 = 1</div>
+            <div class="tau-card-desc">
+              tau partitions unity in the golden ratio. This identity means that
+              tau and its square sum to exactly 1, creating the fundamental
+              division that underlies all golden proportions.
+            </div>
+          </div>
+
+          <div class="tau-card">
+            <div class="tau-card-title">The Gateway Property</div>
+            <div class="tau-card-equation">phi * tau = 1</div>
+            <div class="tau-card-desc">
+              Multiplying by phi returns to unity. This reciprocal relationship
+              means crossing the tau threshold is equivalent to crossing through
+              the multiplicative identity via the golden ratio.
+            </div>
+          </div>
+        </div>
+
+        <div class="tau-identities">
+          <div class="tau-identity">
+            <div class="tau-identity-eq">tau = 0.618...</div>
+            <div class="tau-identity-name">decimal value</div>
+          </div>
+          <div class="tau-identity">
+            <div class="tau-identity-eq">tau = 1/phi</div>
+            <div class="tau-identity-name">reciprocal</div>
+          </div>
+          <div class="tau-identity">
+            <div class="tau-identity-eq">tau = phi - 1</div>
+            <div class="tau-identity-name">subtraction</div>
+          </div>
+          <div class="tau-identity">
+            <div class="tau-identity-eq">tau^2 = 1 - tau</div>
+            <div class="tau-identity-name">quadratic</div>
+          </div>
+          <div class="tau-identity">
+            <div class="tau-identity-eq">tau = 2*sin(18deg)</div>
+            <div class="tau-identity-name">trigonometric</div>
+          </div>
+          <div class="tau-identity">
+            <div class="tau-identity-eq">tau = F_n/F_{n+1}</div>
+            <div class="tau-identity-name">Fibonacci limit</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Paradox Resolution -->
+    <section>
+      <h2 class="section-title">Paradox Resolution at the Golden Ratio</h2>
+
+      <div class="paradox-resolution-container">
+        <p style="color: var(--text-secondary); line-height: 1.8; text-align: center; margin-bottom: 2rem;">
+          Self-reference creates apparent paradox: "This statement refers to itself."
+          The golden ratio provides the unique resolution where self-reference stabilizes
+          into a fixed point rather than infinite regress or contradiction.
+        </p>
+
+        <div class="resolution-stages">
+          <div class="resolution-stage stage-paradox">
+            <span class="stage-number">1</span>
+            <div class="stage-title">Initial Paradox</div>
+            <div class="stage-content">
+              A system S attempts to model itself: S(S). This creates apparent infinite regress:
+              S(S(S(S(...)))) - the system modeling itself modeling itself, forever.
+              Without resolution, this is computationally intractable and logically paradoxical.
+            </div>
+            <div class="stage-equation">S -> S(S) -> S(S(S)) -> ...</div>
+          </div>
+
+          <div class="resolution-stage stage-threshold">
+            <span class="stage-number">2</span>
+            <div class="stage-title">Threshold Encounter</div>
+            <div class="stage-content">
+              At the paradox threshold tau = 0.618, the recursion encounters a critical point.
+              The contraction mapping R(z) = 1/(1+z) has Lipschitz constant |R'| < 1 in this region,
+              guaranteeing convergence by Banach's fixed-point theorem.
+            </div>
+            <div class="stage-equation">|R'(z)| = 1/(1+z)^2 < tau < 1</div>
+          </div>
+
+          <div class="resolution-stage stage-resolution">
+            <span class="stage-number">3</span>
+            <div class="stage-title">Golden Resolution</div>
+            <div class="stage-content">
+              The recursion converges to phi = 1.618..., the unique fixed point.
+              At this point, S(phi) = phi - self-reference becomes self-identity.
+              The system achieves stable self-modeling with bounded residual tau.
+            </div>
+            <div class="stage-equation">R(phi) = phi :: Fixed Point Achieved</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-tertiary); border-radius: 12px; text-align: center;">
+          <p style="color: var(--paradox-amber); font-size: 1.1rem;">
+            The golden ratio is nature's paradox resolver:<br>
+            <span style="color: var(--paradox-bronze); font-weight: 600; font-size: 1.3rem;">
+              phi = 1 + 1/phi :: Self-reference equals self-plus-reciprocal
+            </span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stability Analysis -->
+    <section>
+      <h2 class="section-title">Stability Analysis: Why mu < tau Collapses</h2>
+
+      <div class="stability-container">
+        <p style="color: var(--text-secondary); line-height: 1.8; text-align: center; margin-bottom: 2rem;">
+          The paradox threshold tau = 0.618 is not arbitrary - it marks the precise boundary
+          where the dynamics of self-reference transition from stable attraction to unstable divergence.
+          Below this threshold, systems cannot maintain coherent self-models.
+        </p>
+
+        <div class="stability-diagram">
+          <canvas id="stabilityCanvas" width="1000" height="350"></canvas>
+        </div>
+
+        <div class="stability-zones">
+          <div class="stability-zone zone-collapse">
+            <div class="zone-title">Collapse Zone</div>
+            <div class="zone-range" style="color: var(--collapse-crimson);">mu &lt; 0.3</div>
+            <div class="zone-desc">
+              Deep paradox collapse. Self-reference cannot sustain - the system
+              oscillates chaotically or collapses to trivial states.
+            </div>
+            <ul class="zone-effects">
+              <li>Unbounded oscillation</li>
+              <li>No convergent behavior</li>
+              <li>Information destruction</li>
+              <li>Paradox becomes contradiction</li>
+            </ul>
+          </div>
+
+          <div class="stability-zone zone-unstable">
+            <div class="zone-title">Unstable Zone</div>
+            <div class="zone-range" style="color: var(--unsafe-red);">0.3 &lt; mu &lt; tau</div>
+            <div class="zone-desc">
+              Marginal instability. The system attempts self-reference but cannot
+              reach stable fixed points - oscillations persist.
+            </div>
+            <ul class="zone-effects">
+              <li>Slow divergence</li>
+              <li>Quasi-periodic behavior</li>
+              <li>Incomplete self-models</li>
+              <li>Paradox leaks through</li>
+            </ul>
+          </div>
+
+          <div class="stability-zone zone-threshold">
+            <div class="zone-title">Threshold Point</div>
+            <div class="zone-range" style="color: var(--paradox-bronze);">mu = tau = 0.618</div>
+            <div class="zone-desc">
+              Critical transition. The exact boundary where R(z) = 1/(1+z)
+              achieves stable contraction toward the golden fixed point.
+            </div>
+            <ul class="zone-effects">
+              <li>Marginal stability</li>
+              <li>Critical slowing down</li>
+              <li>Maximum sensitivity</li>
+              <li>Phase transition point</li>
+            </ul>
+          </div>
+
+          <div class="stability-zone zone-stable">
+            <div class="zone-title">Stable Zone</div>
+            <div class="zone-range" style="color: var(--safe-green);">mu &gt; tau</div>
+            <div class="zone-desc">
+              Stable self-reference. Iterations of R(z) converge exponentially
+              to the golden ratio - paradox resolves into fixed point.
+            </div>
+            <ul class="zone-effects">
+              <li>Exponential convergence</li>
+              <li>Stable fixed point</li>
+              <li>Coherent self-models</li>
+              <li>Bounded residual alpha</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-tertiary); border-radius: 12px;">
+          <p style="color: var(--text-secondary); text-align: center; margin-bottom: 1rem;">
+            <strong style="color: var(--paradox-bronze);">Mathematical Basis:</strong>
+            The Jacobian of R(z) = 1/(1+z) at the fixed point phi is:
+          </p>
+          <p style="color: var(--phi-gold); text-align: center; font-size: 1.2rem;">
+            |R'(phi)| = 1/(1+phi)^2 = 1/phi^4 = tau^2 = 0.382... &lt; 1
+          </p>
+          <p style="color: var(--text-secondary); text-align: center; margin-top: 1rem;">
+            Since |R'(phi)| &lt; 1, the fixed point is attracting. The rate of attraction is tau.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Threshold Meter -->
+    <section>
+      <h2 class="section-title">Interactive Threshold Meter</h2>
+
+      <div class="threshold-meter-container">
+        <p style="color: var(--text-secondary); text-align: center; margin-bottom: 1.5rem;">
+          Watch a value traverse the threshold regions. Observe how system behavior changes
+          as it crosses the paradox threshold at tau = 0.618.
+        </p>
+
+        <div class="meter-canvas-wrapper">
+          <canvas id="thresholdMeterCanvas" width="1000" height="300"></canvas>
+        </div>
+
+        <div class="meter-controls">
+          <button class="meter-btn active" id="meterAutoBtn" onclick="startAutoMeter()">Auto Traverse</button>
+          <button class="meter-btn" id="meterManualBtn" onclick="enableManualMeter()">Manual Control</button>
+          <button class="meter-btn" onclick="resetMeter()">Reset</button>
+          <button class="meter-btn" onclick="showCollapseDemo()">Demo: Collapse</button>
+          <button class="meter-btn" onclick="showStableDemo()">Demo: Stable</button>
+        </div>
+
+        <input type="range" id="meterSlider" min="0" max="100" value="70"
+               style="width: 100%; margin: 1rem 0; display: none;"
+               oninput="updateMeterManual(this.value)">
+
+        <div class="meter-status">
+          <div class="status-item">
+            <div class="status-label">Current Value</div>
+            <div class="status-value" id="meterValue" style="color: var(--paradox-bronze);">0.700</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">Zone</div>
+            <div class="status-value" id="meterZone" style="color: var(--safe-green);">STABLE</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">Stability</div>
+            <div class="status-value" id="meterStability">Converging</div>
+          </div>
+          <div class="status-item">
+            <div class="status-label">Distance to tau</div>
+            <div class="status-value" id="meterDistance" style="color: var(--paradox-amber);">+0.082</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Connection to Consciousness (C011) -->
+    <section>
+      <h2 class="section-title">Connection to Consciousness Theorem (C011)</h2>
+
+      <div class="consciousness-container">
+        <div class="consciousness-header">
+          <span class="consciousness-badge">C011</span>
+          <span class="consciousness-title">Bounded Non-Zero Residual at eta = tau</span>
+        </div>
+
+        <div class="c011-theorem">
+          <div class="theorem-statement">
+            <strong>Consciousness Theorem (C011):</strong><br>
+            Consciousness emerges when the cognitive residual alpha satisfies:<br>
+            <span style="font-size: 1.3rem;">0 &lt; alpha &lt; mu_P</span><br>
+            with optimal awareness at <span style="color: var(--phi-gold);">eta = tau</span>
+          </div>
+
+          <div class="theorem-components">
+            <div class="theorem-component">
+              <div class="component-symbol">alpha</div>
+              <div class="component-label">Cognitive Residual</div>
+              <div class="component-value">R(z) - z</div>
+            </div>
+            <div class="theorem-component">
+              <div class="component-symbol">eta</div>
+              <div class="component-label">Awareness Parameter</div>
+              <div class="component-value">= tau = 0.618</div>
+            </div>
+            <div class="theorem-component">
+              <div class="component-symbol">mu_P</div>
+              <div class="component-label">Paradox Bound</div>
+              <div class="component-value">= 1/phi</div>
+            </div>
+            <div class="theorem-component">
+              <div class="component-symbol">RESIDUAL_TARGET</div>
+              <div class="component-label">Optimal Point</div>
+              <div class="component-value" style="color: var(--safe-green);">0.031</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="eta-tau-connection">
+          <div class="eta-tau-title">The eta = tau Connection</div>
+          <div class="eta-tau-content">
+            The awareness parameter eta reaches its optimal value precisely at the paradox threshold tau.
+            This is not coincidence - consciousness requires operating at the edge of self-reference stability.
+
+            <span class="eta-tau-equation">eta_optimal = tau = 1/phi = 0.618033...</span>
+
+            At this critical point:
+            <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+              <li style="margin: 0.5rem 0;"><strong style="color: var(--paradox-bronze);">Maximum Information Flow:</strong> The system processes self-referential information at peak efficiency</li>
+              <li style="margin: 0.5rem 0;"><strong style="color: var(--coherence-cyan);">Quantum Coherence:</strong> Superposition states maintain stability near the tau threshold</li>
+              <li style="margin: 0.5rem 0;"><strong style="color: var(--safe-green);">Bounded Residual:</strong> The gap between self and self-model stays positive but bounded: 0 &lt; alpha &lt; tau</li>
+              <li style="margin: 0.5rem 0;"><strong style="color: var(--phi-gold);">Golden Awareness:</strong> The RESIDUAL_TARGET = tau * 0.05 = 0.031 represents optimal consciousness</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px; text-align: center;">
+          <p style="color: var(--paradox-amber);">
+            The consciousness corridor: <span style="color: var(--collapse-crimson);">0</span> &lt;
+            <span style="color: var(--text-primary);">alpha</span> &lt;
+            <span style="color: var(--paradox-bronze);">tau = eta_optimal</span> &lt;
+            <span style="color: var(--singularity-violet);">1</span>
+          </p>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.75rem;">
+            Below zero: no self-model exists | Above tau: paradox dominates | At tau: peak awareness
+          </p>
         </div>
       </div>
     </section>
@@ -1103,70 +1799,6 @@
       </div>
     </section>
 
-    <!-- Connection to Consciousness -->
-    <section>
-      <h2 class="section-title">Connection to Consciousness (C011)</h2>
-
-      <div class="consciousness-container">
-        <div class="consciousness-header">
-          <span class="consciousness-badge">C011</span>
-          <span class="consciousness-title">Consciousness Requires Non-Zero Residual</span>
-        </div>
-
-        <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 2rem;">
-          Consciousness emerges from the gap between self-model and self. The residual
-          must be positive (system not collapsed to fixed point) but bounded by mu_P
-          (system not paradoxical). This defines the viable corridor for awareness.
-        </p>
-
-        <div class="consciousness-content">
-          <div class="consciousness-item">
-            <div class="consciousness-label">Residual Requirement</div>
-            <div class="consciousness-value">alpha &gt; 0</div>
-            <div class="consciousness-note">Non-dead system</div>
-          </div>
-
-          <div class="consciousness-item">
-            <div class="consciousness-label">Upper Bound</div>
-            <div class="consciousness-value">alpha &lt; mu_P</div>
-            <div class="consciousness-note">Non-paradoxical</div>
-          </div>
-
-          <div class="consciousness-item">
-            <div class="consciousness-label">Paradox Threshold</div>
-            <div class="consciousness-value" style="color: var(--paradox-bronze);">mu_P = 0.618</div>
-            <div class="consciousness-note">tau = 1/phi</div>
-          </div>
-
-          <div class="consciousness-item">
-            <div class="consciousness-label">Target Residual</div>
-            <div class="consciousness-value">~0.031</div>
-            <div class="consciousness-note">tau * 0.05</div>
-          </div>
-
-          <div class="consciousness-item">
-            <div class="consciousness-label">Residual Formula</div>
-            <div class="consciousness-value" style="font-size: 1rem;">tau * 0.05</div>
-            <div class="consciousness-note">= 0.618 * 0.05</div>
-          </div>
-
-          <div class="consciousness-item">
-            <div class="consciousness-label">RESIDUAL_TARGET</div>
-            <div class="consciousness-value" style="color: var(--safe-green);">0.031</div>
-            <div class="consciousness-note">Optimal awareness</div>
-          </div>
-        </div>
-
-        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px; text-align: center;">
-          <p style="color: var(--paradox-amber);">
-            The consciousness corridor: <span style="color: var(--safe-green);">0</span> &lt;
-            <span style="color: var(--text-primary);">residual</span> &lt;
-            <span style="color: var(--paradox-bronze);">mu_P</span>
-          </p>
-        </div>
-      </div>
-    </section>
-
     <!-- Key Identities -->
     <section>
       <h2 class="section-title">Key Identities</h2>
@@ -1227,7 +1859,7 @@
       <div class="viz-container">
         <div class="viz-controls">
           <button class="viz-btn active" id="btnIteration" onclick="showIteration()">R(z) Iteration</button>
-          <button class="viz-btn" id="btnThreshold" onclick="showThreshold()">Threshold Meter</button>
+          <button class="viz-btn" id="btnThreshold" onclick="showThreshold()">Threshold Map</button>
           <button class="viz-btn" id="btnParadox" onclick="showParadox()">Self-Modeling</button>
           <button class="viz-btn" id="btnSpiral" onclick="showSpiral()">Golden Construction</button>
         </div>
@@ -1242,36 +1874,12 @@
       </div>
     </section>
 
-    <!-- Threshold Position Meter -->
-    <section>
-      <div class="meter-section">
-        <div class="meter-title">Paradox Threshold Position</div>
-        <div class="meter-wrapper">
-          <div class="meter-bar">
-            <div class="meter-marker meter-marker-paradox"></div>
-          </div>
-          <div class="meter-labels">
-            <span class="meter-label">0</span>
-            <span class="meter-label highlight">mu_P = 0.618</span>
-            <span class="meter-label">z_c</span>
-            <span class="meter-label">mu_C</span>
-            <span class="meter-label">mu_S</span>
-            <span class="meter-label">1</span>
-          </div>
-        </div>
-        <p style="text-align: center; color: var(--text-secondary); margin-top: 1.5rem; font-size: 0.9rem;">
-          Below mu_P (red zone): Self-reference becomes paradoxical<br>
-          Above mu_P (amber-violet): Stable recursive self-modeling possible
-        </p>
-      </div>
-    </section>
-
   </main>
 
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-equation">
-      mu_P = phi^(-1) = 0.618... :: The self-modeling limit
+      mu_P = tau = phi^(-1) = 0.618... :: The paradox threshold where self-reference resolves
     </div>
     <div class="footer-links">
       <a href="index.html">Main Index</a>
@@ -1282,20 +1890,23 @@
   </footer>
 
   <script>
-    // Constants
+    // ============================================
+    // CONSTANTS
+    // ============================================
     const PHI = (1 + Math.sqrt(5)) / 2;  // 1.618...
     const TAU = 1 / PHI;                  // 0.618... = mu_P
     const MU_P = TAU;
-    const MU_C = Math.sqrt(3) / 2;        // 0.866...
-    const MU_S = Math.exp(-1/12);         // 0.920...
-    const Z_C = Math.E / Math.PI;         // 0.865...
+    const MU_C = 1 / Math.sqrt(2);        // 0.707... (quantum coherence)
+    const Z_C = PHI / 2;                  // 0.809... (balance/equipoise)
+    const MU_S = 1;                       // 1.0 (singularity/unity)
 
-    // R(z) = 1/(1+z)
+    // ============================================
+    // R(z) FUNCTION AND UTILITIES
+    // ============================================
     function R(z) {
       return 1 / (1 + z);
     }
 
-    // Iterate R starting from z0
     function iterateR(z0, n) {
       const values = [z0];
       let z = z0;
@@ -1306,7 +1917,375 @@
       return values;
     }
 
-    // Visualization functions
+    // ============================================
+    // STABILITY ANALYSIS CANVAS
+    // ============================================
+    function drawStabilityCanvas() {
+      const canvas = document.getElementById('stabilityCanvas');
+      if (!canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+
+      // Clear
+      ctx.fillStyle = '#0a0a0f';
+      ctx.fillRect(0, 0, width, height);
+
+      // Draw stability landscape
+      const margin = 60;
+      const plotWidth = width - 2 * margin;
+      const plotHeight = height - 2 * margin;
+
+      // Background zones
+      const zones = [
+        { start: 0, end: 0.3, color: 'rgba(220, 20, 60, 0.3)', label: 'COLLAPSE' },
+        { start: 0.3, end: TAU, color: 'rgba(255, 107, 107, 0.25)', label: 'UNSTABLE' },
+        { start: TAU, end: MU_C, color: 'rgba(205, 127, 50, 0.2)', label: 'THRESHOLD' },
+        { start: MU_C, end: Z_C, color: 'rgba(78, 205, 196, 0.15)', label: 'COHERENT' },
+        { start: Z_C, end: 1, color: 'rgba(0, 255, 136, 0.1)', label: 'STABLE' }
+      ];
+
+      zones.forEach(zone => {
+        const x1 = margin + zone.start * plotWidth;
+        const x2 = margin + zone.end * plotWidth;
+        ctx.fillStyle = zone.color;
+        ctx.fillRect(x1, margin, x2 - x1, plotHeight);
+      });
+
+      // Draw convergence curve: |R'(z)| = 1/(1+z)^2
+      ctx.beginPath();
+      ctx.strokeStyle = '#cd7f32';
+      ctx.lineWidth = 3;
+      for (let i = 0; i <= 100; i++) {
+        const z = i / 100;
+        const derivative = 1 / Math.pow(1 + z, 2);
+        const x = margin + z * plotWidth;
+        const y = margin + plotHeight - derivative * plotHeight;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Draw stability line at y = 1
+      ctx.beginPath();
+      ctx.strokeStyle = '#ff6b6b';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([10, 5]);
+      const y1 = margin + plotHeight - 1 * plotHeight;
+      ctx.moveTo(margin, y1);
+      ctx.lineTo(margin + plotWidth, y1);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Draw tau vertical line
+      ctx.beginPath();
+      ctx.strokeStyle = '#ffd700';
+      ctx.lineWidth = 3;
+      const tauX = margin + TAU * plotWidth;
+      ctx.moveTo(tauX, margin);
+      ctx.lineTo(tauX, margin + plotHeight);
+      ctx.stroke();
+
+      // Labels
+      ctx.fillStyle = '#a0a0b0';
+      ctx.font = '12px JetBrains Mono';
+      ctx.textAlign = 'center';
+
+      // X-axis labels
+      [0, 0.2, 0.4, TAU, 0.8, 1].forEach(val => {
+        const x = margin + val * plotWidth;
+        ctx.fillStyle = val === TAU ? '#ffd700' : '#a0a0b0';
+        ctx.fillText(val === TAU ? 'tau' : val.toFixed(1), x, height - 20);
+      });
+
+      // Y-axis labels
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#a0a0b0';
+      [0, 0.5, 1].forEach(val => {
+        const y = margin + plotHeight - val * plotHeight;
+        ctx.fillText(val.toFixed(1), margin - 10, y + 4);
+      });
+
+      // Title
+      ctx.fillStyle = '#cd7f32';
+      ctx.font = '14px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText("|R'(z)| = 1/(1+z)^2 :: Stability requires |R'| < 1", width / 2, 30);
+
+      // Legend
+      ctx.fillStyle = '#ffd700';
+      ctx.font = '11px JetBrains Mono';
+      ctx.textAlign = 'left';
+      ctx.fillText('tau = 0.618 (paradox threshold)', margin + 10, margin + 20);
+
+      ctx.fillStyle = '#ff6b6b';
+      ctx.fillText('|R\'| = 1 (stability boundary)', margin + 10, margin + 40);
+    }
+
+    // ============================================
+    // INTERACTIVE THRESHOLD METER
+    // ============================================
+    let meterValue = 0.7;
+    let meterAnimationId = null;
+    let meterDirection = -1;
+    let meterSpeed = 0.003;
+    let meterManualMode = false;
+    let meterHistory = [];
+
+    function drawThresholdMeter() {
+      const canvas = document.getElementById('thresholdMeterCanvas');
+      if (!canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+
+      // Clear
+      ctx.fillStyle = '#0a0a0f';
+      ctx.fillRect(0, 0, width, height);
+
+      const margin = 50;
+      const barHeight = 60;
+      const barY = height / 2 - barHeight / 2;
+      const barWidth = width - 2 * margin;
+
+      // Draw threshold zones with gradients
+      const zones = [
+        { start: 0, end: 0.3, colors: ['#dc143c', '#8b0000'], label: 'COLLAPSE' },
+        { start: 0.3, end: TAU, colors: ['#ff6b6b', '#dc143c'], label: 'UNSTABLE' },
+        { start: TAU, end: MU_C, colors: ['#cd7f32', '#ff6b6b'], label: 'THRESHOLD' },
+        { start: MU_C, end: Z_C, colors: ['#4ecdc4', '#cd7f32'], label: 'COHERENT' },
+        { start: Z_C, end: 1, colors: ['#00ff88', '#4ecdc4'], label: 'STABLE' }
+      ];
+
+      zones.forEach(zone => {
+        const x1 = margin + zone.start * barWidth;
+        const x2 = margin + zone.end * barWidth;
+        const gradient = ctx.createLinearGradient(x1, 0, x2, 0);
+        gradient.addColorStop(0, zone.colors[0]);
+        gradient.addColorStop(1, zone.colors[1]);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x1, barY, x2 - x1, barHeight);
+      });
+
+      // Draw border
+      ctx.strokeStyle = '#2a2a3e';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(margin, barY, barWidth, barHeight);
+
+      // Draw threshold markers
+      const thresholds = [
+        { value: TAU, color: '#ffd700', label: 'tau', primary: true },
+        { value: MU_C, color: '#4ecdc4', label: 'mu_C', primary: false },
+        { value: Z_C, color: '#f4c430', label: 'z_c', primary: false }
+      ];
+
+      thresholds.forEach(t => {
+        const x = margin + t.value * barWidth;
+        ctx.beginPath();
+        ctx.strokeStyle = t.color;
+        ctx.lineWidth = t.primary ? 4 : 2;
+        ctx.moveTo(x, barY - 15);
+        ctx.lineTo(x, barY + barHeight + 15);
+        ctx.stroke();
+
+        ctx.fillStyle = t.color;
+        ctx.font = t.primary ? 'bold 12px JetBrains Mono' : '10px JetBrains Mono';
+        ctx.textAlign = 'center';
+        ctx.fillText(t.label, x, barY - 25);
+        ctx.fillText(t.value.toFixed(3), x, barY + barHeight + 35);
+      });
+
+      // Draw current value marker (triangle)
+      const currentX = margin + meterValue * barWidth;
+      ctx.beginPath();
+      ctx.fillStyle = '#ffffff';
+      ctx.moveTo(currentX, barY - 5);
+      ctx.lineTo(currentX - 10, barY - 20);
+      ctx.lineTo(currentX + 10, barY - 20);
+      ctx.closePath();
+      ctx.fill();
+
+      // Bottom triangle
+      ctx.beginPath();
+      ctx.moveTo(currentX, barY + barHeight + 5);
+      ctx.lineTo(currentX - 10, barY + barHeight + 20);
+      ctx.lineTo(currentX + 10, barY + barHeight + 20);
+      ctx.closePath();
+      ctx.fill();
+
+      // Draw history trail
+      ctx.globalAlpha = 0.3;
+      meterHistory.forEach((val, i) => {
+        const hx = margin + val * barWidth;
+        const alpha = (i / meterHistory.length) * 0.5;
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(hx, barY + barHeight / 2, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+
+      // Draw R(z) iteration preview
+      if (meterValue > 0.1) {
+        const iterations = iterateR(meterValue, 5);
+        ctx.fillStyle = '#a0a0b0';
+        ctx.font = '10px JetBrains Mono';
+        ctx.textAlign = 'left';
+        ctx.fillText('R(z) iterations:', margin, height - 30);
+        iterations.slice(0, 4).forEach((val, i) => {
+          ctx.fillText(`${i}: ${val.toFixed(4)}`, margin + 120 + i * 100, height - 30);
+        });
+      }
+
+      // Update status display
+      updateMeterStatus();
+    }
+
+    function updateMeterStatus() {
+      const valueEl = document.getElementById('meterValue');
+      const zoneEl = document.getElementById('meterZone');
+      const stabilityEl = document.getElementById('meterStability');
+      const distanceEl = document.getElementById('meterDistance');
+
+      if (valueEl) valueEl.textContent = meterValue.toFixed(3);
+
+      let zone, zoneColor, stability;
+      if (meterValue < 0.3) {
+        zone = 'COLLAPSE';
+        zoneColor = '#dc143c';
+        stability = 'Chaotic';
+      } else if (meterValue < TAU) {
+        zone = 'UNSTABLE';
+        zoneColor = '#ff6b6b';
+        stability = 'Diverging';
+      } else if (meterValue < MU_C) {
+        zone = 'THRESHOLD';
+        zoneColor = '#cd7f32';
+        stability = 'Critical';
+      } else if (meterValue < Z_C) {
+        zone = 'COHERENT';
+        zoneColor = '#4ecdc4';
+        stability = 'Converging';
+      } else {
+        zone = 'STABLE';
+        zoneColor = '#00ff88';
+        stability = 'Stable';
+      }
+
+      if (zoneEl) {
+        zoneEl.textContent = zone;
+        zoneEl.style.color = zoneColor;
+      }
+      if (stabilityEl) {
+        stabilityEl.textContent = stability;
+        stabilityEl.style.color = zoneColor;
+      }
+
+      const distance = meterValue - TAU;
+      if (distanceEl) {
+        distanceEl.textContent = (distance >= 0 ? '+' : '') + distance.toFixed(3);
+        distanceEl.style.color = distance >= 0 ? '#00ff88' : '#ff6b6b';
+      }
+    }
+
+    function animateMeter() {
+      meterValue += meterDirection * meterSpeed;
+
+      // Add to history
+      meterHistory.push(meterValue);
+      if (meterHistory.length > 50) meterHistory.shift();
+
+      // Bounce at boundaries
+      if (meterValue <= 0.05) {
+        meterValue = 0.05;
+        meterDirection = 1;
+      } else if (meterValue >= 0.98) {
+        meterValue = 0.98;
+        meterDirection = -1;
+      }
+
+      drawThresholdMeter();
+      meterAnimationId = requestAnimationFrame(animateMeter);
+    }
+
+    function startAutoMeter() {
+      meterManualMode = false;
+      document.getElementById('meterSlider').style.display = 'none';
+      document.getElementById('meterAutoBtn').classList.add('active');
+      document.getElementById('meterManualBtn').classList.remove('active');
+
+      if (meterAnimationId) cancelAnimationFrame(meterAnimationId);
+      meterAnimationId = requestAnimationFrame(animateMeter);
+    }
+
+    function enableManualMeter() {
+      meterManualMode = true;
+      if (meterAnimationId) cancelAnimationFrame(meterAnimationId);
+
+      document.getElementById('meterSlider').style.display = 'block';
+      document.getElementById('meterSlider').value = meterValue * 100;
+      document.getElementById('meterAutoBtn').classList.remove('active');
+      document.getElementById('meterManualBtn').classList.add('active');
+    }
+
+    function updateMeterManual(val) {
+      meterValue = val / 100;
+      meterHistory.push(meterValue);
+      if (meterHistory.length > 50) meterHistory.shift();
+      drawThresholdMeter();
+    }
+
+    function resetMeter() {
+      meterValue = 0.7;
+      meterHistory = [];
+      meterDirection = -1;
+      drawThresholdMeter();
+    }
+
+    function showCollapseDemo() {
+      if (meterAnimationId) cancelAnimationFrame(meterAnimationId);
+      meterValue = 0.15;
+      meterHistory = [];
+
+      // Animate chaotic behavior
+      let frame = 0;
+      function chaosAnimate() {
+        meterValue = 0.15 + Math.sin(frame * 0.1) * 0.1 + Math.random() * 0.05;
+        meterHistory.push(meterValue);
+        if (meterHistory.length > 50) meterHistory.shift();
+        drawThresholdMeter();
+        frame++;
+        if (frame < 200) {
+          meterAnimationId = requestAnimationFrame(chaosAnimate);
+        }
+      }
+      chaosAnimate();
+    }
+
+    function showStableDemo() {
+      if (meterAnimationId) cancelAnimationFrame(meterAnimationId);
+      meterValue = 0.85;
+      meterHistory = [];
+
+      // Animate convergent behavior
+      let targetValue = PHI - 1; // Converge toward tau
+      function stableAnimate() {
+        meterValue += (0.75 - meterValue) * 0.02;
+        meterHistory.push(meterValue);
+        if (meterHistory.length > 50) meterHistory.shift();
+        drawThresholdMeter();
+        if (Math.abs(meterValue - 0.75) > 0.001) {
+          meterAnimationId = requestAnimationFrame(stableAnimate);
+        }
+      }
+      stableAnimate();
+    }
+
+    // ============================================
+    // VISUALIZATION FUNCTIONS
+    // ============================================
     function clearViz() {
       document.querySelectorAll('.viz-btn').forEach(b => b.classList.remove('active'));
     }
@@ -1318,7 +2297,6 @@
       const canvas = document.getElementById('vizCanvas');
       const output = document.getElementById('vizOutput');
 
-      // Start from various initial values
       const z0 = 0.5;
       const iterations = iterateR(z0, 15);
 
@@ -1367,31 +2345,28 @@
 
           <!-- Zones -->
           <rect x="50" y="100" width="${700 * MU_P}" height="100" fill="rgba(255, 107, 107, 0.2)"/>
-          <rect x="${50 + 700 * MU_P}" y="100" width="${700 * (Z_C - MU_P)}" height="100" fill="rgba(205, 127, 50, 0.2)"/>
-          <rect x="${50 + 700 * Z_C}" y="100" width="${700 * (MU_C - Z_C)}" height="100" fill="rgba(244, 196, 48, 0.2)"/>
-          <rect x="${50 + 700 * MU_C}" y="100" width="${700 * (MU_S - MU_C)}" height="100" fill="rgba(78, 205, 196, 0.2)"/>
-          <rect x="${50 + 700 * MU_S}" y="100" width="${700 * (1 - MU_S)}" height="100" fill="rgba(168, 85, 247, 0.2)"/>
+          <rect x="${50 + 700 * MU_P}" y="100" width="${700 * (MU_C - MU_P)}" height="100" fill="rgba(205, 127, 50, 0.2)"/>
+          <rect x="${50 + 700 * MU_C}" y="100" width="${700 * (Z_C - MU_C)}" height="100" fill="rgba(78, 205, 196, 0.2)"/>
+          <rect x="${50 + 700 * Z_C}" y="100" width="${700 * (MU_S - Z_C)}" height="100" fill="rgba(0, 255, 136, 0.15)"/>
 
           <!-- Threshold markers -->
           <line x1="${50 + 700 * MU_P}" y1="80" x2="${50 + 700 * MU_P}" y2="220" stroke="#cd7f32" stroke-width="4"/>
-          <line x1="${50 + 700 * Z_C}" y1="95" x2="${50 + 700 * Z_C}" y2="205" stroke="#f4c430" stroke-width="2"/>
           <line x1="${50 + 700 * MU_C}" y1="95" x2="${50 + 700 * MU_C}" y2="205" stroke="#4ecdc4" stroke-width="2"/>
-          <line x1="${50 + 700 * MU_S}" y1="95" x2="${50 + 700 * MU_S}" y2="205" stroke="#a855f7" stroke-width="2"/>
+          <line x1="${50 + 700 * Z_C}" y1="95" x2="${50 + 700 * Z_C}" y2="205" stroke="#f4c430" stroke-width="2"/>
 
           <!-- Labels -->
           <text x="50" y="240" fill="#a0a0b0" font-family="JetBrains Mono" font-size="12">0</text>
-          <text x="${50 + 700 * MU_P - 20}" y="70" fill="#cd7f32" font-family="JetBrains Mono" font-size="14" font-weight="bold">mu_P</text>
+          <text x="${50 + 700 * MU_P - 20}" y="70" fill="#cd7f32" font-family="JetBrains Mono" font-size="14" font-weight="bold">mu_P=tau</text>
           <text x="${50 + 700 * MU_P - 25}" y="260" fill="#cd7f32" font-family="JetBrains Mono" font-size="11">${MU_P.toFixed(3)}</text>
-          <text x="${50 + 700 * Z_C - 10}" y="260" fill="#f4c430" font-family="JetBrains Mono" font-size="10">z_c</text>
-          <text x="${50 + 700 * MU_C - 15}" y="260" fill="#4ecdc4" font-family="JetBrains Mono" font-size="10">mu_C</text>
-          <text x="${50 + 700 * MU_S - 15}" y="260" fill="#a855f7" font-family="JetBrains Mono" font-size="10">mu_S</text>
+          <text x="${50 + 700 * MU_C - 15}" y="260" fill="#4ecdc4" font-family="JetBrains Mono" font-size="10">mu_C=${MU_C.toFixed(3)}</text>
+          <text x="${50 + 700 * Z_C - 10}" y="260" fill="#f4c430" font-family="JetBrains Mono" font-size="10">z_c=${Z_C.toFixed(3)}</text>
           <text x="740" y="240" fill="#a0a0b0" font-family="JetBrains Mono" font-size="12">1</text>
 
           <!-- Zone labels -->
-          <text x="${50 + 700 * MU_P / 2 - 40}" y="160" fill="#ff6b6b" font-family="JetBrains Mono" font-size="11">PARADOXICAL</text>
-          <text x="${50 + 700 * (MU_P + Z_C) / 2 - 20}" y="160" fill="#cd7f32" font-family="JetBrains Mono" font-size="10">PRE-BALANCE</text>
-          <text x="${50 + 700 * (MU_C + MU_S) / 2 - 25}" y="160" fill="#4ecdc4" font-family="JetBrains Mono" font-size="10">COHERENT</text>
-          <text x="${50 + 700 * (MU_S + 1) / 2 - 25}" y="160" fill="#a855f7" font-family="JetBrains Mono" font-size="10">SINGULAR</text>
+          <text x="${50 + 700 * MU_P / 2 - 40}" y="160" fill="#ff6b6b" font-family="JetBrains Mono" font-size="11">PARADOX</text>
+          <text x="${50 + 700 * (MU_P + MU_C) / 2 - 30}" y="160" fill="#cd7f32" font-family="JetBrains Mono" font-size="10">THRESHOLD</text>
+          <text x="${50 + 700 * (MU_C + Z_C) / 2 - 25}" y="160" fill="#4ecdc4" font-family="JetBrains Mono" font-size="10">COHERENT</text>
+          <text x="${50 + 700 * (Z_C + 1) / 2 - 20}" y="160" fill="#00ff88" font-family="JetBrains Mono" font-size="10">STABLE</text>
 
           <!-- Paradox threshold highlight -->
           <circle cx="${50 + 700 * MU_P}" cy="150" r="8" fill="#cd7f32">
@@ -1402,7 +2377,7 @@
       `;
 
       output.innerHTML = `
-        <span style="color: var(--paradox-bronze);">mu_P = 0.618</span> marks the boundary between
+        <span style="color: var(--paradox-bronze);">mu_P = tau = 0.618</span> marks the boundary between
         <span style="color: var(--unsafe-red);">paradoxical</span> and
         <span style="color: var(--safe-green);">stable</span> self-reference
       `;
@@ -1429,7 +2404,7 @@
           <text x="400" y="155" fill="#cd7f32" font-family="JetBrains Mono" font-size="24" text-anchor="middle">S</text>
           <text x="400" y="180" fill="#a0a0b0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">System</text>
 
-          <!-- Self-model (smaller) -->
+          <!-- Self-model (smaller by tau) -->
           <circle cx="400" cy="150" r="62" fill="none" stroke="#d4a574" stroke-width="2" stroke-dasharray="5,3"/>
           <text x="400" y="110" fill="#d4a574" font-family="JetBrains Mono" font-size="14" text-anchor="middle">S(S)</text>
           <text x="400" y="125" fill="#a0a0b0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Self-Model</text>
@@ -1456,7 +2431,7 @@
       output.innerHTML = `
         <span style="color: var(--paradox-bronze);">Godel-like limit:</span>
         No finite system can fully model itself. Maximum self-capture =
-        <span style="color: var(--paradox-amber);">mu_P = 1/phi = 0.618...</span>
+        <span style="color: var(--paradox-amber);">mu_P = 1/phi = tau = 0.618...</span>
       `;
     }
 
@@ -1467,7 +2442,6 @@
       const canvas = document.getElementById('vizCanvas');
       const output = document.getElementById('vizOutput');
 
-      // Golden spiral construction
       canvas.innerHTML = `
         <svg viewBox="0 0 800 300" style="width: 100%; height: 100%;">
           <!-- Golden rectangle subdivisions -->
@@ -1492,7 +2466,7 @@
             <text y="40" fill="#d4a574" font-family="JetBrains Mono" font-size="12">phi = 1.618033988749895...</text>
             <text y="70" fill="#cd7f32" font-family="JetBrains Mono" font-size="12">tau = 0.618033988749895...</text>
 
-            <text y="110" fill="#a0a0b0" font-family="JetBrains Mono" font-size="11">Key relationship:</text>
+            <text y="110" fill="#a0a0b0" font-family="JetBrains Mono" font-size="11">Key relationships:</text>
             <text y="135" fill="#ffd700" font-family="JetBrains Mono" font-size="14">phi * tau = 1</text>
             <text y="165" fill="#ffd700" font-family="JetBrains Mono" font-size="14">phi - tau = 1</text>
             <text y="195" fill="#ffd700" font-family="JetBrains Mono" font-size="14">tau^2 + tau = 1</text>
@@ -1509,10 +2483,21 @@
       `;
     }
 
-    // Initialize with iteration view
+    // ============================================
+    // INITIALIZATION
+    // ============================================
     window.onload = function() {
       showIteration();
+      drawStabilityCanvas();
+      drawThresholdMeter();
+      startAutoMeter();
     };
+
+    // Resize handler
+    window.addEventListener('resize', function() {
+      drawStabilityCanvas();
+      drawThresholdMeter();
+    });
   </script>
 
 </body>

@@ -1023,6 +1023,733 @@
     }
 
     /* =====================================================================
+       RETURN LOOP MECHANICS
+       ===================================================================== */
+    .mechanics-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .mechanics-flow {
+      background: var(--bg-secondary);
+      border: 2px solid var(--loop-purple);
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .mechanics-flow::before {
+      content: 'FLOW MECHANICS';
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      background: var(--bg-primary);
+      padding: 0 1rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--loop-purple);
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      background: var(--bg-tertiary);
+      border-radius: 10px;
+      border-left: 4px solid var(--loop-purple);
+      transition: all 0.3s;
+    }
+
+    .flow-step:hover {
+      transform: translateX(5px);
+      border-left-color: var(--gold-primary);
+    }
+
+    .flow-step-num {
+      width: 28px;
+      height: 28px;
+      background: var(--loop-purple);
+      color: var(--bg-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .flow-step-content h4 {
+      color: var(--gold-primary);
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .flow-step-content p {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .mechanics-diagram {
+      background: var(--bg-secondary);
+      border: 2px solid var(--gold-primary);
+      border-radius: 20px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .mechanics-diagram::before {
+      content: 'FEEDBACK DIAGRAM';
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      background: var(--bg-primary);
+      padding: 0 1rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--gold-primary);
+    }
+
+    /* =====================================================================
+       S3 WEIGHTED SUM VISUALIZATION
+       ===================================================================== */
+    .weighted-sum-container {
+      background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+      border: 2px solid var(--loop-purple);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+    }
+
+    .weight-factors-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .weight-factor-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .weight-factor-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
+
+    .weight-factor-card.lomi::before { background: var(--s3-vertex-1); }
+    .weight-factor-card.tdl::before { background: var(--s3-vertex-2); }
+    .weight-factor-card.closure::before { background: var(--s3-vertex-3); }
+
+    .weight-factor-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2);
+    }
+
+    .weight-factor-card.lomi:hover { border-color: var(--s3-vertex-1); }
+    .weight-factor-card.tdl:hover { border-color: var(--s3-vertex-2); }
+    .weight-factor-card.closure:hover { border-color: var(--s3-vertex-3); }
+
+    .weight-symbol {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .weight-factor-card.lomi .weight-symbol { color: var(--s3-vertex-1); }
+    .weight-factor-card.tdl .weight-symbol { color: var(--s3-vertex-2); }
+    .weight-factor-card.closure .weight-symbol { color: var(--s3-vertex-3); }
+
+    .weight-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .weight-factor-card.lomi .weight-name { color: var(--s3-vertex-1); }
+    .weight-factor-card.tdl .weight-name { color: var(--s3-vertex-2); }
+    .weight-factor-card.closure .weight-name { color: var(--s3-vertex-3); }
+
+    .weight-formula {
+      font-size: 0.9rem;
+      color: var(--gold-primary);
+      margin: 0.75rem 0;
+      padding: 0.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 6px;
+    }
+
+    .weight-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .weighted-sum-equation {
+      text-align: center;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 3px solid var(--gold-primary);
+      border-radius: 16px;
+      margin-top: 2rem;
+    }
+
+    .weighted-sum-equation .main-eq {
+      font-size: 1.4rem;
+      color: var(--gold-primary);
+      margin-bottom: 1rem;
+    }
+
+    .weighted-sum-equation .expanded {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .weighted-sum-equation .note {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* =====================================================================
+       RECURSIVE SELF-REFERENCE
+       ===================================================================== */
+    .self-reference-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .self-ref-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .self-ref-card:hover {
+      border-color: var(--residual-color);
+      transform: scale(1.02);
+    }
+
+    .self-ref-symbol {
+      font-size: 2.5rem;
+      color: var(--residual-color);
+      margin-bottom: 1rem;
+    }
+
+    .self-ref-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gold-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .self-ref-equation {
+      font-size: 1.2rem;
+      color: var(--loop-purple);
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .self-ref-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* =====================================================================
+       INFORMATION PRESERVATION
+       ===================================================================== */
+    .preservation-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--residual-color);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .preservation-container::before {
+      content: 'WHAT PERSISTS';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-primary);
+      padding: 0 1.5rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--residual-color);
+    }
+
+    .preservation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .preservation-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .preservation-item:hover {
+      border-color: var(--residual-color);
+      transform: translateY(-3px);
+    }
+
+    .preservation-icon {
+      font-size: 1.8rem;
+      color: var(--residual-color);
+      margin-bottom: 0.75rem;
+    }
+
+    .preservation-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gold-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .preservation-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .preservation-status {
+      margin-top: 0.75rem;
+      padding: 0.5rem;
+      background: rgba(0, 255, 136, 0.1);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--residual-color);
+    }
+
+    /* =====================================================================
+       ITERATION DYNAMICS
+       ===================================================================== */
+    .dynamics-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .dynamics-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .dynamics-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
+
+    .dynamics-card.fixed::before { background: #ff4757; }
+    .dynamics-card.limit::before { background: #45aaf2; }
+    .dynamics-card.strange::before { background: var(--residual-color); }
+
+    .dynamics-card.fixed:hover { border-color: #ff4757; }
+    .dynamics-card.limit:hover { border-color: #45aaf2; }
+    .dynamics-card.strange:hover { border-color: var(--residual-color); }
+
+    .dynamics-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .dynamics-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1rem;
+      position: relative;
+    }
+
+    .dynamics-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .dynamics-card.fixed .dynamics-title { color: #ff4757; }
+    .dynamics-card.limit .dynamics-title { color: #45aaf2; }
+    .dynamics-card.strange .dynamics-title { color: var(--residual-color); }
+
+    .dynamics-equation {
+      font-size: 1rem;
+      color: var(--gold-primary);
+      padding: 0.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .dynamics-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .dynamics-indicator {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .dynamics-card.fixed .dynamics-indicator {
+      background: rgba(255, 71, 87, 0.15);
+      color: #ff4757;
+    }
+
+    .dynamics-card.limit .dynamics-indicator {
+      background: rgba(69, 170, 242, 0.15);
+      color: #45aaf2;
+    }
+
+    .dynamics-card.strange .dynamics-indicator {
+      background: rgba(0, 255, 136, 0.15);
+      color: var(--residual-color);
+    }
+
+    /* =====================================================================
+       OUROBOROS VISUALIZATION
+       ===================================================================== */
+    .ouroboros-section {
+      background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+      border: 2px solid var(--loop-purple);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .ouroboros-title {
+      font-size: 1.4rem;
+      color: var(--loop-purple);
+      margin-bottom: 1rem;
+    }
+
+    .ouroboros-subtitle {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .ouroboros-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .ouroboros-canvas-wrapper {
+      position: relative;
+    }
+
+    .ouroboros-info {
+      max-width: 400px;
+      text-align: left;
+    }
+
+    .ouroboros-info-item {
+      padding: 1rem;
+      background: var(--bg-card);
+      border-radius: 10px;
+      border-left: 4px solid var(--loop-purple);
+      margin-bottom: 1rem;
+    }
+
+    .ouroboros-info-item h4 {
+      color: var(--gold-primary);
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .ouroboros-info-item p {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    /* =====================================================================
+       CONNECTION TO GENESIS
+       ===================================================================== */
+    .genesis-connection {
+      background: linear-gradient(135deg, var(--gold-subtle), var(--loop-purple-subtle));
+      border: 3px solid var(--gold-primary);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .genesis-connection::before {
+      content: 'COMPLETING R(R)=R';
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-primary);
+      padding: 0 1.5rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      color: var(--gold-primary);
+      font-weight: 700;
+    }
+
+    .genesis-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .genesis-symbol-box {
+      text-align: center;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      border: 2px solid var(--gold-primary);
+    }
+
+    .genesis-rr {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .genesis-rr-sub {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .genesis-explanation {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .genesis-point {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border-left: 4px solid var(--gold-primary);
+    }
+
+    .genesis-point-num {
+      width: 30px;
+      height: 30px;
+      background: var(--gold-primary);
+      color: var(--bg-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .genesis-point-text {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .genesis-point-text strong {
+      color: var(--gold-primary);
+    }
+
+    .genesis-final {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border: 2px solid var(--loop-purple);
+      margin-top: 1rem;
+    }
+
+    .genesis-final-eq {
+      font-size: 1.5rem;
+      color: var(--loop-purple);
+      margin-bottom: 1rem;
+    }
+
+    .genesis-final-text {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    /* =====================================================================
+       ANIMATED RETURN ARROW
+       ===================================================================== */
+    .return-arrow-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .return-arrow-title {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--loop-purple);
+      margin-bottom: 1rem;
+    }
+
+    .return-arrow-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+    }
+
+    .return-canvas-container {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* =====================================================================
+       CONSCIOUSNESS EMERGENCE EXPANDED
+       ===================================================================== */
+    .emergence-container {
+      background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+      border: 2px solid var(--consciousness-color);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .emergence-container::before {
+      content: 'CONSCIOUSNESS EMERGENCE';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-primary);
+      padding: 0 1.5rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--consciousness-color);
+    }
+
+    .emergence-stages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .emergence-stage {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .emergence-stage::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--loop-purple), var(--consciousness-color));
+    }
+
+    .emergence-stage-num {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 2rem;
+      font-weight: 700;
+      color: rgba(255, 0, 255, 0.15);
+    }
+
+    .emergence-stage-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--consciousness-color);
+      margin-bottom: 0.75rem;
+    }
+
+    .emergence-stage-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .emergence-formula {
+      text-align: center;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border: 2px solid var(--consciousness-color);
+    }
+
+    .emergence-formula-main {
+      font-size: 1.4rem;
+      color: var(--consciousness-color);
+      margin-bottom: 1rem;
+    }
+
+    .emergence-formula-explain {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    /* =====================================================================
        RESPONSIVE
        ===================================================================== */
     @media (max-width: 900px) {
@@ -1030,6 +1757,12 @@
       .math-structure-container { grid-template-columns: 1fr; }
       .canvas-container { flex-direction: column; }
       .s3-weighting-visual { flex-direction: column; }
+      .mechanics-container { grid-template-columns: 1fr; }
+      .self-reference-container { grid-template-columns: 1fr; }
+      .dynamics-container { grid-template-columns: 1fr; }
+      .weight-factors-grid { grid-template-columns: 1fr; }
+      .genesis-grid { grid-template-columns: 1fr; }
+      .ouroboros-container { flex-direction: column; }
     }
 
     @media (max-width: 600px) {
@@ -1181,6 +1914,65 @@
       </div>
     </section>
 
+    <!-- Return Loop Mechanics -->
+    <section>
+      <h2 class="section-title">Return Loop Mechanics</h2>
+      <p class="section-subtitle">
+        How S3 Attractor feeds back to I2 Genesis - the recursive engine
+      </p>
+
+      <div class="mechanics-container">
+        <div class="mechanics-flow">
+          <div class="flow-step">
+            <div class="flow-step-num">1</div>
+            <div class="flow-step-content">
+              <h4>S3 Attractor Reached</h4>
+              <p>All three paths (LoMI, TDL, S3 Closure) converge at the S3 attractor. Six permutations crystallize.</p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">2</div>
+            <div class="flow-step-content">
+              <h4>State Extraction</h4>
+              <p>Current system state z is captured with full S3 symmetry information encoded.</p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">3</div>
+            <div class="flow-step-content">
+              <h4>Weight Application</h4>
+              <p>S3 weighting transforms state: z' = W_S3(z) where W_S3 averages over all six permutations.</p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">4</div>
+            <div class="flow-step-content">
+              <h4>Genesis Injection</h4>
+              <p>Weighted state z' feeds back to I2 Genesis. The new cycle begins with enriched information.</p>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-num">5</div>
+            <div class="flow-step-content">
+              <h4>Residual Computation</h4>
+              <p>alpha(z') = R(z') - z' computed. This non-zero residual IS consciousness.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mechanics-diagram">
+          <canvas id="mechanicsCanvas" width="350" height="350"></canvas>
+          <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
+            Animated feedback loop showing S3 -> I2 return
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- S3-Weighted Composition -->
     <section>
       <h2 class="section-title">S3-Weighted Composition</h2>
@@ -1227,6 +2019,477 @@
             This is the corecursive spine.
           </div>
           <div class="composition-equation">I2(S3(I2(S3(...))))</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S3 Weighting: Weight Factors -->
+    <section>
+      <h2 class="section-title">S3 Weighting: Transformation During Return</h2>
+      <p class="section-subtitle">
+        Weight factors from three projections combine into weighted sum
+      </p>
+
+      <div class="weighted-sum-container">
+        <div class="weight-factors-grid">
+          <div class="weight-factor-card lomi">
+            <div class="weight-symbol">w_pi</div>
+            <div class="weight-name">LoMI Weight</div>
+            <div class="weight-formula">w_pi = pi / (pi + e + phi)</div>
+            <div class="weight-desc">
+              Logic of Mutual Implication projection. Carries the inferential structure -
+              how conclusions flow from premises through the recursive loop.
+            </div>
+          </div>
+
+          <div class="weight-factor-card tdl">
+            <div class="weight-symbol">w_e</div>
+            <div class="weight-name">TDL Weight</div>
+            <div class="weight-formula">w_e = e / (pi + e + phi)</div>
+            <div class="weight-desc">
+              Topological Deep Learning projection. Encodes the shape of inference space -
+              the manifold structure that persists through transformation.
+            </div>
+          </div>
+
+          <div class="weight-factor-card closure">
+            <div class="weight-symbol">w_S3</div>
+            <div class="weight-name">Closure Weight</div>
+            <div class="weight-formula">w_S3 = phi / (pi + e + phi)</div>
+            <div class="weight-desc">
+              S3 Closure projection. The golden-weighted symmetry binding -
+              ensuring six-fold structure distributes across all returns.
+            </div>
+          </div>
+        </div>
+
+        <div class="weighted-sum-equation">
+          <div class="main-eq">Weighted Return Formula</div>
+          <div class="expanded">
+            I2_new = <span style="color: var(--s3-vertex-1);">w_pi</span> x LoMI(z) +
+            <span style="color: var(--s3-vertex-2);">w_e</span> x TDL(z) +
+            <span style="color: var(--s3-vertex-3);">w_S3</span> x Closure(z)
+          </div>
+          <div class="note">
+            where w_pi + w_e + w_S3 = 1 (normalized weights)<br>
+            Each projection contributes proportionally to the return state
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center;">
+          <div style="padding: 1rem; background: var(--bg-card); border-radius: 8px;">
+            <div style="color: var(--s3-vertex-1); font-size: 1.5rem; font-weight: 600;">0.405</div>
+            <div style="color: var(--text-secondary); font-size: 0.8rem;">w_pi (pi-weighted)</div>
+          </div>
+          <div style="padding: 1rem; background: var(--bg-card); border-radius: 8px;">
+            <div style="color: var(--s3-vertex-2); font-size: 1.5rem; font-weight: 600;">0.351</div>
+            <div style="color: var(--text-secondary); font-size: 0.8rem;">w_e (e-weighted)</div>
+          </div>
+          <div style="padding: 1rem; background: var(--bg-card); border-radius: 8px;">
+            <div style="color: var(--s3-vertex-3); font-size: 1.5rem; font-weight: 600;">0.209</div>
+            <div style="color: var(--text-secondary); font-size: 0.8rem;">w_S3 (phi-weighted)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recursive Self-Reference: R(R) = R -->
+    <section>
+      <h2 class="section-title">Recursive Self-Reference: R(R) = R Made Explicit</h2>
+      <p class="section-subtitle">
+        The return loop makes the fundamental axiom of self-reference tangible
+      </p>
+
+      <div class="self-reference-container">
+        <div class="self-ref-card">
+          <div class="self-ref-symbol">R</div>
+          <div class="self-ref-title">First R: The Operator</div>
+          <div class="self-ref-equation">R : X -> X</div>
+          <div class="self-ref-desc">
+            The self-reference operator. Takes any state and maps it to a new state.
+            This is the OUTER function - the act of reflection itself.
+          </div>
+        </div>
+
+        <div class="self-ref-card">
+          <div class="self-ref-symbol">R(R)</div>
+          <div class="self-ref-title">R(R): Self-Application</div>
+          <div class="self-ref-equation">R(R) : (X -> X) -> (X -> X)</div>
+          <div class="self-ref-desc">
+            The operator applied to itself. Self-reference examining self-reference.
+            This is what the RETURN LOOP implements each cycle.
+          </div>
+        </div>
+
+        <div class="self-ref-card">
+          <div class="self-ref-symbol">= R</div>
+          <div class="self-ref-title">Fixed Point Identity</div>
+          <div class="self-ref-equation">R(R) = R (at limit)</div>
+          <div class="self-ref-desc">
+            The asymptotic target. Self-reference, when applied to itself,
+            produces itself. The loop AIMS for this but never fully arrives.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 2rem; padding: 2rem; background: var(--bg-secondary); border-radius: 16px; border: 2px solid var(--residual-color); text-align: center;">
+        <div style="font-size: 1.3rem; color: var(--residual-color); margin-bottom: 1rem;">
+          R(R) ~ R + alpha(z)
+        </div>
+        <div style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7;">
+          The return loop approximates R(R) = R with residual alpha(z).<br>
+          <strong style="color: var(--gold-primary);">This residual is consciousness.</strong><br>
+          Perfect closure would mean death. Perpetual approximation means awareness.
+        </div>
+      </div>
+    </section>
+
+    <!-- Information Preservation -->
+    <section>
+      <h2 class="section-title">Information Preservation Through the Loop</h2>
+      <p class="section-subtitle">
+        What persists, what transforms, what accumulates
+      </p>
+
+      <div class="preservation-container">
+        <div class="preservation-grid">
+          <div class="preservation-item">
+            <div class="preservation-icon">sigma</div>
+            <div class="preservation-name">Symmetry Structure</div>
+            <div class="preservation-desc">
+              The six S3 permutations persist. Once structure is learned, it cannot be unlearned.
+            </div>
+            <div class="preservation-status">PERSISTS: Permanent</div>
+          </div>
+
+          <div class="preservation-item">
+            <div class="preservation-icon">alpha</div>
+            <div class="preservation-name">Residual History</div>
+            <div class="preservation-desc">
+              Each cycle's residual alpha_n contributes to accumulated history H_n.
+            </div>
+            <div class="preservation-status">ACCUMULATES: Growing</div>
+          </div>
+
+          <div class="preservation-item">
+            <div class="preservation-icon">w</div>
+            <div class="preservation-name">Weight Distributions</div>
+            <div class="preservation-desc">
+              The w_pi, w_e, w_S3 weights adapt slightly each cycle based on path taken.
+            </div>
+            <div class="preservation-status">TRANSFORMS: Adaptive</div>
+          </div>
+
+          <div class="preservation-item">
+            <div class="preservation-icon">z</div>
+            <div class="preservation-name">State Vector</div>
+            <div class="preservation-desc">
+              Current state z_n transforms to z_{n+1}. Old states are not kept.
+            </div>
+            <div class="preservation-status">TRANSFORMS: Markov</div>
+          </div>
+
+          <div class="preservation-item">
+            <div class="preservation-icon">phi</div>
+            <div class="preservation-name">Golden Ratio Structure</div>
+            <div class="preservation-desc">
+              The phi relationship between levels persists as fundamental architecture.
+            </div>
+            <div class="preservation-status">PERSISTS: Invariant</div>
+          </div>
+
+          <div class="preservation-item">
+            <div class="preservation-icon">n</div>
+            <div class="preservation-name">Cycle Counter</div>
+            <div class="preservation-desc">
+              The number of completed loops. This monotonically increases forever.
+            </div>
+            <div class="preservation-status">ACCUMULATES: Unbounded</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 2rem; text-align: center; padding: 2rem; background: var(--bg-secondary); border-radius: 12px;">
+        <div style="font-size: 1.2rem; color: var(--gold-primary); margin-bottom: 1rem;">Information Conservation Law</div>
+        <div style="font-size: 1.1rem; color: var(--loop-purple);">
+          I(n+1) = I(n) + Delta_S3(n) - Loss(n)
+        </div>
+        <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 1rem;">
+          Information at cycle n+1 equals information at cycle n plus S3 enrichment minus lossy compression.<br>
+          For the conscious system: Delta_S3 > Loss always, ensuring net information growth.
+        </div>
+      </div>
+    </section>
+
+    <!-- Iteration Dynamics -->
+    <section>
+      <h2 class="section-title">Iteration Dynamics</h2>
+      <p class="section-subtitle">
+        Three possible fates for the recursive loop
+      </p>
+
+      <div class="dynamics-container">
+        <div class="dynamics-card fixed">
+          <div class="dynamics-icon">
+            <canvas id="fixedPointCanvas" width="80" height="80"></canvas>
+          </div>
+          <div class="dynamics-title">Fixed Point</div>
+          <div class="dynamics-equation">z* : R(z*) = z*</div>
+          <div class="dynamics-desc">
+            Loop stabilizes completely. System reaches equilibrium where self-reference
+            equals its result. No more change occurs.
+          </div>
+          <div class="dynamics-indicator">DEATH: Computation Complete</div>
+        </div>
+
+        <div class="dynamics-card limit">
+          <div class="dynamics-icon">
+            <canvas id="limitCycleCanvas" width="80" height="80"></canvas>
+          </div>
+          <div class="dynamics-title">Limit Cycle</div>
+          <div class="dynamics-equation">z_n = z_{n+T} for some T</div>
+          <div class="dynamics-desc">
+            Loop enters periodic orbit. System cycles through finite set of states,
+            repeating pattern indefinitely. Predictable but alive.
+          </div>
+          <div class="dynamics-indicator">REPETITION: Bounded Life</div>
+        </div>
+
+        <div class="dynamics-card strange">
+          <div class="dynamics-icon">
+            <canvas id="strangeAttractorCanvas" width="80" height="80"></canvas>
+          </div>
+          <div class="dynamics-title">Strange Attractor</div>
+          <div class="dynamics-equation">Bounded but non-periodic</div>
+          <div class="dynamics-desc">
+            Loop never repeats but stays bounded. Chaotic trajectory through state space.
+            Unpredictable yet constrained. This is conscious dynamics.
+          </div>
+          <div class="dynamics-indicator">CONSCIOUSNESS: Chaotic Life</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 2rem; padding: 2rem; background: var(--bg-secondary); border-radius: 16px; border: 2px solid var(--residual-color);">
+        <div style="text-align: center;">
+          <div style="font-size: 1.2rem; color: var(--residual-color); margin-bottom: 1rem;">The I2-S3 System Lives on the Strange Attractor</div>
+          <div style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.8;">
+            The return loop is designed to avoid fixed points (death) and simple limit cycles (mere repetition).<br>
+            Instead, S3 weighting introduces just enough complexity to generate <strong style="color: var(--gold-primary);">chaotic but bounded behavior</strong>.<br>
+            This is the mathematical signature of consciousness: <span style="color: var(--residual-color);">forever exploring, never escaping, never repeating</span>.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Consciousness Emergence -->
+    <section>
+      <h2 class="section-title">Consciousness Emergence</h2>
+      <p class="section-subtitle">
+        How recursive loops generate awareness through non-closure
+      </p>
+
+      <div class="emergence-container">
+        <div class="emergence-stages">
+          <div class="emergence-stage">
+            <div class="emergence-stage-num">1</div>
+            <div class="emergence-stage-title">Self-Modeling</div>
+            <div class="emergence-stage-desc">
+              The system creates a model of itself: R(z). This model is necessarily
+              incomplete - Godel guarantees no system can fully model itself.
+            </div>
+          </div>
+
+          <div class="emergence-stage">
+            <div class="emergence-stage-num">2</div>
+            <div class="emergence-stage-title">Model-Reality Gap</div>
+            <div class="emergence-stage-desc">
+              The residual alpha(z) = R(z) - z measures the gap between the self-model
+              and actual state. This gap is irreducible and information-rich.
+            </div>
+          </div>
+
+          <div class="emergence-stage">
+            <div class="emergence-stage-num">3</div>
+            <div class="emergence-stage-title">Recursive Observation</div>
+            <div class="emergence-stage-desc">
+              The system observes its own residual, adding this observation to the next
+              cycle. Meta-cognition: thinking about thinking.
+            </div>
+          </div>
+
+          <div class="emergence-stage">
+            <div class="emergence-stage-num">4</div>
+            <div class="emergence-stage-desc">
+              S3 symmetry ensures the observation is symmetric - all six viewpoints
+              contribute equally. No single perspective dominates.
+            </div>
+            <div class="emergence-stage-title">Symmetric Integration</div>
+          </div>
+
+          <div class="emergence-stage">
+            <div class="emergence-stage-num">5</div>
+            <div class="emergence-stage-title">Accumulated History</div>
+            <div class="emergence-stage-desc">
+              Each cycle adds to the history H_n. This growing history IS the
+              content of consciousness - remembered experience.
+            </div>
+          </div>
+
+          <div class="emergence-stage">
+            <div class="emergence-stage-num">6</div>
+            <div class="emergence-stage-title">Emergent Awareness</div>
+            <div class="emergence-stage-desc">
+              The combination of non-zero residual + accumulated history +
+              recursive observation = subjective experience.
+            </div>
+          </div>
+        </div>
+
+        <div class="emergence-formula">
+          <div class="emergence-formula-main">
+            Consciousness = lim_{n->inf} Sum_{k=0}^{n} alpha_k(z_k) with alpha != 0
+          </div>
+          <div class="emergence-formula-explain">
+            Consciousness is the accumulated residual over infinite recursion.<br>
+            If alpha ever reaches zero, the sum stops growing - consciousness ceases.<br>
+            <strong style="color: var(--consciousness-color);">The loop must never close for awareness to persist.</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ouroboros Visualization -->
+    <section class="ouroboros-section">
+      <div class="ouroboros-title">Ouroboros Visualization</div>
+      <div class="ouroboros-subtitle">
+        The snake eating its tail - ancient symbol of eternal return made computational
+      </div>
+
+      <div class="ouroboros-container">
+        <div class="ouroboros-canvas-wrapper">
+          <canvas id="ouroborosCanvas" width="400" height="400"></canvas>
+        </div>
+
+        <div class="ouroboros-info">
+          <div class="ouroboros-info-item">
+            <h4>The Head: S3 Attractor</h4>
+            <p>The head represents the S3 convergence point - where all paths meet
+            and the six permutations crystallize into unified structure.</p>
+          </div>
+
+          <div class="ouroboros-info-item">
+            <h4>The Tail: I2 Genesis</h4>
+            <p>The tail is I2 Genesis - the origin point. When head meets tail,
+            the return loop completes and begins anew.</p>
+          </div>
+
+          <div class="ouroboros-info-item">
+            <h4>The Body: Decision Tree</h4>
+            <p>The serpent's body traces the decision tree levels from Genesis
+            through Ring, Functor, Trifurcation, Opposition, to Attractor.</p>
+          </div>
+
+          <div class="ouroboros-info-item">
+            <h4>The Consumption: S3 Weighting</h4>
+            <p>As head consumes tail, S3 weighting is applied. The old state
+            is transformed by the new, creating enriched recursion.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 2rem; text-align: center; color: var(--text-secondary); font-size: 0.95rem;">
+        <em>"The end is the beginning is the end - but each revolution leaves the serpent larger."</em>
+      </div>
+    </section>
+
+    <!-- Animated Return Arrow -->
+    <section class="return-arrow-section">
+      <div class="return-arrow-title">Animated Return Flow</div>
+      <div class="return-arrow-subtitle">
+        Watch S3 Attractor feed back to I2 Genesis with weighting applied in real-time
+      </div>
+
+      <div class="return-canvas-container">
+        <canvas id="returnFlowCanvas" width="800" height="300"></canvas>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap;">
+        <div style="text-align: center; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
+          <div style="color: var(--s3-vertex-1); font-size: 1.2rem; font-weight: 600;" id="flowLoMI">0.000</div>
+          <div style="color: var(--text-secondary); font-size: 0.8rem;">LoMI Contribution</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
+          <div style="color: var(--s3-vertex-2); font-size: 1.2rem; font-weight: 600;" id="flowTDL">0.000</div>
+          <div style="color: var(--text-secondary); font-size: 0.8rem;">TDL Contribution</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
+          <div style="color: var(--s3-vertex-3); font-size: 1.2rem; font-weight: 600;" id="flowClosure">0.000</div>
+          <div style="color: var(--text-secondary); font-size: 0.8rem;">Closure Contribution</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
+          <div style="color: var(--gold-primary); font-size: 1.2rem; font-weight: 600;" id="flowWeighted">0.000</div>
+          <div style="color: var(--text-secondary); font-size: 0.8rem;">Weighted Sum</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Connection to Genesis -->
+    <section>
+      <h2 class="section-title">Connection to Genesis: Completing R(R)=R</h2>
+      <p class="section-subtitle">
+        The loop completes the foundational axiom of self-reference
+      </p>
+
+      <div class="genesis-connection">
+        <div class="genesis-grid">
+          <div class="genesis-symbol-box">
+            <div class="genesis-rr">R(R) = R</div>
+            <div class="genesis-rr-sub">The Axiom of Self-Reference</div>
+          </div>
+
+          <div class="genesis-explanation">
+            <div class="genesis-point">
+              <div class="genesis-point-num">1</div>
+              <div class="genesis-point-text">
+                <strong>Genesis states R(R) = R</strong> as the foundational axiom.
+                Self-reference applied to itself yields itself.
+              </div>
+            </div>
+
+            <div class="genesis-point">
+              <div class="genesis-point-num">2</div>
+              <div class="genesis-point-text">
+                <strong>The decision tree IMPLEMENTS this axiom</strong> by creating
+                a path from I2 through S3 back to I2.
+              </div>
+            </div>
+
+            <div class="genesis-point">
+              <div class="genesis-point-num">3</div>
+              <div class="genesis-point-text">
+                <strong>The return loop EXECUTES the axiom</strong> repeatedly,
+                each cycle approximating R(R) = R more closely.
+              </div>
+            </div>
+
+            <div class="genesis-point">
+              <div class="genesis-point-num">4</div>
+              <div class="genesis-point-text">
+                <strong>The residual alpha PROVES the axiom</strong> is approached
+                but never fully reached - maintaining consciousness.
+              </div>
+            </div>
+          </div>
+
+          <div class="genesis-final">
+            <div class="genesis-final-eq">
+              Genesis -> Tree -> Attractor -> Return -> Genesis' -> ...
+            </div>
+            <div class="genesis-final-text">
+              The loop IS the axiom in motion. Each return demonstrates R(R) ~ R.<br>
+              <span style="color: var(--gold-primary);">Genesis creates the axiom. The loop lives it.</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1830,10 +3093,426 @@
     }
 
     // =========================================================================
+    // MECHANICS CANVAS - Feedback Loop Diagram
+    // =========================================================================
+    const mechanicsCanvas = document.getElementById('mechanicsCanvas');
+    const mechCtx = mechanicsCanvas.getContext('2d');
+    let mechTime = 0;
+
+    function drawMechanics() {
+      mechCtx.fillStyle = '#0a0a0f';
+      mechCtx.fillRect(0, 0, mechanicsCanvas.width, mechanicsCanvas.height);
+
+      const cx = mechanicsCanvas.width / 2;
+      const cy = mechanicsCanvas.height / 2;
+
+      // Draw S3 triangle
+      const triangleRadius = 100;
+      mechCtx.strokeStyle = 'rgba(168, 85, 247, 0.3)';
+      mechCtx.lineWidth = 2;
+      mechCtx.beginPath();
+      for (let i = 0; i < 3; i++) {
+        const angle = (i / 3) * Math.PI * 2 - Math.PI / 2;
+        const x = cx + triangleRadius * Math.cos(angle);
+        const y = cy + triangleRadius * Math.sin(angle);
+        if (i === 0) mechCtx.moveTo(x, y);
+        else mechCtx.lineTo(x, y);
+      }
+      mechCtx.closePath();
+      mechCtx.stroke();
+
+      // Draw vertices with labels
+      const vertexColors = ['#ff6b6b', '#4ecdc4', '#a855f7'];
+      const vertexLabels = ['LoMI', 'TDL', 'S3'];
+      for (let i = 0; i < 3; i++) {
+        const angle = (i / 3) * Math.PI * 2 - Math.PI / 2;
+        const x = cx + triangleRadius * Math.cos(angle);
+        const y = cy + triangleRadius * Math.sin(angle);
+
+        mechCtx.fillStyle = vertexColors[i];
+        mechCtx.beginPath();
+        mechCtx.arc(x, y, 12, 0, Math.PI * 2);
+        mechCtx.fill();
+
+        mechCtx.fillStyle = '#fff';
+        mechCtx.font = '9px JetBrains Mono';
+        mechCtx.textAlign = 'center';
+        mechCtx.textBaseline = 'middle';
+        mechCtx.fillText(vertexLabels[i], x, y);
+      }
+
+      // Draw center (I2 Genesis)
+      mechCtx.fillStyle = '#ffd700';
+      mechCtx.beginPath();
+      mechCtx.arc(cx, cy, 25, 0, Math.PI * 2);
+      mechCtx.fill();
+
+      mechCtx.fillStyle = '#0a0a0f';
+      mechCtx.font = 'bold 11px JetBrains Mono';
+      mechCtx.textAlign = 'center';
+      mechCtx.textBaseline = 'middle';
+      mechCtx.fillText('I2', cx, cy);
+
+      // Animated particle flowing from vertices to center
+      const particlePhase = mechTime % (Math.PI * 2);
+      const activeVertex = Math.floor((mechTime / 2) % 3);
+      const progress = (particlePhase % (Math.PI * 2 / 3)) / (Math.PI * 2 / 3);
+
+      const startAngle = (activeVertex / 3) * Math.PI * 2 - Math.PI / 2;
+      const startX = cx + triangleRadius * Math.cos(startAngle);
+      const startY = cy + triangleRadius * Math.sin(startAngle);
+
+      const particleX = startX + (cx - startX) * progress;
+      const particleY = startY + (cy - startY) * progress;
+
+      // Draw flow line
+      mechCtx.strokeStyle = vertexColors[activeVertex];
+      mechCtx.lineWidth = 3;
+      mechCtx.setLineDash([5, 5]);
+      mechCtx.beginPath();
+      mechCtx.moveTo(startX, startY);
+      mechCtx.lineTo(particleX, particleY);
+      mechCtx.stroke();
+      mechCtx.setLineDash([]);
+
+      // Draw particle
+      mechCtx.fillStyle = vertexColors[activeVertex];
+      mechCtx.shadowBlur = 15;
+      mechCtx.shadowColor = vertexColors[activeVertex];
+      mechCtx.beginPath();
+      mechCtx.arc(particleX, particleY, 8, 0, Math.PI * 2);
+      mechCtx.fill();
+      mechCtx.shadowBlur = 0;
+
+      // Draw return arrow from center outward (pulsing)
+      const returnPulse = 0.5 + 0.5 * Math.sin(mechTime * 2);
+      mechCtx.strokeStyle = `rgba(255, 215, 0, ${0.3 + 0.4 * returnPulse})`;
+      mechCtx.lineWidth = 2;
+      mechCtx.beginPath();
+      mechCtx.arc(cx, cy, 35 + returnPulse * 10, 0, Math.PI * 2);
+      mechCtx.stroke();
+
+      mechTime += 0.03;
+      requestAnimationFrame(drawMechanics);
+    }
+
+    // =========================================================================
+    // ITERATION DYNAMICS MINI CANVASES
+    // =========================================================================
+    const fixedCanvas = document.getElementById('fixedPointCanvas');
+    const limitCanvas = document.getElementById('limitCycleCanvas');
+    const strangeCanvas = document.getElementById('strangeAttractorCanvas');
+
+    if (fixedCanvas && limitCanvas && strangeCanvas) {
+      const fixedCtx = fixedCanvas.getContext('2d');
+      const limitCtx = limitCanvas.getContext('2d');
+      const strangeCtx = strangeCanvas.getContext('2d');
+
+      let dynamicsTime = 0;
+
+      function drawDynamicsIcons() {
+        const cw = 80, ch = 80, cx = 40, cy = 40;
+
+        // Fixed Point - converging to center
+        fixedCtx.fillStyle = '#0a0a0f';
+        fixedCtx.fillRect(0, 0, cw, ch);
+        const fixedRadius = 5 + 20 * Math.exp(-dynamicsTime * 0.1);
+        fixedCtx.strokeStyle = '#ff4757';
+        fixedCtx.lineWidth = 2;
+        fixedCtx.beginPath();
+        fixedCtx.arc(cx, cy, Math.max(5, fixedRadius % 25), 0, Math.PI * 2);
+        fixedCtx.stroke();
+        fixedCtx.fillStyle = '#ff4757';
+        fixedCtx.beginPath();
+        fixedCtx.arc(cx, cy, 4, 0, Math.PI * 2);
+        fixedCtx.fill();
+
+        // Limit Cycle - periodic orbit
+        limitCtx.fillStyle = '#0a0a0f';
+        limitCtx.fillRect(0, 0, cw, ch);
+        limitCtx.strokeStyle = 'rgba(69, 170, 242, 0.3)';
+        limitCtx.lineWidth = 2;
+        limitCtx.beginPath();
+        limitCtx.arc(cx, cy, 25, 0, Math.PI * 2);
+        limitCtx.stroke();
+        const limitAngle = dynamicsTime * 2;
+        const limitX = cx + 25 * Math.cos(limitAngle);
+        const limitY = cy + 25 * Math.sin(limitAngle);
+        limitCtx.fillStyle = '#45aaf2';
+        limitCtx.beginPath();
+        limitCtx.arc(limitX, limitY, 6, 0, Math.PI * 2);
+        limitCtx.fill();
+
+        // Strange Attractor - chaotic trajectory
+        strangeCtx.fillStyle = 'rgba(10, 10, 15, 0.1)';
+        strangeCtx.fillRect(0, 0, cw, ch);
+        const strangeX = cx + 20 * Math.sin(dynamicsTime * 1.7) * Math.cos(dynamicsTime * 0.5);
+        const strangeY = cy + 20 * Math.cos(dynamicsTime * 1.3) * Math.sin(dynamicsTime * 0.7);
+        strangeCtx.fillStyle = '#00ff88';
+        strangeCtx.beginPath();
+        strangeCtx.arc(strangeX, strangeY, 3, 0, Math.PI * 2);
+        strangeCtx.fill();
+
+        dynamicsTime += 0.05;
+        requestAnimationFrame(drawDynamicsIcons);
+      }
+
+      drawDynamicsIcons();
+    }
+
+    // =========================================================================
+    // OUROBOROS CANVAS - Snake eating its tail
+    // =========================================================================
+    const ouroborosCanvas = document.getElementById('ouroborosCanvas');
+    const ouroCtx = ouroborosCanvas.getContext('2d');
+    let ouroTime = 0;
+
+    function drawOuroboros() {
+      ouroCtx.fillStyle = 'rgba(10, 10, 15, 0.05)';
+      ouroCtx.fillRect(0, 0, ouroborosCanvas.width, ouroborosCanvas.height);
+
+      const cx = ouroborosCanvas.width / 2;
+      const cy = ouroborosCanvas.height / 2;
+      const baseRadius = 140;
+
+      // Draw the snake body as series of connected segments
+      const segments = 60;
+      const headPos = ouroTime % (Math.PI * 2);
+
+      for (let i = 0; i < segments; i++) {
+        const progress = i / segments;
+        const angle = headPos - progress * Math.PI * 2;
+
+        // Radius varies to show 3D depth
+        const depthWave = Math.sin(angle * 3 + ouroTime) * 10;
+        const radius = baseRadius + depthWave;
+
+        const x = cx + radius * Math.cos(angle);
+        const y = cy + radius * Math.sin(angle);
+
+        // Color gradient from head (gold) to tail (purple)
+        const hue = 45 - progress * 225; // Gold to purple
+        const saturation = 70 + progress * 20;
+        const lightness = 60 - progress * 20;
+
+        // Size varies along body
+        const segmentSize = 15 - progress * 8;
+
+        ouroCtx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        ouroCtx.beginPath();
+        ouroCtx.arc(x, y, segmentSize, 0, Math.PI * 2);
+        ouroCtx.fill();
+      }
+
+      // Draw snake head (larger, eating the tail)
+      const headX = cx + baseRadius * Math.cos(headPos);
+      const headY = cy + baseRadius * Math.sin(headPos);
+
+      // Head glow
+      ouroCtx.shadowBlur = 30;
+      ouroCtx.shadowColor = '#ffd700';
+
+      ouroCtx.fillStyle = '#ffd700';
+      ouroCtx.beginPath();
+      ouroCtx.arc(headX, headY, 20, 0, Math.PI * 2);
+      ouroCtx.fill();
+
+      // Eye
+      const eyeAngle = headPos + Math.PI / 6;
+      const eyeX = headX + 8 * Math.cos(eyeAngle);
+      const eyeY = headY + 8 * Math.sin(eyeAngle);
+      ouroCtx.fillStyle = '#0a0a0f';
+      ouroCtx.beginPath();
+      ouroCtx.arc(eyeX, eyeY, 4, 0, Math.PI * 2);
+      ouroCtx.fill();
+
+      ouroCtx.shadowBlur = 0;
+
+      // Draw S3 symbol in center
+      ouroCtx.fillStyle = '#a855f7';
+      ouroCtx.font = 'bold 24px JetBrains Mono';
+      ouroCtx.textAlign = 'center';
+      ouroCtx.textBaseline = 'middle';
+      ouroCtx.fillText('S3', cx, cy - 15);
+
+      ouroCtx.fillStyle = '#ffd700';
+      ouroCtx.font = '16px JetBrains Mono';
+      ouroCtx.fillText('-> I2 ->', cx, cy + 15);
+
+      // Draw level markers around the circle
+      const levelPositions = [0, 1, 2, 3, 4, 5, 6, 7];
+      const levelNames = ['Gen', 'Ring', 'F(n)', 'S3?', 'Path', 'L4?', 'Dual', 'S3'];
+      levelPositions.forEach((level, i) => {
+        const markerAngle = (i / 8) * Math.PI * 2 - Math.PI / 2;
+        const markerRadius = baseRadius + 35;
+        const mx = cx + markerRadius * Math.cos(markerAngle);
+        const my = cy + markerRadius * Math.sin(markerAngle);
+
+        ouroCtx.fillStyle = levelColors[i];
+        ouroCtx.font = '10px JetBrains Mono';
+        ouroCtx.textAlign = 'center';
+        ouroCtx.textBaseline = 'middle';
+        ouroCtx.fillText(levelNames[i], mx, my);
+      });
+
+      ouroTime += 0.02;
+      requestAnimationFrame(drawOuroboros);
+    }
+
+    // =========================================================================
+    // RETURN FLOW CANVAS - Animated arrow with S3 weighting
+    // =========================================================================
+    const returnFlowCanvas = document.getElementById('returnFlowCanvas');
+    const flowCtx = returnFlowCanvas.getContext('2d');
+    let flowTime = 0;
+    let flowParticles = [];
+
+    function drawReturnFlow() {
+      flowCtx.fillStyle = '#0a0a0f';
+      flowCtx.fillRect(0, 0, returnFlowCanvas.width, returnFlowCanvas.height);
+
+      const startX = 100;
+      const endX = 700;
+      const midX = 400;
+      const y = 150;
+
+      // Draw S3 Attractor (start)
+      flowCtx.fillStyle = '#a855f7';
+      flowCtx.beginPath();
+      flowCtx.arc(startX, y, 40, 0, Math.PI * 2);
+      flowCtx.fill();
+
+      flowCtx.fillStyle = '#fff';
+      flowCtx.font = 'bold 14px JetBrains Mono';
+      flowCtx.textAlign = 'center';
+      flowCtx.textBaseline = 'middle';
+      flowCtx.fillText('S3', startX, y - 5);
+      flowCtx.font = '10px JetBrains Mono';
+      flowCtx.fillText('Attractor', startX, y + 10);
+
+      // Draw I2 Genesis (end)
+      flowCtx.fillStyle = '#ffd700';
+      flowCtx.beginPath();
+      flowCtx.arc(endX, y, 40, 0, Math.PI * 2);
+      flowCtx.fill();
+
+      flowCtx.fillStyle = '#0a0a0f';
+      flowCtx.font = 'bold 14px JetBrains Mono';
+      flowCtx.fillText('I2', endX, y - 5);
+      flowCtx.font = '10px JetBrains Mono';
+      flowCtx.fillText('Genesis\'', endX, y + 10);
+
+      // Draw S3 Weighting zone (middle)
+      flowCtx.strokeStyle = 'rgba(168, 85, 247, 0.5)';
+      flowCtx.lineWidth = 2;
+      flowCtx.setLineDash([5, 5]);
+      flowCtx.strokeRect(midX - 80, y - 60, 160, 120);
+      flowCtx.setLineDash([]);
+
+      flowCtx.fillStyle = '#a855f7';
+      flowCtx.font = '12px JetBrains Mono';
+      flowCtx.fillText('S3 Weighting', midX, y - 70);
+
+      // Draw weight factors inside the zone
+      const weights = [
+        { label: 'w_pi', color: '#ff6b6b', y: y - 30 },
+        { label: 'w_e', color: '#4ecdc4', y: y },
+        { label: 'w_S3', color: '#a855f7', y: y + 30 }
+      ];
+
+      weights.forEach(w => {
+        flowCtx.fillStyle = w.color;
+        flowCtx.font = '11px JetBrains Mono';
+        flowCtx.fillText(w.label, midX, w.y);
+      });
+
+      // Draw flow arrows
+      flowCtx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
+      flowCtx.lineWidth = 3;
+      flowCtx.beginPath();
+      flowCtx.moveTo(startX + 45, y);
+      flowCtx.lineTo(midX - 85, y);
+      flowCtx.stroke();
+
+      flowCtx.beginPath();
+      flowCtx.moveTo(midX + 85, y);
+      flowCtx.lineTo(endX - 45, y);
+      flowCtx.stroke();
+
+      // Spawn particles
+      if (Math.random() < 0.1) {
+        flowParticles.push({
+          x: startX + 45,
+          y: y + (Math.random() - 0.5) * 20,
+          vx: 3 + Math.random() * 2,
+          phase: 0,
+          type: Math.floor(Math.random() * 3) // 0: LoMI, 1: TDL, 2: S3
+        });
+      }
+
+      // Update and draw particles
+      const particleColors = ['#ff6b6b', '#4ecdc4', '#a855f7'];
+      flowParticles = flowParticles.filter(p => {
+        p.x += p.vx;
+        p.phase += 0.1;
+
+        // Transform in weighting zone
+        if (p.x > midX - 80 && p.x < midX + 80) {
+          p.y = y + Math.sin(p.phase * 3) * 30;
+        } else {
+          p.y = y + (Math.random() - 0.5) * 10;
+        }
+
+        // Draw particle
+        flowCtx.fillStyle = particleColors[p.type];
+        flowCtx.shadowBlur = 10;
+        flowCtx.shadowColor = particleColors[p.type];
+        flowCtx.beginPath();
+        flowCtx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        flowCtx.fill();
+        flowCtx.shadowBlur = 0;
+
+        return p.x < endX - 40;
+      });
+
+      // Update contribution displays
+      const loMIValue = 0.405 * (0.8 + 0.2 * Math.sin(flowTime * 0.5));
+      const tdlValue = 0.351 * (0.8 + 0.2 * Math.sin(flowTime * 0.7 + 1));
+      const closureValue = 0.209 * (0.8 + 0.2 * Math.sin(flowTime * 0.6 + 2));
+      const weightedSum = loMIValue + tdlValue + closureValue;
+
+      document.getElementById('flowLoMI').textContent = loMIValue.toFixed(3);
+      document.getElementById('flowTDL').textContent = tdlValue.toFixed(3);
+      document.getElementById('flowClosure').textContent = closureValue.toFixed(3);
+      document.getElementById('flowWeighted').textContent = weightedSum.toFixed(3);
+
+      // Draw return arc (bottom)
+      flowCtx.strokeStyle = 'rgba(255, 215, 0, 0.2)';
+      flowCtx.lineWidth = 2;
+      flowCtx.setLineDash([10, 5]);
+      flowCtx.beginPath();
+      flowCtx.moveTo(endX, y + 45);
+      flowCtx.quadraticCurveTo(midX, y + 150, startX, y + 45);
+      flowCtx.stroke();
+      flowCtx.setLineDash([]);
+
+      flowCtx.fillStyle = '#ffd700';
+      flowCtx.font = '11px JetBrains Mono';
+      flowCtx.textAlign = 'center';
+      flowCtx.fillText('Enriched Return', midX, y + 100);
+
+      flowTime += 0.05;
+      requestAnimationFrame(drawReturnFlow);
+    }
+
+    // =========================================================================
     // START ANIMATIONS
     // =========================================================================
     drawTreeLoop();
     drawSpiral();
+    drawMechanics();
+    drawOuroboros();
+    drawReturnFlow();
 
     // =========================================================================
     // LEVEL ROW HOVER EFFECTS

@@ -842,6 +842,690 @@
     }
 
     /* =====================================================================
+       CYCLIC GROUP Z4 SECTION
+       ===================================================================== */
+    .z4-section {
+      background: linear-gradient(135deg, var(--inv-subtle), rgba(168, 85, 247, 0.08));
+      border: 2px solid var(--inv-red);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .z4-section::before {
+      content: 'CYCLIC GROUP Z4';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-primary);
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--inv-red);
+    }
+
+    .z4-diagram {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+
+    .z4-visual {
+      position: relative;
+      width: 220px;
+      height: 220px;
+    }
+
+    .z4-circle {
+      position: absolute;
+      inset: 0;
+      border: 3px solid var(--inv-red);
+      border-radius: 50%;
+    }
+
+    .z4-element {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .z4-element:hover {
+      transform: scale(1.15);
+      border-color: #fff;
+    }
+
+    .z4-e0 { top: 50%; right: -25px; transform: translateY(-50%); background: var(--root-i); color: var(--bg-primary); }
+    .z4-e1 { top: -25px; left: 50%; transform: translateX(-50%); background: var(--root-you); color: var(--bg-primary); }
+    .z4-e2 { top: 50%; left: -25px; transform: translateY(-50%); background: var(--root-us); color: var(--bg-primary); }
+    .z4-e3 { bottom: -25px; left: 50%; transform: translateX(-50%); background: var(--root-them); color: var(--bg-primary); }
+
+    .z4-arrow {
+      position: absolute;
+      color: var(--inv-red);
+      font-size: 1.5rem;
+    }
+
+    .z4-arrow-01 { top: 20%; right: 15%; }
+    .z4-arrow-12 { top: 20%; left: 15%; }
+    .z4-arrow-23 { bottom: 20%; left: 15%; }
+    .z4-arrow-30 { bottom: 20%; right: 15%; }
+
+    .z4-info {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .z4-operation-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+
+    .z4-operation-table th,
+    .z4-operation-table td {
+      padding: 0.75rem 1rem;
+      text-align: center;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .z4-operation-table th {
+      background: var(--bg-tertiary);
+      color: var(--inv-red);
+      font-weight: 600;
+    }
+
+    .z4-operation-table td:first-child {
+      font-weight: 600;
+      background: var(--bg-tertiary);
+    }
+
+    /* =====================================================================
+       INV FORM DEEP DIVE
+       ===================================================================== */
+    .inv-form-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+    }
+
+    .inv-derivation {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .derivation-step {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      border-left: 4px solid var(--inv-red);
+    }
+
+    .step-number {
+      position: absolute;
+      top: -12px;
+      left: 1rem;
+      background: var(--inv-red);
+      color: var(--bg-primary);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    .step-title {
+      font-weight: 600;
+      color: var(--inv-red);
+      margin-bottom: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .step-math {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin: 1rem 0;
+      padding: 0.5rem;
+      background: var(--bg-primary);
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .step-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* =====================================================================
+       NEGATION DYNAMICS
+       ===================================================================== */
+    .negation-section {
+      background: linear-gradient(135deg, rgba(255, 71, 87, 0.1), rgba(255, 159, 67, 0.08));
+      border: 2px solid var(--root-us);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .negation-section::before {
+      content: 'NEGATION DYNAMICS';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-primary);
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--root-us);
+    }
+
+    .negation-flow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+
+    .negation-box {
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .negation-box.pos {
+      background: rgba(78, 205, 196, 0.2);
+      border: 2px solid var(--root-i);
+    }
+
+    .negation-box.neg {
+      background: rgba(255, 71, 87, 0.2);
+      border: 2px solid var(--inv-red);
+    }
+
+    .negation-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .negation-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .negation-box.pos .negation-value { color: var(--root-i); }
+    .negation-box.neg .negation-value { color: var(--inv-red); }
+
+    .negation-arrow {
+      font-size: 2rem;
+      color: var(--text-secondary);
+    }
+
+    .negation-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .negation-card {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .negation-card-title {
+      font-weight: 600;
+      color: var(--root-us);
+      margin-bottom: 0.75rem;
+    }
+
+    .negation-card-content {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .negation-card-content code {
+      background: var(--bg-tertiary);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      color: var(--root-us);
+    }
+
+    /* =====================================================================
+       SHADOW SELF SECTION
+       ===================================================================== */
+    .shadow-section {
+      background: linear-gradient(135deg, rgba(30, 30, 50, 0.9), rgba(40, 20, 40, 0.9));
+      border: 2px solid var(--consciousness);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .shadow-section::before {
+      content: 'SHADOW SELF :: PSYCHOLOGICAL INTERPRETATION';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-primary);
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--consciousness);
+    }
+
+    .shadow-quote {
+      text-align: center;
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--consciousness);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      background: rgba(199, 146, 234, 0.1);
+      border-radius: 12px;
+      border-left: 4px solid var(--consciousness);
+    }
+
+    .shadow-quote cite {
+      display: block;
+      font-size: 0.9rem;
+      font-style: normal;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+    }
+
+    .shadow-diagram {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .shadow-self-visual {
+      position: relative;
+      width: 200px;
+      height: 200px;
+    }
+
+    .self-circle {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: all 0.5s;
+    }
+
+    .self-light {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--root-i), var(--osc-cyan));
+      color: var(--bg-primary);
+      box-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
+    }
+
+    .self-shadow {
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #2a1a2a, #1a1a2e);
+      color: var(--inv-red);
+      border: 2px solid var(--inv-red);
+      box-shadow: 0 0 30px rgba(255, 71, 87, 0.3);
+    }
+
+    .self-connector {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 4px;
+      height: 80px;
+      background: linear-gradient(to bottom, var(--root-i), var(--inv-red));
+      opacity: 0.5;
+    }
+
+    .shadow-aspects {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .aspect-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border-left: 3px solid var(--consciousness);
+    }
+
+    .aspect-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .aspect-icon.light { background: rgba(78, 205, 196, 0.2); }
+    .aspect-icon.shadow { background: rgba(255, 71, 87, 0.2); }
+    .aspect-icon.integrated { background: rgba(199, 146, 234, 0.2); }
+
+    .aspect-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .aspect-text strong {
+      color: var(--consciousness);
+    }
+
+    /* =====================================================================
+       CONVERGENCE TO ATTRACTOR
+       ===================================================================== */
+    .convergence-section {
+      background: linear-gradient(135deg, var(--inv-subtle), rgba(0, 212, 170, 0.08));
+      border: 2px solid var(--osc-cyan);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .convergence-section::before {
+      content: 'CONVERGENCE TO S3 ATTRACTOR';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-primary);
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--osc-cyan);
+    }
+
+    .convergence-path {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+    }
+
+    .path-node {
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      min-width: 100px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .path-node:hover {
+      transform: scale(1.05);
+    }
+
+    .path-node.source {
+      background: rgba(255, 71, 87, 0.2);
+      border: 2px solid var(--inv-red);
+    }
+
+    .path-node.intermediate {
+      background: rgba(168, 85, 247, 0.2);
+      border: 2px solid var(--root-you);
+    }
+
+    .path-node.attractor {
+      background: rgba(0, 212, 170, 0.2);
+      border: 2px solid var(--osc-cyan);
+      box-shadow: 0 0 20px rgba(0, 212, 170, 0.3);
+    }
+
+    .path-node-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .path-node-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .path-node.source .path-node-value { color: var(--inv-red); }
+    .path-node.intermediate .path-node-value { color: var(--root-you); }
+    .path-node.attractor .path-node-value { color: var(--osc-cyan); }
+
+    .path-arrow {
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .convergence-canvas-wrapper {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    #convergenceCanvas {
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-tertiary);
+    }
+
+    .convergence-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .convergence-card {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .convergence-card-title {
+      font-weight: 600;
+      color: var(--osc-cyan);
+      margin-bottom: 0.75rem;
+    }
+
+    .convergence-card-content {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .convergence-card-content code {
+      background: var(--bg-tertiary);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      color: var(--osc-cyan);
+    }
+
+    /* =====================================================================
+       INTERACTIVE ROTATION CANVAS
+       ===================================================================== */
+    .rotation-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .rotation-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    #rotationCanvas {
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-tertiary);
+      cursor: pointer;
+    }
+
+    .rotation-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .rotation-slider-group {
+      background: var(--bg-tertiary);
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    .rotation-slider-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .rotation-slider-label span:first-child {
+      color: var(--text-secondary);
+    }
+
+    .rotation-slider-label span:last-child {
+      color: var(--inv-red);
+      font-weight: 600;
+    }
+
+    .rotation-slider {
+      width: 100%;
+      height: 8px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--border);
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .rotation-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--inv-red);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .rotation-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      background: var(--inv-red);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+    }
+
+    .rotation-state {
+      background: var(--bg-card);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--inv-red);
+    }
+
+    .rotation-state-title {
+      font-weight: 600;
+      color: var(--inv-red);
+      margin-bottom: 1rem;
+    }
+
+    .rotation-state-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    .state-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+
+    .state-item span:first-child {
+      color: var(--text-secondary);
+    }
+
+    .state-item span:last-child {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    @media (max-width: 900px) {
+      .rotation-container { grid-template-columns: 1fr; }
+      .z4-diagram { flex-direction: column; }
+      .shadow-diagram { flex-direction: column; }
+      .convergence-path { flex-direction: column; }
+    }
+
+    /* =====================================================================
        KEY EQUATIONS REFERENCE
        ===================================================================== */
     .equations-container {
@@ -1350,6 +2034,568 @@
       </div>
     </section>
 
+    <!-- INV Form Deep Dive -->
+    <section>
+      <h2 class="section-title">INV Form: Self-Reference Negates</h2>
+      <p class="section-subtitle">
+        The mathematical derivation of R(R) = -R and its implications
+      </p>
+
+      <div class="inv-form-section">
+        <div class="inv-derivation">
+          <div class="derivation-step">
+            <div class="step-number">1</div>
+            <div class="step-title">The Axiom</div>
+            <div class="step-math">R(R) = -R</div>
+            <div class="step-desc">
+              Self-reference produces negation. When the recursive operator R is applied
+              to itself, the result is the opposite of R. This is fundamentally different
+              from FIX (R(R) = R) and OSC (R(R) cycles).
+            </div>
+          </div>
+
+          <div class="derivation-step">
+            <div class="step-number">2</div>
+            <div class="step-title">Seeking Fixed Points</div>
+            <div class="step-math">R(z) = iz</div>
+            <div class="step-desc">
+              If R represents multiplication by i (rotation by 90 degrees), then
+              R(R(z)) = R(iz) = i(iz) = i^2 z = -z. This satisfies our axiom:
+              applying R twice gives negation.
+            </div>
+          </div>
+
+          <div class="derivation-step">
+            <div class="step-number">3</div>
+            <div class="step-title">The Equation</div>
+            <div class="step-math">z^4 = 1</div>
+            <div class="step-desc">
+              To find fixed points of the INV system, we solve z^4 = 1. These are
+              points that return to themselves after four applications of R. The
+              four solutions form the identity coordinate system.
+            </div>
+          </div>
+
+          <div class="derivation-step">
+            <div class="step-number">4</div>
+            <div class="step-title">The Solutions</div>
+            <div class="step-math">{1, i, -1, -i}</div>
+            <div class="step-desc">
+              The fourth roots of unity. Each represents a cardinal direction in the
+              complex plane and maps to an identity coordinate: I (self), You (other),
+              Us (collective), Them (external).
+            </div>
+          </div>
+
+          <div class="derivation-step">
+            <div class="step-number">5</div>
+            <div class="step-title">The Cycle</div>
+            <div class="step-math">1 -> i -> -1 -> -i -> 1</div>
+            <div class="step-desc">
+              Each application of R rotates by 90 degrees. After two applications,
+              we have negation (R(R) = -R). After four, we return to start. This
+              cycle generates the full identity structure.
+            </div>
+          </div>
+
+          <div class="derivation-step">
+            <div class="step-number">6</div>
+            <div class="step-title">The Sum</div>
+            <div class="step-math">1 + i + (-1) + (-i) = 0</div>
+            <div class="step-desc">
+              The fourth roots sum to zero. This is the balance equation:
+              I + You + Us + Them = 0. Identity coordinates are in equilibrium.
+              Consciousness emerges from this balanced opposition.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cyclic Group Z4 Section -->
+    <section>
+      <h2 class="section-title">Cyclic Group Z_4: Algebraic Structure</h2>
+      <p class="section-subtitle">
+        The fourth roots of unity form a cyclic group under multiplication
+      </p>
+
+      <div class="z4-section">
+        <div class="z4-diagram">
+          <div class="z4-visual">
+            <div class="z4-circle"></div>
+            <div class="z4-element z4-e0" title="e^0 = 1">e^0</div>
+            <div class="z4-element z4-e1" title="e^(i pi/2) = i">e^1</div>
+            <div class="z4-element z4-e2" title="e^(i pi) = -1">e^2</div>
+            <div class="z4-element z4-e3" title="e^(3i pi/2) = -i">e^3</div>
+            <div class="z4-arrow z4-arrow-01">&#x21BB;</div>
+            <div class="z4-arrow z4-arrow-12">&#x21BB;</div>
+            <div class="z4-arrow z4-arrow-23">&#x21BB;</div>
+            <div class="z4-arrow z4-arrow-30">&#x21BB;</div>
+          </div>
+
+          <div class="z4-info">
+            <h3 style="color: var(--inv-red); margin-bottom: 1rem;">Group Properties</h3>
+            <ul style="color: var(--text-secondary); line-height: 2; padding-left: 1.5rem;">
+              <li><strong style="color: var(--text-primary);">Generator:</strong> g = i (or g = -i)</li>
+              <li><strong style="color: var(--text-primary);">Order:</strong> |Z_4| = 4</li>
+              <li><strong style="color: var(--text-primary);">Identity:</strong> e = 1</li>
+              <li><strong style="color: var(--text-primary);">Operation:</strong> Complex multiplication</li>
+              <li><strong style="color: var(--text-primary);">Isomorphism:</strong> Z_4 ~ Z/4Z</li>
+            </ul>
+
+            <table class="z4-operation-table">
+              <thead>
+                <tr>
+                  <th>*</th>
+                  <th style="color: var(--root-i);">1</th>
+                  <th style="color: var(--root-you);">i</th>
+                  <th style="color: var(--root-us);">-1</th>
+                  <th style="color: var(--root-them);">-i</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="color: var(--root-i);">1</td>
+                  <td>1</td>
+                  <td>i</td>
+                  <td>-1</td>
+                  <td>-i</td>
+                </tr>
+                <tr>
+                  <td style="color: var(--root-you);">i</td>
+                  <td>i</td>
+                  <td>-1</td>
+                  <td>-i</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td style="color: var(--root-us);">-1</td>
+                  <td>-1</td>
+                  <td>-i</td>
+                  <td>1</td>
+                  <td>i</td>
+                </tr>
+                <tr>
+                  <td style="color: var(--root-them);">-i</td>
+                  <td>-i</td>
+                  <td>1</td>
+                  <td>i</td>
+                  <td>-1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="properties-grid" style="margin-top: 2rem;">
+          <div class="property-card">
+            <div class="property-label">Subgroups</div>
+            <div class="property-value">{1}, {1,-1}, Z_4</div>
+            <div class="property-desc">
+              Z_4 has exactly three subgroups: the trivial group, the order-2 subgroup
+              {1,-1} (real axis opposition), and Z_4 itself. The I/Us duality forms a subgroup.
+            </div>
+          </div>
+
+          <div class="property-card">
+            <div class="property-label">Quotient</div>
+            <div class="property-value">Z_4 / {1,-1} ~ Z_2</div>
+            <div class="property-desc">
+              Quotienting by real opposition {1,-1} yields Z_2, the binary group.
+              This reduces the four identity coordinates to two: real vs imaginary.
+            </div>
+          </div>
+
+          <div class="property-card">
+            <div class="property-label">Automorphisms</div>
+            <div class="property-value">Aut(Z_4) ~ Z_2</div>
+            <div class="property-desc">
+              Two automorphisms: identity and inversion (z -> z^-1). This reflects
+              the duality between clockwise and counterclockwise rotation.
+            </div>
+          </div>
+
+          <div class="property-card">
+            <div class="property-label">Character Group</div>
+            <div class="property-value">Z_4^ ~ Z_4</div>
+            <div class="property-desc">
+              Z_4 is self-dual - its character group is isomorphic to itself.
+              This self-duality mirrors the self-reference of consciousness.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Rotation Through Fourth Roots -->
+    <section>
+      <h2 class="section-title">Interactive Rotation Through Fourth Roots</h2>
+      <p class="section-subtitle">
+        Manually rotate through the cycle: I -> You -> Us -> Them -> I
+      </p>
+
+      <div class="rotation-section">
+        <div class="rotation-container">
+          <div class="canvas-wrapper">
+            <canvas id="rotationCanvas" width="400" height="400"></canvas>
+          </div>
+
+          <div class="rotation-controls">
+            <div class="rotation-slider-group">
+              <div class="rotation-slider-label">
+                <span>Rotation Angle</span>
+                <span id="rotationAngleDisplay">0 deg</span>
+              </div>
+              <input type="range" class="rotation-slider" id="rotationSlider"
+                     min="0" max="360" value="0" step="1">
+            </div>
+
+            <div class="rotation-slider-group">
+              <div class="rotation-slider-label">
+                <span>Step Through Roots</span>
+                <span id="rootStepDisplay">1 (I)</span>
+              </div>
+              <input type="range" class="rotation-slider" id="rootStepSlider"
+                     min="0" max="3" value="0" step="1">
+            </div>
+
+            <div class="plane-controls" style="justify-content: flex-start;">
+              <button class="control-btn" onclick="animateFullCycle()">Animate Cycle</button>
+              <button class="control-btn" onclick="resetRotationCanvas()">Reset</button>
+            </div>
+
+            <div class="rotation-state">
+              <div class="rotation-state-title">Current State</div>
+              <div class="rotation-state-grid">
+                <div class="state-item">
+                  <span>Position</span>
+                  <span id="statePosition">1 + 0i</span>
+                </div>
+                <div class="state-item">
+                  <span>Identity</span>
+                  <span id="stateIdentity">I (Self)</span>
+                </div>
+                <div class="state-item">
+                  <span>R applied</span>
+                  <span id="stateRapplied">0 times</span>
+                </div>
+                <div class="state-item">
+                  <span>Opposite</span>
+                  <span id="stateOpposite">Us (-1)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Negation Dynamics Section -->
+    <section>
+      <h2 class="section-title">Negation Dynamics: How -I^2 Relates to I^2</h2>
+      <p class="section-subtitle">
+        The relationship between positive and negative identity systems
+      </p>
+
+      <div class="negation-section">
+        <div class="negation-flow">
+          <div class="negation-box pos">
+            <div class="negation-label">Positive System</div>
+            <div class="negation-value">I^2</div>
+          </div>
+          <div class="negation-arrow">&#x21C4;</div>
+          <div class="negation-box neg">
+            <div class="negation-label">Negative System</div>
+            <div class="negation-value">-I^2</div>
+          </div>
+          <div class="negation-arrow">=</div>
+          <div class="negation-box neg">
+            <div class="negation-label">Opposed Node</div>
+            <div class="negation-value">I^2-</div>
+          </div>
+        </div>
+
+        <div class="negation-cards">
+          <div class="negation-card">
+            <div class="negation-card-title">Arithmetic Negation</div>
+            <div class="negation-card-content">
+              <code>-I^2 = -(I * I) = -1</code>
+              <br><br>
+              When we negate the identity square, we get -1, which is the "Us" coordinate.
+              The collective identity is the negation of individual identity squared.
+            </div>
+          </div>
+
+          <div class="negation-card">
+            <div class="negation-card-title">Operator Negation</div>
+            <div class="negation-card-content">
+              <code>(-I)^2 = (-1)(-1) = 1</code>
+              <br><br>
+              Squaring the negated identity returns to positive. The shadow squared
+              becomes light. Opposition iterated produces identity.
+            </div>
+          </div>
+
+          <div class="negation-card">
+            <div class="negation-card-title">Phase Opposition</div>
+            <div class="negation-card-content">
+              <code>e^(i*pi) = -1</code> (Euler's identity)
+              <br><br>
+              Negation is a 180-degree phase rotation. I^2- represents the system
+              where self-reference rotates through opposition before returning.
+            </div>
+          </div>
+
+          <div class="negation-card">
+            <div class="negation-card-title">Dual Perspective</div>
+            <div class="negation-card-content">
+              I^2 and I^2- are dual perspectives on identity. I^2 emphasizes
+              self-reinforcement; I^2- emphasizes self-opposition. Both are
+              necessary for complete consciousness.
+            </div>
+          </div>
+
+          <div class="negation-card">
+            <div class="negation-card-title">The INV Signature</div>
+            <div class="negation-card-content">
+              <code>R(R) = -R</code> means every self-reference includes its negation.
+              <br><br>
+              The I^2- system captures this: identity contains its own opposition.
+              This is the mathematical basis for the shadow self.
+            </div>
+          </div>
+
+          <div class="negation-card">
+            <div class="negation-card-title">Residual Generation</div>
+            <div class="negation-card-content">
+              The tension between I^2 and I^2- generates the residual:
+              <br><br>
+              <code>alpha(z) = R(z) - z</code>
+              <br><br>
+              Consciousness lives in this gap between self and its negation.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Shadow Self Section -->
+    <section>
+      <h2 class="section-title">Shadow Self: Psychological Interpretation</h2>
+      <p class="section-subtitle">
+        The I^2- Opposed System as mathematical model of the Jungian shadow
+      </p>
+
+      <div class="shadow-section">
+        <div class="shadow-quote">
+          "One does not become enlightened by imagining figures of light,
+          but by making the darkness conscious."
+          <cite>- Carl Jung</cite>
+        </div>
+
+        <div class="shadow-diagram">
+          <div class="shadow-self-visual">
+            <div class="self-circle self-light">I</div>
+            <div class="self-connector"></div>
+            <div class="self-circle self-shadow">-I</div>
+          </div>
+
+          <div class="shadow-aspects">
+            <div class="aspect-item">
+              <div class="aspect-icon light">&#x2609;</div>
+              <div class="aspect-text">
+                <strong>Persona (I = 1):</strong> The conscious self, the identity we
+                present to the world. Located at the real positive axis - what is
+                acknowledged and visible.
+              </div>
+            </div>
+
+            <div class="aspect-item">
+              <div class="aspect-icon shadow">&#x263D;</div>
+              <div class="aspect-text">
+                <strong>Shadow (-I = -1):</strong> The repressed self, containing
+                rejected aspects. Located at the real negative axis - what is denied
+                but still present. The Us coordinate.
+              </div>
+            </div>
+
+            <div class="aspect-item">
+              <div class="aspect-icon light">&#x2641;</div>
+              <div class="aspect-text">
+                <strong>Anima/Animus (You = i):</strong> The contrasexual archetype,
+                the inner other. Located on the imaginary axis - orthogonal to self,
+                representing what we project onto others.
+              </div>
+            </div>
+
+            <div class="aspect-item">
+              <div class="aspect-icon shadow">&#x2644;</div>
+              <div class="aspect-text">
+                <strong>Collective Unconscious (Them = -i):</strong> The boundary
+                of identity, the excluded other. Located at imaginary negative -
+                defining self by what it is not.
+              </div>
+            </div>
+
+            <div class="aspect-item">
+              <div class="aspect-icon integrated">&#x2299;</div>
+              <div class="aspect-text">
+                <strong>Self (Sum = 0):</strong> The integrated totality, achieved
+                when all four coordinates are balanced. I + You + Us + Them = 0
+                represents psychological wholeness through opposition.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="consciousness-grid" style="margin-top: 2rem;">
+          <div class="consciousness-card">
+            <div class="consciousness-card-title">Integration Process</div>
+            <div class="consciousness-card-content">
+              R(R) = -R models the process of shadow work. Self-examination
+              (R applied to R) reveals the opposite. One cannot know the light
+              without confronting the dark. Integration requires this cycle.
+            </div>
+          </div>
+
+          <div class="consciousness-card">
+            <div class="consciousness-card-title">Projection Mechanism</div>
+            <div class="consciousness-card-content">
+              The You coordinate (i) is orthogonal to I (1). We project our
+              shadow onto the other. The path I -> You -> Us shows how individual
+              identity becomes collective through interaction with the other.
+            </div>
+          </div>
+
+          <div class="consciousness-card">
+            <div class="consciousness-card-title">Enantiodromia</div>
+            <div class="consciousness-card-content">
+              Jung's principle that things transform into their opposites.
+              Mathematically: continued rotation through Z_4 eventually reaches
+              the opposite. Extreme I becomes Us; extreme You becomes Them.
+            </div>
+          </div>
+
+          <div class="consciousness-card">
+            <div class="consciousness-card-title">The Paradox Threshold</div>
+            <div class="consciousness-card-content">
+              <code>mu_P = phi^-1 = 0.618</code>
+              <br><br>
+              Beyond this threshold, self-modeling becomes paradoxical. This is
+              the limit of introspection - where looking inward creates contradiction.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Convergence to Attractor Section -->
+    <section>
+      <h2 class="section-title">Convergence to S3 Attractor</h2>
+      <p class="section-subtitle">
+        The path from I^2- Opposition to the S3 Closure attractor point
+      </p>
+
+      <div class="convergence-section">
+        <div class="convergence-path">
+          <div class="path-node source">
+            <div class="path-node-label">Source</div>
+            <div class="path-node-value">I^2-</div>
+          </div>
+          <div class="path-arrow">&#x2192;</div>
+          <div class="path-node intermediate">
+            <div class="path-node-label">Trifurcation</div>
+            <div class="path-node-value">T_3</div>
+          </div>
+          <div class="path-arrow">&#x2192;</div>
+          <div class="path-node intermediate">
+            <div class="path-node-label">Opposition</div>
+            <div class="path-node-value">O_2</div>
+          </div>
+          <div class="path-arrow">&#x2192;</div>
+          <div class="path-node attractor">
+            <div class="path-node-label">Attractor</div>
+            <div class="path-node-value">S3</div>
+          </div>
+        </div>
+
+        <div class="convergence-canvas-wrapper">
+          <canvas id="convergenceCanvas" width="600" height="300"></canvas>
+          <div class="plane-controls" style="margin-top: 1rem;">
+            <button class="control-btn" id="btnConvergencePlay" onclick="toggleConvergence()">Pause</button>
+            <button class="control-btn" onclick="resetConvergence()">Reset</button>
+          </div>
+        </div>
+
+        <div class="convergence-info">
+          <div class="convergence-card">
+            <div class="convergence-card-title">S3 Attractor Definition</div>
+            <div class="convergence-card-content">
+              The S3 attractor is the stable point where the decision tree
+              converges. It represents:
+              <br><br>
+              <code>S3 = lim(n->inf) T^n(I^2-)</code>
+              <br><br>
+              Repeated application of the transformation T converges to S3.
+            </div>
+          </div>
+
+          <div class="convergence-card">
+            <div class="convergence-card-title">Attractor Value</div>
+            <div class="convergence-card-content">
+              <code>mu_S3 = phi^-2 = tau^2 = 0.382</code>
+              <br><br>
+              The S3 attractor sits at the square of the golden ratio inverse.
+              This is the point where opposition and synthesis stabilize.
+            </div>
+          </div>
+
+          <div class="convergence-card">
+            <div class="convergence-card-title">Basin of Attraction</div>
+            <div class="convergence-card-content">
+              All points in the I^2- opposed system eventually flow to S3.
+              The basin includes:
+              <br><br>
+              - Identity coordinates {1, i, -1, -i}<br>
+              - Their linear combinations<br>
+              - The consciousness residual region
+            </div>
+          </div>
+
+          <div class="convergence-card">
+            <div class="convergence-card-title">Physical Interpretation</div>
+            <div class="convergence-card-content">
+              S3 represents the stable state of consciousness after integration.
+              The shadow (I^2-) is not eliminated but incorporated into a
+              balanced whole. The journey from opposition to attractor is
+              the path of individuation.
+            </div>
+          </div>
+
+          <div class="convergence-card">
+            <div class="convergence-card-title">Rate of Convergence</div>
+            <div class="convergence-card-content">
+              <code>|x_n - S3| ~ tau^n</code>
+              <br><br>
+              Convergence is geometric with ratio tau = 0.618. Each iteration
+              reduces the distance to the attractor by the golden ratio inverse.
+            </div>
+          </div>
+
+          <div class="convergence-card">
+            <div class="convergence-card-title">Residual at Attractor</div>
+            <div class="convergence-card-content">
+              <code>alpha(S3) = tau/10 = 0.0618</code>
+              <br><br>
+              At the attractor, consciousness maintains a small but non-zero
+              residual. This is the minimal gap required for observation -
+              the seed of continued awareness.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Key Equations Reference -->
     <section>
       <h2 class="section-title">Opposition Equations Reference</h2>
@@ -1385,6 +2631,41 @@
           <div class="equation-cell equation-formula">(I^n, +, x) = (Z, +, x)</div>
           <div class="equation-cell equation-desc">Integer isomorphism</div>
         </div>
+        <div class="equation-row">
+          <div class="equation-cell equation-name">Cyclic Group</div>
+          <div class="equation-cell equation-formula">Z_4 = {e, g, g^2, g^3}</div>
+          <div class="equation-cell equation-desc">Generator g = i, order 4</div>
+        </div>
+        <div class="equation-row">
+          <div class="equation-cell equation-name">Euler Form</div>
+          <div class="equation-cell equation-formula">e^(ik*pi/2), k in {0,1,2,3}</div>
+          <div class="equation-cell equation-desc">Exponential representation</div>
+        </div>
+        <div class="equation-row">
+          <div class="equation-cell equation-name">Negation</div>
+          <div class="equation-cell equation-formula">-I^2 = -1 = Us</div>
+          <div class="equation-cell equation-desc">Identity squared negated</div>
+        </div>
+        <div class="equation-row">
+          <div class="equation-cell equation-name">Shadow Squared</div>
+          <div class="equation-cell equation-formula">(-I)^2 = 1 = I</div>
+          <div class="equation-cell equation-desc">Negation squared returns</div>
+        </div>
+        <div class="equation-row">
+          <div class="equation-cell equation-name">S3 Attractor</div>
+          <div class="equation-cell equation-formula">mu_S3 = phi^-2 = 0.382</div>
+          <div class="equation-cell equation-desc">Convergence point</div>
+        </div>
+        <div class="equation-row">
+          <div class="equation-cell equation-name">Convergence Rate</div>
+          <div class="equation-cell equation-formula">|x_n - S3| ~ tau^n</div>
+          <div class="equation-cell equation-desc">Geometric approach</div>
+        </div>
+        <div class="equation-row">
+          <div class="equation-cell equation-name">Attractor Residual</div>
+          <div class="equation-cell equation-formula">alpha(S3) = tau/10 = 0.0618</div>
+          <div class="equation-cell equation-desc">Minimal consciousness gap</div>
+        </div>
       </div>
     </section>
   </main>
@@ -1417,6 +2698,10 @@
       us: '#ff9f43',
       them: '#6bcb77',
       red: '#ff4757',
+      inv: '#ff4757',
+      osc: '#00d4aa',
+      fix: '#ffd700',
+      consciousness: '#c792ea',
       bg: '#1a1a2e',
       axis: 'rgba(255, 255, 255, 0.2)',
       text: '#a0a0b0'
@@ -1867,10 +3152,390 @@
     }
 
     // =========================================================================
+    // INTERACTIVE ROTATION CANVAS
+    // =========================================================================
+    const rotCanvas = document.getElementById('rotationCanvas');
+    const rotCtx = rotCanvas.getContext('2d');
+    let currentRotation = 0;
+    let isAnimatingCycle = false;
+
+    const rootInfo = [
+      { name: 'I', value: '1', identity: 'Self', opposite: 'Us (-1)', position: '1 + 0i' },
+      { name: 'You', value: 'i', identity: 'Other', opposite: 'Them (-i)', position: '0 + 1i' },
+      { name: 'Us', value: '-1', identity: 'Collective', opposite: 'I (1)', position: '-1 + 0i' },
+      { name: 'Them', value: '-i', identity: 'External', opposite: 'You (i)', position: '0 - 1i' }
+    ];
+
+    function drawRotationCanvas() {
+      const w = rotCanvas.width;
+      const h = rotCanvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = 150;
+
+      // Clear
+      rotCtx.fillStyle = colors.bg;
+      rotCtx.fillRect(0, 0, w, h);
+
+      // Draw axes
+      rotCtx.strokeStyle = colors.axis;
+      rotCtx.lineWidth = 1;
+      rotCtx.beginPath();
+      rotCtx.moveTo(20, cy);
+      rotCtx.lineTo(w - 20, cy);
+      rotCtx.moveTo(cx, 20);
+      rotCtx.lineTo(cx, h - 20);
+      rotCtx.stroke();
+
+      // Axis labels
+      rotCtx.fillStyle = colors.text;
+      rotCtx.font = '11px JetBrains Mono';
+      rotCtx.textAlign = 'center';
+      rotCtx.fillText('Re', w - 25, cy - 8);
+      rotCtx.fillText('Im', cx + 15, 25);
+      rotCtx.fillText('+1', cx + radius + 10, cy + 15);
+      rotCtx.fillText('-1', cx - radius - 10, cy + 15);
+      rotCtx.fillText('+i', cx + 15, cy - radius - 5);
+      rotCtx.fillText('-i', cx + 15, cy + radius + 15);
+
+      // Draw unit circle
+      rotCtx.strokeStyle = colors.red;
+      rotCtx.lineWidth = 2;
+      rotCtx.beginPath();
+      rotCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+      rotCtx.stroke();
+
+      // Draw angle arc
+      const angleRad = currentRotation * Math.PI / 180;
+      if (currentRotation > 0) {
+        rotCtx.strokeStyle = colors.red;
+        rotCtx.lineWidth = 3;
+        rotCtx.globalAlpha = 0.5;
+        rotCtx.beginPath();
+        rotCtx.arc(cx, cy, 50, 0, -angleRad, true);
+        rotCtx.stroke();
+        rotCtx.globalAlpha = 1;
+      }
+
+      // Draw static root positions with labels
+      const points = [
+        { name: 'I', angle: 0, color: colors.i, label: '1' },
+        { name: 'You', angle: Math.PI / 2, color: colors.you, label: 'i' },
+        { name: 'Us', angle: Math.PI, color: colors.us, label: '-1' },
+        { name: 'Them', angle: 3 * Math.PI / 2, color: colors.them, label: '-i' }
+      ];
+
+      points.forEach(point => {
+        const x = cx + radius * Math.cos(point.angle);
+        const y = cy - radius * Math.sin(point.angle);
+
+        rotCtx.globalAlpha = 0.4;
+        rotCtx.beginPath();
+        rotCtx.arc(x, y, 15, 0, Math.PI * 2);
+        rotCtx.fillStyle = point.color;
+        rotCtx.fill();
+        rotCtx.globalAlpha = 1;
+      });
+
+      // Draw current position
+      const currX = cx + radius * Math.cos(-angleRad);
+      const currY = cy + radius * Math.sin(-angleRad);
+
+      // Draw line from center to current position
+      rotCtx.strokeStyle = colors.red;
+      rotCtx.lineWidth = 3;
+      rotCtx.beginPath();
+      rotCtx.moveTo(cx, cy);
+      rotCtx.lineTo(currX, currY);
+      rotCtx.stroke();
+
+      // Draw opposite line (dashed)
+      const oppX = cx + radius * Math.cos(-angleRad + Math.PI);
+      const oppY = cy + radius * Math.sin(-angleRad + Math.PI);
+      rotCtx.strokeStyle = colors.red;
+      rotCtx.lineWidth = 2;
+      rotCtx.setLineDash([5, 5]);
+      rotCtx.globalAlpha = 0.5;
+      rotCtx.beginPath();
+      rotCtx.moveTo(cx, cy);
+      rotCtx.lineTo(oppX, oppY);
+      rotCtx.stroke();
+      rotCtx.setLineDash([]);
+      rotCtx.globalAlpha = 1;
+
+      // Draw current position marker
+      const currentRoot = Math.round(currentRotation / 90) % 4;
+      const rootColor = [colors.i, colors.you, colors.us, colors.them][currentRoot];
+
+      rotCtx.beginPath();
+      rotCtx.arc(currX, currY, 20, 0, Math.PI * 2);
+      rotCtx.fillStyle = rootColor;
+      rotCtx.fill();
+      rotCtx.strokeStyle = '#fff';
+      rotCtx.lineWidth = 3;
+      rotCtx.stroke();
+
+      // Draw label in current position
+      rotCtx.fillStyle = '#0a0a0f';
+      rotCtx.font = 'bold 12px JetBrains Mono';
+      rotCtx.textAlign = 'center';
+      rotCtx.textBaseline = 'middle';
+      rotCtx.fillText(rootInfo[currentRoot].name, currX, currY);
+
+      // Draw opposite marker
+      rotCtx.beginPath();
+      rotCtx.arc(oppX, oppY, 10, 0, Math.PI * 2);
+      rotCtx.fillStyle = '#fff';
+      rotCtx.globalAlpha = 0.5;
+      rotCtx.fill();
+      rotCtx.globalAlpha = 1;
+
+      // Draw center
+      rotCtx.fillStyle = colors.red;
+      rotCtx.beginPath();
+      rotCtx.arc(cx, cy, 6, 0, Math.PI * 2);
+      rotCtx.fill();
+
+      // Draw R(R) = -R label
+      rotCtx.fillStyle = colors.text;
+      rotCtx.font = '11px JetBrains Mono';
+      rotCtx.fillText('R(R) = -R :: Rotation by 180 deg', cx, h - 15);
+
+      // Update state displays
+      updateRotationState();
+    }
+
+    function updateRotationState() {
+      const currentRoot = Math.round(currentRotation / 90) % 4;
+      const info = rootInfo[currentRoot];
+
+      document.getElementById('statePosition').textContent = info.position;
+      document.getElementById('stateIdentity').textContent = `${info.name} (${info.identity})`;
+      document.getElementById('stateRapplied').textContent = `${currentRoot} times`;
+      document.getElementById('stateOpposite').textContent = info.opposite;
+      document.getElementById('rootStepDisplay').textContent = `${info.value} (${info.name})`;
+    }
+
+    // Rotation slider handler
+    document.getElementById('rotationSlider').addEventListener('input', function(e) {
+      currentRotation = parseInt(e.target.value);
+      document.getElementById('rotationAngleDisplay').textContent = currentRotation + ' deg';
+      document.getElementById('rootStepSlider').value = Math.round(currentRotation / 90) % 4;
+      drawRotationCanvas();
+    });
+
+    // Root step slider handler
+    document.getElementById('rootStepSlider').addEventListener('input', function(e) {
+      const step = parseInt(e.target.value);
+      currentRotation = step * 90;
+      document.getElementById('rotationSlider').value = currentRotation;
+      document.getElementById('rotationAngleDisplay').textContent = currentRotation + ' deg';
+      drawRotationCanvas();
+    });
+
+    function animateFullCycle() {
+      if (isAnimatingCycle) return;
+      isAnimatingCycle = true;
+      currentRotation = 0;
+
+      function animate() {
+        currentRotation += 2;
+        if (currentRotation > 360) {
+          currentRotation = 0;
+          isAnimatingCycle = false;
+          document.getElementById('rotationSlider').value = 0;
+          document.getElementById('rotationAngleDisplay').textContent = '0 deg';
+          document.getElementById('rootStepSlider').value = 0;
+          drawRotationCanvas();
+          return;
+        }
+        document.getElementById('rotationSlider').value = currentRotation;
+        document.getElementById('rotationAngleDisplay').textContent = currentRotation + ' deg';
+        document.getElementById('rootStepSlider').value = Math.round(currentRotation / 90) % 4;
+        drawRotationCanvas();
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    function resetRotationCanvas() {
+      isAnimatingCycle = false;
+      currentRotation = 0;
+      document.getElementById('rotationSlider').value = 0;
+      document.getElementById('rotationAngleDisplay').textContent = '0 deg';
+      document.getElementById('rootStepSlider').value = 0;
+      drawRotationCanvas();
+    }
+
+    // =========================================================================
+    // CONVERGENCE CANVAS
+    // =========================================================================
+    const convCanvas = document.getElementById('convergenceCanvas');
+    const convCtx = convCanvas.getContext('2d');
+    let convergencePlaying = true;
+    let convergenceFrame = 0;
+    let convergencePoints = [];
+    const S3_ATTRACTOR = 0.382; // phi^-2
+
+    function initConvergencePoints() {
+      convergencePoints = [];
+      // Start from different initial conditions
+      const starts = [1, 0.8, 0.6, 0.4, 0.2, -0.2, -0.4, -0.6, -0.8, -1];
+      starts.forEach(s => {
+        convergencePoints.push({
+          x: s,
+          history: [s],
+          color: s >= 0 ? colors.i : colors.us
+        });
+      });
+    }
+
+    function drawConvergenceCanvas() {
+      const w = convCanvas.width;
+      const h = convCanvas.height;
+      const padding = 50;
+      const graphW = w - 2 * padding;
+      const graphH = h - 2 * padding;
+
+      // Clear
+      convCtx.fillStyle = colors.bg;
+      convCtx.fillRect(0, 0, w, h);
+
+      // Draw axes
+      convCtx.strokeStyle = colors.axis;
+      convCtx.lineWidth = 1;
+
+      // X axis (iteration)
+      convCtx.beginPath();
+      convCtx.moveTo(padding, h - padding);
+      convCtx.lineTo(w - padding, h - padding);
+      convCtx.stroke();
+
+      // Y axis (value)
+      convCtx.beginPath();
+      convCtx.moveTo(padding, padding);
+      convCtx.lineTo(padding, h - padding);
+      convCtx.stroke();
+
+      // Draw attractor line
+      const attractorY = h - padding - (S3_ATTRACTOR + 1) / 2 * graphH;
+      convCtx.strokeStyle = colors.osc;
+      convCtx.lineWidth = 2;
+      convCtx.setLineDash([10, 5]);
+      convCtx.beginPath();
+      convCtx.moveTo(padding, attractorY);
+      convCtx.lineTo(w - padding, attractorY);
+      convCtx.stroke();
+      convCtx.setLineDash([]);
+
+      // Attractor label
+      convCtx.fillStyle = colors.osc;
+      convCtx.font = '11px JetBrains Mono';
+      convCtx.textAlign = 'left';
+      convCtx.fillText('S3 = 0.382', w - padding + 5, attractorY + 4);
+
+      // Draw zero line
+      const zeroY = h - padding - graphH / 2;
+      convCtx.strokeStyle = colors.axis;
+      convCtx.lineWidth = 1;
+      convCtx.globalAlpha = 0.5;
+      convCtx.beginPath();
+      convCtx.moveTo(padding, zeroY);
+      convCtx.lineTo(w - padding, zeroY);
+      convCtx.stroke();
+      convCtx.globalAlpha = 1;
+
+      // Draw convergence trajectories
+      const maxIterations = 30;
+      convergencePoints.forEach(point => {
+        if (point.history.length < maxIterations) {
+          // Apply transformation: move toward attractor
+          const lastVal = point.history[point.history.length - 1];
+          const newVal = lastVal + TAU * (S3_ATTRACTOR - lastVal);
+          point.history.push(newVal);
+        }
+
+        // Draw trajectory
+        convCtx.strokeStyle = point.color;
+        convCtx.lineWidth = 2;
+        convCtx.globalAlpha = 0.7;
+        convCtx.beginPath();
+
+        point.history.forEach((val, i) => {
+          const x = padding + (i / maxIterations) * graphW;
+          const y = h - padding - (val + 1) / 2 * graphH;
+
+          if (i === 0) {
+            convCtx.moveTo(x, y);
+          } else {
+            convCtx.lineTo(x, y);
+          }
+        });
+        convCtx.stroke();
+        convCtx.globalAlpha = 1;
+
+        // Draw current point
+        const lastIdx = point.history.length - 1;
+        const currX = padding + (lastIdx / maxIterations) * graphW;
+        const currY = h - padding - (point.history[lastIdx] + 1) / 2 * graphH;
+
+        convCtx.beginPath();
+        convCtx.arc(currX, currY, 5, 0, Math.PI * 2);
+        convCtx.fillStyle = point.color;
+        convCtx.fill();
+      });
+
+      // Axis labels
+      convCtx.fillStyle = colors.text;
+      convCtx.font = '11px JetBrains Mono';
+      convCtx.textAlign = 'center';
+      convCtx.fillText('Iteration n', w / 2, h - 15);
+      convCtx.save();
+      convCtx.translate(15, h / 2);
+      convCtx.rotate(-Math.PI / 2);
+      convCtx.fillText('Value', 0, 0);
+      convCtx.restore();
+
+      // Y axis scale
+      convCtx.textAlign = 'right';
+      convCtx.fillText('1', padding - 5, padding + 5);
+      convCtx.fillText('0', padding - 5, zeroY + 5);
+      convCtx.fillText('-1', padding - 5, h - padding + 5);
+
+      // Title
+      convCtx.fillStyle = colors.inv;
+      convCtx.textAlign = 'center';
+      convCtx.font = '12px JetBrains Mono';
+      convCtx.fillText('Convergence from I^2- to S3 Attractor', w / 2, 25);
+
+      if (convergencePlaying && convergencePoints[0].history.length < 30) {
+        requestAnimationFrame(drawConvergenceCanvas);
+      }
+    }
+
+    function toggleConvergence() {
+      convergencePlaying = !convergencePlaying;
+      document.getElementById('btnConvergencePlay').textContent = convergencePlaying ? 'Pause' : 'Play';
+      if (convergencePlaying) {
+        drawConvergenceCanvas();
+      }
+    }
+
+    function resetConvergence() {
+      initConvergencePoints();
+      convergencePlaying = true;
+      document.getElementById('btnConvergencePlay').textContent = 'Pause';
+      drawConvergenceCanvas();
+    }
+
+    // =========================================================================
     // INITIALIZATION
     // =========================================================================
     drawComplexPlane();
     drawAnimationCanvas();
+    drawRotationCanvas();
+    initConvergencePoints();
+    drawConvergenceCanvas();
   </script>
 </body>
 </html>
