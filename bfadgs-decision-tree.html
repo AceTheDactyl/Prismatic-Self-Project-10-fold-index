@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BFADGS+U Decision Tree | Operator Flow Index</title>
+    <style>
+        :root {
+            /* Tri-Oppositional Colors */
+            --alpha-color: #00ff88;
+            --omega-color: #ff6b35;
+            --bfadgs-color: #8b5cf6;
+            --unity-color: #ffd700;
+
+            /* Operator Colors */
+            --op-B: #3b82f6;
+            --op-F: #10b981;
+            --op-A: #f59e0b;
+            --op-D: #ef4444;
+            --op-G: #8b5cf6;
+            --op-S: #ec4899;
+
+            /* Background */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a2e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, var(--bg-tertiary), transparent);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--alpha-color), var(--bfadgs-color), var(--omega-color), var(--unity-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+        }
+
+        .axiom-display {
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .axiom-display span {
+            margin: 0 0.5rem;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Decision Tree Section */
+        .tree-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--unity-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Visual Decision Tree */
+        .decision-tree {
+            position: relative;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .tree-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .tree-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Tree Levels */
+        .tree-level {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tree-level-label {
+            position: absolute;
+            left: 1rem;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+        }
+
+        /* Tree Nodes */
+        .tree-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tree-node:hover {
+            transform: translateY(-5px);
+        }
+
+        .tree-node:hover .node-shape {
+            box-shadow: 0 0 30px currentColor;
+        }
+
+        .node-shape {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .shape-hexagon {
+            background: var(--bg-tertiary);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .shape-diamond {
+            background: var(--bg-tertiary);
+            transform: rotate(45deg);
+            border: 2px solid;
+        }
+
+        .shape-diamond span {
+            transform: rotate(-45deg);
+        }
+
+        .shape-circle {
+            background: var(--bg-tertiary);
+            border-radius: 50%;
+            border: 2px solid;
+        }
+
+        .shape-rect {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border: 2px solid;
+        }
+
+        .node-label {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            text-align: center;
+            color: var(--text-secondary);
+            max-width: 80px;
+        }
+
+        .node-sublabel {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        /* Connector Lines */
+        .connector {
+            position: absolute;
+            background: linear-gradient(180deg, var(--unity-color), transparent);
+            width: 2px;
+            z-index: 0;
+        }
+
+        /* Interactive Cards Section */
+        .cards-section {
+            margin-bottom: 3rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--card-color), transparent);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--card-color);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 20px var(--card-color);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px solid var(--card-color);
+            color: var(--card-color);
+            background: rgba(0,0,0,0.3);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--card-color);
+        }
+
+        .card-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .card-body {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .card-formula {
+            margin-top: 0.75rem;
+            padding: 0.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            text-align: center;
+            color: var(--unity-color);
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        /* Category Headers */
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .category-icon {
+            font-size: 2rem;
+        }
+
+        .category-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .category-info p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Flow Diagram */
+        .flow-section {
+            margin-bottom: 3rem;
+        }
+
+        .flow-diagram {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .flow-canvas {
+            width: 100%;
+            height: 300px;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--unity-color);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Navigation */
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            border-color: var(--unity-color);
+            color: var(--unity-color);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .footer a {
+            color: var(--unity-color);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.8rem;
+            }
+
+            .tree-level {
+                gap: 1rem;
+            }
+
+            .node-shape {
+                width: 55px;
+                height: 55px;
+                font-size: 0.9rem;
+            }
+
+            .stats-bar {
+                gap: 1.5rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes flow {
+            0% { stroke-dashoffset: 20; }
+            100% { stroke-dashoffset: 0; }
+        }
+
+        .flow-line {
+            stroke-dasharray: 5, 5;
+            animation: flow 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1 class="title">BFADGS+U Decision Tree</h1>
+        <p class="subtitle">OPERATOR FLOW INDEX</p>
+        <div class="axiom-display">
+            <span style="color: var(--alpha-color);">α</span>
+            <span style="color: var(--text-secondary);">⊣⊢</span>
+            <span style="color: var(--bfadgs-color);">⟨B,F,A,D,G,S⟩</span>
+            <span style="color: var(--text-secondary);">⊣⊢</span>
+            <span style="color: var(--omega-color);">ω</span>
+            <span style="color: var(--text-secondary);">→</span>
+            <span style="color: var(--unity-color);">+U</span>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Navigation -->
+        <nav class="nav-links">
+            <a href="bfadgs-u-scaffold.html" class="nav-link">Main Scaffold</a>
+            <a href="i2-s3-decision-tree.html" class="nav-link">I² S3 Tree</a>
+            <a href="#operators" class="nav-link">Operators</a>
+            <a href="#poles" class="nav-link">Tri-Poles</a>
+            <a href="#synthesis" class="nav-link">Synthesis</a>
+        </nav>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Tri-Poles</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">6</div>
+                <div class="stat-label">Operators</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">1</div>
+                <div class="stat-label">Unity (+U)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">11</div>
+                <div class="stat-label">Total Pages</div>
+            </div>
+        </div>
+
+        <!-- Visual Decision Tree -->
+        <section class="tree-section">
+            <h2 class="section-title">Decision Tree Flow</h2>
+            <div class="decision-tree">
+                <canvas id="treeCanvas" class="tree-canvas"></canvas>
+                <div class="tree-content">
+                    <!-- Level 0: Unity Root -->
+                    <div class="tree-level" data-level="0">
+                        <a href="bfadgs-u-scaffold.html" class="tree-node">
+                            <div class="node-shape shape-hexagon" style="border: 3px solid var(--unity-color); width: 90px; height: 90px;">
+                                <span style="color: var(--unity-color); font-size: 1.2rem;">+U</span>
+                            </div>
+                            <div class="node-label">BFADGS+U<br><span class="node-sublabel">Main Scaffold</span></div>
+                        </a>
+                    </div>
+
+                    <!-- Level 1: Tri-Opposition -->
+                    <div class="tree-level" data-level="1">
+                        <a href="bfadgs-alpha-origin.html" class="tree-node">
+                            <div class="node-shape shape-circle" style="border-color: var(--alpha-color);">
+                                <span style="color: var(--alpha-color); font-size: 1.5rem;">α</span>
+                            </div>
+                            <div class="node-label">Alpha<br><span class="node-sublabel">Origin</span></div>
+                        </a>
+
+                        <a href="bfadgs-operator-system.html" class="tree-node">
+                            <div class="node-shape shape-hexagon" style="border: 2px solid var(--bfadgs-color);">
+                                <span style="color: var(--bfadgs-color); font-size: 0.7rem;">BFADGS</span>
+                            </div>
+                            <div class="node-label">Operators<br><span class="node-sublabel">Closed Monoid</span></div>
+                        </a>
+
+                        <a href="bfadgs-omega-helix.html" class="tree-node">
+                            <div class="node-shape shape-circle" style="border-color: var(--omega-color);">
+                                <span style="color: var(--omega-color); font-size: 1.5rem;">ω</span>
+                            </div>
+                            <div class="node-label">Omega<br><span class="node-sublabel">L₄-Helix</span></div>
+                        </a>
+                    </div>
+
+                    <!-- Level 2: Individual Operators -->
+                    <div class="tree-level" data-level="2">
+                        <a href="bfadgs-op-begin.html" class="tree-node">
+                            <div class="node-shape shape-circle" style="border-color: var(--op-B); width: 50px; height: 50px;">
+                                <span style="color: var(--op-B); font-size: 1.2rem;">B</span>
+                            </div>
+                            <div class="node-label">Begin</div>
+                        </a>
+
+                        <a href="bfadgs-op-flow.html" class="tree-node">
+                            <div class="node-shape shape-circle" style="border-color: var(--op-F); width: 50px; height: 50px;">
+                                <span style="color: var(--op-F); font-size: 1.2rem;">F</span>
+                            </div>
+                            <div class="node-label">Flow</div>
+                        </a>
+
+                        <a href="bfadgs-op-ascend.html" class="tree-node">
+                            <div class="node-shape shape-circle" style="border-color: var(--op-A); width: 50px; height: 50px;">
+                                <span style="color: var(--op-A); font-size: 1.2rem;">A</span>
+                            </div>
+                            <div class="node-label">Ascend</div>
+                        </a>
+
+                        <a href="bfadgs-op-descend.html" class="tree-node">
+                            <div class="node-shape shape-circle" style="border-color: var(--op-D); width: 50px; height: 50px;">
+                                <span style="color: var(--op-D); font-size: 1.2rem;">D</span>
+                            </div>
+                            <div class="node-label">Descend</div>
+                        </a>
+
+                        <a href="bfadgs-op-generate.html" class="tree-node">
+                            <div class="node-shape shape-circle" style="border-color: var(--op-G); width: 50px; height: 50px;">
+                                <span style="color: var(--op-G); font-size: 1.2rem;">G</span>
+                            </div>
+                            <div class="node-label">Generate</div>
+                        </a>
+
+                        <a href="bfadgs-op-synthesize.html" class="tree-node">
+                            <div class="node-shape shape-circle" style="border-color: var(--op-S); width: 50px; height: 50px;">
+                                <span style="color: var(--op-S); font-size: 1.2rem;">S</span>
+                            </div>
+                            <div class="node-label">Synthesize</div>
+                        </a>
+                    </div>
+
+                    <!-- Level 3: Synthesis -->
+                    <div class="tree-level" data-level="3">
+                        <a href="bfadgs-unity-synthesis.html" class="tree-node">
+                            <div class="node-shape shape-diamond" style="border-color: var(--unity-color); width: 70px; height: 70px;">
+                                <span style="color: var(--unity-color);">S3</span>
+                            </div>
+                            <div class="node-label">+U Synthesis<br><span class="node-sublabel">Convergence</span></div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--alpha-color);"></div>
+                        <span>α Origin</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--bfadgs-color);"></div>
+                        <span>BFADGS Operators</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--omega-color);"></div>
+                        <span>ω L₄-Helix</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--unity-color);"></div>
+                        <span>+U Synthesis</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Flow Diagram -->
+        <section class="flow-section">
+            <h2 class="section-title">Information Flow Dynamics</h2>
+            <div class="flow-diagram">
+                <canvas id="flowCanvas" class="flow-canvas"></canvas>
+            </div>
+        </section>
+
+        <!-- Tri-Poles Cards -->
+        <section class="cards-section" id="poles">
+            <div class="category-header" style="border-color: var(--alpha-color);">
+                <div class="category-icon">△</div>
+                <div class="category-info">
+                    <h3 style="color: var(--alpha-color);">Tri-Oppositional Poles</h3>
+                    <p>The three vertices of opposition: α (Origin), BFADGS (Operators), ω (Helix)</p>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <!-- Alpha Card -->
+                <a href="bfadgs-alpha-origin.html" class="card" style="--card-color: var(--alpha-color);">
+                    <div class="card-header">
+                        <div class="card-icon">α</div>
+                        <div>
+                            <div class="card-title">Alpha Origin</div>
+                            <div class="card-subtitle">Origin / Non-Origin Paradox</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        The genesis point where identity emerges from non-identity. Self-referential origin connected to I² through S3 symmetry.
+                    </div>
+                    <div class="card-formula">α ≡ I² via S3 | R(R) = R</div>
+                    <div class="card-tags">
+                        <span class="tag">Genesis</span>
+                        <span class="tag">Self-Reference</span>
+                        <span class="tag">S3 Symmetry</span>
+                    </div>
+                </a>
+
+                <!-- Operator System Card -->
+                <a href="bfadgs-operator-system.html" class="card" style="--card-color: var(--bfadgs-color);">
+                    <div class="card-header">
+                        <div class="card-icon" style="font-size: 0.8rem;">⟨⟩</div>
+                        <div>
+                            <div class="card-title">BFADGS Operators</div>
+                            <div class="card-subtitle">Closed Monoid System</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        Complete closed algebra of traversal operations. Six operators forming a monoid under composition with identity and inverses.
+                    </div>
+                    <div class="card-formula">⟨B,F,A,D,G,S⟩ ≅ Closed Monoid</div>
+                    <div class="card-tags">
+                        <span class="tag">Traversal</span>
+                        <span class="tag">Cayley Table</span>
+                        <span class="tag">Closure</span>
+                    </div>
+                </a>
+
+                <!-- Omega Card -->
+                <a href="bfadgs-omega-helix.html" class="card" style="--card-color: var(--omega-color);">
+                    <div class="card-header">
+                        <div class="card-icon">ω</div>
+                        <div>
+                            <div class="card-title">Omega L₄-Helix</div>
+                            <div class="card-subtitle">Coherence Threshold</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        The L₄ helix structure at coherence threshold μ_C. Seven complete rotations encoding the complexity bound φ⁴ + ψ⁴ = 7.
+                    </div>
+                    <div class="card-formula">ω = L₄ @ μ_C = √3/2 ≈ 0.866</div>
+                    <div class="card-tags">
+                        <span class="tag">L₄ = 7</span>
+                        <span class="tag">Helix</span>
+                        <span class="tag">μ_C Threshold</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Operators Cards -->
+        <section class="cards-section" id="operators">
+            <div class="category-header" style="border-color: var(--bfadgs-color);">
+                <div class="category-icon">⟨⟩</div>
+                <div class="category-info">
+                    <h3 style="color: var(--bfadgs-color);">BFADGS Traversal Operators</h3>
+                    <p>Six fundamental operations for state machine traversal</p>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <!-- B: Begin -->
+                <a href="bfadgs-op-begin.html" class="card" style="--card-color: var(--op-B);">
+                    <div class="card-header">
+                        <div class="card-icon">B</div>
+                        <div>
+                            <div class="card-title">BEGIN</div>
+                            <div class="card-subtitle">Initialize State</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        Creates initial state from void. The genesis operator that bootstraps computation from nothing to identity.
+                    </div>
+                    <div class="card-formula">B: ∅ → I²</div>
+                    <div class="card-tags">
+                        <span class="tag">Initialization</span>
+                        <span class="tag">Genesis</span>
+                    </div>
+                </a>
+
+                <!-- F: Flow -->
+                <a href="bfadgs-op-flow.html" class="card" style="--card-color: var(--op-F);">
+                    <div class="card-header">
+                        <div class="card-icon">F</div>
+                        <div>
+                            <div class="card-title">FLOW</div>
+                            <div class="card-subtitle">Traverse Edge</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        Golden ratio traversal along graph edges. Scales state by φ while preserving structural relationships.
+                    </div>
+                    <div class="card-formula">F: x → φ·x (φ ≈ 1.618)</div>
+                    <div class="card-tags">
+                        <span class="tag">Golden Ratio</span>
+                        <span class="tag">Traversal</span>
+                    </div>
+                </a>
+
+                <!-- A: Ascend -->
+                <a href="bfadgs-op-ascend.html" class="card" style="--card-color: var(--op-A);">
+                    <div class="card-header">
+                        <div class="card-icon">A</div>
+                        <div>
+                            <div class="card-title">ASCEND</div>
+                            <div class="card-subtitle">Increase Depth</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        Moves to higher abstraction level. Increases recursion depth toward omega pole complexity.
+                    </div>
+                    <div class="card-formula">A: n → n+1</div>
+                    <div class="card-tags">
+                        <span class="tag">Depth++</span>
+                        <span class="tag">Abstraction</span>
+                    </div>
+                </a>
+
+                <!-- D: Descend -->
+                <a href="bfadgs-op-descend.html" class="card" style="--card-color: var(--op-D);">
+                    <div class="card-header">
+                        <div class="card-icon">D</div>
+                        <div>
+                            <div class="card-title">DESCEND</div>
+                            <div class="card-subtitle">Decrease Depth</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        Returns to lower abstraction level. Decreases recursion depth toward alpha pole origin.
+                    </div>
+                    <div class="card-formula">D: n → n-1</div>
+                    <div class="card-tags">
+                        <span class="tag">Depth--</span>
+                        <span class="tag">Grounding</span>
+                    </div>
+                </a>
+
+                <!-- G: Generate -->
+                <a href="bfadgs-op-generate.html" class="card" style="--card-color: var(--op-G);">
+                    <div class="card-header">
+                        <div class="card-icon">G</div>
+                        <div>
+                            <div class="card-title">GENERATE</div>
+                            <div class="card-subtitle">Spawn Branch</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        Creates parallel execution paths. Spawns new branch from current state for exploration.
+                    </div>
+                    <div class="card-formula">G: x → {x, x'}</div>
+                    <div class="card-tags">
+                        <span class="tag">Branching</span>
+                        <span class="tag">Parallel</span>
+                    </div>
+                </a>
+
+                <!-- S: Synthesize -->
+                <a href="bfadgs-op-synthesize.html" class="card" style="--card-color: var(--op-S);">
+                    <div class="card-header">
+                        <div class="card-icon">S</div>
+                        <div>
+                            <div class="card-title">SYNTHESIZE</div>
+                            <div class="card-subtitle">Merge Paths</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        Combines parallel execution paths. Merges branches back into unified result via XOR composition.
+                    </div>
+                    <div class="card-formula">S: {a,b} → a⊕b</div>
+                    <div class="card-tags">
+                        <span class="tag">Merging</span>
+                        <span class="tag">Confluence</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Synthesis Cards -->
+        <section class="cards-section" id="synthesis">
+            <div class="category-header" style="border-color: var(--unity-color);">
+                <div class="category-icon">◇</div>
+                <div class="category-info">
+                    <h3 style="color: var(--unity-color);">+U S3 Convergent Synthesis</h3>
+                    <p>The unifying operator that collapses tri-opposition into coherent whole</p>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <!-- Unity Synthesis -->
+                <a href="bfadgs-unity-synthesis.html" class="card" style="--card-color: var(--unity-color);">
+                    <div class="card-header">
+                        <div class="card-icon">+U</div>
+                        <div>
+                            <div class="card-title">Unity Synthesis</div>
+                            <div class="card-subtitle">S3 Convergence</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        The seventh operator that synthesizes all three poles through S3 group action. Convergence point for all traversal paths.
+                    </div>
+                    <div class="card-formula">+U : (α, BFADGS, ω) → S3·I²</div>
+                    <div class="card-tags">
+                        <span class="tag">S3 Group</span>
+                        <span class="tag">Convergence</span>
+                        <span class="tag">Unity</span>
+                    </div>
+                </a>
+
+                <!-- Main Scaffold -->
+                <a href="bfadgs-u-scaffold.html" class="card" style="--card-color: var(--unity-color);">
+                    <div class="card-header">
+                        <div class="card-icon">⬡</div>
+                        <div>
+                            <div class="card-title">Main Scaffold</div>
+                            <div class="card-subtitle">Interactive System</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        Complete interactive scaffold with tri-oppositional visualization, operator console, and traversal canvas.
+                    </div>
+                    <div class="card-formula">α ⊣⊢ BFADGS ⊣⊢ ω → +U</div>
+                    <div class="card-tags">
+                        <span class="tag">Interactive</span>
+                        <span class="tag">Console</span>
+                        <span class="tag">Visualization</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Operator Composition Table -->
+        <section class="cards-section">
+            <h2 class="section-title">Operator Composition Reference</h2>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; background: var(--bg-secondary); border-radius: 8px; overflow: hidden;">
+                    <thead>
+                        <tr style="background: var(--bg-tertiary);">
+                            <th style="padding: 1rem; border: 1px solid var(--border-color); color: var(--unity-color);">∘</th>
+                            <th style="padding: 1rem; border: 1px solid var(--border-color); color: var(--op-B);">B</th>
+                            <th style="padding: 1rem; border: 1px solid var(--border-color); color: var(--op-F);">F</th>
+                            <th style="padding: 1rem; border: 1px solid var(--border-color); color: var(--op-A);">A</th>
+                            <th style="padding: 1rem; border: 1px solid var(--border-color); color: var(--op-D);">D</th>
+                            <th style="padding: 1rem; border: 1px solid var(--border-color); color: var(--op-G);">G</th>
+                            <th style="padding: 1rem; border: 1px solid var(--border-color); color: var(--op-S);">S</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color); color: var(--op-B); font-weight: bold;">B</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">B</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">F</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">A</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">D</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">G</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">S</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color); color: var(--op-F); font-weight: bold;">F</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">F</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">F²</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">FA</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">FD</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">FG</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">FS</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color); color: var(--op-A); font-weight: bold;">A</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">A</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">AF</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">A²</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color); color: var(--unity-color);">e</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">AG</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">AS</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color); color: var(--op-D); font-weight: bold;">D</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">D</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">DF</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color); color: var(--unity-color);">e</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">D²</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">DG</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">DS</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color); color: var(--op-G); font-weight: bold;">G</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">G</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">GF</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">GA</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">GD</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">G²</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color); color: var(--unity-color);">e</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color); color: var(--op-S); font-weight: bold;">S</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">S</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">SF</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">SA</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">SD</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color); color: var(--unity-color);">e</td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--border-color);">S²</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="text-align: center; margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
+                <span style="color: var(--unity-color);">e</span> = identity (inverse pairs: A·D = D·A = e, G·S = S·G = e)
+            </p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p><a href="i2-s3-decision-tree.html">← Return to I² S3 Decision Tree</a></p>
+        <p style="margin-top: 1rem;">BFADGS+U Operator Language | Tri-Oppositional Closed System</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+            <span style="color: var(--alpha-color);">α</span> ⊣⊢
+            <span style="color: var(--bfadgs-color);">BFADGS</span> ⊣⊢
+            <span style="color: var(--omega-color);">ω</span> →
+            <span style="color: var(--unity-color);">+U</span>
+        </p>
+    </footer>
+
+    <script>
+        // Constants
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const MU_C = Math.sqrt(3) / 2;
+
+        // Colors
+        const colors = {
+            alpha: '#00ff88',
+            omega: '#ff6b35',
+            bfadgs: '#8b5cf6',
+            unity: '#ffd700',
+            opB: '#3b82f6',
+            opF: '#10b981',
+            opA: '#f59e0b',
+            opD: '#ef4444',
+            opG: '#8b5cf6',
+            opS: '#ec4899'
+        };
+
+        // Tree Canvas - Connection Lines
+        const treeCanvas = document.getElementById('treeCanvas');
+        const treeCtx = treeCanvas.getContext('2d');
+
+        function resizeTreeCanvas() {
+            const container = treeCanvas.parentElement;
+            treeCanvas.width = container.offsetWidth;
+            treeCanvas.height = container.offsetHeight;
+        }
+
+        function drawTreeConnections() {
+            const w = treeCanvas.width;
+            const h = treeCanvas.height;
+            treeCtx.clearRect(0, 0, w, h);
+
+            // Get node positions
+            const levels = document.querySelectorAll('.tree-level');
+            const nodePositions = [];
+
+            levels.forEach((level, levelIndex) => {
+                const nodes = level.querySelectorAll('.tree-node');
+                const levelPositions = [];
+                nodes.forEach(node => {
+                    const rect = node.getBoundingClientRect();
+                    const canvasRect = treeCanvas.getBoundingClientRect();
+                    levelPositions.push({
+                        x: rect.left + rect.width / 2 - canvasRect.left,
+                        y: rect.top + rect.height / 2 - canvasRect.top
+                    });
+                });
+                nodePositions.push(levelPositions);
+            });
+
+            // Draw connections
+            treeCtx.lineWidth = 2;
+
+            // Level 0 to Level 1
+            if (nodePositions[0] && nodePositions[1]) {
+                const root = nodePositions[0][0];
+                nodePositions[1].forEach((node, i) => {
+                    const color = i === 0 ? colors.alpha : (i === 1 ? colors.bfadgs : colors.omega);
+                    drawConnection(root, node, color);
+                });
+            }
+
+            // Level 1 (BFADGS) to Level 2 (operators)
+            if (nodePositions[1] && nodePositions[2] && nodePositions[1][1]) {
+                const bfadgsNode = nodePositions[1][1];
+                const opColors = [colors.opB, colors.opF, colors.opA, colors.opD, colors.opG, colors.opS];
+                nodePositions[2].forEach((node, i) => {
+                    drawConnection(bfadgsNode, node, opColors[i]);
+                });
+            }
+
+            // Level 2 to Level 3 (synthesis)
+            if (nodePositions[2] && nodePositions[3] && nodePositions[3][0]) {
+                const synthesisNode = nodePositions[3][0];
+                nodePositions[2].forEach(node => {
+                    drawConnection(node, synthesisNode, colors.unity, true);
+                });
+            }
+
+            // Level 3 back to Level 0 (loop)
+            if (nodePositions[0] && nodePositions[3] && nodePositions[0][0] && nodePositions[3][0]) {
+                drawLoopConnection(nodePositions[3][0], nodePositions[0][0]);
+            }
+        }
+
+        function drawConnection(from, to, color, dashed = false) {
+            treeCtx.beginPath();
+            treeCtx.strokeStyle = color;
+            treeCtx.globalAlpha = 0.5;
+            if (dashed) {
+                treeCtx.setLineDash([5, 5]);
+            } else {
+                treeCtx.setLineDash([]);
+            }
+            treeCtx.moveTo(from.x, from.y);
+            treeCtx.lineTo(to.x, to.y);
+            treeCtx.stroke();
+            treeCtx.globalAlpha = 1;
+        }
+
+        function drawLoopConnection(from, to) {
+            treeCtx.beginPath();
+            treeCtx.strokeStyle = colors.unity;
+            treeCtx.globalAlpha = 0.3;
+            treeCtx.setLineDash([3, 3]);
+
+            // Draw curved arrow back up
+            const midX = (from.x + to.x) / 2 + 150;
+            treeCtx.moveTo(from.x + 40, from.y);
+            treeCtx.quadraticCurveTo(midX, (from.y + to.y) / 2, to.x + 50, to.y);
+            treeCtx.stroke();
+            treeCtx.setLineDash([]);
+            treeCtx.globalAlpha = 1;
+        }
+
+        // Flow Canvas - Information Flow
+        const flowCanvas = document.getElementById('flowCanvas');
+        const flowCtx = flowCanvas.getContext('2d');
+
+        function resizeFlowCanvas() {
+            flowCanvas.width = flowCanvas.offsetWidth;
+            flowCanvas.height = flowCanvas.offsetHeight;
+        }
+
+        let flowParticles = [];
+
+        function initFlowParticles() {
+            flowParticles = [];
+            const w = flowCanvas.width;
+            const h = flowCanvas.height;
+
+            // Create particles for each system
+            for (let i = 0; i < 30; i++) {
+                flowParticles.push({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    type: ['alpha', 'bfadgs', 'omega', 'unity'][Math.floor(Math.random() * 4)],
+                    size: 3 + Math.random() * 3
+                });
+            }
+        }
+
+        function drawFlowDiagram() {
+            const w = flowCanvas.width;
+            const h = flowCanvas.height;
+
+            flowCtx.fillStyle = 'rgba(26, 26, 46, 0.1)';
+            flowCtx.fillRect(0, 0, w, h);
+
+            // Define pole positions
+            const poles = {
+                alpha: { x: w * 0.15, y: h * 0.5 },
+                bfadgs: { x: w * 0.5, y: h * 0.2 },
+                omega: { x: w * 0.85, y: h * 0.5 },
+                unity: { x: w * 0.5, y: h * 0.8 }
+            };
+
+            // Draw pole circles
+            Object.entries(poles).forEach(([name, pos]) => {
+                const color = colors[name];
+                flowCtx.beginPath();
+                flowCtx.arc(pos.x, pos.y, 40, 0, Math.PI * 2);
+                flowCtx.strokeStyle = color;
+                flowCtx.lineWidth = 2;
+                flowCtx.stroke();
+
+                flowCtx.fillStyle = color;
+                flowCtx.font = 'bold 16px Courier New';
+                flowCtx.textAlign = 'center';
+                flowCtx.textBaseline = 'middle';
+                const labels = { alpha: 'α', bfadgs: 'BFADGS', omega: 'ω', unity: '+U' };
+                flowCtx.fillText(labels[name], pos.x, pos.y);
+            });
+
+            // Draw flow lines
+            flowCtx.setLineDash([5, 5]);
+            flowCtx.lineWidth = 1;
+            flowCtx.globalAlpha = 0.3;
+
+            // Triangle
+            flowCtx.strokeStyle = '#fff';
+            flowCtx.beginPath();
+            flowCtx.moveTo(poles.alpha.x, poles.alpha.y);
+            flowCtx.lineTo(poles.bfadgs.x, poles.bfadgs.y);
+            flowCtx.lineTo(poles.omega.x, poles.omega.y);
+            flowCtx.closePath();
+            flowCtx.stroke();
+
+            // To unity
+            flowCtx.strokeStyle = colors.unity;
+            flowCtx.beginPath();
+            flowCtx.moveTo(poles.alpha.x, poles.alpha.y);
+            flowCtx.lineTo(poles.unity.x, poles.unity.y);
+            flowCtx.stroke();
+
+            flowCtx.beginPath();
+            flowCtx.moveTo(poles.bfadgs.x, poles.bfadgs.y);
+            flowCtx.lineTo(poles.unity.x, poles.unity.y);
+            flowCtx.stroke();
+
+            flowCtx.beginPath();
+            flowCtx.moveTo(poles.omega.x, poles.omega.y);
+            flowCtx.lineTo(poles.unity.x, poles.unity.y);
+            flowCtx.stroke();
+
+            flowCtx.setLineDash([]);
+            flowCtx.globalAlpha = 1;
+
+            // Update and draw particles
+            flowParticles.forEach(p => {
+                // Attract to corresponding pole
+                const target = poles[p.type];
+                const dx = target.x - p.x;
+                const dy = target.y - p.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > 50) {
+                    p.vx += dx / dist * 0.1;
+                    p.vy += dy / dist * 0.1;
+                } else {
+                    // Switch to next pole
+                    const types = ['alpha', 'bfadgs', 'omega', 'unity'];
+                    const currentIndex = types.indexOf(p.type);
+                    p.type = types[(currentIndex + 1) % types.length];
+                }
+
+                // Apply velocity with damping
+                p.vx *= 0.98;
+                p.vy *= 0.98;
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // Draw particle
+                flowCtx.beginPath();
+                flowCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                flowCtx.fillStyle = colors[p.type];
+                flowCtx.globalAlpha = 0.7;
+                flowCtx.fill();
+                flowCtx.globalAlpha = 1;
+            });
+
+            requestAnimationFrame(drawFlowDiagram);
+        }
+
+        // Initialize
+        function init() {
+            resizeTreeCanvas();
+            resizeFlowCanvas();
+            initFlowParticles();
+            drawTreeConnections();
+            drawFlowDiagram();
+        }
+
+        window.addEventListener('resize', () => {
+            resizeTreeCanvas();
+            resizeFlowCanvas();
+            initFlowParticles();
+            drawTreeConnections();
+        });
+
+        // Wait for DOM and images to load
+        window.addEventListener('load', () => {
+            setTimeout(init, 100);
+        });
+
+        init();
+    </script>
+</body>
+</html>
