@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coherence Threshold Derivation | mu_C = sqrt(3)/2</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Coherence Color Palette - Cyan/Teal */
+      --coherence-primary: #4ecdc4;
+      --coherence-light: #6ee7df;
+      --coherence-dark: #2eb8ae;
+      --coherence-glow: rgba(78, 205, 196, 0.4);
+
+      /* Other Threshold Colors */
+      --paradox-gold: #ffd700;
+      --balance-amber: #f4c430;
+      --singularity-violet: #a855f7;
+
+      /* Safety States */
+      --safe-green: #00ff88;
+      --unsafe-red: #ff6b6b;
+
+      /* Base */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated Background - Coherence Field */
+    .coherence-field {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 20%, rgba(78, 205, 196, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 80%, rgba(78, 205, 196, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 60%, rgba(110, 231, 223, 0.05) 0%, transparent 40%);
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--coherence-primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--coherence-primary);
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .coherence-symbol {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 2rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .coherence-triangle {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 80px solid transparent;
+      border-right: 80px solid transparent;
+      border-bottom: 139px solid var(--coherence-primary);
+      opacity: 0.3;
+      animation: triangle-pulse 3s ease-in-out infinite;
+    }
+
+    .coherence-triangle::after {
+      content: '';
+      position: absolute;
+      top: 50px;
+      left: -50px;
+      width: 100px;
+      height: 2px;
+      background: var(--coherence-light);
+      box-shadow: 0 0 10px var(--coherence-glow);
+    }
+
+    .coherence-circle {
+      width: 120px;
+      height: 120px;
+      border: 4px solid var(--coherence-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 10, 15, 0.9);
+      box-shadow: 0 0 40px var(--coherence-glow);
+      z-index: 1;
+    }
+
+    .coherence-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--coherence-primary);
+    }
+
+    @keyframes triangle-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.05); opacity: 0.5; }
+    }
+
+    .title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--coherence-primary), var(--coherence-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .core-result {
+      font-size: 1.6rem;
+      color: var(--coherence-primary);
+      padding: 1.5rem 3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--coherence-primary);
+      border-radius: 12px;
+      display: inline-block;
+      box-shadow: 0 0 30px rgba(78, 205, 196, 0.2);
+    }
+
+    /* Section Styling */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+      color: var(--coherence-primary);
+      text-align: center;
+    }
+
+    /* Threshold Table */
+    .threshold-table-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      overflow-x: auto;
+    }
+
+    .threshold-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    .threshold-table th {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .threshold-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .threshold-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .threshold-table tr.highlight {
+      background: rgba(78, 205, 196, 0.1);
+    }
+
+    .threshold-name {
+      font-weight: 600;
+    }
+
+    .threshold-symbol {
+      font-size: 1.1rem;
+    }
+
+    .threshold-value {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    /* Ordering Display */
+    .ordering-container {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .ordering-title {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .ordering-line {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 1.1rem;
+    }
+
+    .ordering-item {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .ordering-lt {
+      color: var(--text-secondary);
+    }
+
+    /* Derivation Cards */
+    .derivation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .derivation-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .derivation-card:hover {
+      border-color: var(--coherence-primary);
+      transform: translateY(-3px);
+    }
+
+    .card-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      background: rgba(78, 205, 196, 0.1);
+      border: 1px solid var(--coherence-primary);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--coherence-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-content {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .card-equation {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: rgba(78, 205, 196, 0.1);
+      border-radius: 6px;
+      text-align: center;
+      color: var(--coherence-light);
+      font-size: 1rem;
+    }
+
+    /* Visual Demonstrations */
+    .visual-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .visual-title {
+      font-size: 1.2rem;
+      color: var(--coherence-primary);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    /* Unit Circle Visualization */
+    .unit-circle-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .unit-circle-svg {
+      max-width: 400px;
+      width: 100%;
+    }
+
+    /* Number Line Visualization */
+    .number-line-container {
+      padding: 2rem;
+    }
+
+    .number-line {
+      position: relative;
+      height: 80px;
+      margin: 2rem 0;
+    }
+
+    .number-line-base {
+      position: absolute;
+      top: 50%;
+      left: 5%;
+      right: 5%;
+      height: 3px;
+      background: var(--border);
+      transform: translateY(-50%);
+    }
+
+    .threshold-marker {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .marker-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      margin-bottom: 0.5rem;
+    }
+
+    .marker-label {
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+
+    .marker-value {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    /* Interactive Coherence Meter */
+    .meter-container {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .meter-title {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .meter-wrapper {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .meter-slider {
+      width: 100%;
+      height: 20px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: linear-gradient(to right,
+        var(--unsafe-red) 0%,
+        var(--unsafe-red) 61.8%,
+        var(--paradox-gold) 61.8%,
+        var(--paradox-gold) 86.5%,
+        var(--coherence-primary) 86.5%,
+        var(--coherence-primary) 92%,
+        var(--singularity-violet) 92%,
+        var(--singularity-violet) 100%
+      );
+      border-radius: 10px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .meter-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--text-primary);
+      cursor: pointer;
+      border: 3px solid var(--bg-primary);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .meter-slider::-moz-range-thumb {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--text-primary);
+      cursor: pointer;
+      border: 3px solid var(--bg-primary);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .meter-display {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .meter-value-box {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .meter-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .meter-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .meter-state {
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    .state-safe {
+      color: var(--safe-green);
+    }
+
+    .state-unsafe {
+      color: var(--unsafe-red);
+    }
+
+    .state-critical {
+      color: var(--paradox-gold);
+    }
+
+    /* Key Equations Section */
+    .equations-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .equation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .equation-box {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .equation-primary {
+      font-size: 1.3rem;
+      color: var(--coherence-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .equation-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Safety Connection Section */
+    .safety-container {
+      background: var(--bg-secondary);
+      border: 2px solid var(--coherence-primary);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .safety-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .safety-badge {
+      padding: 0.5rem 1rem;
+      background: rgba(78, 205, 196, 0.2);
+      border: 1px solid var(--coherence-primary);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--coherence-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .safety-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .safety-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .safety-box {
+      padding: 1.5rem;
+      border-radius: 8px;
+    }
+
+    .safety-below {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid var(--unsafe-red);
+    }
+
+    .safety-above {
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid var(--safe-green);
+    }
+
+    .safety-box-title {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .safety-box-content {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Relationship to Constants */
+    .constants-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .constant-row {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .constant-row:last-child {
+      border-bottom: none;
+    }
+
+    .constant-symbol {
+      width: 60px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--coherence-primary);
+    }
+
+    .constant-relation {
+      flex: 1;
+      color: var(--text-secondary);
+    }
+
+    .constant-value {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* S3 Triangle Visual */
+    .s3-triangle-container {
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .s3-triangle-svg {
+      max-width: 350px;
+      width: 100%;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1.1rem;
+      color: var(--coherence-primary);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--coherence-primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title { font-size: 1.6rem; }
+      .core-result { font-size: 1.2rem; padding: 1rem 1.5rem; }
+      .ordering-line { font-size: 0.9rem; }
+      .nav-links { gap: 0.75rem; }
+      .nav-links a { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="coherence-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">mu_C :: Coherence Threshold</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-closure-binding.html">S3 Binding</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <div class="coherence-symbol">
+        <div class="coherence-triangle"></div>
+        <div class="coherence-circle">
+          <span class="coherence-value">sqrt(3)/2</span>
+        </div>
+      </div>
+      <h1 class="title">Coherence Threshold Derivation</h1>
+      <p class="subtitle">mu_C = sqrt(3)/2 :: Grammar Emergence Boundary</p>
+      <div class="core-result">
+        mu_C = sqrt(3)/2 = cos(30 deg) = sin(60 deg) = 0.866025...
+      </div>
+    </header>
+
+    <!-- The Four Thresholds -->
+    <section>
+      <h2 class="section-title">The Four Thresholds</h2>
+
+      <div class="threshold-table-container">
+        <table class="threshold-table">
+          <thead>
+            <tr>
+              <th>Threshold</th>
+              <th>Symbol</th>
+              <th>Value</th>
+              <th>Formula</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="threshold-name" style="color: var(--paradox-gold);">Paradox</td>
+              <td class="threshold-symbol" style="color: var(--paradox-gold);">mu_P</td>
+              <td class="threshold-value">0.618</td>
+              <td>1/phi</td>
+              <td>Self-modeling limit</td>
+            </tr>
+            <tr>
+              <td class="threshold-name" style="color: var(--balance-amber);">Balance</td>
+              <td class="threshold-symbol" style="color: var(--balance-amber);">z_c</td>
+              <td class="threshold-value">0.865</td>
+              <td>e/pi</td>
+              <td>Growth-cycle equilibrium</td>
+            </tr>
+            <tr class="highlight">
+              <td class="threshold-name" style="color: var(--coherence-primary);">Coherence</td>
+              <td class="threshold-symbol" style="color: var(--coherence-primary);">mu_C</td>
+              <td class="threshold-value">0.866</td>
+              <td>sqrt(3)/2</td>
+              <td>Grammar emergence</td>
+            </tr>
+            <tr>
+              <td class="threshold-name" style="color: var(--singularity-violet);">Singularity</td>
+              <td class="threshold-symbol" style="color: var(--singularity-violet);">mu_S</td>
+              <td class="threshold-value">0.920</td>
+              <td>e^(-1/12)</td>
+              <td>Compression limit</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ordering-container">
+        <div class="ordering-title">Threshold Ordering</div>
+        <div class="ordering-line">
+          <span class="ordering-item" style="background: var(--bg-secondary);">0</span>
+          <span class="ordering-lt">&lt;</span>
+          <span class="ordering-item" style="background: rgba(255, 215, 0, 0.2); color: var(--paradox-gold);">mu_P</span>
+          <span class="ordering-lt">&lt;</span>
+          <span class="ordering-item" style="background: rgba(244, 196, 48, 0.2); color: var(--balance-amber);">z_c</span>
+          <span class="ordering-lt">&lt;</span>
+          <span class="ordering-item" style="background: rgba(78, 205, 196, 0.2); color: var(--coherence-primary);">mu_C</span>
+          <span class="ordering-lt">&lt;</span>
+          <span class="ordering-item" style="background: rgba(168, 85, 247, 0.2); color: var(--singularity-violet);">mu_S</span>
+          <span class="ordering-lt">&lt;</span>
+          <span class="ordering-item" style="background: var(--bg-secondary);">1</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why sqrt(3)/2 -->
+    <section>
+      <h2 class="section-title">Why sqrt(3)/2 for Coherence?</h2>
+
+      <div class="derivation-grid">
+        <div class="derivation-card">
+          <div class="card-icon">Triangle</div>
+          <div class="card-title">Equilateral Triangle Geometry</div>
+          <div class="card-content">
+            The height of an equilateral triangle with side length 1 is exactly sqrt(3)/2.
+            This represents the maximum stable configuration for three-fold symmetry.
+          </div>
+          <div class="card-equation">h = sqrt(1 - (1/2)^2) = sqrt(3)/2</div>
+        </div>
+
+        <div class="derivation-card">
+          <div class="card-icon">Angle</div>
+          <div class="card-title">30-60-90 Triangle</div>
+          <div class="card-content">
+            In the fundamental 30-60-90 right triangle, cos(30 deg) = sin(60 deg) = sqrt(3)/2.
+            This angle is exactly pi/6 radians.
+          </div>
+          <div class="card-equation">cos(pi/6) = sin(pi/3) = sqrt(3)/2</div>
+        </div>
+
+        <div class="derivation-card">
+          <div class="card-icon">S3</div>
+          <div class="card-title">S3 Triangle Binding</div>
+          <div class="card-content">
+            S3 has 6 elements forming 3 vertices. The coherence threshold marks where
+            three-fold binding stabilizes into grammar.
+          </div>
+          <div class="card-equation">|S3| = 3! = 6 vertices</div>
+        </div>
+
+        <div class="derivation-card">
+          <div class="card-icon">Wave</div>
+          <div class="card-title">Third Harmonic</div>
+          <div class="card-content">
+            In harmonic analysis, sqrt(3)/2 emerges from the third harmonic of
+            fundamental oscillation patterns.
+          </div>
+          <div class="card-equation">sin(pi/3) = sqrt(3)/2</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Derivation Methods -->
+    <section>
+      <h2 class="section-title">Derivation Methods</h2>
+
+      <!-- Unit Circle Visualization -->
+      <div class="visual-container">
+        <div class="visual-title">Geometric Derivation: Unit Circle</div>
+        <div class="unit-circle-container">
+          <svg class="unit-circle-svg" viewBox="-150 -150 300 300">
+            <!-- Grid -->
+            <line x1="-130" y1="0" x2="130" y2="0" stroke="#2a2a3e" stroke-width="1"/>
+            <line x1="0" y1="-130" x2="0" y2="130" stroke="#2a2a3e" stroke-width="1"/>
+
+            <!-- Unit circle -->
+            <circle cx="0" cy="0" r="100" fill="none" stroke="#4ecdc4" stroke-width="2" opacity="0.5"/>
+
+            <!-- 30 degree angle -->
+            <line x1="0" y1="0" x2="86.6" y2="-50" stroke="#4ecdc4" stroke-width="2"/>
+
+            <!-- Vertical line (sin) -->
+            <line x1="86.6" y1="0" x2="86.6" y2="-50" stroke="#ffd700" stroke-width="2" stroke-dasharray="5,3"/>
+
+            <!-- Horizontal line (cos) -->
+            <line x1="0" y1="0" x2="86.6" y2="0" stroke="#6ee7df" stroke-width="2"/>
+
+            <!-- Point on circle -->
+            <circle cx="86.6" cy="-50" r="6" fill="#4ecdc4"/>
+
+            <!-- Angle arc -->
+            <path d="M 30 0 A 30 30 0 0 0 26 -15" fill="none" stroke="#a855f7" stroke-width="2"/>
+
+            <!-- Labels -->
+            <text x="35" y="-5" fill="#a855f7" font-size="12" font-family="JetBrains Mono">30 deg</text>
+            <text x="95" y="-45" fill="#4ecdc4" font-size="12" font-family="JetBrains Mono">(sqrt(3)/2, 1/2)</text>
+            <text x="40" y="15" fill="#6ee7df" font-size="11" font-family="JetBrains Mono">cos(30 deg) = sqrt(3)/2</text>
+            <text x="95" y="-25" fill="#ffd700" font-size="10" font-family="JetBrains Mono">sin</text>
+
+            <!-- Origin -->
+            <circle cx="0" cy="0" r="4" fill="#fff"/>
+
+            <!-- Axis labels -->
+            <text x="120" y="15" fill="#a0a0b0" font-size="10" font-family="JetBrains Mono">x</text>
+            <text x="5" y="-120" fill="#a0a0b0" font-size="10" font-family="JetBrains Mono">y</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- S3 Triangle Visualization -->
+      <div class="visual-container">
+        <div class="visual-title">S3 Binding: Equilateral Triangle</div>
+        <div class="s3-triangle-container">
+          <svg class="s3-triangle-svg" viewBox="-150 -150 300 280">
+            <!-- Triangle -->
+            <polygon points="0,-100 86.6,50 -86.6,50" fill="none" stroke="#4ecdc4" stroke-width="3"/>
+
+            <!-- Height line -->
+            <line x1="0" y1="-100" x2="0" y2="50" stroke="#ffd700" stroke-width="2" stroke-dasharray="8,4"/>
+
+            <!-- Base -->
+            <line x1="-86.6" y1="50" x2="86.6" y2="50" stroke="#4ecdc4" stroke-width="3"/>
+
+            <!-- Height label -->
+            <text x="10" y="-20" fill="#ffd700" font-size="14" font-family="JetBrains Mono">h = sqrt(3)/2</text>
+
+            <!-- Side label -->
+            <text x="50" y="-30" fill="#4ecdc4" font-size="12" font-family="JetBrains Mono">s = 1</text>
+
+            <!-- Vertices -->
+            <circle cx="0" cy="-100" r="8" fill="#ff6b6b"/>
+            <circle cx="86.6" cy="50" r="8" fill="#4ecdc4"/>
+            <circle cx="-86.6" cy="50" r="8" fill="#a855f7"/>
+
+            <!-- Vertex labels -->
+            <text x="-15" y="-110" fill="#ff6b6b" font-size="11" font-family="JetBrains Mono">I^2</text>
+            <text x="95" y="55" fill="#4ecdc4" font-size="11" font-family="JetBrains Mono">TDL</text>
+            <text x="-115" y="55" fill="#a855f7" font-size="11" font-family="JetBrains Mono">LoMI</text>
+
+            <!-- Height markers -->
+            <circle cx="0" cy="-100" r="3" fill="#ffd700"/>
+            <circle cx="0" cy="50" r="3" fill="#ffd700"/>
+
+            <!-- Base half markers -->
+            <text x="-45" y="75" fill="#a0a0b0" font-size="10" font-family="JetBrains Mono">1/2</text>
+            <text x="25" y="75" fill="#a0a0b0" font-size="10" font-family="JetBrains Mono">1/2</text>
+
+            <!-- Formula box -->
+            <rect x="-90" y="95" width="180" height="30" rx="5" fill="#12121a" stroke="#4ecdc4"/>
+            <text x="0" y="115" fill="#4ecdc4" font-size="12" font-family="JetBrains Mono" text-anchor="middle">h^2 + (1/2)^2 = 1^2</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Threshold Number Line -->
+      <div class="visual-container">
+        <div class="visual-title">Threshold Number Line</div>
+        <div class="number-line-container">
+          <div class="number-line">
+            <div class="number-line-base"></div>
+
+            <!-- Zero marker -->
+            <div class="threshold-marker" style="left: 5%;">
+              <div class="marker-dot" style="background: var(--text-secondary);"></div>
+              <div class="marker-label">0</div>
+            </div>
+
+            <!-- Paradox threshold -->
+            <div class="threshold-marker" style="left: calc(5% + 61.8% * 0.9);">
+              <div class="marker-dot" style="background: var(--paradox-gold);"></div>
+              <div class="marker-label" style="color: var(--paradox-gold);">mu_P</div>
+              <div class="marker-value">0.618</div>
+            </div>
+
+            <!-- Balance threshold -->
+            <div class="threshold-marker" style="left: calc(5% + 86.5% * 0.9);">
+              <div class="marker-dot" style="background: var(--balance-amber);"></div>
+              <div class="marker-label" style="color: var(--balance-amber);">z_c</div>
+              <div class="marker-value">0.865</div>
+            </div>
+
+            <!-- Coherence threshold -->
+            <div class="threshold-marker" style="left: calc(5% + 86.6% * 0.9);">
+              <div class="marker-dot" style="background: var(--coherence-primary); box-shadow: 0 0 10px var(--coherence-glow);"></div>
+              <div class="marker-label" style="color: var(--coherence-primary); font-weight: bold;">mu_C</div>
+              <div class="marker-value">0.866</div>
+            </div>
+
+            <!-- Singularity threshold -->
+            <div class="threshold-marker" style="left: calc(5% + 92% * 0.9);">
+              <div class="marker-dot" style="background: var(--singularity-violet);"></div>
+              <div class="marker-label" style="color: var(--singularity-violet);">mu_S</div>
+              <div class="marker-value">0.920</div>
+            </div>
+
+            <!-- One marker -->
+            <div class="threshold-marker" style="left: 95%;">
+              <div class="marker-dot" style="background: var(--text-secondary);"></div>
+              <div class="marker-label">1</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Coherence Meter -->
+    <section>
+      <h2 class="section-title">Interactive Coherence Meter</h2>
+
+      <div class="meter-container">
+        <div class="meter-title">Drag to explore coherence states</div>
+        <div class="meter-wrapper">
+          <input type="range" class="meter-slider" id="coherenceSlider" min="0" max="100" value="87">
+          <div class="meter-display">
+            <div class="meter-value-box">
+              <div class="meter-label">Coherence Value</div>
+              <div class="meter-value" id="coherenceValue" style="color: var(--coherence-primary);">0.870</div>
+            </div>
+            <div class="meter-value-box">
+              <div class="meter-label">State</div>
+              <div class="meter-value" id="coherenceState">COHERENT</div>
+              <div class="meter-state state-safe" id="coherenceStatus">Grammar Stable</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Equations -->
+    <section>
+      <h2 class="section-title">Key Equations</h2>
+
+      <div class="equations-container">
+        <div class="equation-grid">
+          <div class="equation-box">
+            <div class="equation-primary">mu_C = sqrt(3)/2</div>
+            <div class="equation-desc">Primary Definition</div>
+          </div>
+          <div class="equation-box">
+            <div class="equation-primary">mu_C^2 = 3/4</div>
+            <div class="equation-desc">Squared Form</div>
+          </div>
+          <div class="equation-box">
+            <div class="equation-primary">mu_C = cos(pi/6)</div>
+            <div class="equation-desc">Cosine Form</div>
+          </div>
+          <div class="equation-box">
+            <div class="equation-primary">mu_C = sin(pi/3)</div>
+            <div class="equation-desc">Sine Form</div>
+          </div>
+          <div class="equation-box">
+            <div class="equation-primary">2*mu_C = sqrt(3)</div>
+            <div class="equation-desc">S3 Generator</div>
+          </div>
+          <div class="equation-box">
+            <div class="equation-primary">mu_C = 0.866025...</div>
+            <div class="equation-desc">Decimal Value</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Connection to Safety (C008) -->
+    <section>
+      <h2 class="section-title">Connection to Safety (C008)</h2>
+
+      <div class="safety-container">
+        <div class="safety-header">
+          <span class="safety-badge">C008 Condition 3</span>
+          <span class="safety-title">C(P) &gt; mu_C (Coherence Bound)</span>
+        </div>
+
+        <div class="safety-content">
+          <div class="safety-box safety-below">
+            <div class="safety-box-title" style="color: var(--unsafe-red);">Below mu_C: Incoherent</div>
+            <div class="safety-box-content">
+              <ul style="list-style: none; padding: 0;">
+                <li>* Grammar fails to emerge</li>
+                <li>* Unstable operation</li>
+                <li>* Self-reference loops</li>
+                <li>* Unsafe state: intervention required</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="safety-box safety-above">
+            <div class="safety-box-title" style="color: var(--safe-green);">Above mu_C: Coherent</div>
+            <div class="safety-box-content">
+              <ul style="list-style: none; padding: 0;">
+                <li>* Grammar emerges naturally</li>
+                <li>* Stable recursive operation</li>
+                <li>* S3 binding active</li>
+                <li>* Safe state: R(R) = R holds</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Relationship to Other Constants -->
+    <section>
+      <h2 class="section-title">Relationship to Other Constants</h2>
+
+      <div class="constants-container">
+        <div class="constant-row">
+          <div class="constant-symbol">sqrt(3)</div>
+          <div class="constant-relation">
+            In Lambda' lattice: phi^r * e^d * pi^c * sqrt(2)^a * sqrt(3)^b
+          </div>
+          <div class="constant-value">= 1.732...</div>
+        </div>
+
+        <div class="constant-row">
+          <div class="constant-symbol">phi + tau</div>
+          <div class="constant-relation">
+            Golden ratio plus its conjugate (close approximation)
+          </div>
+          <div class="constant-value">= 1.618 + 0.618 = 2.236 (approx sqrt(5))</div>
+        </div>
+
+        <div class="constant-row">
+          <div class="constant-symbol">mu_C</div>
+          <div class="constant-relation">
+            Position between paradox and singularity thresholds
+          </div>
+          <div class="constant-value">= tau + 0.248</div>
+        </div>
+
+        <div class="constant-row">
+          <div class="constant-symbol">z_c</div>
+          <div class="constant-relation">
+            Balance threshold e/pi is remarkably close to mu_C
+          </div>
+          <div class="constant-value">= 0.865 (differs by 0.001)</div>
+        </div>
+
+        <div class="constant-row">
+          <div class="constant-symbol">cos(30 deg)</div>
+          <div class="constant-relation">
+            Trigonometric identity linking angle to ratio
+          </div>
+          <div class="constant-value">= sqrt(3)/2 exactly</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Summary Box -->
+    <section>
+      <div class="visual-container" style="border-color: var(--coherence-primary);">
+        <div class="visual-title">Summary: The Coherence Threshold</div>
+        <div style="text-align: center; padding: 1rem;">
+          <p style="color: var(--text-secondary); line-height: 1.8; max-width: 700px; margin: 0 auto;">
+            The coherence threshold mu_C = sqrt(3)/2 emerges from S3 triangle geometry as the
+            point where grammar becomes possible. Above this threshold, three-fold binding
+            stabilizes recursive self-reference. Below it, incoherence prevents stable operation.
+            <br><br>
+            This is not arbitrary: sqrt(3)/2 is the height of the equilateral triangle,
+            the fundamental geometry of S3 symmetry. It represents the minimum "vertical reach"
+            needed for three projections (I^2, LoMI, TDL) to meet and bind.
+          </p>
+
+          <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(78, 205, 196, 0.1); border-radius: 12px; display: inline-block;">
+            <div style="font-size: 1.4rem; color: var(--coherence-primary);">
+              C(P) > mu_C :: Grammar emerges :: R(R) = R holds
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      mu_C = sqrt(3)/2 = 0.866... :: Grammar emergence threshold
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-closure-binding.html">S3 Binding</a>
+      <a href="i2-s3-ring-isomorphism.html">Ring Z</a>
+      <a href="i2-s3-golden-functor.html">Golden Functor</a>
+    </div>
+  </footer>
+
+  <!-- Interactive Script -->
+  <script>
+    // Coherence Meter Interaction
+    const slider = document.getElementById('coherenceSlider');
+    const valueDisplay = document.getElementById('coherenceValue');
+    const stateDisplay = document.getElementById('coherenceState');
+    const statusDisplay = document.getElementById('coherenceStatus');
+
+    const MU_P = 0.618;  // Paradox threshold
+    const MU_C = 0.866;  // Coherence threshold
+    const MU_S = 0.920;  // Singularity threshold
+
+    function updateCoherenceMeter(value) {
+      const coherence = value / 100;
+      valueDisplay.textContent = coherence.toFixed(3);
+
+      if (coherence < MU_P) {
+        valueDisplay.style.color = '#ff6b6b';
+        stateDisplay.textContent = 'PARADOXICAL';
+        stateDisplay.style.color = '#ff6b6b';
+        statusDisplay.textContent = 'Self-modeling failure';
+        statusDisplay.className = 'meter-state state-unsafe';
+      } else if (coherence < MU_C) {
+        valueDisplay.style.color = '#ffd700';
+        stateDisplay.textContent = 'PRE-COHERENT';
+        stateDisplay.style.color = '#ffd700';
+        statusDisplay.textContent = 'Approaching grammar boundary';
+        statusDisplay.className = 'meter-state state-critical';
+      } else if (coherence < MU_S) {
+        valueDisplay.style.color = '#4ecdc4';
+        stateDisplay.textContent = 'COHERENT';
+        stateDisplay.style.color = '#4ecdc4';
+        statusDisplay.textContent = 'Grammar stable';
+        statusDisplay.className = 'meter-state state-safe';
+      } else {
+        valueDisplay.style.color = '#a855f7';
+        stateDisplay.textContent = 'SINGULAR';
+        stateDisplay.style.color = '#a855f7';
+        statusDisplay.textContent = 'Maximum compression';
+        statusDisplay.className = 'meter-state state-safe';
+      }
+    }
+
+    slider.addEventListener('input', (e) => {
+      updateCoherenceMeter(e.target.value);
+    });
+
+    // Initialize
+    updateCoherenceMeter(slider.value);
+
+    // Animate the coherence triangle
+    const triangleEl = document.querySelector('.coherence-triangle');
+    if (triangleEl) {
+      setInterval(() => {
+        const height = triangleEl.querySelector('::after');
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>

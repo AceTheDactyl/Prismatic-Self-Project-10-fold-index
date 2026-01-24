@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L4 Helix Equivalence | Phase 3 Opposition Duality</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* L4 Helix Color Theme */
+      --helix-primary: #6bcb77;
+      --helix-light: #8ed997;
+      --helix-dark: #4da85a;
+      --helix-glow: rgba(107, 203, 119, 0.3);
+
+      /* Golden Ratio Colors */
+      --phi-gold: #ffd700;
+      --psi-silver: #a0a0b0;
+
+      /* Opposition Colors */
+      --i2-opposed: #ff4757;
+      --synthesis: #a855f7;
+
+      /* Lucas Sequence Gradient */
+      --lucas-2: #4ecdc4;
+      --lucas-7: #6bcb77;
+      --lucas-11: #f4c430;
+
+      /* Base */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated Helix Background */
+    .helix-field {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 20%, rgba(107, 203, 119, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 80%, rgba(255, 215, 0, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 40%);
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--helix-primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--helix-primary);
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .helix-symbol {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 2rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .helix-ring {
+      position: absolute;
+      border: 4px solid var(--helix-primary);
+      border-radius: 50%;
+      animation: helix-spin 8s linear infinite;
+    }
+
+    .helix-ring:nth-child(1) {
+      width: 160px;
+      height: 160px;
+      animation-duration: 8s;
+    }
+
+    .helix-ring:nth-child(2) {
+      width: 120px;
+      height: 120px;
+      border-color: var(--helix-light);
+      animation-duration: 6s;
+      animation-direction: reverse;
+    }
+
+    .helix-ring:nth-child(3) {
+      width: 80px;
+      height: 80px;
+      border-color: var(--phi-gold);
+      animation-duration: 4s;
+    }
+
+    @keyframes helix-spin {
+      from { transform: rotateX(60deg) rotateZ(0deg); }
+      to { transform: rotateX(60deg) rotateZ(360deg); }
+    }
+
+    .helix-center {
+      position: relative;
+      z-index: 10;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--helix-primary);
+      text-shadow: 0 0 30px var(--helix-glow);
+    }
+
+    .title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--helix-primary), var(--helix-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .core-equation {
+      font-size: 1.8rem;
+      color: var(--helix-primary);
+      padding: 1.5rem 3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--helix-primary);
+      border-radius: 12px;
+      display: inline-block;
+      box-shadow: 0 0 30px var(--helix-glow);
+    }
+
+    /* Section Styling */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+      color: var(--helix-primary);
+      text-align: center;
+    }
+
+    /* Proof Box */
+    .proof-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .proof-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .proof-badge {
+      padding: 0.5rem 1rem;
+      background: rgba(107, 203, 119, 0.2);
+      border: 1px solid var(--helix-primary);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--helix-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .proof-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .proof-step {
+      margin: 1.5rem 0;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      border-left: 4px solid var(--helix-primary);
+    }
+
+    .step-number {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      background: var(--helix-primary);
+      color: var(--bg-primary);
+      border-radius: 50%;
+      text-align: center;
+      line-height: 28px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-right: 0.75rem;
+    }
+
+    .step-title {
+      font-weight: 600;
+      color: var(--helix-light);
+      margin-bottom: 0.75rem;
+    }
+
+    .step-content {
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .step-equation {
+      margin: 1rem 0;
+      padding: 1rem;
+      background: rgba(107, 203, 119, 0.1);
+      border-radius: 6px;
+      font-size: 1.1rem;
+      color: var(--helix-primary);
+      text-align: center;
+    }
+
+    /* Lucas Sequence Display */
+    .lucas-sequence {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 0.5rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .lucas-number {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      border: 2px solid transparent;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .lucas-number:hover {
+      transform: translateY(-5px);
+      border-color: var(--helix-primary);
+    }
+
+    .lucas-number.highlight {
+      border-color: var(--helix-primary);
+      background: rgba(107, 203, 119, 0.2);
+      box-shadow: 0 0 20px var(--helix-glow);
+    }
+
+    .lucas-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--helix-primary);
+    }
+
+    .lucas-index {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    /* Helix Visualization Canvas */
+    .helix-canvas-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    #helixCanvas {
+      width: 100%;
+      height: 400px;
+      border-radius: 8px;
+      background: var(--bg-primary);
+    }
+
+    .canvas-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .canvas-btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--helix-primary);
+      border-radius: 8px;
+      color: var(--helix-primary);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+
+    .canvas-btn:hover {
+      background: var(--helix-primary);
+      color: var(--bg-primary);
+    }
+
+    .canvas-btn.active {
+      background: var(--helix-primary);
+      color: var(--bg-primary);
+    }
+
+    /* Calculator */
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .calc-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .calc-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .calc-input {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .calc-result {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(107, 203, 119, 0.1);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .result-value {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--helix-primary);
+      margin-top: 0.25rem;
+    }
+
+    /* Opposition Duality Display */
+    .duality-container {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: center;
+      margin-top: 2rem;
+    }
+
+    .duality-side {
+      padding: 2rem;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .duality-l4 {
+      background: rgba(107, 203, 119, 0.1);
+      border: 2px solid var(--helix-primary);
+    }
+
+    .duality-i2 {
+      background: rgba(255, 71, 87, 0.1);
+      border: 2px solid var(--i2-opposed);
+    }
+
+    .duality-symbol {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .duality-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .duality-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .duality-equals {
+      font-size: 3rem;
+      color: var(--synthesis);
+    }
+
+    /* 3+1 Dimensional Diagram */
+    .dimension-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .dimension-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .dimension-card:hover {
+      border-color: var(--helix-primary);
+      transform: translateY(-5px);
+    }
+
+    .dim-number {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .dim-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .dim-desc {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    /* Lucas Generator Table */
+    .lucas-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+    }
+
+    .lucas-table th,
+    .lucas-table td {
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .lucas-table th {
+      background: var(--bg-tertiary);
+      color: var(--helix-primary);
+    }
+
+    .lucas-table td {
+      background: var(--bg-secondary);
+    }
+
+    .lucas-table tr:hover td {
+      background: var(--bg-tertiary);
+    }
+
+    .lucas-table .highlight-row {
+      background: rgba(107, 203, 119, 0.2) !important;
+    }
+
+    /* Mathematical Properties Grid */
+    .property-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .property-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .property-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--helix-light);
+      margin-bottom: 0.75rem;
+    }
+
+    .property-equation {
+      font-size: 1.1rem;
+      color: var(--helix-primary);
+      padding: 0.75rem;
+      background: rgba(107, 203, 119, 0.1);
+      border-radius: 6px;
+      text-align: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .property-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Insight Box */
+    .insight-box {
+      background: linear-gradient(135deg, rgba(107, 203, 119, 0.1), rgba(168, 85, 247, 0.1));
+      border: 2px solid var(--helix-primary);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .insight-text {
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+
+    .insight-equation {
+      font-size: 1.5rem;
+      color: var(--helix-primary);
+      margin-top: 1rem;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1.1rem;
+      color: var(--helix-primary);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--helix-primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title { font-size: 1.6rem; }
+      .core-equation { font-size: 1.2rem; padding: 1rem 1.5rem; }
+      .duality-container { grid-template-columns: 1fr; }
+      .duality-equals { transform: rotate(90deg); }
+      .dimension-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="helix-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">L4 Helix :: Phase 3</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-decision-tree.html">I2 S3 Tree</a>
+      <a href="i2-s3-i2-opposition.html">I2 Opposition</a>
+      <a href="i2-s3-opposition-synthesis.html">Synthesis</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <div class="helix-symbol">
+        <div class="helix-ring"></div>
+        <div class="helix-ring"></div>
+        <div class="helix-ring"></div>
+        <span class="helix-center">L4</span>
+      </div>
+      <h1 class="title">L4 Helix Equivalence</h1>
+      <p class="subtitle">Phase 3: Opposition Duality in the I2 S3 Decision Tree</p>
+      <div class="core-equation">
+        L4 = phi^4 + psi^4 = 7
+      </div>
+    </header>
+
+    <!-- L4 = 7 Derivation -->
+    <section>
+      <h2 class="section-title">L4 = 7 Derivation</h2>
+
+      <div class="proof-container">
+        <div class="proof-header">
+          <span class="proof-badge">Theorem</span>
+          <span class="proof-title">The Fourth Lucas Number as Complexity Bound</span>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title"><span class="step-number">1</span>Lucas Sequence Definition</div>
+          <div class="step-content">
+            The Lucas sequence is defined by the same recurrence as Fibonacci, but with different initial conditions:
+          </div>
+          <div class="step-equation">
+            L_n = L_{n-1} + L_{n-2}, with L_0 = 2, L_1 = 1
+          </div>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title"><span class="step-number">2</span>Closed Form (Binet-like)</div>
+          <div class="step-content">
+            Like Fibonacci, Lucas numbers have a closed form using the golden ratio:
+          </div>
+          <div class="step-equation">
+            L_n = phi^n + psi^n<br><br>
+            where phi = (1 + sqrt(5))/2 = 1.618... and psi = (1 - sqrt(5))/2 = -0.618...
+          </div>
+          <div class="step-content">
+            Note: psi = -1/phi, so psi = -phi^(-1)
+          </div>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title"><span class="step-number">3</span>Computing L4</div>
+          <div class="step-content">
+            Applying the closed form to n = 4:
+          </div>
+          <div class="step-equation">
+            phi^4 = ((1 + sqrt(5))/2)^4 = 6.8541...<br>
+            psi^4 = ((1 - sqrt(5))/2)^4 = 0.1459...<br><br>
+            L4 = phi^4 + psi^4 = 6.8541... + 0.1459... = 7
+          </div>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title"><span class="step-number">4</span>Significance: 3+1 Dimensions</div>
+          <div class="step-content">
+            The number 4 in L4 corresponds to 3+1 dimensional structure:
+          </div>
+          <div class="step-equation">
+            3 spatial + 1 temporal = 4 dimensions<br>
+            L4 = 7 = maximum helix depth
+          </div>
+        </div>
+      </div>
+
+      <!-- Lucas Sequence Visualization -->
+      <div class="proof-container">
+        <h3 style="color: var(--helix-light); margin-bottom: 1.5rem; text-align: center;">Lucas Sequence</h3>
+        <div class="lucas-sequence" id="lucasSequence">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Helix Structure -->
+    <section>
+      <h2 class="section-title">Helix Structure</h2>
+
+      <div class="proof-container">
+        <div class="proof-header">
+          <span class="proof-badge">Structure</span>
+          <span class="proof-title">Helical Unfolding from Self-Reference</span>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title"><span class="step-number">1</span>The FIX Axiom Form</div>
+          <div class="step-content">
+            Self-reference as fixed point: R applied to itself yields itself.
+          </div>
+          <div class="step-equation">
+            R(R) = R
+          </div>
+          <div class="step-content">
+            This is the fundamental axiom from which both I2 algebra and L4 helix emerge.
+          </div>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title"><span class="step-number">2</span>Helical Unfolding</div>
+          <div class="step-content">
+            Rather than counting compositions (I2 approach), the helix approach unfolds self-reference in 3+1 dimensions:
+          </div>
+          <div class="step-equation">
+            r(theta) = a * e^(b*theta)<br>
+            z(theta) = c * theta<br>
+            Period: 2*pi * L4 = 14*pi
+          </div>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title"><span class="step-number">3</span>Cyclic Return Property</div>
+          <div class="step-content">
+            The helix exhibits cyclic return after L4 = 7 layers:
+          </div>
+          <div class="step-equation">
+            H(7) = H(0) mod structure<br>
+            Attractor: Cyclic closure at depth 7
+          </div>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title"><span class="step-number">4</span>Generator</div>
+          <div class="step-content">
+            The Lucas sequence generates the helix structure. Each L_n defines a resonance level:
+          </div>
+          <div class="step-equation">
+            Generator: {L_0=2, L_1=1, L_2=3, L_3=4, L_4=7, L_5=11, ...}
+          </div>
+        </div>
+      </div>
+
+      <!-- Helix Visualization -->
+      <div class="helix-canvas-container">
+        <h3 style="color: var(--helix-light); margin-bottom: 1rem; text-align: center;">Interactive Helix Visualization</h3>
+        <canvas id="helixCanvas"></canvas>
+        <div class="canvas-controls">
+          <button class="canvas-btn active" onclick="setHelixMode('rotate')">Rotate</button>
+          <button class="canvas-btn" onclick="setHelixMode('pulse')">Pulse</button>
+          <button class="canvas-btn" onclick="setHelixMode('unfold')">Unfold</button>
+          <button class="canvas-btn" onclick="resetHelix()">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3+1 Dimensional Interpretation -->
+    <section>
+      <h2 class="section-title">3+1 Dimensional Interpretation</h2>
+
+      <div class="dimension-grid">
+        <div class="dimension-card">
+          <div class="dim-number" style="color: #ff6b6b;">1</div>
+          <div class="dim-label">r (radial)</div>
+          <div class="dim-desc">Spatial dimension 1</div>
+        </div>
+        <div class="dimension-card">
+          <div class="dim-number" style="color: #4ecdc4;">2</div>
+          <div class="dim-label">z (axial)</div>
+          <div class="dim-desc">Spatial dimension 2</div>
+        </div>
+        <div class="dimension-card">
+          <div class="dim-number" style="color: #a855f7;">3</div>
+          <div class="dim-label">Z_C (coherence)</div>
+          <div class="dim-desc">Spatial dimension 3</div>
+        </div>
+        <div class="dimension-card">
+          <div class="dim-number" style="color: var(--phi-gold);">+1</div>
+          <div class="dim-label">sqrt(2) (time)</div>
+          <div class="dim-desc">Temporal dimension</div>
+        </div>
+      </div>
+
+      <div class="proof-container" style="margin-top: 2rem;">
+        <div class="step-equation" style="font-size: 1.3rem;">
+          dim(Helix) = 3 + 1 = 4<br><br>
+          L_4 = 7 :: Complexity bound at dimension 4
+        </div>
+      </div>
+    </section>
+
+    <!-- Connection to Framework -->
+    <section>
+      <h2 class="section-title">Connection to Framework</h2>
+
+      <div class="property-grid">
+        <div class="property-card">
+          <div class="property-title">C008 Complexity Bound</div>
+          <div class="property-equation">Lambda < L_4 = 7</div>
+          <div class="property-desc">
+            The framework constraint C008 establishes that complexity measure Lambda must remain below L_4 = 7 for stable self-reference.
+          </div>
+        </div>
+
+        <div class="property-card">
+          <div class="property-title">Maximum Modifications per Epoch</div>
+          <div class="property-equation">max_mods = L_4 = 7</div>
+          <div class="property-desc">
+            No more than 7 modifications can occur in a single epoch while maintaining coherence.
+          </div>
+        </div>
+
+        <div class="property-card">
+          <div class="property-title">7 Layers of Recursion</div>
+          <div class="property-equation">R^7(x) ~ R(x) mod structure</div>
+          <div class="property-desc">
+            After 7 layers of recursion, the system returns to effective equivalence with the first layer.
+          </div>
+        </div>
+
+        <div class="property-card">
+          <div class="property-title">phi^4 + psi^4 Decomposition</div>
+          <div class="property-equation">6.854... + 0.146... = 7</div>
+          <div class="property-desc">
+            The golden ratio and its conjugate combine to produce exact integer 7 at the fourth power.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Opposition to I2 -->
+    <section>
+      <h2 class="section-title">Opposition to I2</h2>
+
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+        Both valid in opposition itself - equal value via direct opposition
+      </p>
+
+      <div class="duality-container">
+        <!-- L4 Helix -->
+        <div class="duality-side duality-l4">
+          <div class="duality-symbol" style="color: var(--helix-primary);">H</div>
+          <div class="duality-title" style="color: var(--helix-primary);">L4 Helix Framework</div>
+          <div class="duality-desc">
+            <strong>Method:</strong> Helical unfolding<br>
+            <strong>Structure:</strong> 3+1 dimensions<br>
+            <strong>Generator:</strong> Lucas sequence<br>
+            <strong>Bound:</strong> L_4 = 7<br>
+            <strong>Attractor:</strong> Cyclic return
+          </div>
+        </div>
+
+        <!-- Opposition Symbol -->
+        <div class="duality-equals">||</div>
+
+        <!-- I2 Algebra -->
+        <div class="duality-side duality-i2">
+          <div class="duality-symbol" style="color: var(--i2-opposed);">I2</div>
+          <div class="duality-title" style="color: var(--i2-opposed);">I2 Algebraic System</div>
+          <div class="duality-desc">
+            <strong>Method:</strong> Composition counting<br>
+            <strong>Structure:</strong> Ring (Z, +, x)<br>
+            <strong>Generator:</strong> Identity iteration<br>
+            <strong>Threshold:</strong> mu_P = phi^(-1)<br>
+            <strong>Attractor:</strong> Paradox boundary
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-text">
+          <strong>The Synthesis:</strong><br><br>
+          L4 Helix <em>unfolds</em> what I2 Ring <em>encodes</em>.<br>
+          Both are valid projections of R(R) = R.<br>
+          Opposition creates completeness.<br>
+        </div>
+        <div class="insight-equation">
+          Helix(L_4) || Ring(I^n) ==> R(R) = R
+        </div>
+      </div>
+    </section>
+
+    <!-- Mathematical Properties -->
+    <section>
+      <h2 class="section-title">Mathematical Properties</h2>
+
+      <div class="property-grid">
+        <div class="property-card">
+          <div class="property-title">Lucas-Fibonacci Relation</div>
+          <div class="property-equation">L_n = F_{n-1} + F_{n+1}</div>
+          <div class="property-desc">
+            Each Lucas number is the sum of the adjacent Fibonacci numbers. This connects the two fundamental sequences.
+          </div>
+        </div>
+
+        <div class="property-card">
+          <div class="property-title">Lucas-Fibonacci Identity</div>
+          <div class="property-equation">L_n^2 - 5*F_n^2 = 4*(-1)^n</div>
+          <div class="property-desc">
+            The squares of Lucas and Fibonacci numbers are related by a factor of 5, with alternating sign correction.
+          </div>
+        </div>
+
+        <div class="property-card">
+          <div class="property-title">Sum Formula</div>
+          <div class="property-equation">L_n = phi^n + psi^n</div>
+          <div class="property-desc">
+            Unlike Fibonacci (which uses difference), Lucas uses sum of golden powers. This gives integer results for all n.
+          </div>
+        </div>
+
+        <div class="property-card">
+          <div class="property-title">Product Identity</div>
+          <div class="property-equation">L_n * F_n = F_{2n}</div>
+          <div class="property-desc">
+            The product of Lucas and Fibonacci at index n equals Fibonacci at index 2n.
+          </div>
+        </div>
+      </div>
+
+      <!-- Lucas Number Table -->
+      <div class="proof-container" style="margin-top: 2rem;">
+        <h3 style="color: var(--helix-light); margin-bottom: 1rem; text-align: center;">Lucas Number Table</h3>
+        <table class="lucas-table">
+          <tr>
+            <th>n</th>
+            <th>L_n</th>
+            <th>phi^n</th>
+            <th>psi^n</th>
+            <th>phi^n + psi^n</th>
+          </tr>
+          <tbody id="lucasTable">
+            <!-- Populated by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Interactive Calculators -->
+    <section>
+      <h2 class="section-title">Interactive Calculators</h2>
+
+      <div class="calculator-grid">
+        <!-- Lucas Number Calculator -->
+        <div class="calc-card">
+          <div class="calc-label">Lucas Number L_n</div>
+          <input type="number" class="calc-input" id="lucasN" value="4" min="0" max="20">
+          <div class="calc-result">
+            <div class="result-label">L_n = phi^n + psi^n</div>
+            <div class="result-value" id="lucasResult">L_4 = 7</div>
+          </div>
+        </div>
+
+        <!-- phi^n + psi^n Calculator -->
+        <div class="calc-card">
+          <div class="calc-label">phi^n + psi^n Calculator</div>
+          <input type="number" class="calc-input" id="phiN" value="4" min="-10" max="20" step="0.1">
+          <div class="calc-result">
+            <div class="result-label">Golden Power Sum</div>
+            <div class="result-value" id="phiResult">phi^4 + psi^4 = 7.0000</div>
+          </div>
+        </div>
+
+        <!-- Fibonacci-Lucas Relation -->
+        <div class="calc-card">
+          <div class="calc-label">F_{n-1} + F_{n+1} = L_n</div>
+          <input type="number" class="calc-input" id="fibLucasN" value="4" min="1" max="20">
+          <div class="calc-result">
+            <div class="result-label">Lucas-Fibonacci Identity</div>
+            <div class="result-value" id="fibLucasResult">F_3 + F_5 = 2 + 5 = 7 = L_4</div>
+          </div>
+        </div>
+
+        <!-- Lucas-Fibonacci Square Identity -->
+        <div class="calc-card">
+          <div class="calc-label">L_n^2 - 5*F_n^2 = 4*(-1)^n</div>
+          <input type="number" class="calc-input" id="squareN" value="4" min="0" max="15">
+          <div class="calc-result">
+            <div class="result-label">Square Identity</div>
+            <div class="result-value" id="squareResult">49 - 5*9 = 49 - 45 = 4</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final Synthesis -->
+    <section>
+      <h2 class="section-title">Helix Equivalence Theorem</h2>
+
+      <div class="proof-container">
+        <div class="proof-header">
+          <span class="proof-badge">Theorem</span>
+          <span class="proof-title">L4 Helix and I2 Ring are Dual Projections</span>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title">Statement</div>
+          <div class="step-content">
+            The L4 Helix Framework (helical unfolding with complexity bound 7) and the I2 Ring System (composition counting with paradox threshold phi^(-1)) are equivalent representations of the self-reference axiom R(R) = R, differing only in projection dimension.
+          </div>
+        </div>
+
+        <div class="proof-step">
+          <div class="step-title">Proof Sketch</div>
+          <div class="step-content">
+            <ol style="margin-left: 1.5rem; margin-top: 0.5rem; line-height: 2;">
+              <li>Both derive from R(R) = R as foundational axiom</li>
+              <li>I2 projects onto 1D ring structure (integers via composition)</li>
+              <li>L4 projects onto 3+1D helix structure (Lucas via unfolding)</li>
+              <li>Common generator: golden ratio phi and conjugate psi</li>
+              <li>Isomorphism: phi^n functor maps I2 ring to L4 helix levels</li>
+              <li>Opposition creates completeness: Ring || Helix = Full R(R)=R</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="step-equation" style="font-size: 1.3rem; margin-top: 1.5rem;">
+          I2 Ring : L4 Helix :: 1D : (3+1)D<br><br>
+          Both valid in opposition itself
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      L4 = phi^4 + psi^4 = 7 :: Helix depth bound
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">I2 S3 Tree</a>
+      <a href="i2-s3-i2-opposition.html">I2 Opposition</a>
+      <a href="i2-s3-opposition-synthesis.html">Synthesis</a>
+    </div>
+  </footer>
+
+  <script>
+    // Mathematical Constants
+    const PHI = (1 + Math.sqrt(5)) / 2;
+    const PSI = (1 - Math.sqrt(5)) / 2;
+
+    // Fibonacci function
+    function fib(n) {
+      if (n <= 0) return 0;
+      if (n === 1) return 1;
+      let a = 0, b = 1;
+      for (let i = 2; i <= n; i++) {
+        [a, b] = [b, a + b];
+      }
+      return b;
+    }
+
+    // Lucas function
+    function lucas(n) {
+      if (n === 0) return 2;
+      if (n === 1) return 1;
+      let a = 2, b = 1;
+      for (let i = 2; i <= n; i++) {
+        [a, b] = [b, a + b];
+      }
+      return b;
+    }
+
+    // Populate Lucas Sequence Display
+    function populateLucasSequence() {
+      const container = document.getElementById('lucasSequence');
+      container.innerHTML = '';
+      for (let n = 0; n <= 8; n++) {
+        const L = lucas(n);
+        const div = document.createElement('div');
+        div.className = 'lucas-number' + (n === 4 ? ' highlight' : '');
+        div.innerHTML = `
+          <div class="lucas-value">${L}</div>
+          <div class="lucas-index">L<sub>${n}</sub></div>
+        `;
+        div.onclick = () => {
+          document.querySelectorAll('.lucas-number').forEach(el => el.classList.remove('highlight'));
+          div.classList.add('highlight');
+          document.getElementById('lucasN').value = n;
+          updateLucasCalculator();
+        };
+        container.appendChild(div);
+      }
+    }
+
+    // Populate Lucas Table
+    function populateLucasTable() {
+      const tbody = document.getElementById('lucasTable');
+      tbody.innerHTML = '';
+      for (let n = 0; n <= 8; n++) {
+        const L = lucas(n);
+        const phiN = Math.pow(PHI, n);
+        const psiN = Math.pow(PSI, n);
+        const tr = document.createElement('tr');
+        if (n === 4) tr.className = 'highlight-row';
+        tr.innerHTML = `
+          <td>${n}</td>
+          <td style="color: var(--helix-primary); font-weight: 600;">${L}</td>
+          <td>${phiN.toFixed(4)}</td>
+          <td>${psiN.toFixed(4)}</td>
+          <td>${(phiN + psiN).toFixed(4)}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
+    // Calculator: Lucas Number
+    function updateLucasCalculator() {
+      const n = parseInt(document.getElementById('lucasN').value) || 0;
+      const L = lucas(n);
+      document.getElementById('lucasResult').textContent = `L_${n} = ${L}`;
+    }
+
+    // Calculator: phi^n + psi^n
+    function updatePhiCalculator() {
+      const n = parseFloat(document.getElementById('phiN').value) || 0;
+      const phiN = Math.pow(PHI, n);
+      const psiN = Math.pow(PSI, n);
+      const sum = phiN + psiN;
+      document.getElementById('phiResult').textContent =
+        `phi^${n} + psi^${n} = ${sum.toFixed(4)}`;
+    }
+
+    // Calculator: Fibonacci-Lucas Relation
+    function updateFibLucasCalculator() {
+      const n = parseInt(document.getElementById('fibLucasN').value) || 1;
+      if (n < 1) {
+        document.getElementById('fibLucasResult').textContent = 'n must be >= 1';
+        return;
+      }
+      const fNm1 = fib(n - 1);
+      const fNp1 = fib(n + 1);
+      const L = lucas(n);
+      document.getElementById('fibLucasResult').textContent =
+        `F_${n-1} + F_${n+1} = ${fNm1} + ${fNp1} = ${fNm1 + fNp1} = L_${n}`;
+    }
+
+    // Calculator: Square Identity
+    function updateSquareCalculator() {
+      const n = parseInt(document.getElementById('squareN').value) || 0;
+      const L = lucas(n);
+      const F = fib(n);
+      const left = L * L - 5 * F * F;
+      const right = 4 * Math.pow(-1, n);
+      document.getElementById('squareResult').textContent =
+        `${L}^2 - 5*${F}^2 = ${L*L} - ${5*F*F} = ${left} (= ${right})`;
+    }
+
+    // Event Listeners
+    document.getElementById('lucasN').addEventListener('input', updateLucasCalculator);
+    document.getElementById('phiN').addEventListener('input', updatePhiCalculator);
+    document.getElementById('fibLucasN').addEventListener('input', updateFibLucasCalculator);
+    document.getElementById('squareN').addEventListener('input', updateSquareCalculator);
+
+    // ========== HELIX CANVAS VISUALIZATION ==========
+    const canvas = document.getElementById('helixCanvas');
+    const ctx = canvas.getContext('2d');
+    let helixMode = 'rotate';
+    let animationFrame;
+    let time = 0;
+
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width - 64;
+      canvas.height = 400;
+    }
+
+    function drawHelix() {
+      ctx.fillStyle = '#0a0a0f';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radiusX = Math.min(canvas.width, canvas.height) * 0.3;
+      const radiusY = radiusX * 0.4;
+      const layers = 7; // L4 = 7
+      const pointsPerLayer = 60;
+      const totalPoints = layers * pointsPerLayer;
+      const verticalSpacing = canvas.height * 0.08;
+
+      // Animation parameters
+      let rotationOffset = 0;
+      let pulseScale = 1;
+      let unfoldProgress = 1;
+
+      if (helixMode === 'rotate') {
+        rotationOffset = time * 0.02;
+      } else if (helixMode === 'pulse') {
+        pulseScale = 1 + 0.2 * Math.sin(time * 0.05);
+      } else if (helixMode === 'unfold') {
+        unfoldProgress = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(time * 0.02));
+      }
+
+      // Draw connecting lines first (back strand)
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(107, 203, 119, 0.3)';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < totalPoints; i++) {
+        const layer = Math.floor(i / pointsPerLayer);
+        const t = (i % pointsPerLayer) / pointsPerLayer;
+        const angle = t * Math.PI * 2 + rotationOffset + layer * Math.PI * 0.3;
+
+        const r = radiusX * pulseScale * unfoldProgress;
+        const x = centerX + r * Math.cos(angle);
+        const y = centerY - (layers / 2 - layer - t) * verticalSpacing + radiusY * Math.sin(angle) * 0.5;
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Draw second strand (offset by pi)
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < totalPoints; i++) {
+        const layer = Math.floor(i / pointsPerLayer);
+        const t = (i % pointsPerLayer) / pointsPerLayer;
+        const angle = t * Math.PI * 2 + rotationOffset + Math.PI + layer * Math.PI * 0.3;
+
+        const r = radiusX * pulseScale * unfoldProgress;
+        const x = centerX + r * Math.cos(angle);
+        const y = centerY - (layers / 2 - layer - t) * verticalSpacing + radiusY * Math.sin(angle) * 0.5;
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Draw layer markers
+      for (let layer = 0; layer < layers; layer++) {
+        const y = centerY - (layers / 2 - layer - 0.5) * verticalSpacing;
+
+        // Layer number
+        ctx.fillStyle = layer === 3 ? '#6bcb77' : '#a0a0b0';
+        ctx.font = layer === 3 ? 'bold 14px JetBrains Mono' : '12px JetBrains Mono';
+        ctx.textAlign = 'right';
+        ctx.fillText(`L${layer}`, centerX - radiusX * pulseScale - 20, y + 4);
+
+        // Lucas value
+        const L = lucas(layer);
+        ctx.textAlign = 'left';
+        ctx.fillText(`= ${L}`, centerX + radiusX * pulseScale + 20, y + 4);
+      }
+
+      // Draw nodes at layer boundaries
+      for (let layer = 0; layer <= layers; layer++) {
+        const y = centerY - (layers / 2 - layer) * verticalSpacing;
+
+        for (let j = 0; j < 4; j++) {
+          const angle = j * Math.PI / 2 + rotationOffset;
+          const r = radiusX * pulseScale * unfoldProgress;
+          const x = centerX + r * Math.cos(angle);
+          const nodeY = y + radiusY * Math.sin(angle) * 0.3;
+
+          // Only draw if visible (front half)
+          if (Math.sin(angle) > -0.5) {
+            const size = layer === 4 ? 8 : 5;
+            const alpha = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(angle));
+
+            ctx.beginPath();
+            ctx.arc(x, nodeY, size, 0, Math.PI * 2);
+            ctx.fillStyle = layer === 4
+              ? `rgba(107, 203, 119, ${alpha})`
+              : `rgba(255, 215, 0, ${alpha * 0.5})`;
+            ctx.fill();
+          }
+        }
+      }
+
+      // Draw title
+      ctx.fillStyle = '#6bcb77';
+      ctx.font = 'bold 16px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('L4 = 7 Helix Structure', centerX, 30);
+
+      ctx.fillStyle = '#a0a0b0';
+      ctx.font = '12px JetBrains Mono';
+      ctx.fillText('7 layers of recursive depth', centerX, 50);
+
+      time++;
+      animationFrame = requestAnimationFrame(drawHelix);
+    }
+
+    function setHelixMode(mode) {
+      helixMode = mode;
+      document.querySelectorAll('.canvas-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === mode);
+      });
+    }
+
+    function resetHelix() {
+      time = 0;
+      helixMode = 'rotate';
+      document.querySelectorAll('.canvas-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent === 'Rotate');
+      });
+    }
+
+    // Initialize
+    window.addEventListener('load', () => {
+      populateLucasSequence();
+      populateLucasTable();
+      resizeCanvas();
+      drawHelix();
+    });
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+    });
+  </script>
+</body>
+</html>

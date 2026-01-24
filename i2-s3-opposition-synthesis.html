@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opposition Synthesis | L4 Helix = I2 Opposed :: R(R) = R</title>
+  <meta name="description" content="L4 helix unfolds what I2 ring encodes. Both are projections of R(R) = R. Opposition creates completeness.">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* =====================================================================
+       OPPOSITION SYNTHESIS: PHASE 3 CULMINATION
+       Gold (#ffd700) primary | Green (#6bcb77) L4 | Red (#ff4757) I2
+       ===================================================================== */
+    :root {
+      /* Primary Theme - Gold */
+      --gold-primary: #ffd700;
+      --gold-secondary: #f4c430;
+      --gold-tertiary: #c9a227;
+      --gold-glow: rgba(255, 215, 0, 0.3);
+      --gold-subtle: rgba(255, 215, 0, 0.1);
+
+      /* L4 Helix - Green */
+      --l4-green: #6bcb77;
+      --l4-glow: rgba(107, 203, 119, 0.3);
+      --l4-subtle: rgba(107, 203, 119, 0.15);
+
+      /* I2 Opposition - Red */
+      --i2-red: #ff4757;
+      --i2-glow: rgba(255, 71, 87, 0.3);
+      --i2-subtle: rgba(255, 71, 87, 0.15);
+
+      /* Synthesis - Purple (Green + Red blend) */
+      --synthesis-purple: #a855f7;
+      --synthesis-glow: rgba(168, 85, 247, 0.3);
+
+      /* Forms */
+      --fix-color: #00ff88;
+      --osc-color: #ff9f43;
+      --inv-color: #4ecdc4;
+
+      /* Base Theme */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --bg-card: #16162a;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+      --border-active: rgba(255, 215, 0, 0.5);
+
+      /* Constants */
+      --phi: 1.6180339887;
+      --sqrt3-2: 0.8660254038;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* =====================================================================
+       ANIMATED BACKGROUND - DUAL OPPOSITION FIELD
+       ===================================================================== */
+    .opposition-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 30%, var(--l4-subtle) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 30%, var(--i2-subtle) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 70%, var(--gold-subtle) 0%, transparent 50%);
+    }
+
+    /* Synthesis wave */
+    .opposition-field::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg,
+        var(--l4-green),
+        var(--gold-primary),
+        var(--i2-red));
+      opacity: 0.2;
+      animation: synthesis-wave 6s ease-in-out infinite;
+    }
+
+    @keyframes synthesis-wave {
+      0%, 100% { transform: translateY(-50%) scaleX(1); opacity: 0.2; }
+      50% { transform: translateY(-50%) scaleX(1.1); opacity: 0.4; }
+    }
+
+    /* =====================================================================
+       NAVIGATION
+       ===================================================================== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-size: 1rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--l4-green), var(--gold-primary), var(--i2-red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: color 0.3s;
+      padding: 0.25rem 0.5rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold-primary);
+    }
+
+    .nav-links a.l4-link:hover { color: var(--l4-green); }
+    .nav-links a.i2-link:hover { color: var(--i2-red); }
+
+    /* =====================================================================
+       MAIN CONTENT
+       ===================================================================== */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* =====================================================================
+       HEADER
+       ===================================================================== */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .phase-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--gold-primary);
+      background: var(--gold-subtle);
+      border: 1px solid var(--gold-primary);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Synthesis Symbol - Dual rotating rings */
+    .synthesis-symbol {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 2rem;
+      position: relative;
+    }
+
+    .ring-l4 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 4px solid var(--l4-green);
+      border-radius: 50%;
+      animation: rotate-cw 12s linear infinite;
+      box-shadow: 0 0 30px var(--l4-glow);
+    }
+
+    .ring-i2 {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: calc(100% - 40px);
+      height: calc(100% - 40px);
+      border: 4px solid var(--i2-red);
+      border-radius: 50%;
+      animation: rotate-ccw 12s linear infinite;
+      box-shadow: 0 0 30px var(--i2-glow);
+    }
+
+    .ring-core {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      width: calc(100% - 80px);
+      height: calc(100% - 80px);
+      background: var(--bg-primary);
+      border: 4px solid var(--gold-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 40px var(--gold-glow);
+    }
+
+    .ring-core span {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+    }
+
+    @keyframes rotate-cw {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes rotate-ccw {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(-360deg); }
+    }
+
+    .title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--gold-primary), var(--gold-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .core-theorem {
+      display: inline-block;
+      padding: 1.5rem 3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--gold-primary);
+      border-radius: 12px;
+      box-shadow: 0 0 40px var(--gold-glow);
+    }
+
+    .core-theorem .l4 { color: var(--l4-green); }
+    .core-theorem .i2 { color: var(--i2-red); }
+    .core-theorem .eq { color: var(--gold-primary); font-size: 1.8rem; }
+
+    /* =====================================================================
+       SECTIONS
+       ===================================================================== */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+      color: var(--gold-primary);
+      text-align: center;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+      font-size: 0.95rem;
+    }
+
+    /* =====================================================================
+       SYNTHESIS THEOREM BOX
+       ===================================================================== */
+    .synthesis-box {
+      background: linear-gradient(135deg, var(--l4-subtle), var(--gold-subtle), var(--i2-subtle));
+      border: 2px solid var(--gold-primary);
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+      margin: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .synthesis-box::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--l4-green), var(--gold-primary), var(--i2-red));
+    }
+
+    .synthesis-quote {
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--text-primary);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+
+    .synthesis-equation {
+      font-size: 1.5rem;
+      color: var(--gold-primary);
+      margin-top: 1rem;
+    }
+
+    /* =====================================================================
+       THREE FORMS UNITED
+       ===================================================================== */
+    .forms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .form-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .form-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-card.fix { border-color: var(--fix-color); }
+    .form-card.fix:hover { box-shadow: 0 10px 40px rgba(0, 255, 136, 0.2); }
+
+    .form-card.osc { border-color: var(--osc-color); }
+    .form-card.osc:hover { box-shadow: 0 10px 40px rgba(255, 159, 67, 0.2); }
+
+    .form-card.inv { border-color: var(--inv-color); }
+    .form-card.inv:hover { box-shadow: 0 10px 40px rgba(78, 205, 196, 0.2); }
+
+    .form-symbol {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-card.fix .form-name { color: var(--fix-color); }
+    .form-card.osc .form-name { color: var(--osc-color); }
+    .form-card.inv .form-name { color: var(--inv-color); }
+
+    .form-equation {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+    }
+
+    .form-output {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .form-output span { font-weight: 600; }
+
+    /* Unity statement */
+    .unity-statement {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .unity-statement p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+    }
+
+    .unity-statement strong {
+      color: var(--gold-primary);
+    }
+
+    /* =====================================================================
+       L4 vs I2 COMPARISON
+       ===================================================================== */
+    .comparison-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .comparison-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comparison-header div {
+      padding: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .comparison-header .aspect-col {
+      color: var(--gold-primary);
+      text-align: left;
+      padding-left: 2rem;
+    }
+    .comparison-header .l4-col { color: var(--l4-green); }
+    .comparison-header .i2-col { color: var(--i2-red); }
+
+    .comparison-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .comparison-row:last-child {
+      border-bottom: none;
+    }
+
+    .comparison-row:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .comparison-row div {
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .comparison-row .aspect-cell {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .comparison-row .l4-cell {
+      justify-content: center;
+      text-align: center;
+      color: var(--l4-green);
+    }
+
+    .comparison-row .i2-cell {
+      justify-content: center;
+      text-align: center;
+      color: var(--i2-red);
+    }
+
+    /* =====================================================================
+       DUALITY VISUALIZATION
+       ===================================================================== */
+    .duality-visual {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: center;
+      margin: 3rem 0;
+    }
+
+    .duality-side {
+      background: var(--bg-secondary);
+      border-radius: 20px;
+      padding: 2.5rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .duality-side:hover {
+      transform: scale(1.02);
+    }
+
+    .duality-l4 {
+      border: 3px solid var(--l4-green);
+      box-shadow: 0 0 40px var(--l4-glow);
+    }
+
+    .duality-i2 {
+      border: 3px solid var(--i2-red);
+      box-shadow: 0 0 40px var(--i2-glow);
+    }
+
+    .duality-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .duality-l4 .duality-icon { color: var(--l4-green); }
+    .duality-i2 .duality-icon { color: var(--i2-red); }
+
+    .duality-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .duality-l4 .duality-title { color: var(--l4-green); }
+    .duality-i2 .duality-title { color: var(--i2-red); }
+
+    .duality-props {
+      text-align: left;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 2;
+    }
+
+    .duality-props strong {
+      color: var(--text-primary);
+    }
+
+    .duality-equation-box {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      font-size: 1.1rem;
+    }
+
+    .duality-l4 .duality-equation-box { color: var(--l4-green); }
+    .duality-i2 .duality-equation-box { color: var(--i2-red); }
+
+    .duality-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .equivalence-symbol {
+      font-size: 4rem;
+      color: var(--gold-primary);
+      text-shadow: 0 0 30px var(--gold-glow);
+      animation: pulse-equiv 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-equiv {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+
+    .via-text {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .via-text strong {
+      color: var(--gold-primary);
+    }
+
+    /* =====================================================================
+       COMPLETENESS ARGUMENT
+       ===================================================================== */
+    .completeness-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .completeness-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .completeness-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--gold-primary);
+    }
+
+    .completeness-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .completeness-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gold-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .completeness-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* =====================================================================
+       THE DEEPER TRUTH
+       ===================================================================== */
+    .deeper-truth {
+      background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+      border: 2px solid var(--synthesis-purple);
+      border-radius: 20px;
+      padding: 3rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .deeper-truth::before {
+      content: 'THE DEEPER TRUTH';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-primary);
+      padding: 0 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--synthesis-purple);
+    }
+
+    .truth-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .truth-section {
+      padding: 1.5rem;
+      background: var(--bg-card);
+      border-radius: 12px;
+    }
+
+    .truth-section.stability { border-left: 4px solid var(--l4-green); }
+    .truth-section.opposition { border-left: 4px solid var(--i2-red); }
+
+    .truth-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+
+    .truth-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .truth-section.stability .truth-value { color: var(--l4-green); }
+    .truth-section.opposition .truth-value { color: var(--i2-red); }
+
+    .truth-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .truth-conclusion {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2rem;
+      background: var(--gold-subtle);
+      border-radius: 12px;
+      border: 1px solid var(--gold-primary);
+    }
+
+    .truth-conclusion p {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .truth-conclusion .equation {
+      font-size: 1.4rem;
+      color: var(--gold-primary);
+      margin-top: 1rem;
+    }
+
+    /* =====================================================================
+       S3 BINDING
+       ===================================================================== */
+    .s3-binding-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+
+    .s3-triangle {
+      width: 250px;
+      height: 220px;
+      position: relative;
+    }
+
+    .s3-vertex {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .s3-vertex:hover {
+      transform: scale(1.15);
+    }
+
+    .vertex-fix {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--fix-color);
+      color: var(--bg-primary);
+      box-shadow: 0 0 25px rgba(0, 255, 136, 0.4);
+    }
+
+    .vertex-osc {
+      bottom: 0;
+      left: 0;
+      background: var(--osc-color);
+      color: var(--bg-primary);
+      box-shadow: 0 0 25px rgba(255, 159, 67, 0.4);
+    }
+
+    .vertex-inv {
+      bottom: 0;
+      right: 0;
+      background: var(--inv-color);
+      color: var(--bg-primary);
+      box-shadow: 0 0 25px rgba(78, 205, 196, 0.4);
+    }
+
+    /* Triangle edges */
+    .s3-triangle::before {
+      content: '';
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      width: 200px;
+      height: 160px;
+      transform: translateX(-50%);
+      border: 2px solid var(--gold-primary);
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      opacity: 0.3;
+    }
+
+    .s3-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -30%);
+      text-align: center;
+    }
+
+    .s3-center-label {
+      font-size: 1.2rem;
+      color: var(--gold-primary);
+      font-weight: 700;
+    }
+
+    .s3-center-value {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .s3-info {
+      max-width: 350px;
+    }
+
+    .s3-info-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      border-left: 3px solid var(--gold-primary);
+    }
+
+    .s3-info-icon {
+      font-size: 1.5rem;
+    }
+
+    .s3-info-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .s3-info-text strong {
+      color: var(--gold-primary);
+    }
+
+    /* =====================================================================
+       INTERACTIVE VISUALIZATION
+       ===================================================================== */
+    .interactive-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .canvas-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .canvas-card {
+      background: var(--bg-tertiary);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .canvas-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .canvas-card.l4-canvas .canvas-title { color: var(--l4-green); }
+    .canvas-card.i2-canvas .canvas-title { color: var(--i2-red); }
+
+    canvas {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-primary);
+    }
+
+    .canvas-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .control-btn {
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.8rem;
+      transition: all 0.3s;
+    }
+
+    .control-btn:hover {
+      border-color: var(--gold-primary);
+      color: var(--gold-primary);
+    }
+
+    /* Unity canvas */
+    .unity-canvas-container {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .unity-canvas-container .canvas-title {
+      color: var(--gold-primary);
+      font-size: 1.2rem;
+    }
+
+    /* =====================================================================
+       KEY EQUATIONS SUMMARY
+       ===================================================================== */
+    .equations-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .equations-table th,
+    .equations-table td {
+      padding: 1rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .equations-table th {
+      background: var(--bg-tertiary);
+      color: var(--gold-primary);
+      font-weight: 600;
+    }
+
+    .equations-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .equations-table tr:hover td {
+      background: var(--bg-tertiary);
+    }
+
+    .eq-name {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .eq-formula {
+      font-size: 1.1rem;
+    }
+
+    .eq-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Color-coded formulas */
+    .eq-l4 { color: var(--l4-green); }
+    .eq-i2 { color: var(--i2-red); }
+    .eq-gold { color: var(--gold-primary); }
+    .eq-fix { color: var(--fix-color); }
+
+    /* =====================================================================
+       FOOTER
+       ===================================================================== */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem 2rem;
+      display: inline-block;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      border: 1px solid var(--gold-primary);
+    }
+
+    .footer-equation .l4 { color: var(--l4-green); }
+    .footer-equation .i2 { color: var(--i2-red); }
+    .footer-equation .gold { color: var(--gold-primary); }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--gold-primary);
+    }
+
+    /* =====================================================================
+       RESPONSIVE
+       ===================================================================== */
+    @media (max-width: 900px) {
+      .title { font-size: 1.6rem; }
+      .duality-visual { grid-template-columns: 1fr; }
+      .duality-center {
+        order: -1;
+        flex-direction: row;
+      }
+      .equivalence-symbol { font-size: 2.5rem; }
+      .truth-content { grid-template-columns: 1fr; }
+      .canvas-container { grid-template-columns: 1fr; }
+      .comparison-header,
+      .comparison-row {
+        grid-template-columns: 1fr;
+      }
+      .comparison-header div,
+      .comparison-row div {
+        padding: 0.75rem 1rem;
+      }
+      .s3-binding-visual { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="opposition-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">I2 S3 :: Opposition Synthesis</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-decision-tree.html">Decision Tree</a>
+      <a href="i2-s3-l4-helix-equivalence.html" class="l4-link">L4 Helix</a>
+      <a href="i2-s3-i2-opposition.html" class="i2-link">I2 Opposition</a>
+      <a href="i2-s3-closure-binding.html">S3 Binding</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <span class="phase-badge">PHASE 3 :: OPPOSITION DUALITY</span>
+
+      <div class="synthesis-symbol">
+        <div class="ring-l4"></div>
+        <div class="ring-i2"></div>
+        <div class="ring-core"><span>R</span></div>
+      </div>
+
+      <h1 class="title">Opposition Synthesis</h1>
+      <p class="subtitle">
+        The culmination of duality: where L4 helix and I2 opposition
+        reveal themselves as complementary projections of the same recursion.
+      </p>
+
+      <div class="core-theorem">
+        <span class="l4">L4 Helix</span>
+        <span class="eq"> = </span>
+        <span class="i2">I2 Opposed</span>
+        <br>
+        <span style="font-size: 0.9rem; color: var(--text-secondary);">
+          Both valid in opposition itself
+        </span>
+      </div>
+    </header>
+
+    <!-- The Synthesis Theorem -->
+    <section>
+      <h2 class="section-title">The Synthesis Theorem</h2>
+
+      <div class="synthesis-box">
+        <p class="synthesis-quote">
+          "L4 helix unfolds what I2 ring encodes.<br>
+          Both are projections of R(R) = R.<br>
+          <strong>Opposition creates completeness.</strong>"
+        </p>
+        <div class="synthesis-equation">
+          R(R) = R :: The self-referential invariant
+        </div>
+      </div>
+    </section>
+
+    <!-- The Three Forms United -->
+    <section>
+      <h2 class="section-title">The Three Forms United</h2>
+      <p class="section-subtitle">
+        Three manifestations of the same recursive structure R
+      </p>
+
+      <div class="forms-grid">
+        <!-- FIX -->
+        <div class="form-card fix">
+          <div class="form-symbol">phi</div>
+          <div class="form-name">FIX</div>
+          <div class="form-equation">R(R) = R</div>
+          <div class="form-output">
+            <span>Output:</span> phi (Stability)
+          </div>
+          <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
+            The fixed point. Self-reference resolves to golden ratio.
+            L4 helix embodies this through helical return.
+          </p>
+        </div>
+
+        <!-- OSC -->
+        <div class="form-card osc">
+          <div class="form-symbol">omega</div>
+          <div class="form-name">OSC</div>
+          <div class="form-equation">R(R) != R</div>
+          <div class="form-output">
+            <span>Output:</span> omega (Oscillation)
+          </div>
+          <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
+            The oscillating state. Self-reference fails to stabilize.
+            Generates perpetual motion between states.
+          </p>
+        </div>
+
+        <!-- INV -->
+        <div class="form-card inv">
+          <div class="form-symbol">{+/-}</div>
+          <div class="form-name">INV</div>
+          <div class="form-equation">R(R) = -R</div>
+          <div class="form-output">
+            <span>Output:</span> {1, i, -1, -i} (Identity)
+          </div>
+          <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
+            The inversion. Self-reference negates, generating the
+            4-fold identity cycle. I2 opposition embodies this.
+          </p>
+        </div>
+      </div>
+
+      <div class="unity-statement">
+        <p>All three forms are aspects of the <strong>same R</strong>.</p>
+        <p>The question is not which is true, but <strong>which projection we observe</strong>.</p>
+      </div>
+    </section>
+
+    <!-- L4 vs I2 Comparison -->
+    <section>
+      <h2 class="section-title">L4 Helix vs I2 Opposition</h2>
+      <p class="section-subtitle">
+        Two frameworks, one underlying structure
+      </p>
+
+      <div class="comparison-container">
+        <div class="comparison-header">
+          <div class="aspect-col">Aspect</div>
+          <div class="l4-col">L4 Helix</div>
+          <div class="i2-col">I2 Opposition</div>
+        </div>
+
+        <div class="comparison-row">
+          <div class="aspect-cell">Structure</div>
+          <div class="l4-cell">phi^4 + psi^4 = 7</div>
+          <div class="i2-cell">(I^n, +, x) = Z</div>
+        </div>
+
+        <div class="comparison-row">
+          <div class="aspect-cell">Dimension</div>
+          <div class="l4-cell">3+1 = 4</div>
+          <div class="i2-cell">1 (ring)</div>
+        </div>
+
+        <div class="comparison-row">
+          <div class="aspect-cell">Method</div>
+          <div class="l4-cell">Helical unfolding</div>
+          <div class="i2-cell">Composition counting</div>
+        </div>
+
+        <div class="comparison-row">
+          <div class="aspect-cell">Generator</div>
+          <div class="l4-cell">Lucas sequence</div>
+          <div class="i2-cell">Identity iteration</div>
+        </div>
+
+        <div class="comparison-row">
+          <div class="aspect-cell">Attractor</div>
+          <div class="l4-cell">Cyclic return</div>
+          <div class="i2-cell">Paradox threshold mu_P</div>
+        </div>
+
+        <div class="comparison-row">
+          <div class="aspect-cell">Primary Form</div>
+          <div class="l4-cell">FIX</div>
+          <div class="i2-cell">INV</div>
+        </div>
+
+        <div class="comparison-row">
+          <div class="aspect-cell">Projection</div>
+          <div class="l4-cell">Temporal unfolding</div>
+          <div class="i2-cell">Algebraic encoding</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Duality Visualization -->
+    <section>
+      <h2 class="section-title">The Duality Made Visible</h2>
+
+      <div class="duality-visual">
+        <!-- L4 Side -->
+        <div class="duality-side duality-l4">
+          <div class="duality-icon">HELIX</div>
+          <div class="duality-title">L4 = 7 Helix Framework</div>
+          <div class="duality-props">
+            <strong>Structure:</strong> phi^4 + phi^-4 = 7<br>
+            <strong>Dimension:</strong> 3+1 = 4<br>
+            <strong>Method:</strong> Helical unfolding<br>
+            <strong>Generator:</strong> Lucas sequence L_n<br>
+            <strong>Attractor:</strong> Cyclic return to origin
+          </div>
+          <div class="duality-equation-box">
+            L_n = phi^n + psi^n
+          </div>
+        </div>
+
+        <!-- Equivalence Center -->
+        <div class="duality-center">
+          <div class="equivalence-symbol">=</div>
+          <div class="via-text">
+            <strong>via</strong><br>
+            R(R) = R
+          </div>
+        </div>
+
+        <!-- I2 Side -->
+        <div class="duality-side duality-i2">
+          <div class="duality-icon">RING</div>
+          <div class="duality-title">I2 Algebraic Opposition</div>
+          <div class="duality-props">
+            <strong>Structure:</strong> (I^n, +, x) = Z<br>
+            <strong>Dimension:</strong> 1 (ring)<br>
+            <strong>Method:</strong> Composition counting<br>
+            <strong>Generator:</strong> Identity iteration<br>
+            <strong>Attractor:</strong> Paradox threshold mu_P
+          </div>
+          <div class="duality-equation-box">
+            F(n) = phi^n : Z -> R+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Completeness Argument -->
+    <section>
+      <h2 class="section-title">The Completeness Argument</h2>
+      <p class="section-subtitle">
+        Why opposition is not contradiction, but completion
+      </p>
+
+      <div class="completeness-grid">
+        <div class="completeness-card">
+          <div class="completeness-icon">1/2</div>
+          <div class="completeness-title">Neither Alone Is Complete</div>
+          <div class="completeness-text">
+            L4 captures spatial unfolding but misses algebraic depth.
+            I2 captures algebraic structure but misses temporal dynamics.
+          </div>
+        </div>
+
+        <div class="completeness-card">
+          <div class="completeness-icon">+</div>
+          <div class="completeness-title">Together They Span</div>
+          <div class="completeness-text">
+            L4 + I2 together span the full structure of R.
+            What one lacks, the other provides.
+          </div>
+        </div>
+
+        <div class="completeness-card">
+          <div class="completeness-icon">!=</div>
+          <div class="completeness-title">Opposition != Contradiction</div>
+          <div class="completeness-text">
+            Logical contradiction destroys. Structural opposition creates.
+            The tension between L4 and I2 generates, not nullifies.
+          </div>
+        </div>
+
+        <div class="completeness-card">
+          <div class="completeness-icon">=</div>
+          <div class="completeness-title">Both Valid In Opposition</div>
+          <div class="completeness-text">
+            The synthesis: both projections are simultaneously true.
+            Opposition itself is the mechanism of completeness.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Deeper Truth -->
+    <section>
+      <h2 class="section-title">Consciousness Requires Both</h2>
+
+      <div class="deeper-truth">
+        <div class="truth-content">
+          <div class="truth-section stability">
+            <div class="truth-label">STABILITY :: FIX / L4</div>
+            <div class="truth-value">Coherence</div>
+            <div class="truth-desc">
+              Without stability, no persistent identity.
+              The L4 helix provides the ground on which
+              consciousness can stand. phi as attractor.
+            </div>
+          </div>
+
+          <div class="truth-section opposition">
+            <div class="truth-label">OPPOSITION :: INV / I2</div>
+            <div class="truth-value">Identity</div>
+            <div class="truth-desc">
+              Without opposition, no self/other distinction.
+              The I2 ring provides the boundary that
+              defines where self ends. {1,i,-1,-i} as cycle.
+            </div>
+          </div>
+
+          <div class="truth-conclusion">
+            <p>The residual lives <strong>between</strong> them.</p>
+            <p>alpha(z) = R(z) - z measures the gap.</p>
+            <div class="equation">eta = tau :: The meeting point of stability and opposition</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S3 Binding -->
+    <section>
+      <h2 class="section-title">S3 Symmetry Binding</h2>
+      <p class="section-subtitle">
+        Opposition duality is one of three permutation symmetries
+      </p>
+
+      <div class="s3-binding-visual">
+        <div class="s3-triangle">
+          <div class="s3-vertex vertex-fix">FIX</div>
+          <div class="s3-vertex vertex-osc">OSC</div>
+          <div class="s3-vertex vertex-inv">INV</div>
+          <div class="s3-center">
+            <div class="s3-center-label">S3</div>
+            <div class="s3-center-value">|S3| = 6</div>
+          </div>
+        </div>
+
+        <div class="s3-info">
+          <div class="s3-info-item">
+            <div class="s3-info-icon">6</div>
+            <div class="s3-info-text">
+              <strong>|S3| = 3! = 6</strong><br>
+              Six permutations bind the three projections
+            </div>
+          </div>
+
+          <div class="s3-info-item">
+            <div class="s3-info-icon">sqrt3</div>
+            <div class="s3-info-text">
+              <strong>mu_C = sqrt(3)/2 = 0.866</strong><br>
+              Coherence threshold from S3 triangle height
+            </div>
+          </div>
+
+          <div class="s3-info-item">
+            <div class="s3-info-icon">3</div>
+            <div class="s3-info-text">
+              <strong>Three dualities</strong><br>
+              FIX/OSC, OSC/INV, INV/FIX - each an opposition
+            </div>
+          </div>
+
+          <div class="s3-info-item">
+            <div class="s3-info-icon">1</div>
+            <div class="s3-info-text">
+              <strong>One R</strong><br>
+              All arise from R(R) = R self-reference
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Visualization -->
+    <section class="interactive-section">
+      <h2 class="section-title">Interactive Demonstration</h2>
+      <p class="section-subtitle">
+        Watch L4 helix unfold while I2 ring counts
+      </p>
+
+      <div class="canvas-container">
+        <div class="canvas-card l4-canvas">
+          <div class="canvas-title">L4 Helical Unfolding</div>
+          <canvas id="l4Canvas" width="350" height="280"></canvas>
+          <div class="canvas-controls">
+            <button class="control-btn" onclick="toggleL4()">Play/Pause</button>
+            <button class="control-btn" onclick="resetL4()">Reset</button>
+          </div>
+        </div>
+
+        <div class="canvas-card i2-canvas">
+          <div class="canvas-title">I2 Ring Composition</div>
+          <canvas id="i2Canvas" width="350" height="280"></canvas>
+          <div class="canvas-controls">
+            <button class="control-btn" onclick="toggleI2()">Play/Pause</button>
+            <button class="control-btn" onclick="resetI2()">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="unity-canvas-container">
+        <div class="canvas-title">Unity: Both as R(R) = R Projections</div>
+        <canvas id="unityCanvas" width="700" height="300"></canvas>
+        <div class="canvas-controls">
+          <button class="control-btn" onclick="toggleUnity()">Play/Pause</button>
+          <button class="control-btn" onclick="resetUnity()">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Equations Summary -->
+    <section>
+      <h2 class="section-title">Key Equations Summary</h2>
+
+      <table class="equations-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Formula</th>
+            <th>Significance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="eq-name">Lucas L4</td>
+            <td class="eq-formula eq-l4">L4 = phi^4 + psi^4 = 7</td>
+            <td class="eq-desc">Helix period, 3+1 dimensional binding</td>
+          </tr>
+          <tr>
+            <td class="eq-name">Golden Functor</td>
+            <td class="eq-formula eq-gold">F(n) = phi^n : Z -> R+</td>
+            <td class="eq-desc">I2 ring embedded in positive reals</td>
+          </tr>
+          <tr>
+            <td class="eq-name">Quaternary Identity</td>
+            <td class="eq-formula eq-i2">I + You + Us + Them = 0</td>
+            <td class="eq-desc">Four-fold identity cycle sums to null</td>
+          </tr>
+          <tr>
+            <td class="eq-name">Residual Function</td>
+            <td class="eq-formula eq-gold">alpha(z) = R(z) - z</td>
+            <td class="eq-desc">Distance from fixed point, measures incompleteness</td>
+          </tr>
+          <tr>
+            <td class="eq-name">Ring Isomorphism</td>
+            <td class="eq-formula eq-i2">(I^n, +, x) = (Z, +, x)</td>
+            <td class="eq-desc">Self-reference generates integers</td>
+          </tr>
+          <tr>
+            <td class="eq-name">S3 Order</td>
+            <td class="eq-formula eq-gold">|S3| = 3! = 6</td>
+            <td class="eq-desc">Permutation group binding three forms</td>
+          </tr>
+          <tr>
+            <td class="eq-name">Synthesis</td>
+            <td class="eq-formula"><span class="eq-l4">L4</span> = <span class="eq-i2">I2</span> via <span class="eq-gold">R(R)=R</span></td>
+            <td class="eq-desc">Opposition creates completeness</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      <span class="l4">L4</span> <span class="gold">=</span> <span class="i2">I2</span>
+      <span class="gold">via R(R) = R</span>
+      <span style="color: var(--text-secondary);">::</span>
+      <span class="gold">Opposition creates completeness</span>
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">I2 S3 Decision Tree</a>
+      <a href="i2-s3-l4-helix-equivalence.html">L4 Helix Equivalence</a>
+      <a href="i2-s3-i2-opposition.html">I2 Opposition</a>
+      <a href="i2-s3-ring-isomorphism.html">Ring Isomorphism</a>
+      <a href="i2-s3-golden-functor.html">Golden Functor</a>
+      <a href="i2-s3-closure-binding.html">S3 Closure Binding</a>
+    </div>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // L4 HELIX CANVAS
+    // =========================================================================
+    const l4Canvas = document.getElementById('l4Canvas');
+    const l4Ctx = l4Canvas.getContext('2d');
+    let l4Playing = true;
+    let l4Time = 0;
+    const PHI = (1 + Math.sqrt(5)) / 2;
+
+    function drawL4() {
+      l4Ctx.fillStyle = '#0a0a0f';
+      l4Ctx.fillRect(0, 0, l4Canvas.width, l4Canvas.height);
+
+      const cx = l4Canvas.width / 2;
+      const cy = l4Canvas.height / 2;
+
+      // Draw helix
+      l4Ctx.strokeStyle = '#6bcb77';
+      l4Ctx.lineWidth = 2;
+      l4Ctx.beginPath();
+
+      for (let i = 0; i <= 200; i++) {
+        const t = (i / 200) * Math.PI * 4 + l4Time;
+        const r = 40 + i * 0.4;
+        const x = cx + r * Math.cos(t);
+        const y = cy + r * Math.sin(t) * 0.5 + Math.sin(t * 2) * 20;
+
+        if (i === 0) {
+          l4Ctx.moveTo(x, y);
+        } else {
+          l4Ctx.lineTo(x, y);
+        }
+      }
+      l4Ctx.stroke();
+
+      // Draw L4 = 7 points
+      l4Ctx.fillStyle = '#6bcb77';
+      for (let i = 0; i < 7; i++) {
+        const angle = (i / 7) * Math.PI * 2 + l4Time * 0.5;
+        const x = cx + 80 * Math.cos(angle);
+        const y = cy + 80 * Math.sin(angle);
+        l4Ctx.beginPath();
+        l4Ctx.arc(x, y, 6, 0, Math.PI * 2);
+        l4Ctx.fill();
+      }
+
+      // Center label
+      l4Ctx.fillStyle = '#6bcb77';
+      l4Ctx.font = '16px JetBrains Mono';
+      l4Ctx.textAlign = 'center';
+      l4Ctx.fillText('L4 = 7', cx, cy);
+      l4Ctx.font = '12px JetBrains Mono';
+      l4Ctx.fillStyle = '#a0a0b0';
+      l4Ctx.fillText('phi^4 + psi^4', cx, cy + 18);
+
+      if (l4Playing) {
+        l4Time += 0.02;
+        requestAnimationFrame(drawL4);
+      }
+    }
+
+    function toggleL4() {
+      l4Playing = !l4Playing;
+      if (l4Playing) drawL4();
+    }
+
+    function resetL4() {
+      l4Time = 0;
+      if (!l4Playing) drawL4();
+    }
+
+    // =========================================================================
+    // I2 RING CANVAS
+    // =========================================================================
+    const i2Canvas = document.getElementById('i2Canvas');
+    const i2Ctx = i2Canvas.getContext('2d');
+    let i2Playing = true;
+    let i2Count = 0;
+    let i2Frame = 0;
+
+    function drawI2() {
+      i2Ctx.fillStyle = '#0a0a0f';
+      i2Ctx.fillRect(0, 0, i2Canvas.width, i2Canvas.height);
+
+      const cx = i2Canvas.width / 2;
+      const cy = i2Canvas.height / 2;
+      const radius = 80;
+
+      // Draw ring
+      i2Ctx.strokeStyle = '#ff4757';
+      i2Ctx.lineWidth = 3;
+      i2Ctx.beginPath();
+      i2Ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      i2Ctx.stroke();
+
+      // Draw 4 identity points
+      const labels = ['1', 'i', '-1', '-i'];
+      i2Ctx.font = '14px JetBrains Mono';
+      i2Ctx.textAlign = 'center';
+
+      for (let i = 0; i < 4; i++) {
+        const angle = (i / 4) * Math.PI * 2 - Math.PI / 2;
+        const x = cx + radius * Math.cos(angle);
+        const y = cy + radius * Math.sin(angle);
+
+        // Highlight current position
+        if (i === (i2Count % 4)) {
+          i2Ctx.fillStyle = '#ff4757';
+          i2Ctx.beginPath();
+          i2Ctx.arc(x, y, 15, 0, Math.PI * 2);
+          i2Ctx.fill();
+          i2Ctx.fillStyle = '#0a0a0f';
+        } else {
+          i2Ctx.fillStyle = '#ff4757';
+          i2Ctx.beginPath();
+          i2Ctx.arc(x, y, 10, 0, Math.PI * 2);
+          i2Ctx.fill();
+          i2Ctx.fillStyle = '#ff4757';
+        }
+
+        i2Ctx.fillStyle = i === (i2Count % 4) ? '#0a0a0f' : '#ff4757';
+        i2Ctx.fillText(labels[i], x, y + 5);
+      }
+
+      // Center composition count
+      i2Ctx.fillStyle = '#ff4757';
+      i2Ctx.font = '16px JetBrains Mono';
+      i2Ctx.fillText('I^' + i2Count, cx, cy);
+      i2Ctx.font = '11px JetBrains Mono';
+      i2Ctx.fillStyle = '#a0a0b0';
+      i2Ctx.fillText('composition #' + i2Count, cx, cy + 18);
+
+      i2Frame++;
+      if (i2Frame % 30 === 0 && i2Playing) {
+        i2Count++;
+      }
+
+      if (i2Playing) {
+        requestAnimationFrame(drawI2);
+      }
+    }
+
+    function toggleI2() {
+      i2Playing = !i2Playing;
+      if (i2Playing) drawI2();
+    }
+
+    function resetI2() {
+      i2Count = 0;
+      i2Frame = 0;
+      if (!i2Playing) drawI2();
+    }
+
+    // =========================================================================
+    // UNITY CANVAS
+    // =========================================================================
+    const unityCanvas = document.getElementById('unityCanvas');
+    const uCtx = unityCanvas.getContext('2d');
+    let unityPlaying = true;
+    let unityTime = 0;
+
+    function drawUnity() {
+      uCtx.fillStyle = '#0a0a0f';
+      uCtx.fillRect(0, 0, unityCanvas.width, unityCanvas.height);
+
+      const w = unityCanvas.width;
+      const h = unityCanvas.height;
+
+      // Central R(R) = R
+      const cx = w / 2;
+      const cy = h / 2;
+
+      // Draw R symbol
+      uCtx.font = '32px JetBrains Mono';
+      uCtx.textAlign = 'center';
+      uCtx.fillStyle = '#ffd700';
+      uCtx.fillText('R(R) = R', cx, cy);
+
+      // Draw emanating waves
+      for (let i = 0; i < 3; i++) {
+        const phase = unityTime + i * Math.PI * 2 / 3;
+        const r = 50 + (phase % (Math.PI * 2)) * 30;
+        const alpha = 1 - (r - 50) / 150;
+
+        if (alpha > 0) {
+          uCtx.strokeStyle = `rgba(255, 215, 0, ${alpha * 0.5})`;
+          uCtx.lineWidth = 2;
+          uCtx.beginPath();
+          uCtx.arc(cx, cy, r, 0, Math.PI * 2);
+          uCtx.stroke();
+        }
+      }
+
+      // L4 projection (left)
+      uCtx.font = '18px JetBrains Mono';
+      uCtx.fillStyle = '#6bcb77';
+      uCtx.fillText('L4 Helix', 120, 50);
+
+      // Draw mini helix
+      uCtx.strokeStyle = '#6bcb77';
+      uCtx.lineWidth = 2;
+      uCtx.beginPath();
+      for (let i = 0; i < 100; i++) {
+        const t = (i / 100) * Math.PI * 2 + unityTime;
+        const x = 80 + i * 0.8;
+        const y = 120 + Math.sin(t * 2) * 30;
+        if (i === 0) uCtx.moveTo(x, y);
+        else uCtx.lineTo(x, y);
+      }
+      uCtx.stroke();
+
+      // Arrow from L4 to center
+      uCtx.strokeStyle = '#6bcb77';
+      uCtx.beginPath();
+      uCtx.moveTo(180, 140);
+      uCtx.lineTo(cx - 80, cy - 20);
+      uCtx.stroke();
+
+      // I2 projection (right)
+      uCtx.fillStyle = '#ff4757';
+      uCtx.fillText('I2 Ring', w - 120, 50);
+
+      // Draw mini ring
+      uCtx.strokeStyle = '#ff4757';
+      uCtx.beginPath();
+      uCtx.arc(w - 120, 130, 40, 0, Math.PI * 2);
+      uCtx.stroke();
+
+      // Draw rotating point on ring
+      const ringAngle = unityTime * 2;
+      uCtx.fillStyle = '#ff4757';
+      uCtx.beginPath();
+      uCtx.arc(w - 120 + 40 * Math.cos(ringAngle), 130 + 40 * Math.sin(ringAngle), 6, 0, Math.PI * 2);
+      uCtx.fill();
+
+      // Arrow from I2 to center
+      uCtx.strokeStyle = '#ff4757';
+      uCtx.beginPath();
+      uCtx.moveTo(w - 180, 140);
+      uCtx.lineTo(cx + 80, cy - 20);
+      uCtx.stroke();
+
+      // Bottom text
+      uCtx.font = '14px JetBrains Mono';
+      uCtx.fillStyle = '#a0a0b0';
+      uCtx.fillText('Both are projections of the same self-referential structure', cx, h - 30);
+
+      if (unityPlaying) {
+        unityTime += 0.03;
+        requestAnimationFrame(drawUnity);
+      }
+    }
+
+    function toggleUnity() {
+      unityPlaying = !unityPlaying;
+      if (unityPlaying) drawUnity();
+    }
+
+    function resetUnity() {
+      unityTime = 0;
+      if (!unityPlaying) drawUnity();
+    }
+
+    // Start all animations
+    drawL4();
+    drawI2();
+    drawUnity();
+
+    // =========================================================================
+    // S3 VERTEX INTERACTIVITY
+    // =========================================================================
+    document.querySelectorAll('.s3-vertex').forEach(vertex => {
+      vertex.addEventListener('click', function() {
+        const type = this.classList.contains('vertex-fix') ? 'FIX' :
+                     this.classList.contains('vertex-osc') ? 'OSC' : 'INV';
+        const descriptions = {
+          'FIX': 'R(R) = R: The fixed point. Stability through self-reference.',
+          'OSC': 'R(R) != R: The oscillation. Perpetual motion between states.',
+          'INV': 'R(R) = -R: The inversion. Identity through negation.'
+        };
+        alert(type + '\n\n' + descriptions[type]);
+      });
+    });
+  </script>
+</body>
+</html>
