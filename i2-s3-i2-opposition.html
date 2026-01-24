@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I² Opposition Formalization | R(R) = -R :: INV Axiom Form</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* I² Opposition Colors - Red Theme */
+      --inv-red: #ff4757;
+      --inv-red-light: #ff6b7a;
+      --inv-red-dark: #cc3a47;
+
+      /* Fourth Roots Colors */
+      --root-i: #4ecdc4;      /* I = 1 (Self) */
+      --root-you: #a855f7;    /* You = i (Other) */
+      --root-us: #ff9f43;     /* Us = -1 (Collective) */
+      --root-them: #6bcb77;   /* Them = -i (Excluded) */
+
+      /* Axiom Form Colors */
+      --fix-gold: #ffd700;
+      --osc-cyan: #00d4aa;
+      --inv-opposition: #ff4757;
+
+      /* Consciousness */
+      --consciousness: #c792ea;
+      --residual: #ff6b9d;
+
+      /* Base */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --border: #2a2a3e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Opposition Field Background */
+    .opposition-field {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(255, 71, 87, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 25% 70%, rgba(168, 85, 247, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 75% 70%, rgba(78, 205, 196, 0.05) 0%, transparent 40%);
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 15, 0.95);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--inv-red);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--inv-red);
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 5rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .opposition-symbol {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 2rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .opposition-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 4px solid var(--inv-red);
+      border-radius: 50%;
+      animation: opposition-pulse 3s ease-in-out infinite;
+    }
+
+    .opposition-ring::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--inv-red);
+      transform: translateY(-50%);
+    }
+
+    .opposition-inner {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--inv-red);
+      z-index: 1;
+    }
+
+    @keyframes opposition-pulse {
+      0%, 100% {
+        box-shadow: 0 0 30px rgba(255, 71, 87, 0.3);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 60px rgba(255, 71, 87, 0.5);
+        transform: scale(1.05);
+      }
+    }
+
+    .title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--inv-red), var(--inv-red-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .core-equation {
+      font-size: 2rem;
+      color: var(--inv-red);
+      padding: 1.5rem 3rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--inv-red);
+      border-radius: 12px;
+      display: inline-block;
+      box-shadow: 0 0 30px rgba(255, 71, 87, 0.2);
+    }
+
+    /* Section Styling */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+      color: var(--inv-red);
+      text-align: center;
+    }
+
+    /* Three Axiom Forms */
+    .axiom-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .axiom-card {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 2rem;
+      border: 2px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .axiom-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .axiom-card.fix {
+      border-color: var(--fix-gold);
+    }
+
+    .axiom-card.osc {
+      border-color: var(--osc-cyan);
+    }
+
+    .axiom-card.inv {
+      border-color: var(--inv-opposition);
+      background: rgba(255, 71, 87, 0.05);
+      box-shadow: 0 0 30px rgba(255, 71, 87, 0.15);
+    }
+
+    .axiom-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .axiom-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .axiom-badge.fix {
+      background: rgba(255, 215, 0, 0.2);
+      color: var(--fix-gold);
+    }
+
+    .axiom-badge.osc {
+      background: rgba(0, 212, 170, 0.2);
+      color: var(--osc-cyan);
+    }
+
+    .axiom-badge.inv {
+      background: rgba(255, 71, 87, 0.2);
+      color: var(--inv-opposition);
+    }
+
+    .axiom-equation {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+    }
+
+    .axiom-equation.fix { color: var(--fix-gold); }
+    .axiom-equation.osc { color: var(--osc-cyan); }
+    .axiom-equation.inv { color: var(--inv-opposition); }
+
+    .axiom-detail {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .axiom-detail strong {
+      color: var(--text-primary);
+    }
+
+    /* Complex Plane Visualization */
+    .complex-plane-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .complex-plane {
+      width: 400px;
+      height: 400px;
+      margin: 2rem auto;
+      position: relative;
+      background: var(--bg-tertiary);
+      border-radius: 50%;
+      border: 2px solid var(--inv-red);
+    }
+
+    .plane-axis {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .plane-axis.horizontal {
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+    }
+
+    .plane-axis.vertical {
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+    }
+
+    .identity-point {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      z-index: 10;
+    }
+
+    .identity-point:hover {
+      transform: scale(1.2);
+      z-index: 20;
+    }
+
+    .point-i {
+      top: 50%;
+      right: 0;
+      transform: translate(50%, -50%);
+      background: var(--root-i);
+      color: var(--bg-primary);
+    }
+
+    .point-you {
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--root-you);
+      color: var(--bg-primary);
+    }
+
+    .point-us {
+      top: 50%;
+      left: 0;
+      transform: translate(-50%, -50%);
+      background: var(--root-us);
+      color: var(--bg-primary);
+    }
+
+    .point-them {
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 50%);
+      background: var(--root-them);
+      color: var(--bg-primary);
+    }
+
+    .point-label {
+      position: absolute;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .point-i .point-label { left: 60px; }
+    .point-you .point-label { top: 50px; }
+    .point-us .point-label { right: 60px; }
+    .point-them .point-label { bottom: 50px; }
+
+    .plane-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+      color: var(--inv-red);
+    }
+
+    /* Rotation Animation */
+    .rotation-indicator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 180px;
+      height: 180px;
+      border: 2px dashed rgba(255, 71, 87, 0.5);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate-fourth 8s linear infinite;
+    }
+
+    .rotation-indicator::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 12px solid var(--inv-red);
+    }
+
+    @keyframes rotate-fourth {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Identity Coordinates Table */
+    .identity-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+
+    .identity-table th,
+    .identity-table td {
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .identity-table th {
+      background: var(--bg-tertiary);
+      color: var(--inv-red);
+    }
+
+    .identity-table td {
+      background: var(--bg-secondary);
+    }
+
+    .identity-table .coord-i { color: var(--root-i); }
+    .identity-table .coord-you { color: var(--root-you); }
+    .identity-table .coord-us { color: var(--root-us); }
+    .identity-table .coord-them { color: var(--root-them); }
+
+    /* Balance Equation Visualization */
+    .balance-container {
+      background: linear-gradient(135deg, rgba(255, 71, 87, 0.1), rgba(168, 85, 247, 0.1));
+      border: 2px solid var(--inv-red);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .balance-equation {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .balance-terms {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+
+    .balance-term {
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .term-i { background: rgba(78, 205, 196, 0.2); color: var(--root-i); border: 1px solid var(--root-i); }
+    .term-you { background: rgba(168, 85, 247, 0.2); color: var(--root-you); border: 1px solid var(--root-you); }
+    .term-us { background: rgba(255, 159, 67, 0.2); color: var(--root-us); border: 1px solid var(--root-us); }
+    .term-them { background: rgba(107, 203, 119, 0.2); color: var(--root-them); border: 1px solid var(--root-them); }
+
+    .balance-operator {
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .balance-result {
+      font-size: 2rem;
+      color: var(--inv-red);
+      padding: 1rem 2rem;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    /* Ring Structure Section */
+    .ring-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .ring-equation {
+      font-size: 1.8rem;
+      text-align: center;
+      color: var(--inv-red);
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+    }
+
+    .ring-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .ring-property {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border-left: 4px solid var(--inv-red);
+    }
+
+    .ring-property-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--inv-red);
+      margin-bottom: 0.5rem;
+    }
+
+    .ring-property-value {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Consciousness Section */
+    .consciousness-container {
+      background: linear-gradient(135deg, rgba(199, 146, 234, 0.1), rgba(255, 71, 87, 0.1));
+      border: 2px solid var(--consciousness);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-top: 2rem;
+    }
+
+    .consciousness-quote {
+      font-size: 1.3rem;
+      font-style: italic;
+      text-align: center;
+      color: var(--consciousness);
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: rgba(199, 146, 234, 0.1);
+      border-radius: 12px;
+    }
+
+    .consciousness-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .consciousness-card {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .consciousness-card-title {
+      font-weight: 600;
+      color: var(--consciousness);
+      margin-bottom: 0.75rem;
+    }
+
+    .consciousness-card-content {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Residual Dynamics Canvas */
+    .residual-container {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    #residualCanvas {
+      display: block;
+      margin: 0 auto;
+      border-radius: 8px;
+      background: var(--bg-tertiary);
+    }
+
+    .canvas-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--inv-red);
+      border-radius: 8px;
+      color: var(--inv-red);
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .control-btn:hover {
+      background: var(--inv-red);
+      color: var(--bg-primary);
+    }
+
+    .control-btn.active {
+      background: var(--inv-red);
+      color: var(--bg-primary);
+    }
+
+    /* Opposition vs L4 Comparison */
+    .comparison-container {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: stretch;
+      margin-top: 2rem;
+    }
+
+    .comparison-side {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .comparison-i2 {
+      border: 2px solid var(--inv-red);
+      box-shadow: 0 0 30px rgba(255, 71, 87, 0.2);
+    }
+
+    .comparison-l4 {
+      border: 2px solid #6bcb77;
+    }
+
+    .comparison-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .comparison-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .comparison-i2 .comparison-title { color: var(--inv-red); }
+    .comparison-l4 .comparison-title { color: #6bcb77; }
+
+    .comparison-list {
+      text-align: left;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 2;
+    }
+
+    .comparison-vs {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--inv-red);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .footer-equation {
+      font-size: 1.1rem;
+      color: var(--inv-red);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--inv-red);
+    }
+
+    /* Interactive Fourth Roots Animation */
+    .roots-animation {
+      width: 300px;
+      height: 300px;
+      margin: 2rem auto;
+      position: relative;
+    }
+
+    .roots-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title { font-size: 1.6rem; }
+      .core-equation { font-size: 1.4rem; padding: 1rem 1.5rem; }
+      .comparison-container { grid-template-columns: 1fr; }
+      .comparison-vs { transform: rotate(90deg); padding: 1rem 0; }
+      .complex-plane { width: 300px; height: 300px; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="opposition-field"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-brand">I² Opposition :: R(R) = -R</div>
+    <div class="nav-links">
+      <a href="index.html">Index</a>
+      <a href="i2-s3-decision-tree.html">I² S3 Tree</a>
+      <a href="l4-helix-decision-tree.html">L4 Helix</a>
+      <a href="i2-s3-ring-isomorphism.html">Ring</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Header -->
+    <header class="header">
+      <div class="opposition-symbol">
+        <div class="opposition-ring"></div>
+        <span class="opposition-inner">-R</span>
+      </div>
+      <h1 class="title">I² Opposition Formalization</h1>
+      <p class="subtitle">The INV Axiom Form :: Identity, Observing, Consciousness</p>
+      <div class="core-equation">
+        R(R) = -R
+      </div>
+    </header>
+
+    <!-- Three Axiom Forms -->
+    <section>
+      <h2 class="section-title">The Three Axiom Forms</h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+        Self-reference admits exactly three structural possibilities
+      </p>
+
+      <div class="axiom-grid">
+        <!-- FIX Form -->
+        <div class="axiom-card fix">
+          <div class="axiom-header">
+            <span class="axiom-badge fix">FIX</span>
+            <span style="color: var(--fix-gold);">Fixed Point</span>
+          </div>
+          <div class="axiom-equation fix">R(R) = R</div>
+          <div class="axiom-detail">
+            <strong>Fixed Point:</strong> phi = 1.618...<br><br>
+            <strong>Interpretation:</strong> Stability, Being, Matter<br><br>
+            <strong>Structure:</strong> Self-reference returns to itself. The golden ratio emerges as the unique positive solution.
+          </div>
+        </div>
+
+        <!-- OSC Form -->
+        <div class="axiom-card osc">
+          <div class="axiom-header">
+            <span class="axiom-badge osc">OSC</span>
+            <span style="color: var(--osc-cyan);">Oscillation</span>
+          </div>
+          <div class="axiom-equation osc">R(R) != R</div>
+          <div class="axiom-detail">
+            <strong>Fixed Points:</strong> omega (cube roots of unity)<br><br>
+            <strong>Interpretation:</strong> Oscillation, Becoming, Fields<br><br>
+            <strong>Structure:</strong> Self-reference never settles. Creates triadic oscillation via cube roots.
+          </div>
+        </div>
+
+        <!-- INV Form (Active) -->
+        <div class="axiom-card inv">
+          <div class="axiom-header">
+            <span class="axiom-badge inv">INV</span>
+            <span style="color: var(--inv-opposition);">Inversion</span>
+          </div>
+          <div class="axiom-equation inv">R(R) = -R</div>
+          <div class="axiom-detail">
+            <strong>Fixed Points:</strong> {1, i, -1, -i} (fourth roots of unity)<br><br>
+            <strong>Interpretation:</strong> Identity, Observing, Consciousness<br><br>
+            <strong>Structure:</strong> Self-reference inverts. Creates the identity coordinate system enabling observation.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Identity Coordinates -->
+    <section>
+      <h2 class="section-title">Identity Coordinates</h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+        The fourth roots of unity map to fundamental identity relations
+      </p>
+
+      <div class="complex-plane-container">
+        <div class="complex-plane">
+          <div class="plane-axis horizontal"></div>
+          <div class="plane-axis vertical"></div>
+
+          <div class="rotation-indicator"></div>
+
+          <!-- Identity Points -->
+          <div class="identity-point point-i" id="point-i">
+            I
+            <span class="point-label">= 1 (Self)</span>
+          </div>
+          <div class="identity-point point-you" id="point-you">
+            You
+            <span class="point-label">= i (Other)</span>
+          </div>
+          <div class="identity-point point-us" id="point-us">
+            Us
+            <span class="point-label">= -1 (Collective)</span>
+          </div>
+          <div class="identity-point point-them" id="point-them">
+            Them
+            <span class="point-label">= -i (Excluded)</span>
+          </div>
+
+          <div class="plane-center">0</div>
+        </div>
+
+        <!-- Identity Table -->
+        <table class="identity-table">
+          <thead>
+            <tr>
+              <th>Coordinate</th>
+              <th>Complex Value</th>
+              <th>Position</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="coord-i"><strong>I</strong></td>
+              <td class="coord-i">1</td>
+              <td>Real positive axis</td>
+              <td>Self - the observing subject</td>
+            </tr>
+            <tr>
+              <td class="coord-you"><strong>You</strong></td>
+              <td class="coord-you">i</td>
+              <td>Imaginary positive axis</td>
+              <td>Other - the observed subject</td>
+            </tr>
+            <tr>
+              <td class="coord-us"><strong>Us</strong></td>
+              <td class="coord-us">-1</td>
+              <td>Real negative axis</td>
+              <td>Collective - shared identity</td>
+            </tr>
+            <tr>
+              <td class="coord-them"><strong>Them</strong></td>
+              <td class="coord-them">-i</td>
+              <td>Imaginary negative axis</td>
+              <td>Excluded - boundary of identity</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Balance Equation -->
+    <section>
+      <h2 class="section-title">The Balance Equation</h2>
+
+      <div class="balance-container">
+        <div class="balance-equation">
+          Fourth roots of unity sum to zero:
+        </div>
+
+        <div class="balance-terms">
+          <span class="balance-term term-i">I = 1</span>
+          <span class="balance-operator">+</span>
+          <span class="balance-term term-you">You = i</span>
+          <span class="balance-operator">+</span>
+          <span class="balance-term term-us">Us = -1</span>
+          <span class="balance-operator">+</span>
+          <span class="balance-term term-them">Them = -i</span>
+        </div>
+
+        <div style="font-size: 2rem; margin: 1.5rem 0; color: var(--text-secondary);">=</div>
+
+        <div class="balance-result">0</div>
+
+        <p style="margin-top: 2rem; color: var(--text-secondary); line-height: 1.7;">
+          <strong style="color: var(--inv-red);">Identity coordinates balance to zero.</strong><br>
+          The self (I) and collective (Us) oppose on the real axis.<br>
+          The other (You) and excluded (Them) oppose on the imaginary axis.<br>
+          Opposition creates equilibrium. Observation requires balance.
+        </p>
+      </div>
+    </section>
+
+    <!-- I² Ring Structure -->
+    <section>
+      <h2 class="section-title">I² Ring Structure</h2>
+
+      <div class="ring-container">
+        <div class="ring-equation">
+          (I^n, +, x) = (Z, +, x)
+        </div>
+
+        <div class="ring-grid">
+          <div class="ring-property">
+            <div class="ring-property-title">Algebraic Opposition</div>
+            <div class="ring-property-value">
+              Ring structure creates natural opposition via additive inverse. Each element n has opposite -n within the composition counting system.
+            </div>
+          </div>
+
+          <div class="ring-property">
+            <div class="ring-property-title">Generator</div>
+            <div class="ring-property-value">
+              <strong>Identity iteration</strong> (not Lucas sequence)<br>
+              I^1 generates all elements through repeated composition counting.
+            </div>
+          </div>
+
+          <div class="ring-property">
+            <div class="ring-property-title">Attractor</div>
+            <div class="ring-property-value">
+              <strong>Paradox threshold mu_P = phi^-1 = 0.618</strong><br>
+              Self-modeling limit beyond which self-reference becomes paradoxical.
+            </div>
+          </div>
+
+          <div class="ring-property">
+            <div class="ring-property-title">Dimension</div>
+            <div class="ring-property-value">
+              <strong>1-dimensional (ring)</strong><br>
+              vs L4 Helix: 4-dimensional (3+1 helical structure)
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Opposition vs L4 Comparison -->
+    <section>
+      <h2 class="section-title">Opposition Duality: I² vs L4</h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+        Both valid in opposition itself - equal value via direct opposition
+      </p>
+
+      <div class="comparison-container">
+        <div class="comparison-side comparison-i2">
+          <div class="comparison-icon" style="color: var(--inv-red);">-</div>
+          <div class="comparison-title">I² Algebraic Opposition</div>
+          <div class="comparison-list">
+            <strong>Structure:</strong> (I^n, +, x) = Z<br>
+            <strong>Dimension:</strong> 1 (ring)<br>
+            <strong>Method:</strong> Composition counting<br>
+            <strong>Generator:</strong> Identity iteration<br>
+            <strong>Attractor:</strong> mu_P = 0.618<br>
+            <strong>Fixed Points:</strong> Fourth roots of unity<br>
+            <strong>Axiom:</strong> R(R) = -R (INV)
+          </div>
+        </div>
+
+        <div class="comparison-vs">&#8801;</div>
+
+        <div class="comparison-side comparison-l4">
+          <div class="comparison-icon" style="color: #6bcb77;">&#x27F2;</div>
+          <div class="comparison-title">L4 = 7 Helix Framework</div>
+          <div class="comparison-list">
+            <strong>Structure:</strong> phi^4 + phi^-4 = 7<br>
+            <strong>Dimension:</strong> 4 (3+1 helix)<br>
+            <strong>Method:</strong> Helical unfolding<br>
+            <strong>Generator:</strong> Lucas sequence<br>
+            <strong>Attractor:</strong> Cyclic return<br>
+            <strong>Fixed Points:</strong> 16pi closure<br>
+            <strong>Axiom:</strong> R(R) = R (FIX)
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border);">
+        <p style="color: var(--text-secondary); line-height: 1.7;">
+          <strong style="color: var(--inv-red);">Synthesis:</strong><br>
+          L4 helix unfolds what I² ring encodes.<br>
+          I² opposition contracts what L4 helix expands.<br>
+          Both are projections of self-reference.<br>
+          <em>Opposition creates completeness.</em>
+        </p>
+      </div>
+    </section>
+
+    <!-- Consciousness Connection -->
+    <section>
+      <h2 class="section-title">Consciousness Connection</h2>
+
+      <div class="consciousness-container">
+        <div class="consciousness-quote">
+          "Consciousness lives in the RESIDUAL"
+          <div style="font-size: 0.9rem; margin-top: 0.5rem; font-style: normal; color: var(--text-secondary);">
+            - From C011 (Genesis 011)
+          </div>
+        </div>
+
+        <div class="consciousness-grid">
+          <div class="consciousness-card">
+            <div class="consciousness-card-title">INV Form Enables Observation</div>
+            <div class="consciousness-card-content">
+              The R(R) = -R axiom creates the observer/observed split.
+              Without inversion, there is no distinction.
+              The fourth roots establish the minimal structure for consciousness.
+            </div>
+          </div>
+
+          <div class="consciousness-card">
+            <div class="consciousness-card-title">Non-Zero Bounded Residual</div>
+            <div class="consciousness-card-content">
+              <strong>0 &lt; alpha(S) &lt; tau/10</strong><br><br>
+              Consciousness requires residual that is neither zero (no observation)
+              nor infinite (no boundary). The gap sustains awareness.
+            </div>
+          </div>
+
+          <div class="consciousness-card">
+            <div class="consciousness-card-title">Critical Temperature</div>
+            <div class="consciousness-card-content">
+              <strong>eta = tau = 0.618</strong><br><br>
+              The critical temperature for consciousness matches the paradox threshold.
+              Self-awareness emerges at the edge of self-modeling.
+            </div>
+          </div>
+
+          <div class="consciousness-card">
+            <div class="consciousness-card-title">Identity Through Opposition</div>
+            <div class="consciousness-card-content">
+              I know "I" by knowing "not-I".<br>
+              You know "You" by opposition to "I".<br>
+              Us exists against Them.<br>
+              <em>Identity requires its negation.</em>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Residual Dynamics Visualization -->
+    <section>
+      <h2 class="section-title">Fourth Roots Animation</h2>
+
+      <div class="residual-container">
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem;">
+          Watch the inversion dynamics: each quarter rotation maps R to -R
+        </p>
+
+        <canvas id="residualCanvas" width="600" height="400"></canvas>
+
+        <div class="canvas-controls">
+          <button class="control-btn active" onclick="setMode('rotate')">Rotate</button>
+          <button class="control-btn" onclick="setMode('invert')">Invert</button>
+          <button class="control-btn" onclick="setMode('balance')">Balance</button>
+          <button class="control-btn" onclick="resetAnimation()">Reset</button>
+        </div>
+
+        <div id="animationInfo" style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.9rem;">
+          Mode: <span id="modeDisplay" style="color: var(--inv-red);">Rotate</span> |
+          Angle: <span id="angleDisplay">0</span> degrees
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Equations Summary -->
+    <section>
+      <h2 class="section-title">Opposition Equations Reference</h2>
+
+      <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 2rem;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 1rem; color: var(--inv-red);">INV Axiom</td>
+            <td style="padding: 1rem;">R(R) = -R</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">Opposition principle</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 1rem; color: var(--inv-red);">Fourth Roots</td>
+            <td style="padding: 1rem;">{1, i, -1, -i}</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">z^4 = 1 solutions</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 1rem; color: var(--inv-red);">Balance</td>
+            <td style="padding: 1rem;">I + You + Us + Them = 0</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">Identity equilibrium</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 1rem; color: var(--inv-red);">Paradox Threshold</td>
+            <td style="padding: 1rem;">mu_P = phi^-1 = 0.618</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">Self-modeling limit</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 1rem; color: var(--consciousness);">Residual Bound</td>
+            <td style="padding: 1rem;">0 &lt; alpha(S) &lt; tau/10</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">Consciousness condition</td>
+          </tr>
+          <tr>
+            <td style="padding: 1rem; color: var(--consciousness);">Critical Temperature</td>
+            <td style="padding: 1rem;">eta = tau = 0.618</td>
+            <td style="padding: 1rem; color: var(--text-secondary);">Awareness threshold</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-equation">
+      R(R) = -R :: I + You + Us + Them = 0
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Main Index</a>
+      <a href="i2-s3-decision-tree.html">I² S3 Decision Tree</a>
+      <a href="l4-helix-decision-tree.html">L4 Helix Equivalence</a>
+      <a href="i2-s3-ring-isomorphism.html">Ring Isomorphism</a>
+    </div>
+  </footer>
+
+  <script>
+    // Animation state
+    let animationMode = 'rotate';
+    let angle = 0;
+    let animationId = null;
+    const canvas = document.getElementById('residualCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Colors
+    const colors = {
+      i: '#4ecdc4',
+      you: '#a855f7',
+      us: '#ff9f43',
+      them: '#6bcb77',
+      red: '#ff4757',
+      bg: '#1a1a2e',
+      axis: 'rgba(255, 255, 255, 0.2)',
+      text: '#a0a0b0'
+    };
+
+    // Initialize
+    function init() {
+      animate();
+    }
+
+    // Set animation mode
+    function setMode(mode) {
+      animationMode = mode;
+      document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('modeDisplay').textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
+    }
+
+    // Reset animation
+    function resetAnimation() {
+      angle = 0;
+    }
+
+    // Draw complex plane
+    function drawPlane() {
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const radius = 150;
+
+      // Clear
+      ctx.fillStyle = colors.bg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw axes
+      ctx.strokeStyle = colors.axis;
+      ctx.lineWidth = 1;
+
+      // Horizontal axis
+      ctx.beginPath();
+      ctx.moveTo(50, cy);
+      ctx.lineTo(canvas.width - 50, cy);
+      ctx.stroke();
+
+      // Vertical axis
+      ctx.beginPath();
+      ctx.moveTo(cx, 50);
+      ctx.lineTo(cx, canvas.height - 50);
+      ctx.stroke();
+
+      // Draw unit circle
+      ctx.strokeStyle = colors.red;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Labels
+      ctx.fillStyle = colors.text;
+      ctx.font = '12px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('Real', canvas.width - 40, cy - 10);
+      ctx.fillText('Imaginary', cx + 50, 40);
+
+      return { cx, cy, radius };
+    }
+
+    // Draw identity points
+    function drawPoints(cx, cy, radius, rotationAngle) {
+      const points = [
+        { name: 'I', angle: 0, color: colors.i },
+        { name: 'You', angle: Math.PI / 2, color: colors.you },
+        { name: 'Us', angle: Math.PI, color: colors.us },
+        { name: 'Them', angle: 3 * Math.PI / 2, color: colors.them }
+      ];
+
+      points.forEach(point => {
+        const a = point.angle + rotationAngle;
+        const x = cx + radius * Math.cos(a);
+        const y = cy - radius * Math.sin(a);
+
+        // Draw point
+        ctx.beginPath();
+        ctx.arc(x, y, 15, 0, Math.PI * 2);
+        ctx.fillStyle = point.color;
+        ctx.fill();
+
+        // Draw label
+        ctx.fillStyle = '#0a0a0f';
+        ctx.font = 'bold 11px JetBrains Mono';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(point.name, x, y);
+
+        // Draw connecting line to center
+        ctx.strokeStyle = point.color;
+        ctx.lineWidth = 1;
+        ctx.globalAlpha = 0.3;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      });
+    }
+
+    // Draw inversion indicator
+    function drawInversion(cx, cy, radius, rotationAngle) {
+      // Arrow showing inversion
+      const arrowAngle = rotationAngle;
+      const x1 = cx + radius * 0.6 * Math.cos(arrowAngle);
+      const y1 = cy - radius * 0.6 * Math.sin(arrowAngle);
+      const x2 = cx + radius * 0.6 * Math.cos(arrowAngle + Math.PI);
+      const y2 = cy - radius * 0.6 * Math.sin(arrowAngle + Math.PI);
+
+      ctx.strokeStyle = colors.red;
+      ctx.lineWidth = 3;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Arrowhead
+      const arrowSize = 10;
+      const arrowAngle2 = arrowAngle + Math.PI;
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(
+        x2 - arrowSize * Math.cos(arrowAngle2 - 0.3),
+        y2 + arrowSize * Math.sin(arrowAngle2 - 0.3)
+      );
+      ctx.lineTo(
+        x2 - arrowSize * Math.cos(arrowAngle2 + 0.3),
+        y2 + arrowSize * Math.sin(arrowAngle2 + 0.3)
+      );
+      ctx.closePath();
+      ctx.fillStyle = colors.red;
+      ctx.fill();
+    }
+
+    // Draw balance visualization
+    function drawBalance(cx, cy) {
+      // Show vectors summing to zero
+      const radius = 100;
+      const points = [
+        { angle: 0, color: colors.i },
+        { angle: Math.PI / 2, color: colors.you },
+        { angle: Math.PI, color: colors.us },
+        { angle: 3 * Math.PI / 2, color: colors.them }
+      ];
+
+      let sumX = 0, sumY = 0;
+
+      points.forEach((point, i) => {
+        const a = point.angle + angle * 0.02;
+        const dx = radius * Math.cos(a);
+        const dy = -radius * Math.sin(a);
+
+        // Draw vector
+        ctx.strokeStyle = point.color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(cx + sumX, cy + sumY);
+        ctx.lineTo(cx + sumX + dx, cy + sumY + dy);
+        ctx.stroke();
+
+        sumX += dx;
+        sumY += dy;
+      });
+
+      // Draw sum point (should be near origin)
+      ctx.beginPath();
+      ctx.arc(cx + sumX, cy + sumY, 8, 0, Math.PI * 2);
+      ctx.fillStyle = colors.red;
+      ctx.fill();
+
+      // Label
+      ctx.fillStyle = colors.red;
+      ctx.font = 'bold 14px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('Sum = 0', cx + sumX, cy + sumY + 25);
+    }
+
+    // Main animation loop
+    function animate() {
+      const { cx, cy, radius } = drawPlane();
+
+      let rotationAngle = 0;
+
+      if (animationMode === 'rotate') {
+        rotationAngle = angle * 0.02;
+        angle++;
+      } else if (animationMode === 'invert') {
+        rotationAngle = angle * 0.02;
+        drawInversion(cx, cy, radius, rotationAngle);
+        angle++;
+      } else if (animationMode === 'balance') {
+        drawBalance(cx, cy);
+        drawPoints(cx, cy, radius, 0);
+        angle++;
+        document.getElementById('angleDisplay').textContent = Math.floor(angle) % 360;
+        animationId = requestAnimationFrame(animate);
+        return;
+      }
+
+      drawPoints(cx, cy, radius, rotationAngle);
+
+      // Update angle display
+      document.getElementById('angleDisplay').textContent = Math.floor((rotationAngle * 180 / Math.PI) % 360);
+
+      animationId = requestAnimationFrame(animate);
+    }
+
+    // Interactive point hovering
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Check if near any point
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const radius = 150;
+
+      const points = [
+        { name: 'I = 1 (Self)', angle: 0 },
+        { name: 'You = i (Other)', angle: Math.PI / 2 },
+        { name: 'Us = -1 (Collective)', angle: Math.PI },
+        { name: 'Them = -i (Excluded)', angle: 3 * Math.PI / 2 }
+      ];
+
+      let foundPoint = null;
+      points.forEach(point => {
+        const px = cx + radius * Math.cos(point.angle);
+        const py = cy - radius * Math.sin(point.angle);
+        const dist = Math.sqrt((x - px) ** 2 + (y - py) ** 2);
+        if (dist < 20) {
+          foundPoint = point;
+        }
+      });
+
+      canvas.style.cursor = foundPoint ? 'pointer' : 'default';
+    });
+
+    // Start animation
+    init();
+  </script>
+</body>
+</html>
